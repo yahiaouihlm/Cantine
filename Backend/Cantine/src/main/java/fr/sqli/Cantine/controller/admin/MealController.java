@@ -25,4 +25,7 @@ public class MealController  implements  IAdminEndPoints{
     public MealDtout getMealByID(@RequestParam("id") Integer id) throws MealNotFoundAdminException, InvalidMealInformationAdminException {
         return this.mealService.getMealByID(id);
     }
+
+
+
 }

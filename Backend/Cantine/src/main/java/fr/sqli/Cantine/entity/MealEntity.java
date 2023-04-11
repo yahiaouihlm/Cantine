@@ -70,6 +70,16 @@ public class MealEntity implements Serializable {
 
     public MealEntity() {
     }
+    public  MealEntity( Integer idplat,  String label, String description, String categorie, BigDecimal prixht, Integer quantite, Integer status, ImageEntity image){
+        this.idplat = idplat;
+        this.label = label;
+        this.description = description;
+        this.categorie = categorie;
+        this.prixht = prixht;
+        this.quantite = quantite;
+        this.status = status;
+        this.image = image;
+    }
 
     public Integer getIdplat() {
         return this.idplat;
