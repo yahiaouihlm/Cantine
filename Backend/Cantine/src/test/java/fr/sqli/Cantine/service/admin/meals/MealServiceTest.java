@@ -1,11 +1,13 @@
-package fr.sqli.Cantine.service.admin;
+package fr.sqli.Cantine.service.admin.meals;
 
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.service.admin.MealService;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -29,28 +32,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class MealServiceTest {
+class MealServiceTest  {
 
-     @Mock
-     private  MealService iMealService;
-     @Mock
-     private  IMealDao  iMealDao;
+    @Mock
+    MealService iMealService;
 
-     private  MealEntity mealEntity;
+    @Mock
+    IMealDao  iMealDao;
 
-     @Autowired
-     private  Environment environment ;
+    MealEntity mealEntity;
+    @Mock
+    MultipartFile multipartFile;
+    @Mock
+    IImageService imageService;
+    @Autowired
+    Environment environment;
+
 
      @BeforeEach
      void setUp  () throws MealNotFoundAdminException, InvalidMealInformationAdminException {
-          this.iMealService =  new MealService(environment, iMealDao , null);
-          this.mealEntity =   new MealEntity(1 , "Meal 1","firt Meal To  Test ", "Frites",new BigDecimal(1.3), 1,2,new ImageEntity());
-
+         this.iMealService =  new MealService(environment, iMealDao , null );
+         this.mealEntity =   new MealEntity(1 , "Meal 1","first Meal To  Test ", "Frites",new BigDecimal(1.3), 1,1,new ImageEntity());
 
      }
      @Test
      void getAllMealsWithListOf2Elements() {
-        var  meal2 =   new MealEntity(2 , "Meal 2","firt Meal To  Test 2  ", "Frites",new BigDecimal(1.3), 1,2,new ImageEntity());
+        var  meal2 =   new MealEntity(2 , "Meal 2","firt Meal To  Test 2  ", "Frites",new BigDecimal(1.3), 1,1,new ImageEntity());
         final var ListToFindAsEntity  =  List.of(this.mealEntity, meal2);
 
         final var ListToGetAsDtout  =  List.of(this.mealEntity, meal2).stream().map(meal -> new MealDtout(meal, this.environment.getProperty("sqli.cantine.images.url.meals"))).toList();

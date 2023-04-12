@@ -15,8 +15,18 @@ import java.util.List;
 
 public interface IMealService {
 
+    /**
+     * this method is used to add a meal to the database and save the image in the (images/meals) directory
+     * @param  mealDtoIn as  MealDtoIn the meal to add to the database
+     * @return MealEntity the meal added to the database
+     * @throws InvalidMealInformationAdminException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
+     * @throws InvalidTypeImageException if the image type is not valid (if the image type is not jpg or png)
+     * @throws InvalidImageException if the image is not valid (if the image is null or empty)
+     * @throws ImagePathException if the path is not valid (if the path is null or empty)
+     * @throws IOException if the image is not found
+     */
 
-    public MealEntity addMeal(MealDtoIn mealEntity) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
 
     /**
      * Get all the meals from the database and return them as a list of MealDTO
@@ -31,6 +41,7 @@ public interface IMealService {
      * @return  The meal found with the given id or throw an exception if the meal is not found
      * @throws InvalidMealInformationAdminException if the meal id is null or less than 0
      * @throws MealNotFoundAdminException if the meal is not found
+     *
      */
     public MealDtout getMealByID (Integer id) throws InvalidMealInformationAdminException, MealNotFoundAdminException;
 

@@ -7,6 +7,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -26,27 +27,18 @@ import java.util.List;
 @Service
 public class MealService implements IMealService {
     private static final Logger LOG = LogManager.getLogger();
-    private   ImageService imageService;
+    private   IImageService imageService;
     private final  IMealDao mealDao ;
 
     private final String   MEALS_IMAGES_URL;
     @Autowired
-    public  MealService(Environment env, IMealDao mealDao , ImageService imageService  ){
+    public  MealService(Environment env, IMealDao mealDao , IImageService imageService  ){
         this.mealDao = mealDao;
         this.imageService = imageService;
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
     }
 
-    /**
-     * this method is used to add a meal to the database and save the image in the (images/meals) directory
-     * @param mealDtoIn MealDtoIn the meal to add to the database
-     * @return MealEntity the meal added to the database
-     * @throws InvalidMealInformationAdminException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
-     * @throws InvalidTypeImageException if the image type is not valid (if the image type is not jpg or png)
-     * @throws InvalidImageException if the image is not valid (if the image is null or empty)
-     * @throws ImagePathException if the path is not valid (if the path is null or empty)
-     * @throws IOException if the image is not found
-     */
+
     @Override
     public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
        MealEntity meal =  mealDtoIn.toMealEntity();

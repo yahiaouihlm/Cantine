@@ -27,6 +27,74 @@ class ImageServiceTest {
     private  ImageService imageService;
 
 
+
+    /* unit Test For  Delete Images */
+
+    /**
+     * Test the deleteImage method with valid image name and path
+     * @throws IOException : file.createNewFile() throws IOException we use it  to create the file after the delete method
+     *                       to  save  the aytomatic test from  failing
+     */
+    @Test
+    void deleteImageWithValidImage() throws IOException {
+        String imageName = "testRemove.gif";
+        String path = "src/test/java/fr/sqli/Cantine/service/images/filesTests";
+        File file =  new File(path +'/'+ imageName);
+        Assertions.assertDoesNotThrow(() ->  imageService.deleteImage(imageName, path));
+        file.createNewFile();
+
+    }
+
+    /**
+     * Test the deleteImage method with valid image
+     * @throws InvalidImageException
+     * @throws ImagePathException
+     */
+    @Test
+    void  deleteImageWithInvalidImage()  {
+        Assertions.assertThrows(ImagePathException.class,
+                () -> imageService.deleteImage("test" ,  "meal"));
+    }
+    /**
+     * Test the deleteImage method with null image name
+     */
+    @Test
+    void  deleteImageWithEmptyImgaeName()  {
+        Assertions.assertThrows(ImagePathException.class,
+                () -> imageService.deleteImage("" ,  "meal"));
+    }
+
+    /**
+     * Test the deleteImage method with null image name
+     */
+    
+    @Test
+    void  deleteImageWithNullImgaeName(){
+        Assertions.assertThrows(ImagePathException.class,
+                () -> imageService.deleteImage(null ,  "meal"));
+    }
+
+    /**
+     * Test the deleteImage method with null path
+     */
+
+    @Test
+    void  deleteImageWithNullPath () {
+        Assertions.assertThrows(ImagePathException.class,
+                () -> imageService.deleteImage("meal",  null));
+    }
+
+    /**
+     * Test the deleteImage method with empty path
+     */
+
+    @Test
+    void  deleteImageWithEmptyPath () {
+        Assertions.assertThrows(ImagePathException.class,
+                () -> imageService.deleteImage("meal",   ""   ));
+    }
+
+
     /* unit Test For  Download Images */
 
     /**

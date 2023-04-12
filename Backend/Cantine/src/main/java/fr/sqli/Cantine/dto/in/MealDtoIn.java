@@ -52,30 +52,30 @@ public class MealDtoIn implements Serializable {
             throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
         }
         if (this.description == null || this.description.isEmpty()) {
-            throw new IllegalArgumentException("DESCRIPTION_IS_MANDATORY");
+            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_MANDATORY");
         }
         if (this.description.length() > 600 ) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_LONG");
         }
         if (this.categorie == null || this.categorie.isEmpty()) {
-            throw new IllegalArgumentException("CATEGORIES_IS_MANDATORY");
+            throw new InvalidMealInformationAdminException("CATEGORIES_IS_MANDATORY");
         }
         if (this.categorie.length() > 45 ) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
         }
 
         if (this.prixht == null || this.prixht.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("PRICE_IS_MANDATORY");
+            throw new InvalidMealInformationAdminException("PRICE_IS_MANDATORY");
         }
 
         if (this.quantite == null || this.quantite < 0) {
-            throw new IllegalArgumentException("QUANTITY_IS_MANDATORY");
+            throw new InvalidMealInformationAdminException("QUANTITY_IS_MANDATORY");
         }
         if (this.status == null || this.status < 0) {
-            throw new IllegalArgumentException("STATUS_IS_MANDATORY");
+            throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
         }
         if (this.image == null || this.image.isEmpty()) {
-            throw new IllegalArgumentException("IMAGE_IS_MANDATORY");
+            throw new InvalidMealInformationAdminException("IMAGE_IS_MANDATORY");
         }
     }
 
