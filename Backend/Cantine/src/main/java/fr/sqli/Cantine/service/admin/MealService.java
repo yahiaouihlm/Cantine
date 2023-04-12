@@ -37,6 +37,32 @@ public class MealService implements IMealService {
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
     }
 
+     /* TODO: continuer  la  méthode et ajouter des tests  unitaires
+     *  */
+    @Override
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal ) throws InvalidMealInformationAdminException, MealNotFoundAdminException {
+        IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", idMeal);
+        var  overemotional = this.mealDao.findById(idMeal);
+        if (overemotional.isEmpty()) {
+            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", idMeal);
+            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
+        } 
+        var  meal = overemotional.get();
+        MealEntity mealEntity = mealDtoIn.toMealEntity();
+        meal.setPrixht(mealEntity.getPrixht());
+        meal.setLabel(mealEntity.getLabel());
+        meal.setDescription(mealEntity.getDescription());
+        meal.setCategorie(mealEntity.getCategorie());
+        meal.setQuantite(mealEntity.getQuantite());
+        meal.setStatus(mealEntity.getStatus());
+
+         // Attention  ici
+        if (mealDtoIn.getImage() != null) {
+
+        }
+        return  null ;
+    }
+
     @Override
     public MealEntity removeMeal(Integer id) throws InvalidMealInformationAdminException, MealNotFoundAdminException, RemoveMealAdminException, ImagePathException {
         IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", id);

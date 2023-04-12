@@ -15,76 +15,75 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 @Service
-public class ImageService  implements IImageService{
+public class ImageService implements IImageService {
 
+    private static final Logger LOG = LogManager.getLogger();
     Environment env;
+
     @Autowired
-    public  ImageService (Environment env){
+    public ImageService(Environment env) {
         this.env = env;
     }
-    private static final Logger LOG = LogManager.getLogger();
 
     @Override
-    public String   uploadImage (MultipartFile image , String  path ) throws ImagePathException, IOException, InvalidImageException, InvalidTypeImageException {
+    public String uploadImage(MultipartFile image, String path) throws ImagePathException, IOException, InvalidImageException, InvalidTypeImageException {
 
-        if  ( path == null || path.isEmpty()){
+        if (path == null || path.isEmpty()) {
             LOG.fatal("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
-            throw   new ImagePathException("INVALID PATH CAN'T UPLOAD IMAGE");
+            throw new ImagePathException("INVALID PATH CAN'T UPLOAD IMAGE");
         }
 
-        if (image == null || image.isEmpty()){
+        if (image == null || image.isEmpty()) {
             LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
-            throw  new InvalidImageException("INVALID IMAGE IT CANNOT BE NULL OR EMPTY ");
+            throw new InvalidImageException("INVALID IMAGE IT CANNOT BE NULL OR EMPTY ");
         }
 
 
-        if (image.getContentType() ==null || image.getContentType().isEmpty() ||
+        if (image.getContentType() == null || image.getContentType().isEmpty() ||
                 (!image.getContentType().equals("image/png")
-                && !image.getContentType().equals("image/jpg")
-                && !image.getContentType().equals("image/jpeg")) ){
+                        && !image.getContentType().equals("image/jpg")
+                        && !image.getContentType().equals("image/jpeg"))) {
             LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE IMAGE TYPE IS NOT VALID in the uploadImage METHOD");
             throw new InvalidTypeImageException("INVALID IMAGE TYPE ONLY PNG , JPG , JPEG ARE ACCEPTED ");
         }
 
-        var name =  image.getOriginalFilename();
-        name  = UUID.randomUUID().toString()+name ;
-        var spot = path+"/"+name;
-        File file =  new File(spot);
+        var name = image.getOriginalFilename();
+        name = UUID.randomUUID() + name;
+        var spot = path + "/" + name;
+        File file = new File(spot);
         image.transferTo(Path.of(file.getPath()));
-        return name ;
+        return name;
     }
-
 
 
     @Override
-    public InputStream downloadImage ( String ImageName , String path ) throws ImagePathException, InvalidImageException, FileNotFoundException {
-        if (path == null ||path.isEmpty()  ){
+    public InputStream downloadImage(String ImageName, String path) throws ImagePathException, InvalidImageException, FileNotFoundException {
+        if (path == null || path.isEmpty()) {
             LOG.fatal("CAN'T DOWNLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE downloadImage METHOD ");
-            throw new  ImagePathException("INVALID PATH CAN'T DOWNLOAD IMAGE");
+            throw new ImagePathException("INVALID PATH CAN'T DOWNLOAD IMAGE");
         }
-        if  (ImageName == null ||  ImageName.isEmpty() ){
-           LOG.error("CAN'T DOWNLOAD IMAGE BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE downloadImage METHOD ");
-           throw  new InvalidImageException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
+        if (ImageName == null || ImageName.isEmpty()) {
+            LOG.error("CAN'T DOWNLOAD IMAGE BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE downloadImage METHOD ");
+            throw new InvalidImageException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
         }
 
-        var spot =  path + "/" + ImageName;
-        return  new FileInputStream(spot);
+        var spot = path + "/" + ImageName;
+        return new FileInputStream(spot);
     }
 
 
-
-   @Override
-    public  void deleteImage (String ImageName , String path ) throws ImagePathException {
-        if  ( path == null || path.isEmpty()){
+    @Override
+    public void deleteImage(String ImageName, String path) throws ImagePathException {
+        if (path == null || path.isEmpty()) {
             LOG.fatal("CAN'T DELETE IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE deleteImage METHOD ");
-            throw   new ImagePathException("INVALID PATH CAN'T DELETE IMAGE");
+            throw new ImagePathException("INVALID PATH CAN'T DELETE IMAGE");
         }
-        if  (ImageName == null ||  ImageName.isEmpty() ){
+        if (ImageName == null || ImageName.isEmpty()) {
             LOG.error("CAN'T DELETE IMAGE BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE deleteImage METHOD ");
-            throw  new ImagePathException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
+            throw new ImagePathException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
         }
-        var spot =  path + "/" + ImageName;
-        File file =  new File(spot);
+        var spot = path + "/" + ImageName;
+        File file = new File(spot);
         if (file.delete()) {
             LOG.info("FILE DELETED SUCCESSFULLY");
         } else {
@@ -92,6 +91,12 @@ public class ImageService  implements IImageService{
             throw new ImagePathException("CAN'T DELETE THE FILE NOT FOUND");
         }
 
+    }
+
+    @Override
+    public String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidTypeImageException, InvalidImageException, IOException {
+        this.deleteImage(oldImageName, path);
+        return this.uploadImage(image, path);
     }
 
 }

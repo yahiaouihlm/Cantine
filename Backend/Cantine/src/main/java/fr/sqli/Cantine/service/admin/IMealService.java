@@ -21,7 +21,7 @@ public interface IMealService {
      * Check if the meal information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
      *
      * @param args the meal information to check
-     * @throws InvalidMealInformationAdminException if the meal information is not valid
+     * @throws InvalidMealInformationAdminException if  one of the arguments is null or empty or less than 0
      */
     static void verifyMealInformation(String meassageException, Object... args) throws InvalidMealInformationAdminException {
         for (Object arg : args) {
@@ -32,6 +32,12 @@ public interface IMealService {
 
         }
     }
+
+
+
+
+    public MealEntity updateMeal(MealDtoIn mealDtoIn,  Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+
 
     /**
      * this method is used to remove a meal from the database and delete the image from the (images/meals) directory if the meal is not present in any menu
