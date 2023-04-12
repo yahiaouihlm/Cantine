@@ -37,18 +37,20 @@ public class MealService implements IMealService {
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
     }
 
-     /* TODO: continuer  la  méthode et ajouter des tests  unitaires
+    /* TODO: continuer  la  méthode et ajouter des tests  unitaires
      *  */
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal ) throws InvalidMealInformationAdminException, MealNotFoundAdminException {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
         IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", idMeal);
-        var  overemotional = this.mealDao.findById(idMeal);
+        MealEntity mealEntity = mealDtoIn.toMealEntity();
+
+
+        var overemotional = this.mealDao.findById(idMeal);
         if (overemotional.isEmpty()) {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", idMeal);
             throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
-        } 
-        var  meal = overemotional.get();
-        MealEntity mealEntity = mealDtoIn.toMealEntity();
+        }
+        var meal = overemotional.get();
         meal.setPrixht(mealEntity.getPrixht());
         meal.setLabel(mealEntity.getLabel());
         meal.setDescription(mealEntity.getDescription());
@@ -56,11 +58,15 @@ public class MealService implements IMealService {
         meal.setQuantite(mealEntity.getQuantite());
         meal.setStatus(mealEntity.getStatus());
 
-         // Attention  ici
+        // if  the  image is  not  null  we  update  the  image of  the  meal
         if (mealDtoIn.getImage() != null) {
-
+            var oldImageName = meal.getImage().getImagename();
+            var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(), "images/meals");
+            var image = new ImageEntity();
+            image.setImagename(newImageName);
+            meal.setImage(image);
         }
-        return  null ;
+        return this.mealDao.save(meal);
     }
 
     @Override

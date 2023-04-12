@@ -34,9 +34,23 @@ public interface IMealService {
     }
 
 
+    /**
+     * this method is used to update a meal in the database and save the image in the (images/meals)
+     * directory if the meal is not present in any menu all the feilds must be filled in the mealDtoIn
+     * if  there is no  new image to update  the old image will be kept
+     *
+     * @param mealDtoIn the  meal with the updated information
+     * @param idMeal    the id of the meal to update
+     * @return MealEntity the meal updated in the database
+     * @throws InvalidMealInformationAdminException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
+     * @throws MealNotFoundAdminException           if the meal is not found in the database
+     * @throws InvalidTypeImageException            if the image type is not valid (if the image type is not jpg or png)
+     * @throws InvalidImageException                if the image is not valid (if the image is null or empty)
+     * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
+     * @throws IOException                          if the image is not found or  the jvm cannot create the file
+     */
 
-
-    public MealEntity updateMeal(MealDtoIn mealDtoIn,  Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+    MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
 
 
     /**
