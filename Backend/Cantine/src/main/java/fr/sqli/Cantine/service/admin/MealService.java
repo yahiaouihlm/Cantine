@@ -37,12 +37,11 @@ public class MealService implements IMealService {
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
     }
 
-    /* TODO: continuer  la  méthode et ajouter des tests  unitaires
-     *  */
+
     @Override
     public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
         IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", idMeal);
-        MealEntity mealEntity = mealDtoIn.toMealEntity();
+        MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
 
         var overemotional = this.mealDao.findById(idMeal);

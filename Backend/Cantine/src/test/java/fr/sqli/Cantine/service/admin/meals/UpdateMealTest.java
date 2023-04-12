@@ -7,11 +7,12 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.MealService;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
+import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.images.IImageService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import fr.sqli.Cantine.service.images.exception.ImagePathException;
+import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,7 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -54,6 +57,48 @@ public class UpdateMealTest {
         this.mealDtoIn.setStatus(1);
     }
 
+    @AfterEach
+    public void tearDown() {
+        this.mealEntity = null;
+        this.mealDtoIn = null;
+        this.env =  null ;
+
+    }
+
+   @Test
+   @DisplayName("Update Meal With Valid ID And Meal Found")
+   void  updateMealTestWithRightMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationAdminException {
+       this.mealDtoIn.setLabel("Meal 1 Updated");
+       this.mealDtoIn.setImage(null );
+       Mockito.when(mealDao.findById(1)).thenReturn(Optional.ofNullable(mealEntity));
+       Mockito.when(mealDao.save(mealEntity)).thenReturn(mealEntity);
+
+
+       var result = mealService.updateMeal(mealDtoIn, 1);
+
+         Assertions.assertEquals("Meal 1 Updated", result.getLabel());
+         Assertions.assertEquals("Frites", result.getCategorie());
+         Mockito.verify(mealDao, Mockito.times(1)).findById(1);
+         Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
+
+    }
+
+
+    @Test
+    @DisplayName("Update Meal With Valid ID But Meal Not Found")
+    void  updateMealTestWithIdMealNotFound() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+        var mealIDNotFound = 2;
+        Mockito.when(mealDao.findById(mealIDNotFound)).thenReturn(Optional.ofNullable(null));
+
+        Assertions.assertThrows(MealNotFoundAdminException.class, () -> {
+            mealService.updateMeal(mealDtoIn, mealIDNotFound);
+        });
+
+        Mockito.verify(mealDao, Mockito.times(1)).findById(mealIDNotFound);
+        Mockito.verify(mealDao, Mockito.times(0)).save(mealEntity);
+        Mockito.verify(imageService, Mockito.times(0)).
+                updateImage( Mockito.anyString(),Mockito.any(MultipartFile.class), Mockito.anyString());
+    }
 
     @Test
     @DisplayName("Update Meal With TOO LONG Label")

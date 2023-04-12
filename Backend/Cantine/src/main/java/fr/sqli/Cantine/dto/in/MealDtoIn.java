@@ -21,6 +21,7 @@ public class MealDtoIn implements Serializable {
 
     /**
      * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid
+     *
      * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
      * @throws InvalidMealInformationAdminException if the meal information is not valid
      */
@@ -28,6 +29,28 @@ public class MealDtoIn implements Serializable {
     @JsonIgnore
     public MealEntity toMealEntity() throws InvalidMealInformationAdminException {
         this.checkMealInformationValidity(); // check if the meal information is valid
+        return this.createMealEntity(); // create the MealEntity object
+    }
+
+    /**
+     * Check if the meal information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
+     *
+     * @throws InvalidMealInformationAdminException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
+     */
+    @JsonIgnore
+    public MealEntity toMealEntityWithoutImage() throws InvalidMealInformationAdminException {
+        this.checkValidityExceptImage(); // check if the meal information is valid except the image
+        return this.createMealEntity(); // create the MealEntity object
+    }
+
+    /**
+     * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid except the image
+     *
+     * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
+     * @throws InvalidMealInformationAdminException if the meal information is not valid
+     */
+    @JsonIgnore
+    public MealEntity createMealEntity() throws InvalidMealInformationAdminException {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setCategorie(this.categorie);
         mealEntity.setDescription(this.description);
@@ -41,26 +64,41 @@ public class MealDtoIn implements Serializable {
     /**
      * Check if the meal information is valid or not and throw an exception
      * if it is not valid ( if one of the arguments is null or empty or less than 0)
-     * @throws InvalidMealInformationAdminException  if the meal information is not valid
+     *
+     * @throws InvalidMealInformationAdminException if the meal information is not valid
      */
     @JsonIgnore
     public void checkMealInformationValidity() throws InvalidMealInformationAdminException {
+        this.checkValidityExceptImage();
+        if (this.image == null || this.image.isEmpty()) {
+            throw new InvalidMealInformationAdminException("IMAGE_IS_MANDATORY");
+        }
+    }
+
+    /**
+     * Check if the meal information is valid or not and throw an exception if it is not valid
+     * ( if one of the arguments is null or empty or less than 0) except the image
+     *
+     * @throws InvalidMealInformationAdminException if the meal information is not valid except the image
+     */
+    @JsonIgnore
+    public void checkValidityExceptImage() throws InvalidMealInformationAdminException {
         if (this.label == null || this.label.isEmpty()) {
             throw new InvalidMealInformationAdminException("LABEL_IS_MANDATORY");
         }
-        if  (this.label.length() > 100 ) {
+        if (this.label.length() > 100) {
             throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
         }
         if (this.description == null || this.description.isEmpty()) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_MANDATORY");
         }
-        if (this.description.length() > 600 ) {
+        if (this.description.length() > 600) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_LONG");
         }
         if (this.categorie == null || this.categorie.isEmpty()) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_MANDATORY");
         }
-        if (this.categorie.length() > 45 ) {
+        if (this.categorie.length() > 45) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
         }
 
@@ -74,11 +112,7 @@ public class MealDtoIn implements Serializable {
         if (this.status == null || this.status < 0) {
             throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
         }
-        if (this.image == null || this.image.isEmpty()) {
-            throw new InvalidMealInformationAdminException("IMAGE_IS_MANDATORY");
-        }
     }
-
 
     public String getCategorie() {
         return categorie;
