@@ -99,4 +99,29 @@ public class ImageService implements IImageService {
         return this.uploadImage(image, path);
     }
 
+    @Override
+    public String getImageExtension(String ImageName) throws InvalidImageException {
+        if (ImageName == null || ImageName.isEmpty()) {
+            ImageService.LOG.error("CAN'T GET IMAGE EXTENSION BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE getImageExtension METHOD ");
+            throw new InvalidImageException("INVALID IMAGE NAME ");
+        }
+        var extension = "";
+        try {
+            extension = ImageName.substring(ImageName.lastIndexOf('.'));
+        } catch (Exception e) {
+            ImageService.LOG.error("CAN'T GET IMAGE EXTENSION BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE getImageExtension METHOD ");
+            throw new InvalidImageException("INVALID IMAGE NAME");
+        }
+        if (extension == null || extension.isEmpty()
+                || (!extension.equals(".png")
+                && !extension.equals(".jpg")
+                && !extension.equals(".jpeg"))
+        ) {
+            ImageService.LOG.error("CAN'T GET IMAGE EXTENSION BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE getImageExtension METHOD ");
+            throw new InvalidImageException("INVALID IMAGE NAME");
+
+        }
+
+        return extension;
+    }
 }

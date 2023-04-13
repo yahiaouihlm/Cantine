@@ -70,4 +70,15 @@ public interface IImageService {
      */
 
     String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidTypeImageException, InvalidImageException, IOException;
+
+    /**
+     * this method is used to get the image extension
+     *
+     * @param ImageName the image name
+     * @return String the image extension
+     * @throws InvalidImageException if the extension is invalid (null or empty) or different from jpg or png or jpeg
+     */
+    String getImageExtension(String ImageName) throws InvalidImageException;
+
+
 }
