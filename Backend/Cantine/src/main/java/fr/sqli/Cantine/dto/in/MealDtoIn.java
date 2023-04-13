@@ -10,11 +10,11 @@ import java.math.BigDecimal;
 
 public class MealDtoIn implements Serializable {
 
-    private String categorie;
+    private String category;
     private String description;
     private String label;
-    private BigDecimal prixht;
-    private Integer quantite;
+    private BigDecimal price;
+    private Integer quantity;
     private Integer status;
 
     private MultipartFile image;
@@ -52,11 +52,11 @@ public class MealDtoIn implements Serializable {
     @JsonIgnore
     public MealEntity createMealEntity() throws InvalidMealInformationAdminException {
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setCategorie(this.categorie);
+        mealEntity.setCategory(this.category);
         mealEntity.setDescription(this.description);
         mealEntity.setLabel(this.label);
-        mealEntity.setPrixht(this.prixht);
-        mealEntity.setQuantite(this.quantite);
+        mealEntity.setPrice(this.price);
+        mealEntity.setQuantity(quantity);
         mealEntity.setStatus(this.status);
         return mealEntity;
     }
@@ -95,18 +95,18 @@ public class MealDtoIn implements Serializable {
         if (this.description.length() > 600) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_LONG");
         }
-        if (this.categorie == null || this.categorie.isEmpty()) {
+        if (this.category == null || this.category.isEmpty()) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_MANDATORY");
         }
-        if (this.categorie.length() > 45) {
+        if (this.category.length() > 45) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
         }
 
-        if (this.prixht == null || this.prixht.compareTo(BigDecimal.ZERO) < 0) {
+        if (this.price == null || this.price.compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidMealInformationAdminException("PRICE_IS_MANDATORY");
         }
 
-        if (this.quantite == null || this.quantite < 0) {
+        if (this.quantity == null || this.quantity < 0) {
             throw new InvalidMealInformationAdminException("QUANTITY_IS_MANDATORY");
         }
         if (this.status == null || this.status < 0) {
@@ -114,12 +114,12 @@ public class MealDtoIn implements Serializable {
         }
     }
 
-    public String getCategorie() {
-        return categorie;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getDescription() {
@@ -138,20 +138,20 @@ public class MealDtoIn implements Serializable {
         this.label = label;
     }
 
-    public BigDecimal getPrixht() {
-        return prixht;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPrixht(BigDecimal prixht) {
-        this.prixht = prixht;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public Integer getQuantite() {
-        return quantite;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setQuantite(Integer quantite) {
-        this.quantite = quantite;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Integer getStatus() {

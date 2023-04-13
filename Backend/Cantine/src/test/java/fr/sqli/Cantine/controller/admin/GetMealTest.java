@@ -27,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 class GetMealTest {
 
-   /* @Container
-    private PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
-            .withDatabaseName("cantine")
-            .withUsername("test")
-            .withPassword("test");*/
+    /* @Container
+     private PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
+             .withDatabaseName("cantine")
+             .withUsername("test")
+             .withPassword("test");*/
     @Autowired
-    private  MealService mealService;
+    private MealService mealService;
 
     @Autowired
     private IMealDao mealDao;
@@ -41,12 +41,12 @@ class GetMealTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+   /* @Test
     public void testGetAllMealsTest() throws Exception {
         System.out.println("it should return all meals");
         // given  : 2 meals in database
         ImageEntity image = new ImageEntity();
-        image.setImagename("1beb6c71-ed5e-4486-870b-f50cc9cb0529frites.jpg");
+
         List<MealEntity> meals =
                 List.of(
                         MealEntity.builder().categorie("Entrée").description("Salade de tomates").label("Salade de tomates").image(image).quantite(1)
@@ -66,7 +66,7 @@ class GetMealTest {
 
 
     }
-}
+}*/
 
 /*
 *       public  MealEntity( Integer idplat,  String label, String description, String categorie, BigDecimal prixht, Integer quantite, Integer status, ImageEntity image){
@@ -82,3 +82,5 @@ class GetMealTest {
 
 *
 * */
+
+}

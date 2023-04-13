@@ -5,7 +5,7 @@ import java.util.List;
 import jakarta.persistence.*;
 
 
-@Entity
+/*@Entity
 @Table(name="role")
 
 public class RoleEntity implements Serializable {
@@ -61,4 +61,4 @@ public class RoleEntity implements Serializable {
         this.users = users;
     }
 
-}
+}*/

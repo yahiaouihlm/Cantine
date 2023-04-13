@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import jakarta.persistence.*;
+/*
 @Entity
 @Table(name="menu")
 public class MenuEntity implements Serializable {
@@ -167,4 +168,4 @@ public class MenuEntity implements Serializable {
         return quantite;
     }
 
-}
+}*/

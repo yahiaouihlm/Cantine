@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import  jakarta.persistence.*;
-@Entity
+/*@Entity
 @Table(name = "confirmationtoken")
 public class ConfirmationToken {
 
@@ -81,3 +81,4 @@ public class ConfirmationToken {
     }
 }
 
+*/

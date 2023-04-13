@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
+/*@Entity
 @Table(name = "users")
 
 public class UserEntity implements Serializable {
@@ -62,12 +62,14 @@ public class UserEntity implements Serializable {
         this.birthday = birthday;
         this.password =  password ;
     }
+    */
+
 
     /**
      * @doc :   Initialize the 'creationDate', 'status', and 'credit' fields of the user with respectively the welcome date, the value 0 for the status (disabled account), and the value 0 for the credit.
      *
      */
-    public void UserInit (){
+  /*  public void UserInit (){
            this.creationDate = LocalDate.now();
            this.status = 0 ;
            this.credit = new BigDecimal(0) ;
@@ -177,4 +179,4 @@ public class UserEntity implements Serializable {
     public void setImage(ImageEntity image) {
         this.image = image;
     }
-}
+}*/

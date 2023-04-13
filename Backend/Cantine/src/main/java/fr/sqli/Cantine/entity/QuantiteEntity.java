@@ -3,7 +3,8 @@ package fr.sqli.Cantine.entity;
 import java.io.Serializable;
 import java.util.List;
 import  jakarta.persistence.*;
-@Entity
+
+/*@Entity
 @Table(name="quantite")
 public class QuantiteEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -82,4 +83,4 @@ public class QuantiteEntity implements Serializable {
         this.plat = plat;
     }
 
-}
+}*/

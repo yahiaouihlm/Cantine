@@ -5,7 +5,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 import  jakarta.persistence.*;
-@Entity
+/*@Entity
 
 @Table(name="commande")
 public class OrderEntity implements Serializable {
@@ -119,4 +119,4 @@ public class OrderEntity implements Serializable {
         this.plats = plats;
     }
 
-}
+} */

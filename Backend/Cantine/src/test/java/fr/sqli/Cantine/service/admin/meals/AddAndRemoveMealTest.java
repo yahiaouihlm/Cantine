@@ -54,9 +54,9 @@ class AddAndRemoveMealTest {
         this.mealEntity = new MealEntity();
         this.mealEntity.setIdplat(1);
         this.mealEntity.setStatus(1);
-        this.mealEntity.setPrixht(BigDecimal.valueOf(1.3));
-        this.mealEntity.setQuantite(1);
-        this.mealEntity.setCategorie("Frites");
+        this.mealEntity.setPrice(BigDecimal.valueOf(1.3));
+        this.mealEntity.setQuantity(1);
+        this.mealEntity.setCategory("Frites");
         this.mealEntity.setDescription("first Meal To  Test");
         this.mealEntity.setLabel("Meal 1");
         this.mealEntity.setImage(new ImageEntity());
@@ -123,9 +123,9 @@ class AddAndRemoveMealTest {
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategorie("Frites");
         this.mealDtoIn.setDescription("first Meal To  Test");
-        this.mealDtoIn.setPrixht(BigDecimal.valueOf(-1.3));
+        this.mealDtoIn.setPrice(BigDecimal.valueOf(-1.3));
         this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
-        this.mealDtoIn.setQuantite(1);
+        this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
         Assertions.assertThrows(InvalidMealInformationAdminException.class,
                 () -> mealService.addMeal(mealDtoIn));

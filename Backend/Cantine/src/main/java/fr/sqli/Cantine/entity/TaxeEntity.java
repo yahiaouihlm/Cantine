@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@Entity
+/*@Entity
 @Table(name="taxe")
 
 public class TaxeEntity implements Serializable {
@@ -39,4 +39,4 @@ public class TaxeEntity implements Serializable {
         this.taxe = taxe;
     }
 
-}
+}*/

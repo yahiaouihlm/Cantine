@@ -9,17 +9,17 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="plat")
+@Table(name="meal")
 public class MealEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique=true, nullable=false)
-    private Integer idplat;
+    private Integer id;
 
     @Column(nullable=false, length=45)
-    private String categorie;
+    private String category ;
 
     @Column(nullable=false, length=2147483647)
     private String description;
@@ -28,16 +28,16 @@ public class MealEntity implements Serializable {
     private String label;
 
     @Column(nullable=false, precision=5, scale=2)
-    private BigDecimal prixht;
+    private BigDecimal price ;
 
 
-    private Integer quantite;
+    private Integer quantity ;
 
     @Column(nullable=false)
     private Integer status;
 
     //bi-directional many-to-many association to MenuEntity
-    @ManyToMany()
+ /*  @ManyToMany()
     @JoinTable(
             name="menu_has_plat"
             , joinColumns={
@@ -48,14 +48,14 @@ public class MealEntity implements Serializable {
     }
     )
     private List<MenuEntity> menus;
-
+ */
     //bi-directional many-to-one association to ImageEntity
     @ManyToOne(cascade =  CascadeType.ALL)
     @JoinColumn(name="image_idimage", nullable=false)
     private ImageEntity image;
 
     //bi-directional many-to-many association to CommandeEntity
-    @ManyToMany
+  /*  @ManyToMany
     @JoinTable(
             name="plat_has_commande"
             , joinColumns={
@@ -69,41 +69,32 @@ public class MealEntity implements Serializable {
 
     //bi-directional many-to-one association to QuantiteEntity
     @OneToMany(mappedBy="plat")
-    private List<QuantiteEntity> quantites;
+    private List<QuantiteEntity> quantites;*/
 
-    public  MealEntity( Integer idplat,  String label, String description, String categorie, BigDecimal prixht, Integer quantite, Integer status, ImageEntity image){
-        this.idplat = idplat;
-        this.label = label;
-        this.description = description;
-        this.categorie = categorie;
-        this.prixht = prixht;
-        this.quantite = quantite;
-        this.status = status;
-        this.image = image;
-    }
+
 
     public MealEntity() {
 
     }
 
-    public Integer getIdplat() {
-        return this.idplat;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdplat(Integer idplat) {
-        this.idplat = idplat;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getCategorie() {
-        return this.categorie;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     public void setDescription(String description) {
@@ -111,54 +102,46 @@ public class MealEntity implements Serializable {
     }
 
     public String getLabel() {
-        return this.label;
+        return label;
     }
 
     public void setLabel(String label) {
         this.label = label;
     }
 
-    public BigDecimal getPrixht() {
-        return this.prixht;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPrixht(BigDecimal prixht) {
-        this.prixht = prixht;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public Integer getQuantite() {
-        return this.quantite;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setQuantite(Integer quantite) {
-        this.quantite = quantite;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Integer getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public List<MenuEntity> getMenus() {
-        return this.menus;
-    }
-
-    public void setMenus(List<MenuEntity> menus) {
-        this.menus = menus;
-    }
-
     public ImageEntity getImage() {
-        return this.image;
+        return image;
     }
 
     public void setImage(ImageEntity image) {
         this.image = image;
     }
 
-    public List<OrderEntity> getCommandes() {
+/* public List<OrderEntity> getCommandes() {
         return this.commandes;
     }
 
@@ -187,5 +170,14 @@ public class MealEntity implements Serializable {
 
         return quantite;
     }
+
+    public List<MenuEntity> getMenus() {
+        return this.menus;
+    }
+
+    public void setMenus(List<MenuEntity> menus) {
+        this.menus = menus;
+    }
+*/
 
 }
