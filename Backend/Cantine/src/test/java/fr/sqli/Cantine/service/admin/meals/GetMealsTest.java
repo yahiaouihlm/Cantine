@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@SpringBootTest
+
 @ExtendWith(MockitoExtension.class)
 class GetMealsTest {
 
@@ -41,21 +42,40 @@ class GetMealsTest {
     MultipartFile multipartFile;
     @Mock
     IImageService imageService;
-    @Autowired
-    Environment environment;
+    @Mock
+    MockEnvironment environment;
 
 
     @BeforeEach
     void setUp() throws MealNotFoundAdminException, InvalidMealInformationAdminException {
+        this.environment = new MockEnvironment();
+        this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
         this.iMealService = new MealService(environment, iMealDao, null);
-        this.mealEntity = new MealEntity(1, "Meal 1", "first Meal To  Test ", "Frites", new BigDecimal("1.3"), 1, 1, new ImageEntity());
+        this.mealEntity = new MealEntity();
+        this.mealEntity.setIdplat(1);
+        this.mealEntity.setStatus(1);
+        this.mealEntity.setPrixht(BigDecimal.valueOf(1.3));
+        this.mealEntity.setQuantite(1);
+        this.mealEntity.setCategorie("Frites");
+        this.mealEntity.setDescription("first Meal To  Test");
+        this.mealEntity.setLabel("Meal 1");
+        this.mealEntity.setImage(new ImageEntity());
 
     }
 
     @Test
     @DisplayName("Test getAllMeals() with list of 2 elements")
     void getAllMealsWithListOf2Elements() {
-        var meal2 = new MealEntity(2, "Meal 2", "firt Meal To  Test 2  ", "Frites", new BigDecimal("1.3"), 1, 1, new ImageEntity());
+        var meal2 = new MealEntity();
+        meal2.setIdplat(2);
+        meal2.setStatus(1);
+        meal2.setPrixht(BigDecimal.valueOf(1.3));
+        meal2.setQuantite(1);
+        meal2.setCategorie("Frites");
+        meal2.setDescription("firt Meal To  Test 2  ");
+        meal2.setLabel("Meal 2");
+        meal2.setImage(new ImageEntity());
+
         final var ListToFindAsEntity = List.of(this.mealEntity, meal2);
 
         final var ListToGetAsDtout = List.of(this.mealEntity, meal2).stream().map(meal -> new MealDtout(meal, this.environment.getProperty("sqli.cantine.images.url.meals"))).toList();

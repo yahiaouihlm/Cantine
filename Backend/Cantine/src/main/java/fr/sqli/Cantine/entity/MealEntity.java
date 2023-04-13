@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name="plat")
 public class MealEntity implements Serializable {
@@ -68,8 +71,6 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;
 
-    public MealEntity() {
-    }
     public  MealEntity( Integer idplat,  String label, String description, String categorie, BigDecimal prixht, Integer quantite, Integer status, ImageEntity image){
         this.idplat = idplat;
         this.label = label;
@@ -79,6 +80,10 @@ public class MealEntity implements Serializable {
         this.quantite = quantite;
         this.status = status;
         this.image = image;
+    }
+
+    public MealEntity() {
+
     }
 
     public Integer getIdplat() {

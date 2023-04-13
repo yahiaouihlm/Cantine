@@ -3,12 +3,14 @@ package fr.sqli.Cantine.controller.admin;
 import java.io.File;
 
 public interface IAdminEndPoints {
-    String ENDPOINT_ADD_MEAL_URL = "cantine/admin/meals/add";
-    String ENDPOINT_DELETE_MEAL_URL = "cantine/admin/meals/delete";
 
-    String ENDPOINT_UPDATE_MEAL_URL = "cantine/admin/meals/update";
-    String ENDPOINT_GET_ONE_MEAL_URL = "cantine/admin/meals/getOne";
-    String ENDPOINT_GET_ALL_MEALS_URL = "cantine/admin/meals/getAll";
+    String MEALS_URL_ADMIN = "/cantine/api/admin/meals";
+    String ENDPOINT_ADD_MEAL_URL = "/add";
+    String ENDPOINT_DELETE_MEAL_URL = "/delete";
+
+    String ENDPOINT_UPDATE_MEAL_URL = "/update";
+    String ENDPOINT_GET_ONE_MEAL_URL = "/getOne";
+    String ENDPOINT_GET_ALL_MEALS_URL = "/getAll";
 
 
 

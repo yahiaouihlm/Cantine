@@ -46,7 +46,17 @@ public class UpdateMealTest {
         env = new MockEnvironment();
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
         mealService = new MealService(env, mealDao, imageService);
-        this.mealEntity = new MealEntity(1, "Meal 1", "first Meal To  Test", "Frites", new BigDecimal("1.3"), 1, 1, new ImageEntity());
+        this.mealEntity = new MealEntity();
+
+        this.mealEntity.setImage(new ImageEntity());
+        this.mealEntity.setIdplat(1);
+        this.mealEntity.setPrixht(new BigDecimal("1.3"));
+        this.mealEntity.setQuantite(1);
+        this.mealEntity.setStatus(1);
+        this.mealEntity.setCategorie("Frites");
+        this.mealEntity.setDescription("first Meal To  Test");
+        this.mealEntity.setLabel("Meal 1");
+
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategorie("Frites");

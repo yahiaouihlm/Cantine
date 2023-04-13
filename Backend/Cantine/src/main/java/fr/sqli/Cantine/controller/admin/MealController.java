@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+import static fr.sqli.Cantine.controller.admin.IAdminEndPoints.MEALS_URL_ADMIN;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
+@RequestMapping(value = MEALS_URL_ADMIN)
 public class MealController implements IAdminEndPoints {
 
 

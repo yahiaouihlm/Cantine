@@ -23,7 +23,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +30,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-@SpringBootTest
+
 @ExtendWith(MockitoExtension.class)
 class AddAndRemoveMealTest {
 
@@ -52,7 +51,15 @@ class AddAndRemoveMealTest {
         env = new MockEnvironment();
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
         mealService = new MealService(env, mealDao, imageService);
-        this.mealEntity = new MealEntity(1, "Meal 1", "first Meal To  Test", "Frites", new BigDecimal("1.3"), 1, 1, new ImageEntity());
+        this.mealEntity = new MealEntity();
+        this.mealEntity.setIdplat(1);
+        this.mealEntity.setStatus(1);
+        this.mealEntity.setPrixht(BigDecimal.valueOf(1.3));
+        this.mealEntity.setQuantite(1);
+        this.mealEntity.setCategorie("Frites");
+        this.mealEntity.setDescription("first Meal To  Test");
+        this.mealEntity.setLabel("Meal 1");
+        this.mealEntity.setImage(new ImageEntity());
 
     }
 
@@ -188,8 +195,6 @@ class AddAndRemoveMealTest {
         this.mealDtoIn.setQuantite(1);
         this.mealDtoIn.setStatus(1);
 
-        Mockito.when(env.getProperty("sqli.cantine.images.url.meals")).thenReturn("/images/meals");
-
 
         String imageName = "test-image.jpg";
         Mockito.when(imageService.uploadImage(mealDtoIn.getImage(), "images/meals")).thenReturn(imageName);
@@ -199,7 +204,7 @@ class AddAndRemoveMealTest {
         Mockito.when(this.mealDao.save(Mockito.any(MealEntity.class))).thenReturn(mealEntity);
 
         // Call the method
-        MealEntity result = mealService.addMeal(mealDtoIn);
+        MealEntity result = this.mealService.addMeal(mealDtoIn);
 
         // Verify the result
         Assertions.assertNotNull(result);
