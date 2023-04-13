@@ -27,11 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 class GetMealTest {
 
-    /* @Container
+     @Container
      private PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
-             .withDatabaseName("cantine")
+             .withDatabaseName("testcantine")
              .withUsername("test")
-             .withPassword("test");*/
+             .withPassword("test");
     @Autowired
     private MealService mealService;
 
@@ -41,7 +41,7 @@ class GetMealTest {
     @Autowired
     private MockMvc mockMvc;
 
-   /* @Test
+   @Test
     public void testGetAllMealsTest() throws Exception {
         System.out.println("it should return all meals");
         // given  : 2 meals in database
@@ -49,10 +49,10 @@ class GetMealTest {
 
         List<MealEntity> meals =
                 List.of(
-                        MealEntity.builder().categorie("Entrée").description("Salade de tomates").label("Salade de tomates").image(image).quantite(1)
-                                .prixht(new BigDecimal("2.3")).status(1).build(),
-                        MealEntity.builder().categorie("Entrée").description("Salade de tomates").label("tacos").image(image).quantite(2)
-                                .prixht(new BigDecimal("8.6")).status(1).build()
+                        MealEntity.builder().category("Entrée").description("Salade de tomates").label("Salade de tomates").image(image).quantity(1)
+                                .price(new BigDecimal("2.3")).status(1).build(),
+                        MealEntity.builder().category("Entrée").description("Salade de tomates").label("tacos").image(image).quantity(2)
+                                .price(new BigDecimal("8.6")).status(1).build()
                 );
         mealDao.saveAll(meals);
 
@@ -66,21 +66,5 @@ class GetMealTest {
 
 
     }
-}*/
-
-/*
-*       public  MealEntity( Integer idplat,  String label, String description, String categorie, BigDecimal prixht, Integer quantite, Integer status, ImageEntity image){
-        this.idplat = idplat;
-        this.label = label;
-        this.description = description;
-        this.categorie = categorie;
-        this.prixht = prixht;
-        this.quantite = quantite;
-        this.status = status;
-        this.image = image;
-    }
-
-*
-* */
 
 }

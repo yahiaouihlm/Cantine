@@ -1,11 +1,14 @@
 package fr.sqli.Cantine.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+
 @Table(name="image")
 public class ImageEntity  implements Serializable {
     @Id
@@ -30,7 +33,7 @@ public class ImageEntity  implements Serializable {
   //  @OneToMany(mappedBy="image")
    // private List<UserEntity> users;
 
-    public ImageEntity() {}
+
 
     public Integer getIdimage() {
         return idimage;

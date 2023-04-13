@@ -49,21 +49,21 @@ public class UpdateMealTest {
         this.mealEntity = new MealEntity();
 
         this.mealEntity.setImage(new ImageEntity());
-        this.mealEntity.setIdplat(1);
-        this.mealEntity.setPrixht(new BigDecimal("1.3"));
-        this.mealEntity.setQuantite(1);
+        this.mealEntity.setId(1);
+        this.mealEntity.setPrice(new BigDecimal("1.3"));
+        this.mealEntity.setQuantity(1);
         this.mealEntity.setStatus(1);
-        this.mealEntity.setCategorie("Frites");
+        this.mealEntity.setCategory("Frites");
         this.mealEntity.setDescription("first Meal To  Test");
         this.mealEntity.setLabel("Meal 1");
 
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
-        this.mealDtoIn.setCategorie("Frites");
+        this.mealDtoIn.setCategory("Frites");
         this.mealDtoIn.setDescription("first Meal To  Test");
-        this.mealDtoIn.setPrixht(new BigDecimal("1.3"));
+        this.mealDtoIn.setPrice(new BigDecimal("1.3"));
         this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
-        this.mealDtoIn.setQuantite(1);
+        this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
     }
 
@@ -87,7 +87,7 @@ public class UpdateMealTest {
        var result = mealService.updateMeal(mealDtoIn, 1);
 
          Assertions.assertEquals("Meal 1 Updated", result.getLabel());
-         Assertions.assertEquals("Frites", result.getCategorie());
+         Assertions.assertEquals("Frites", result.getCategory());
          Mockito.verify(mealDao, Mockito.times(1)).findById(1);
          Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
 
@@ -123,7 +123,7 @@ public class UpdateMealTest {
     @Test
     @DisplayName("Update Meal With NULL Label")
     void updateMealTestWithNullPrice() {
-        this.mealDtoIn.setPrixht(null);
+        this.mealDtoIn.setPrice(null);
         Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
             mealService.updateMeal(mealDtoIn, 1);
         });

@@ -52,11 +52,11 @@ class GetMealsTest {
         this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
         this.iMealService = new MealService(environment, iMealDao, null);
         this.mealEntity = new MealEntity();
-        this.mealEntity.setIdplat(1);
+        this.mealEntity.setId(1);
         this.mealEntity.setStatus(1);
-        this.mealEntity.setPrixht(BigDecimal.valueOf(1.3));
-        this.mealEntity.setQuantite(1);
-        this.mealEntity.setCategorie("Frites");
+        this.mealEntity.setPrice(BigDecimal.valueOf(1.3));
+        this.mealEntity.setQuantity(1);
+        this.mealEntity.setCategory("Frites");
         this.mealEntity.setDescription("first Meal To  Test");
         this.mealEntity.setLabel("Meal 1");
         this.mealEntity.setImage(new ImageEntity());
@@ -67,11 +67,11 @@ class GetMealsTest {
     @DisplayName("Test getAllMeals() with list of 2 elements")
     void getAllMealsWithListOf2Elements() {
         var meal2 = new MealEntity();
-        meal2.setIdplat(2);
+        meal2.setId(2);
         meal2.setStatus(1);
-        meal2.setPrixht(BigDecimal.valueOf(1.3));
-        meal2.setQuantite(1);
-        meal2.setCategorie("Frites");
+        meal2.setPrice(BigDecimal.valueOf(1.3));
+        meal2.setQuantity(1);
+        meal2.setCategory("Frites");
         meal2.setDescription("firt Meal To  Test 2  ");
         meal2.setLabel("Meal 2");
         meal2.setImage(new ImageEntity());
@@ -122,8 +122,8 @@ class GetMealsTest {
         MealDtout shouldBeresult = new MealDtout(this.mealEntity, urlMealImage);
 
         Assertions.assertEquals(shouldBeresult.getId(), resultTest.getId());
-        Assertions.assertEquals(shouldBeresult.getCategorie(), resultTest.getCategorie());
-        Assertions.assertEquals(shouldBeresult.getPrixht(), resultTest.getPrixht());
+        Assertions.assertEquals(shouldBeresult.getCategory(), resultTest.getCategory());
+        Assertions.assertEquals(shouldBeresult.getPrice(), resultTest.getPrice());
 
         Mockito.verify(this.iMealDao).findById(idMeal);
     }

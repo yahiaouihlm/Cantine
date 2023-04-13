@@ -5,9 +5,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name="meal")
 public class MealEntity implements Serializable {
