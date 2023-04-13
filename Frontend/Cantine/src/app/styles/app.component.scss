@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap');
+$navbar-color: #002b5c; //  la couleur de la nav qui  sort depuis  la gauche
+$iconnav-color : rgb(188, 204, 209);
+$navprincipale-color: #004a9f ;  // la couleur de La Nav toutes en  haut qui  contient le titre
+
+
+
+mat-toolbar{
+  //  La  couleur de  La NavBar
+  background:$navprincipale-color ;
+  color: white;
+  .not-connect-login-small {
+    display: none;
+  }
+}
+
+mat-sidenav{
+  margin: 16px;
+  width: 200px;
+  border-right:none ;
+  background: $navbar-color;
+  color: white;
+  border-radius: 15px;
+  padding: 16px;
+  text-align: center;
+  margin-left: 5px;
+}
+
+//  ce qui  il  y'a  au  milieur
+.content {
+  height: calc(100vh - 98px);
+  margin: 16px;
+  margin-left: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 2rem;
+  color: lightgray;
+  border: 10px;
+}
+mat-sidenav-container{
+  height: calc(100vh - 65px);
+}
+
+.menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1rem;
+  background-color: $navbar-color ;
+  border: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: $iconnav-color;
+
+  mat-icon {
+    margin-right: 8px;
+    margin-bottom: 3px;
+  }
+}
+.menu-button:hover {
+  background-color: #fcfcfc;
+  color: #000;
+  cursor: pointer;
+}
+
+.avatar {
+  margin-top: 16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.name {
+  margin-top: 0px;
+  font-weight: normal;
+
+}
+
+.designation {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  color: lightgrey;
+
+}
+
+mat-divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.burgger{
+  background-color:$navprincipale-color ;
+  border: none;
+  color:$iconnav-color ;
+}
+
+.badge{
+  width: 8px;
+}
+
+.logo-container{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
+
+  .connect{
+    align-items: space-between;
+    padding-top: 5px;
+    button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 1rem;
+      background-color: $navprincipale-color;
+      border: none;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      color: rgb(220, 226, 238);
+      margin-right: 10px;
+
+      mat-icon {
+        margin-right: 12px;
+        margin-bottom: 1px;
+      }
+    }
+    button:hover {
+      background-color: #fcfcfc;
+      color: #000;
+      cursor: pointer;
+    }
+
+  }
+  img{
+    width: 45px;
+  }
+}
+
+
+//  le  container principale
+.container{
+  width: 100%;
+}
+.border-for-user {
+  margin-left: 10px;
+}
+.paddingForLogoWhenConnectedUser{
+  margin-right: 9vw ;
+}
+
+@media(max-width : 900px){
+  .container{
+    width: 100%;
+    margin-left: 0px;
+    background-color: red;
+  }
+  mat-toolbar {
+    .not-connect-login-small {
+      display: flex;
+      margin-right: 1%;
+    }
+  }
+
+  .logo-container{
+
+    width: 100%;
+    justify-content: center;
+
+    .connect {
+      button {
+        display: none;
+
+        mat-icon {
+          margin-right: 6px;
+        }
+      }
+    }
+    .sqli{
+      display: none;
+    }
+    img{
+
+      width: 40px;
+
+    }
+
+  }
+}
+
+@media(max-width : 300px){
+  .logo-container{
+    img{
+      width: 30px;
+    }
+  }
+}
