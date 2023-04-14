@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin.meals.exceptions;
+package fr.sqli.Cantine.service.admin.exceptions;
 
 public class ExistingMeal extends Exception {
     public ExistingMeal(String message) {

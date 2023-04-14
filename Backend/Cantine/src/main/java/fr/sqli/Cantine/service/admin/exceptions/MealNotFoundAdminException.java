@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin.meals.exceptions;
+package fr.sqli.Cantine.service.admin.exceptions;
 
 public class MealNotFoundAdminException extends  Exception {
     public MealNotFoundAdminException(String message) {

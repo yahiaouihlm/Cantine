@@ -14,6 +14,7 @@ import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface IMealService {
 
@@ -53,16 +54,17 @@ public interface IMealService {
 
 
     /**
-     *   this methode is  used  to  check if the meal is already present in the database or not with the same label, description and category
-     *    if the meal is present in the database it will throw an ExistingMeal exception
-     * @param label the label of the meal
+     * this methode is  used  to  check if the meal is already present in the database or not with the same label, description and category
+     * if the meal is present in the database it will throw an ExistingMeal exception
+     *
+     * @param label       the label of the meal
      * @param description the description of the meal
-     * @param category the category of the meal
+     * @param category    the category of the meal
      * @throws ExistingMeal if the meal is already present in the database with the same label, description and category
      */
-    void    checkExistMeal(String label, String description, String category ) throws ExistingMeal;
+    Optional<MealEntity> checkExistMeal (String label, String description, String category) throws ExistingMeal;
 
-    MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+    MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal;
 
 
     /**
@@ -108,6 +110,7 @@ public interface IMealService {
      * @throws MealNotFoundAdminException           if the meal is not found
      */
     MealDtout getMealByID(Integer id) throws InvalidMealInformationAdminException, MealNotFoundAdminException;
+
 
 
 }

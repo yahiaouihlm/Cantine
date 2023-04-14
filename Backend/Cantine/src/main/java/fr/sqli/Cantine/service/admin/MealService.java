@@ -1,5 +1,6 @@
 package fr.sqli.Cantine.service.admin;
 
+import fr.sqli.Cantine.dao.IImageDao;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -30,6 +32,7 @@ public class MealService implements IMealService {
     private final IMealDao mealDao;
     private final String MEALS_IMAGES_URL;
     private final IImageService imageService;
+
 
     @Autowired
     public MealService(Environment env, IMealDao mealDao, IImageService imageService) {
@@ -40,10 +43,9 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
-        IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", idMeal);
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
+        IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
-
 
         var overemotional = this.mealDao.findById(idMeal);
         if (overemotional.isEmpty()) {
@@ -58,20 +60,28 @@ public class MealService implements IMealService {
         meal.setQuantity(mealEntity.getQuantity());
         meal.setStatus(mealEntity.getStatus());
 
+        //check  if the  meal  is  already  present  in  the  database despite  the  update
+        Optional<MealEntity> mealEntity1 = this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
+        if (mealEntity1.isPresent()){
+            if (mealEntity1.get().getId() != meal.getId()) {
+                throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
+            }
+        }
+
         // if  the  image is  not  null  we  update  the  image of  the  meal
-        if (mealDtoIn.getImage() != null) {
+        if (mealDtoIn.getImage() != null && !mealDtoIn.getImage().isEmpty()) {
             var oldImageName = meal.getImage().getImagename();
             var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(), "images/meals");
-            var image = new ImageEntity();
-            image.setImagename(newImageName);
-            meal.setImage(image);
+
+            meal.getImage().setImagename(newImageName);
+
         }
         return this.mealDao.save(meal);
     }
 
     @Override
     public MealEntity removeMeal(Integer id) throws InvalidMealInformationAdminException, MealNotFoundAdminException, RemoveMealAdminException, ImagePathException {
-        IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", id);
+        IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
 
         var overemotional = this.mealDao.findById(id);
         if (overemotional.isEmpty()) {
@@ -95,7 +105,9 @@ public class MealService implements IMealService {
     @Override
     public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         MealEntity meal = mealDtoIn.toMealEntity();
-        this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
+        if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
+            throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
+        }
         MultipartFile image = mealDtoIn.getImage();
         var imagename = this.imageService.uploadImage(image, "images/meals");
         ImageEntity imageEntity = new ImageEntity();
@@ -125,13 +137,12 @@ public class MealService implements IMealService {
     }
 
 
+
     @Override
-    public void checkExistMeal(String label, String category, String description) throws ExistingMeal {
-         var result = this.mealDao.existsByLabelAndAndCategoryAndDescription(label,  category , description );
-        if (result) {
-            throw new ExistingMeal("THE MEAL WITH THE LABEL :  " + label + " AND THE DESCRIPTION : " + description + " AND THE CATEGORY : " + category + " ALREADY EXISTS");
-        }
+    public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMeal {
+        return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label.trim().toLowerCase(),  category.trim().toLowerCase() , description.trim().toLowerCase() );
 
     }
+
 
 }
