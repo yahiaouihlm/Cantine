@@ -83,13 +83,13 @@ public class MealDtoIn implements Serializable {
      */
     @JsonIgnore
     public void checkValidityExceptImage() throws InvalidMealInformationAdminException {
-        if (this.label == null || this.label.isEmpty()) {
+        if (this.label == null || this.label.trim().isEmpty()) {
             throw new InvalidMealInformationAdminException("LABEL_IS_MANDATORY");
         }
-        if (this.description == null || this.description.isEmpty()) {
+        if (this.description == null || this.description.trim().isEmpty()) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_MANDATORY");
         }
-        if (this.category == null || this.category.isEmpty()) {
+        if (this.category == null || this.category.trim().isEmpty()) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_MANDATORY");
         }
         if (this.price == null) {
@@ -99,14 +99,14 @@ public class MealDtoIn implements Serializable {
             throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
         }
 
-        if  (this.label.length() <  3 ) {
+        if  (this.label.trim().length() <  3 ) {
             throw new InvalidMealInformationAdminException("LABEL_IS_TOO_SHORT");
         }
         if (this.label.length() > 100) {
             throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
         }
 
-        if  (this.description.length() <  3 ) {
+        if  (this.description.trim().length() <  3 ) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_SHORT");
         }
 
@@ -118,7 +118,7 @@ public class MealDtoIn implements Serializable {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
         }
 
-        if  (this.category.length() <  3  ) {
+        if  (this.category.trim().length() <  3  ) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_SHORT");
         }
 
