@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS image(
     idimage SERIAL PRIMARY KEY,
     imageName VARCHAR(400) NOT NULL
-);
+)
 
 
 
@@ -26,6 +26,12 @@ CREATE TABLE IF NOT EXISTS meal(
     CHECK (status IN (0,1)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
-    unique (label, description , category),
-    FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE RESTRICT ON UPDATE RESTRICT
-);
+    unique (label, description, category),
+    FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
+    )
+
+
+
+
+
+
