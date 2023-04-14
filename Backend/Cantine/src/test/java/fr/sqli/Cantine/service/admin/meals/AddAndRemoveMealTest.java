@@ -7,6 +7,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 
 import fr.sqli.Cantine.service.admin.MealService;
+import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
@@ -60,26 +61,7 @@ class AddAndRemoveMealTest {
 
     }
 
-   /* @Test
-    @DisplayName("Test the addMeal method with valid meal")
-    void removeMealTestWithValidMeal() throws MealNotFoundAdminException, RemoveMealAdminException, ImagePathException, InvalidMealInformationAdminException {
-        this.mealEntity.setMenus(List.of()); // make  menu  with  empty list ==> meal  is not in association with menu
-        Mockito.when(mealDao.findById(1)).thenReturn(java.util.Optional.ofNullable(mealEntity));
-        Mockito.doNothing().when(this.imageService).deleteImage(null, "images/meals");
-        var result = mealService.removeMeal(1);
 
-        // tests
-        Assertions.assertEquals("Meal 1", result.getLabel());
-        Assertions.assertEquals("first Meal To  Test", result.getDescription());
-        Assertions.assertEquals("Frites", result.getCategory());
-        Assertions.assertEquals(BigDecimal.valueOf(1.3), result.getPrice());
-
-        ///  verify  the  calls  to  the  methods
-        Mockito.verify(mealDao, Mockito.times(1)).findById(1);  // the meal is found the method findById is called once
-        Mockito.verify(this.imageService, Mockito.times(1)).deleteImage(null, "images/meals"); // the image is deleted
-        Mockito.verify(mealDao, Mockito.times(1)).delete(this.mealEntity);
-    }
-*/
   /*  @Test
     @DisplayName("Test  removeMeal method with positive id and meal not in  association with menu ")
     void removeMealTestWithMealInAssociationWithMenu() {
@@ -112,7 +94,51 @@ class AddAndRemoveMealTest {
 
 
     /**************************** Add Meal Test ****************************/
+   /* @Test
+    @DisplayName("Test the addMeal method with valid meal")
+    void removeMealTestWithValidMeal() throws MealNotFoundAdminException, RemoveMealAdminException, ImagePathException, InvalidMealInformationAdminException {
+        this.mealEntity.setMenus(List.of()); // make  menu  with  empty list ==> meal  is not in association with menu
+        Mockito.when(mealDao.findById(1)).thenReturn(java.util.Optional.ofNullable(mealEntity));
+        Mockito.doNothing().when(this.imageService).deleteImage(null, "images/meals");
 
+        Mockito.when(this.mealDao.existsByLabelAndAndCategoryAndDescription ("Meal 1",  "Frites", "first Meal To  Test")).thenReturn(false);
+
+        var result = mealService.removeMeal(1);
+
+        // tests
+        Assertions.assertEquals("Meal 1", result.getLabel());
+        Assertions.assertEquals("first Meal To  Test", result.getDescription());
+        Assertions.assertEquals("Frites", result.getCategory());
+        Assertions.assertEquals(BigDecimal.valueOf(1.3), result.getPrice());
+
+        ///  verify  the  calls  to  the  methods
+        Mockito.verify(mealDao, Mockito.times(1)).findById(1);  // the meal is found the method findById is called once
+      Mockito.verify(this.mealDao, Mockito.times(1)).existsByLabelAndAndCategoryAndDescription ("Meal 1",  "Frites", "first Meal To  Test");
+
+        Mockito.verify(this.imageService, Mockito.times(1)).deleteImage(null, "images/meals"); // the image is deleted
+        Mockito.verify(mealDao, Mockito.times(1)).delete(this.mealEntity);
+    }
+*/
+
+    @Test
+    @DisplayName("Test the addMeal method with Existing meal")
+    void testAddMealWithExistingMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn = new MealDtoIn();
+        this.mealDtoIn.setLabel("Meal 1");
+        this.mealDtoIn.setCategory("Frites");
+        this.mealDtoIn.setDescription("first Meal To  Test");
+        this.mealDtoIn.setPrice(BigDecimal.valueOf(1.3));
+        this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
+        this.mealDtoIn.setQuantity(1);
+        this.mealDtoIn.setStatus(1);
+      //  Mockito.when(this.mealDao.findByLabel("Meal 1")).thenReturn(this.mealEntity);
+         Mockito.when(this.mealDao.existsByLabelAndAndCategoryAndDescription ("Meal 1",  "Frites", "first Meal To  Test")).thenReturn(true);
+        Assertions.assertThrows(ExistingMeal.class,
+                () -> mealService.addMeal(mealDtoIn));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+        Mockito.verify(this.mealDao, Mockito.times(1)).existsByLabelAndAndCategoryAndDescription ("Meal 1",  "Frites", "first Meal To  Test");
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
     @Test
     @DisplayName("Test the addMeal method with negative price")
     void testAddMealWithNegativePrice() throws InvalidTypeImageException, InvalidImageException, ImagePathException {
@@ -181,7 +207,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void testAddMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationAdminException {
+    public void testAddMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationAdminException, ExistingMeal {
 
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
