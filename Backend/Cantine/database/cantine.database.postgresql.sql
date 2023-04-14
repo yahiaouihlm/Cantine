@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS meal(
     label  VARCHAR(100) NOT NULL,
     description   TEXT NOT NULL ,
     price  DECIMAL(5,2) NOT NULL,
-    category   VARCHAR(45) NOT NULL,
+    category   VARCHAR(46) NOT NULL,
     image_idimage  INT NOT NULL ,
     quantity   INT    DEFAULT 0 ,
     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
@@ -26,6 +26,6 @@ CREATE TABLE IF NOT EXISTS meal(
     CHECK (status IN (0,1)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
-    unique (label, description , price, category),
+    unique (label, description , category),
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
