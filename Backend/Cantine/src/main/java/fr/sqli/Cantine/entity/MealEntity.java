@@ -10,8 +10,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 
-@Builder
-@AllArgsConstructor
+
 @Entity
 @Table(name="meal", uniqueConstraints={
         @UniqueConstraint(columnNames={"label", "description", "price", "category"})
@@ -82,7 +81,15 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/
 
-
+    public MealEntity(String category, String description, String label, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
+        this.category = category;
+        this.description = description;
+        this.label = label;
+        this.price = price;
+        this.quantity = quantity;
+        this.status = status;
+        this.image = image;
+    }
 
     public MealEntity() {
 
