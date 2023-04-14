@@ -86,31 +86,53 @@ public class MealDtoIn implements Serializable {
         if (this.label == null || this.label.isEmpty()) {
             throw new InvalidMealInformationAdminException("LABEL_IS_MANDATORY");
         }
-        if (this.label.length() > 100) {
-            throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
-        }
         if (this.description == null || this.description.isEmpty()) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_MANDATORY");
-        }
-        if (this.description.length() > 600) {
-            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_LONG");
         }
         if (this.category == null || this.category.isEmpty()) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_MANDATORY");
         }
+        if (this.price == null) {
+            throw new InvalidMealInformationAdminException("PRICE_IS_MANDATORY");
+        }
+        if (this.status == null ) {
+            throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
+        }
+
+        if  (this.label.length() <  3 ) {
+            throw new InvalidMealInformationAdminException("LABEL_IS_TOO_SHORT");
+        }
+        if (this.label.length() > 100) {
+            throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
+        }
+
+        if  (this.description.length() <  3 ) {
+            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_SHORT");
+        }
+
+        if (this.description.length() > 600) {
+            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_LONG");
+        }
+
         if (this.category.length() > 45) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
         }
 
-        if (this.price == null || this.price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidMealInformationAdminException("PRICE_IS_MANDATORY");
+        if  (this.category.length() <  3  ) {
+            throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_SHORT");
+        }
+
+        if  ( this.price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidMealInformationAdminException("PRICE MUST BE GREATER THAN 0");
         }
 
         if (this.quantity == null || this.quantity < 0) {
             throw new InvalidMealInformationAdminException("QUANTITY_IS_MANDATORY");
         }
-        if (this.status == null || this.status < 0) {
-            throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
+
+
+        if (this.status != 0 && this.status != 1) {
+            throw new InvalidMealInformationAdminException("STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE ");
         }
     }
 
