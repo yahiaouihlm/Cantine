@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -126,17 +127,17 @@ class AddAndRemoveMealTest {
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategory("Frites");
-        this.mealDtoIn.setDescription("first Meal To  Test");
+        this.mealDtoIn.setDescription("first Meal to  test");
         this.mealDtoIn.setPrice(BigDecimal.valueOf(1.3));
         this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
       //  Mockito.when(this.mealDao.findByLabel("Meal 1")).thenReturn(this.mealEntity);
-         Mockito.when(this.mealDao.existsByLabelAndAndCategoryAndDescription ("Meal 1",  "Frites", "first Meal To  Test")).thenReturn(true);
+         Mockito.when(this.mealDao.existsBy ("meal 1",  "frites", "first meal to  test")).thenReturn(Collections.singletonList(this.mealEntity));
         Assertions.assertThrows(ExistingMeal.class,
                 () -> mealService.addMeal(mealDtoIn));
         Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
-        Mockito.verify(this.mealDao, Mockito.times(1)).existsByLabelAndAndCategoryAndDescription ("Meal 1",  "Frites", "first Meal To  Test");
+        Mockito.verify(this.mealDao, Mockito.times(1)).existsBy ("meal 1",  "frites", "first meal to  test");
         Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
     }
     @Test

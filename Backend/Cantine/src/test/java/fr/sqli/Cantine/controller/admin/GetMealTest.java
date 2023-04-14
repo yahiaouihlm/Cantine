@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -29,9 +30,9 @@ class GetMealTest {
 
      @Container
      private PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
-             .withDatabaseName("testcantine")
-             .withUsername("test")
-             .withPassword("test");
+             .withDatabaseName("cantine_tests")
+             .withUsername("postgres")
+             .withPassword("halim");
     @Autowired
     private MealService mealService;
 
@@ -42,17 +43,19 @@ class GetMealTest {
     private MockMvc mockMvc;
 
    @Test
+   @Rollback(true)
     public void testGetAllMealsTest() throws Exception {
         System.out.println("it should return all meals");
         // given  : 2 meals in database
         ImageEntity image = new ImageEntity();
+        image.setImagename("ImageMealForTest.jpg");
 
+       ImageEntity image1 = new ImageEntity();
+       image1.setImagename("ImageMealForTest1.jpg");
         List<MealEntity> meals =
                 List.of(
-                        MealEntity.builder().category("Entrée").description("Salade de tomates").label("Salade de tomates").image(image).quantity(1)
-                                .price(new BigDecimal("2.3")).status(1).build(),
-                        MealEntity.builder().category("Entrée").description("Salade de tomates").label("tacos").image(image).quantity(2)
-                                .price(new BigDecimal("8.6")).status(1).build()
+                        new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1 ,  1 , image),
+                        new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1 ,  1 , image1)
                 );
         mealDao.saveAll(meals);
 
@@ -63,7 +66,7 @@ class GetMealTest {
        // then : 2 meals are returned  (verify status is 200)
        result.andExpect(MockMvcResultMatchers.status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(meals.size())));
-
+       this.mealDao.deleteAll();
 
     }
 
