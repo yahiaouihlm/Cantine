@@ -35,7 +35,7 @@ public class MealController implements IAdminEndPoints {
 
 
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn, @RequestParam("idMeal") Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn, @RequestParam("idMeal") Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         this.mealService.updateMeal(mealDtoIn, idMeal);
         return ResponseEntity.ok(MEAL_UPDATED_SUCCESSFULLY);
     }

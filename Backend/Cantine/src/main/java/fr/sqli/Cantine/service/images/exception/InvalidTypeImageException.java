@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.service.images.exception;
+package fr.sqli.Cantine.controller.images.exception;
 
 public class InvalidTypeImageException  extends  Exception{
 

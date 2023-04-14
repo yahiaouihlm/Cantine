@@ -1,9 +1,10 @@
-package fr.sqli.Cantine.service.images.exception;
+package fr.sqli.Cantine.controller.images.exception;
 
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -21,7 +22,7 @@ public class ExceptionImageHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public  ResponseEntity<ExceptionDtout> exceptionHandler (MaxUploadSizeExceededException exception){
-        return new ResponseEntity<ExceptionDtout>(new ExceptionDtout("IMAGE TO BIG ") , HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<ExceptionDtout>(new ExceptionDtout("FILE SIZE  TOO BIG ") , HttpStatus.NOT_ACCEPTABLE);
 
     }
 
@@ -44,6 +45,17 @@ public class ExceptionImageHandler {
     @ExceptionHandler(IOException.class)
     public ResponseEntity <ExceptionDtout> exceptionHandler (IOException exception){
         return new ResponseEntity<ExceptionDtout>(new ExceptionDtout(" A PROBLEM WAS APPEARED IN TRYING TO SAVE YOUR IMAGE "   ) , HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handle HttpMediaTypeNotSupportedException exception when the Image is not in the correct format unsupported media type
+     *
+     * @param e HttpMediaTypeNotSupportedException exception
+     * @return ResponseEntity<ExceptionDtout>   with the message of the exception
+     */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ExceptionDtout> handleRemoveMealAdminException(HttpMediaTypeNotSupportedException e) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 
 
