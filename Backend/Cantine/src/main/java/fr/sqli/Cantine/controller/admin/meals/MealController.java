@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin;
+package fr.sqli.Cantine.controller.admin.meals;
 
 
 import fr.sqli.Cantine.dto.in.MealDtoIn;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-import static fr.sqli.Cantine.controller.admin.IAdminEndPoints.MEALS_URL_ADMIN;
+import static fr.sqli.Cantine.controller.admin.meals.IAdminEndPoints.MEALS_URL_ADMIN;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController

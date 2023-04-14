@@ -1,11 +1,12 @@
-package fr.sqli.Cantine.controller.admin.meals.exceptions;
+package fr.sqli.Cantine.controller.admin.meals;
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import org.springframework.dao.DataIntegrityViolationException;
+import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
+import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
