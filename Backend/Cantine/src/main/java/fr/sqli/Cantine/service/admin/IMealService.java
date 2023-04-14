@@ -4,6 +4,7 @@ package fr.sqli.Cantine.service.admin;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
@@ -50,6 +51,17 @@ public interface IMealService {
      * @throws IOException                          if the image is not found or  the jvm cannot create the file
      */
 
+
+    /**
+     *   this methode is  used  to  check if the meal is already present in the database or not with the same label, description and category
+     *    if the meal is present in the database it will throw an ExistingMeal exception
+     * @param label the label of the meal
+     * @param description the description of the meal
+     * @param category the category of the meal
+     * @throws ExistingMeal if the meal is already present in the database with the same label, description and category
+     */
+    void    checkExistMeal(String label, String description, String category ) throws ExistingMeal;
+
     MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
 
 
@@ -78,7 +90,7 @@ public interface IMealService {
      * @throws IOException                          if the image is not found
      */
 
-    MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+    MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal;
 
     /**
      * Get all the meals from the database and return them as a list of MealDTO

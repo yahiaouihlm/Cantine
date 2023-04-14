@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
@@ -92,8 +93,9 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         MealEntity meal = mealDtoIn.toMealEntity();
+        this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
         MultipartFile image = mealDtoIn.getImage();
         var imagename = this.imageService.uploadImage(image, "images/meals");
         ImageEntity imageEntity = new ImageEntity();
@@ -122,5 +124,14 @@ public class MealService implements IMealService {
         throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
     }
 
+
+    @Override
+    public void checkExistMeal(String label, String category, String description) throws ExistingMeal {
+         var result = this.mealDao.existsByLabelAndAndCategoryAndDescription(label,  category , description );
+        if (result) {
+            throw new ExistingMeal("THE MEAL WITH THE LABEL :  " + label + " AND THE DESCRIPTION : " + description + " AND THE CATEGORY : " + category + " ALREADY EXISTS");
+        }
+
+    }
 
 }

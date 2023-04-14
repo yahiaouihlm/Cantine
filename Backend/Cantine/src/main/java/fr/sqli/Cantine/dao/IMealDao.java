@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface IMealDao  extends JpaRepository<MealEntity, Integer>  {
 
+     Boolean existsByLabelAndAndCategoryAndDescription(String label,  String category, String description);
 }

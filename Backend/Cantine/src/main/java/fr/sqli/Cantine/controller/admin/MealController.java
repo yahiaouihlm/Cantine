@@ -4,6 +4,7 @@ package fr.sqli.Cantine.controller.admin;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.service.admin.MealService;
+import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
@@ -46,7 +47,7 @@ public class MealController implements IAdminEndPoints {
     }
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok(MEAL_ADDED_SUCCESSFULLY);
     }

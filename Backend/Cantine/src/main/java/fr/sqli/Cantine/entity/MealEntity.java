@@ -8,10 +8,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Check;
+
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name="meal")
+@Table(name="meal", uniqueConstraints={
+        @UniqueConstraint(columnNames={"label", "description", "price", "category"})
+
+})
 public class MealEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -23,19 +28,23 @@ public class MealEntity implements Serializable {
     @Column(nullable=false, length=45)
     private String category ;
 
-    @Column(nullable=false, length=2147483647)
+    @Column(nullable=false, length=401)
     private String description;
 
     @Column(nullable=false, length=100)
     private String label;
 
     @Column(nullable=false, precision=5, scale=2)
+    @Check(constraints = "price > 0")
     private BigDecimal price ;
 
 
+    @Column(nullable=false )
+    @Check(constraints = "quantity > 0")
     private Integer quantity ;
 
     @Column(nullable=false)
+    @Check(constraints = "status IN (0,1)")
     private Integer status;
 
     //bi-directional many-to-many association to MenuEntity
