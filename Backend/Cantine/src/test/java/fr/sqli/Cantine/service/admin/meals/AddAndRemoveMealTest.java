@@ -9,8 +9,6 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.MealService;
 import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -27,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -133,11 +131,11 @@ class AddAndRemoveMealTest {
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
       //  Mockito.when(this.mealDao.findByLabel("Meal 1")).thenReturn(this.mealEntity);
-         Mockito.when(this.mealDao.existsBy ("meal 1",  "frites", "first meal to  test")).thenReturn(Collections.singletonList(this.mealEntity));
+         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase ("meal 1",  "frites", "first meal to  test")).thenReturn(Optional.of(this.mealEntity));
         Assertions.assertThrows(ExistingMeal.class,
                 () -> mealService.addMeal(mealDtoIn));
         Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
-        Mockito.verify(this.mealDao, Mockito.times(1)).existsBy ("meal 1",  "frites", "first meal to  test");
+        Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase ("meal 1",  "frites", "first meal to  test");
         Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
     }
     @Test

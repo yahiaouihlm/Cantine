@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.MealService;
+import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.images.IImageService;
@@ -77,7 +78,7 @@ public class UpdateMealTest {
 
    @Test
    @DisplayName("Update Meal With Valid ID And Meal Found")
-   void  updateMealTestWithRightMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationAdminException {
+   void  updateMealTestWithRightMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationAdminException, ExistingMeal {
        this.mealDtoIn.setLabel("Meal 1 Updated");
        this.mealDtoIn.setImage(null );
        Mockito.when(mealDao.findById(1)).thenReturn(Optional.ofNullable(mealEntity));
