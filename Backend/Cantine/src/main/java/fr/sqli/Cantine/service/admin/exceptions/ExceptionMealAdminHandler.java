@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.admin.exceptions;
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -10,6 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionMealAdminHandler {
+
+
+     @ExceptionHandler(DataIntegrityViolationException.class)
+     public ResponseEntity<ExceptionDtout> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout("THE MEAL  WITH SAME LABEL , CATEGORY , PRICE AND DESCRIPTION ALREADY EXIST "));
+     }
+
     /**
      * Handle MethodArgumentNotValidException exception when  one of the arguments is not valid  ex:  for Integer argument if the value is String
      *
