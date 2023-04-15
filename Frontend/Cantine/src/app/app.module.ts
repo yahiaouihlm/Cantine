@@ -5,9 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreCantineModule } from './core-cantine/core-cantine.module';
 import { RouterModule } from '@angular/router';
+import { PageNotFoundComponent } from './GlobalComponents/page-not-found/page-not-found.component';
 @NgModule({
   declarations: [
     AppComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
