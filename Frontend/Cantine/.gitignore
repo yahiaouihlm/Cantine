@@ -2,7 +2,7 @@
 #for tests 
 
 
-assets/images
+assets/
 # Compiled output
 /dist
 /tmp
