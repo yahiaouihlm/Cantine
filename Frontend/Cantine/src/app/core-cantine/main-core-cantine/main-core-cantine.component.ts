@@ -5,7 +5,7 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 @Component({
   selector: 'app-main-core-cantine',
   templateUrl: "./main-core-cantine.component.html",
-  styleUrls
+  styleUrls:["../../../assets/"]
 })
 export class MainCoreCantineComponent {
     isconnected = true;
