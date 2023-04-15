@@ -21,7 +21,8 @@ const routes: Routes = [
         {path: 'meals', component: MealsComponent},
         {path: 'menu', component: MenuComponent},
       ]
-}
+},
+  {path:'', redirectTo:'cantine/home', pathMatch:'full'},
 ];  
 @NgModule({
   declarations: [
