@@ -9,23 +9,5 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 })
 export class MainCoreCantineComponent {
     isconnected = true;
-  @ViewChild('sidenav') sidenav!: MatSidenav;
-  constructor (private observer: BreakpointObserver, private cd : ChangeDetectorRef) {}
-  ngAfterViewInit() {
-    if (this.isconnected) {
-
-      this.observer.observe(['(max-width: 900px)']).subscribe((res) => {
-        if (res.matches) {
-          this.sidenav.mode = 'over';
-          this.sidenav.close();
-        } else {
-          this.sidenav.mode = 'side';
-          this.sidenav.open();
-        }
-      });
-
-      this.cd.detectChanges();
-
-    }
-  }
+  constructor () {}
 }

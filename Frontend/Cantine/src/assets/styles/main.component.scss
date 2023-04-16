@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courgette&family=Satisfy&family=Sedgwick+Ave+Display&display=swap');
 $navbar-color: #002b5c; //  la couleur de la nav qui  sort depuis  la gauche
 $iconnav-color : rgb(188, 204, 209);
 $navprincipale-color: #004a9f ;  // la couleur de La Nav toutes en  haut qui  contient le titre
-
+$cantine-sqli-color : rgb(211, 222, 234) ; // l la couleur du  titre sqli dans la nav  principale
 
 
 mat-toolbar{
-  //  La  couleur de  La NavBar
   background:$navprincipale-color ;
   color: white;
   .not-connect-login-small {
@@ -65,7 +66,9 @@ mat-sidenav-container{
   color: #000;
   cursor: pointer;
 }
-
+img {
+  width: 50px;
+}
 .avatar {
   margin-top: 16px;
   width: 100px;
@@ -105,97 +108,92 @@ mat-divider {
 .logo-container{
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  margin-left: 20px;
-
-  .connect{
-    align-items: space-between;
+  justify-content: center;
+  .sqli-div{
+    color: $cantine-sqli-color;
     padding-top: 5px;
-    button {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: 1rem;
-      background-color: $navprincipale-color;
-      border: none;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      color: rgb(220, 226, 238);
-      margin-right: 10px;
 
-      mat-icon {
-        margin-right: 12px;
-        margin-bottom: 1px;
+    .bysqli{
+      margin-top: -10px;
+      .by{
+        font-family: 'Sedgwick Ave Display', cursive;
+
+        font-size: 1.6rem;
+        margin-left: 15%;
+      }
+      .sqli{
+        margin-left: 10%;
+        font-family: 'Courgette', cursive;
+        font-family: 'Satisfy', cursive;
+        font-family: 'Sedgwick Ave Display', cursive;
+
       }
     }
-    button:hover {
-      background-color: #fcfcfc;
-      color: #000;
-      cursor: pointer;
-    }
+  }
+  .cantière-span{
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 2.4rem;
+  }
 
-  }
-  img{
-    width: 45px;
-  }
 }
+.connect{
+  padding-top: 5px;
+  button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    background-color: $navprincipale-color;
+    border: none;
+    padding: 15px;
+    padding-right: 17px;
+    color: rgb(220, 226, 238);
+    margin-right: 10px;
+    mat-icon {
+      margin-right: 5px;
+      margin-bottom: 1px;
+    }
+  }
+  button:hover {
+    background-color: #fcfcfc;
+    color: #000;
+    cursor: pointer;
+  }
 
+}
 
 //  le  container principale
 .container{
   width: 100%;
+
+  background-color: red;
 }
-.border-for-user {
-  margin-left: 10px;
-}
-.paddingForLogoWhenConnectedUser{
-  margin-right: 9vw ;
-}
+/*.border-for-user {
+    margin-left: 10px;
+}*/
 
 @media(max-width : 900px){
   .container{
     width: 100%;
-    margin-left: 0px;
     background-color: red;
   }
   mat-toolbar {
     .not-connect-login-small {
       display: flex;
-      margin-right: 1%;
     }
   }
-
+  img {
+    width: 40px;
+  }
+  .connect{
+    display: none;
+  }
   .logo-container{
-
-    width: 100%;
-    justify-content: center;
-
-    .connect {
-      button {
-        display: none;
-
-        mat-icon {
-          margin-right: 6px;
-        }
-      }
+    .sqli-div{
+      margin-right: 7%;
+      font-size: 1.2rem;
     }
-    .sqli{
-      display: none;
-    }
-    img{
-
-      width: 40px;
-
-    }
-
   }
 }
 
-@media(max-width : 300px){
-  .logo-container{
-    img{
-      width: 30px;
-    }
-  }
-}

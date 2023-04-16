@@ -1,22 +1,25 @@
+
 <mat-toolbar>
-    <button class="burgger" mat-icon-button *ngIf="isconnected && sidenav.mode==='over'" (click)="sidenav.toggle()">
-        <mat-icon  *ngIf="!sidenav.opened">
-            menu
-        </mat-icon>
-        <mat-icon *ngIf="sidenav.opened">
-            close
-        </mat-icon>
+    <button *ngIf="isconnected" class="burgger" mat-icon-button (click)="sidenav.toggle()">
+        <div *ngIf="!sidenav.opened">
+            <img src="../../assets/logo.png" alt="cantière-logo">
+        </div>
+        <div *ngIf="sidenav.opened">
+            <img  src="../../assets/logo.png" alt="cantière-logo">
+        </div>
     </button>
-    <div class="logo-container"  > <!-- logo  Il  faut  changer  la police de Alter  -->
-        <div  [ngClass]= "{'paddingForLogoWhenConnectedUser' : isconnected}"  class="img-logo" > <img src="../assets/logo.png" alt="cantière-logo"> </div>
-        <div class="sqli"> Cantière <br> By SQLI  </div>
-        <div  class="connect">  <button class="btn"> <mat-icon>login</mat-icon>    Connection</button>  </div>
+    <div *ngIf="!isconnected">
+        <img src="../../assets/logo.png" alt="cantière-logo">
+
     </div>
 
+    <div class="logo-container"  ><div class="sqli-div"> <span class="cantière-span">Cantière</span> <br> <div class="bysqli"><span class="by">By</span>  <span class="sqli">SQLI </span></div> </div></div>
+    <div  class="connect">  <button class="btn"> <mat-icon>login</mat-icon>    Connection</button>  </div>
+    <div *ngIf="isconnected" class="not-connect-login-small">   <mat-icon >logout</mat-icon>    </div>
     <div *ngIf="!isconnected" class="not-connect-login-small">   <mat-icon >login</mat-icon>    </div>
 </mat-toolbar>
 <mat-sidenav-container>
-    <mat-sidenav  #sidenav="matSidenav" mode="side">
+    <mat-sidenav #sidenav="matSidenav">
 
         <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200" />
 
@@ -63,8 +66,8 @@
 
     </mat-sidenav>
     <mat-sidenav-content>
-        <div   class="container">    <!-- content  -->
-            <router-outlet></router-outlet>
+        <div class=" container mat-elevation-z4">    <!-- content  -->
+             <router-outlet></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>
