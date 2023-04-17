@@ -83,8 +83,10 @@ public class ImageService implements IImageService {
             throw new ImagePathException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
         }
         var spot = path + "/" + ImageName;
+        System.out.println(spot);
         File file = new File(spot);
-        if (file.delete()) {
+        if (file.exists()) {
+            file.delete();
             LOG.info("FILE DELETED SUCCESSFULLY");
         } else {
             LOG.error("CAN'T DELETE THE FILE");
@@ -95,8 +97,11 @@ public class ImageService implements IImageService {
 
     @Override
     public String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidTypeImageException, InvalidImageException, IOException {
+        var  imageName = this.uploadImage(image, path);
+
         this.deleteImage(oldImageName, path);
-        return this.uploadImage(image, path);
+
+        return imageName;
     }
 
     @Override
