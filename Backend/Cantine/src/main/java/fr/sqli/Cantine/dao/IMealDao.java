@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface IMealDao extends JpaRepository<MealEntity, Integer> {
   /* TODO:  CHANGE THE METHODE */
 
+   @Query(value = "SELECT meal FROM MealEntity meal" +
+           " WHERE LOWER(TRIM(meal.label)) = ?1 AND LOWER(TRIM(meal.category))= ?2 AND LOWER(TRIM(meal.description))= ?3")
    Optional  <MealEntity>   findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
 }
