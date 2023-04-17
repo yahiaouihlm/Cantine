@@ -1,15 +1,32 @@
 header{
-
+    width: 100%;
    .container-images {
-       width: 100vw;
+       width: 100%;
+       background: url("../images/books.jpg") no-repeat 50% 50%;
+        background-size: cover;
        height: 70vh;
-       background-image: url("../images/books.jpg");
    }
   mat-divider {
     background-color: black;
   }
 
 }
+
+
+section{
+  overflow: hidden;
+  img{
+   
+        width:10vw;
+    }
+}
+
+
+
+
+
+
+
 
 
 /*
@@ -24,3 +41,5 @@ header{
 "Rechargez vos batteries avec des aliments nutritifs - découvrez nos menus hebdomadaires pour des repas sains et équilibrés à la cantine Aston"
 "La cantine Aston - un endroit où les aliments sains et les sourires heureux vont de pair".
 */
+
+
