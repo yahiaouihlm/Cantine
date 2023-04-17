@@ -7,6 +7,10 @@ import { Component } from '@angular/core';
     `
        footer{
          font-size: 1rem;
+         background:  #002b5c ;
+         i{
+           margin-right: 8px;
+         }
     }
     .footer-container{
       width: 100%;

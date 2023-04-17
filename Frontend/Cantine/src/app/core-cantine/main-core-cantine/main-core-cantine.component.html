@@ -15,14 +15,14 @@
     </div>
 
     <div class="logo-container">
-        <div class="sqli-div"><span class="cantière-span">Cantière</span> <br>
+        <div class="sqli-div"><span class="cantière-span center">Cantière</span> <br>
             <div class="bysqli"><span class="by">By</span> <span class="sqli">SQLI </span></div>
         </div>
     </div>
     <div class="connect">
-        <button class="btn">
-            <mat-icon>login</mat-icon>
-            Connection
+        <button>
+            <mat-icon>logout</mat-icon>
+            Deconnexion
         </button>
     </div>
     <div *ngIf="isconnected" class="not-connect-login-small">
@@ -81,11 +81,9 @@
     </mat-sidenav>
     <mat-sidenav-content  >
         <main>    <!-- content  -->
-
-
             <router-outlet></router-outlet>     <!--  main  container  -->
         </main>
-        <div class="btn"> Hello  </div>
+
     </mat-sidenav-content>
 </mat-sidenav-container>
 
