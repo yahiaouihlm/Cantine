@@ -1,28 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@800&family=Dancing+Script:wght@600&display=swap');
 header{
+  font-family: 'Advent Pro', sans-serif;
     width: 100%;
    .container-images {
        width: 100%;
-       background: url("../images/books.jpg") no-repeat 50% 50%;
-        background-size: cover;
        height: 70vh;
+       background: url("../images/mainImage.jpg") ;
+        background: url("../images/mainimage3.jpg") ;
+        background: url("../images/books.jpg");
+        background-size : 100% 100%;      
+       animation: mainImageAnimation 15s ease-in 0s infinite  alternate forwards ;
+       h1{
+        font-family: 'Dancing Script', cursive;
+        color: rgb(255, 253, 250);
+        font-size: 6em; 
+        text-align: center;
+        padding-top: 20vh;
+        text-shadow: 1px 3px 15px black;
+      }
+      mat-divider { // le séparateur
+        background-color: rgb(255, 253, 250);
+        height: 2px;
+        width: 10vw;
+        margin: -3px auto;
+        margin-top: 5vh;
+        box-shadow: 1px 3px 15px black;
+      }
+      h3{
+         text-align: center;
+         color: rgb(255, 253, 250);
+         font-size: 2em;
+         margin-top: 5vh;
+         text-shadow: 1px 3px 15px black;
+      }
    }
-  mat-divider {
-    background-color: black;
-  }
+
+   
+   
 
 }
 
 
 section{
-  overflow: hidden;
+  font-family: 'Advent Pro', sans-serif;
+  background-color: #FFFAE1;
+  #text-intro{
+    padding: 0px 20%; 
+  }
+
+ #prestation{
+    display: flex;
+    
+    justify-content: space-between;
+    padding: 30px 10%;
+ }
+  
   img{
-   
-        width:10vw;
+        width:15vw;
+        height: 35vh; 
     }
 }
 
 
 
+
+
+//      background-color: #FFFAE1;
+
+
+
+
+
+
+/*@keyframes mainImageAnimation  {
+  0% {
+      background: url("../images/books.jpg")  no-repeat   ;
+      background-size : 100% 100%;
+  }
+  50% {
+      background: url("../images/mainImage.jpg")  no-repeat  ;
+      background-size : 100% 100%;
+  }
+  100% {
+      background: url("../images/mainimage3.jpg")  no-repeat  ;
+      background-size : 100% 100%;
+  }
+
+}*/
+
+/*@-webkit-keyframes diapo-image-header  {
+  0% {background: url("../images/books.jpg") no-repeat 50% 50%; background-size: cover;}
+  33% {background: url("../images/mainImage.jpg") no-repeat 50% 50%; background-size: cover;}
+  66% {background: url("../images/mainimage3.jpg") no-repeat 50% 50%; background-size: cover;}
+}*/
 
 
 
