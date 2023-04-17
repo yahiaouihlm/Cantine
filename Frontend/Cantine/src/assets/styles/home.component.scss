@@ -50,9 +50,7 @@ section{
 
  #prestation{
     display: flex;
-    
-    justify-content: space-between;
-    padding: 30px 10%;
+    flex-wrap: rap;
  }
   
   img{
@@ -113,3 +111,44 @@ section{
 */
 
 
+
+
+/*
+<div class="container">
+            <div id="text-intro">
+                  <h2>Rechargez vos batteries avec des aliments nutritifs - découvrez nos menus hebdomadaires pour des repas
+                        sains et équilibrés à la cantine Aston</h2>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit blanditiis quidem praesentium officia
+                        facilis quibusdam doloremque nobis veniam exercitationem incidunt, temporibus ad pariatur quam dolorem
+                        illo vero facere? Ut voluptatibus ea unde adipisci assumenda sint quis? Aperiam minus error est!</p>
+            </div>
+            <div class="row">
+              <div class="col-lg">
+                  <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Première div</h4>
+                           <img class="card-img" src="../../../assets/images/menu.jpg" alt="Nos  menus "> 
+                        </div>
+                      </div>
+              </div>
+              <div class="col-lg">
+               
+                  <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Première div</h5>
+                          <p class="card-text">Contenu de la première div</p>
+                        </div>
+                      </div>
+              </div>
+              <div class="col-lg">
+               
+                  <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Première div</h5>
+                          <p class="card-text">Contenu de la première div</p>
+                        </div>
+                      </div>
+              </div>
+            </div>
+          </div>
+*/
