@@ -110,7 +110,7 @@ mat-divider {
   display: flex;
   justify-content: center;
   .sqli-div{
-    color: $cantine-sqli-color;
+
     padding-top: 5px;
 
     .bysqli{
@@ -191,9 +191,20 @@ mat-divider {
   }
   .logo-container{
     .sqli-div{
-      margin-right: 7%;
-      font-size: 1.2rem;
+      .bysqli{
+        .by{
+          font-size: 1rem;
+          margin-left: 8%;
+        }
+        .sqli{
+          font-size: 1rem;
+        }
+      }
     }
+    .cantière-span{
+      font-size: 1.4rem;
+    }
+
   }
 }
 
