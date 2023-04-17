@@ -13,6 +13,10 @@ mat-toolbar{
   .not-connect-login-small {
     display: none;
   }
+  img{
+    width: 50px;
+    cursor: pointer;
+  }
 }
 
 mat-sidenav{
@@ -66,9 +70,7 @@ mat-sidenav-container{
   color: #000;
   cursor: pointer;
 }
-img {
-  width: 50px;
-}
+
 .avatar {
   margin-top: 16px;
   width: 100px;
