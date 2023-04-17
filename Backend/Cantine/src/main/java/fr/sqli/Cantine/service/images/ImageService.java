@@ -97,7 +97,7 @@ public class ImageService implements IImageService {
 
     @Override
     public String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidTypeImageException, InvalidImageException, IOException {
-        var  imageName = this.uploadImage(image, path);
+        var imageName = this.uploadImage(image, path);
 
         this.deleteImage(oldImageName, path);
 
@@ -128,5 +128,27 @@ public class ImageService implements IImageService {
         }
 
         return extension;
+    }
+
+    @Override
+    public boolean isImageExist(String ImageName, String pathDirectory) throws ImagePathException, InvalidImageException {
+        if (pathDirectory == null || pathDirectory.isEmpty()) {
+            LOG.fatal("CAN'T CHECK IF IMAGE EXIST BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE isImageExist METHOD ");
+            throw new ImagePathException("INVALID PATH CAN'T CHECK IF IMAGE EXIST");
+        }
+        if (ImageName == null || ImageName.isEmpty()) {
+            LOG.error("CAN'T CHECK IF IMAGE EXIST BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE isImageExist METHOD ");
+            throw new InvalidImageException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
+        }
+        File directory = new File(pathDirectory);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().equals(ImageName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -81,5 +81,14 @@ public interface IImageService {
     String getImageExtension(String ImageName) throws InvalidImageException;
 
 
-
+    /**
+     * this method is used to check if the image exist in the directory specified in the path
+     *
+     * @param ImageName the image name
+     * @param pathDirectory      the path of the directory where the image was saved
+     * @return boolean true if the image exist in the directory specified in the path
+     * @throws ImagePathException    if the ( Directory ) path is invalid (null or empty) or the image name is invalid (null or empty)
+     * @throws InvalidImageException if the image file  is invalid (null or empty)
+     */
+    boolean isImageExist(String ImageName, String pathDirectory) throws ImagePathException, InvalidImageException;
 }
