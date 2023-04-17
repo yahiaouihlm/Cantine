@@ -8,6 +8,7 @@ $cantine-sqli-color : rgb(211, 222, 234) ; // l la couleur du  titre sqli dans l
 
 
 mat-toolbar{
+  //position: fixed;
   background:$navprincipale-color ;
   color: white;
   .not-connect-login-small {
@@ -17,6 +18,7 @@ mat-toolbar{
     width: 50px;
     cursor: pointer;
   }
+   //z-index: 100;
 }
 
 mat-sidenav{
@@ -162,10 +164,9 @@ mat-divider {
   }
 
 }
-mat-sidenav-content{
+mat-sidenav-content{ // le  container principale
   main{
     width: 100%;
-    background-color: red;
   }
 }
 
