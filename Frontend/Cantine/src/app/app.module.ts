@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { CoreCantineModule } from './core-cantine/core-cantine.module';
 import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './globalComponents/page-not-found/page-not-found.component';
+import { MainFooterComponent } from './globalComponents/main-footer/main-footer.component';
 ;
 @NgModule({
   declarations: [
