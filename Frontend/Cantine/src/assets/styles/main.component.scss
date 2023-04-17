@@ -164,13 +164,15 @@ mat-divider {
   }
 
 }
-
-//  le  container principale
-.container{
-  width: 100%;
-
-  background-color: red;
+mat-sidenav-content{
+  main{
+    width: 100%;
+    background-color: red;
+  }
 }
+
+  //  le  container principale
+
 /*.border-for-user {
     margin-left: 10px;
 }*/
@@ -185,8 +187,11 @@ mat-divider {
       display: flex;
     }
   }
-  img {
-    width: 40px;
+  mat-toolbar{
+    img{
+      width: 40px;
+      cursor: pointer;
+    }
   }
   .connect{
     display: none;
