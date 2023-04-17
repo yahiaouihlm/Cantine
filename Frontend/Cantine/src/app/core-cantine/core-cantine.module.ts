@@ -23,6 +23,7 @@ const routes: Routes = [
       {path: 'menu', component: MenuComponent},
     ]
   },
+
   {path:'', redirectTo:'cantine/home', pathMatch:'full'},
 ];
 @NgModule({
