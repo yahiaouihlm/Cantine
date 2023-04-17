@@ -77,9 +77,12 @@
         </button>
 
     </mat-sidenav>
-    <mat-sidenav-content>
-        <div class=" container mat-elevation-z4">    <!-- content  -->
-            <router-outlet></router-outlet>
-        </div>
+    <mat-sidenav-content  >
+        <main>    <!-- content  -->
+            <router-outlet></router-outlet>     <!--  main  container  -->
+        </main>
     </mat-sidenav-content>
 </mat-sidenav-container>
+
+
+<app-main-footer></app-main-footer>     <!-- footer  -->
