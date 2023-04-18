@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS menu (
     price  DECIMAL(5,2) NOT NULL,
     image_idimage  INT NOT NULL,
     creatoin_date  DATE NOT NULL,
-    quantite INT NOT NULL ,
+    quantity INT NOT NULL ,
     CHECK (status IN (0,1)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS menu (
 CREATE TABLE IF NOT EXISTS menu_has_meal (
      menu_idMenu INT NOT NULL,
      meal_idmeal INT NOT NULL,
-     PRIMARY KEY (menu_idMenu, plat_idplat),
+     PRIMARY KEY (menu_idMenu,  meal_idmeal),
     FOREIGN KEY (menu_idMenu) REFERENCES menu (id)ON DELETE CASCADE,
     FOREIGN KEY (meal_idmeal) REFERENCES  meal (id) ON DELETE RESTRICT
     );
