@@ -7,7 +7,10 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="menu")
+@Table(name="menu", uniqueConstraints={
+        @UniqueConstraint(columnNames={"label", "description", "price"})
+
+})
 public class MenuEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

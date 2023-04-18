@@ -13,7 +13,7 @@ import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name="meal", uniqueConstraints={
-        @UniqueConstraint(columnNames={"label", "description", "price", "category"})
+        @UniqueConstraint(columnNames={"label", "description", "category"})
 
 })
 public class MealEntity implements Serializable {

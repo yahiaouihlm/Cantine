@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS menu (
     CHECK (status IN (0,1)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
-    unique (label, description),
+    unique (label, description, price),
     FOREIGN KEY (image_idimage) REFERENCES image (idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 
