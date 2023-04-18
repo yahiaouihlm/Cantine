@@ -45,6 +45,7 @@ public class MealDtoIn implements Serializable {
 
     /**
      * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid except the image
+     * the method also make a  trim() on the label, description and category before creating the MealEntity object
      *
      * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
      * @throws InvalidMealInformationAdminException if the meal information is not valid
@@ -52,9 +53,9 @@ public class MealDtoIn implements Serializable {
     @JsonIgnore
     public MealEntity createMealEntity() throws InvalidMealInformationAdminException {
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setCategory(this.category);
-        mealEntity.setDescription(this.description);
-        mealEntity.setLabel(this.label);
+        mealEntity.setCategory(this.category.trim());
+        mealEntity.setDescription(this.description.trim());
+        mealEntity.setLabel(this.label.trim());
         mealEntity.setPrice(this.price);
         mealEntity.setQuantity(quantity);
         mealEntity.setStatus(this.status);
@@ -95,18 +96,18 @@ public class MealDtoIn implements Serializable {
         if (this.price == null) {
             throw new InvalidMealInformationAdminException("PRICE_IS_MANDATORY");
         }
-        if (this.status == null ) {
+        if (this.status == null) {
             throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
         }
 
-        if  (this.label.trim().length() <  3 ) {
+        if (this.removeSpaces(this.label).length() < 3) {
             throw new InvalidMealInformationAdminException("LABEL_IS_TOO_SHORT");
         }
         if (this.label.length() > 100) {
             throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
         }
 
-        if  (this.description.trim().length() <  3 ) {
+        if (this.removeSpaces(this.description).length() < 5) {
             throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_SHORT");
         }
 
@@ -118,11 +119,11 @@ public class MealDtoIn implements Serializable {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
         }
 
-        if  (this.category.trim().length() <  3  ) {
+        if (this.removeSpaces(this.category).length() < 3) {
             throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_SHORT");
         }
 
-        if  ( this.price.compareTo(BigDecimal.ZERO) <= 0) {
+        if (this.price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidMealInformationAdminException("PRICE MUST BE GREATER THAN 0");
         }
 
@@ -134,6 +135,12 @@ public class MealDtoIn implements Serializable {
         if (this.status != 0 && this.status != 1) {
             throw new InvalidMealInformationAdminException("STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE ");
         }
+    }
+
+
+    @JsonIgnore
+    public String removeSpaces(String str) {
+        return str.replaceAll("\\s+", "");
     }
 
     public String getCategory() {
