@@ -1,2 +1,8 @@
-package fr.sqli.Cantine.dto.in;public class AbstractDtoIn {
+package fr.sqli.Cantine.dto.in;
+
+public abstract class AbstractDtoIn {
+
+
+
+
 }
