@@ -35,17 +35,15 @@ header{
       }
    }
 
-   
-   
-
 }
 
 
 section{
   font-family: 'Advent Pro', sans-serif;
-  background-color: #FFFAE1;
+  background-color: #ded6c1;
+  padding: 50px 0 50px 0;
   #text-intro{
-    padding: 0px 20%; 
+    padding: 0px 20%;
   }
 
  #prestation{
@@ -57,7 +55,13 @@ section{
         width:40%;
         height: 30vh;
     }
+  p, h2, h4,.row{
+    margin-bottom: 0px;
+  }
 }
+
+
+
 
 @media (max-width: 768px) {
      section {
