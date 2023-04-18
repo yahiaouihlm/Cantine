@@ -55,11 +55,12 @@ public class MealDtoIn implements Serializable {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setCategory(this.category.trim());
         mealEntity.setDescription(this.description.trim());
-        mealEntity.setLabel(this.label.trim());
+        mealEntity.setLabel(this.removeSpaces(this.label));
         mealEntity.setPrice(this.price);
         mealEntity.setQuantity(quantity);
         mealEntity.setStatus(this.status);
         return mealEntity;
+
     }
 
     /**
