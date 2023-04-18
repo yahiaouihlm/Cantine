@@ -1,9 +1,12 @@
 package fr.sqli.Cantine.dto.in;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,16 +25,18 @@ public class MenuDtoIn {
 
     private Integer status;
 
-    private ImageEntity image;
+    private MultipartFile image;
     private Integer quantity;
 
     /**
      *  the client will send  only  the ids of the meals ( check the meals id validity in the service) and the service will fetch the meals from the database
      */
 
-
-
     private List <Integer> mealIDs;
+
+
+
+
 
 
     public String getLabel() {
@@ -66,11 +71,11 @@ public class MenuDtoIn {
         this.status = status;
     }
 
-    public ImageEntity getImage() {
+    public MultipartFile getImage() {
         return image;
     }
 
-    public void setImage(ImageEntity image) {
+    public void setImage(MultipartFile image) {
         this.image = image;
     }
 

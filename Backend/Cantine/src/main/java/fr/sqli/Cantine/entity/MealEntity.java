@@ -27,7 +27,7 @@ public class MealEntity implements Serializable {
     @Column(nullable=false, length=45)
     private String category ;
 
-    @Column(nullable=false, length=401)
+    @Column(nullable=false, length=590)
     private String description;
 
     @Column(nullable=false, length=100)
