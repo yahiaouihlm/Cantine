@@ -47,18 +47,18 @@ public class MealEntity implements Serializable {
     private Integer status;
 
     //bi-directional many-to-many association to MenuEntity
- /*  @ManyToMany()
+   @ManyToMany()
     @JoinTable(
-            name="menu_has_plat"
+            name="menu_has_meal"
             , joinColumns={
-            @JoinColumn(name="plat_idplat", nullable=false)
+            @JoinColumn(name="meal_idmeal", nullable=false)
     }
             , inverseJoinColumns={
             @JoinColumn(name="menu_idmenu", nullable=false)
     }
     )
     private List<MenuEntity> menus;
- */
+
     //bi-directional many-to-one association to ImageEntity
     @ManyToOne(cascade =  CascadeType.ALL)
     @JoinColumn(name="image_idimage", nullable=false)

@@ -2,6 +2,7 @@ package fr.sqli.Cantine.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import jakarta.persistence.*;
 
@@ -13,19 +14,18 @@ public class MenuEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
-    private Integer idmenu;
-
-    @Column(nullable = false, length = 2147483647)
-    private String description;
-
-    @Column(length = 45)
-    private String jourassocier;
-
+    private Integer id;
     @Column(nullable = false, length = 100)
     private String label;
 
+    @Column(nullable = false, length = 500)
+    private String description;
+   @Column(name ="creation_date",  nullable = false )
+   private LocalDate createdDate;
+
+
     @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal prixht;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private Integer status;
@@ -52,9 +52,9 @@ public class MenuEntity implements Serializable {
 
     @ManyToMany()
     @JoinTable(
-            name = " menu_has_plat",
+            name = " menu_has_meal",
             joinColumns = {@JoinColumn(name = "menu_idmenu", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = " plat_idplat", nullable = false)}
+            inverseJoinColumns = {@JoinColumn(name = "meal_idmeal", nullable = false)}
     )
     private List<MealEntity> plats;
     //bi-directional many-to-one association to QuantiteEntity
@@ -62,69 +62,69 @@ public class MenuEntity implements Serializable {
     private List<QuantiteEntity> quantites;*/
 
 
-    @Column(name = "quantite")
-    private Integer quantite;
+    @Column(name = "quantity")
+    private Integer quantity;
 
     public MenuEntity() {
     }
 
-    public Integer getIdmenu() {
-        return this.idmenu;
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getQuantite() {
-        return quantite;
-    }
-
-    public void setQuantite(Integer quantite) {
-        this.quantite = quantite;
-    }
-
-    public void setIdmenu(Integer idmenu) {
-        this.idmenu = idmenu;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getJourassocier() {
-        return this.jourassocier;
-    }
-
-    public void setJourassocier(String jourassocier) {
-        this.jourassocier = jourassocier;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getLabel() {
-        return this.label;
+        return label;
     }
 
     public void setLabel(String label) {
         this.label = label;
     }
 
-    public BigDecimal getPrixht() {
-        return this.prixht;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPrixht(BigDecimal prixht) {
-        this.prixht = prixht;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Integer getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
     }
 
-   /* public List<OrderEntity> getCommandes() {
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    /* public List<OrderEntity> getCommandes() {
         return this.commandes;
     }
 

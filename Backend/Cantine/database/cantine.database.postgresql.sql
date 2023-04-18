@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS menu (
     status INT  NOT  NULL,
     price  DECIMAL(5,2) NOT NULL,
     image_idimage  INT NOT NULL,
-    creatoin_date  DATE NOT NULL,
+    creation_date  DATE NOT NULL,
     quantity INT NOT NULL ,
     CHECK (status IN (0,1)),
     CHECK (quantity >= 0),
