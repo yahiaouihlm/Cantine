@@ -54,12 +54,19 @@ section{
  }
   
   img{
-        width:15vw;
-        height: 35vh; 
+        width:40%;
+        height: 30vh;
     }
 }
 
-
+@media (max-width: 768px) {
+     section {
+          img{
+            width:80%;
+            height: 50vh;
+          }
+     }
+}
 
 
 
