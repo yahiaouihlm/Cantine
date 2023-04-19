@@ -81,13 +81,14 @@ public class UpdateMealTest {
    void  updateMealTestWithRightMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
        this.mealDtoIn.setLabel("Meal 1 Updated");
        this.mealDtoIn.setImage(null );
-       Mockito.when(mealDao.findById(1)).thenReturn(Optional.ofNullable(mealEntity));
+       Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
        Mockito.when(mealDao.save(mealEntity)).thenReturn(mealEntity);
 
 
        var result = mealService.updateMeal(mealDtoIn, 1);
 
-         Assertions.assertEquals("Meal 1 Updated", result.getLabel());
+       // the spaces in label are removed in  MealDtoIn  and saved in database with spaces
+         Assertions.assertEquals("Meal1Updated", result.getLabel());
          Assertions.assertEquals("Frites", result.getCategory());
          Mockito.verify(mealDao, Mockito.times(1)).findById(1);
          Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
