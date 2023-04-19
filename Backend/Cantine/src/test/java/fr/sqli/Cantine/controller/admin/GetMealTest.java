@@ -43,11 +43,11 @@ class GetMealTest {
 
    @Test
    @Rollback(true)
-   @DisplayName("Get all meals test after  Makin  In Data Base ")
+   @DisplayName("Get all meals tests  : 2 meals in database")
 
 
     public void testGetAllMealsTest() throws Exception {
-        // given  : 2 meals in database
+////        given  : 2 meals in database
        ImageEntity image = new ImageEntity();
        image.setImagename("ImageMealForTest.jpg");
 
