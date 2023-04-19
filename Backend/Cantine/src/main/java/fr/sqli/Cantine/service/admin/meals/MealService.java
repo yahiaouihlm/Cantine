@@ -1,15 +1,14 @@
-package fr.sqli.Cantine.service.admin;
+package fr.sqli.Cantine.service.admin.meals;
 
-import fr.sqli.Cantine.dao.IImageDao;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
-import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -43,7 +42,7 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
@@ -80,7 +79,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity removeMeal(Integer id) throws InvalidMealInformationAdminException, MealNotFoundAdminException, RemoveMealAdminException, ImagePathException {
+    public MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException, RemoveMealAdminException, ImagePathException {
         IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
 
         var overemotional = this.mealDao.findById(id);
@@ -103,7 +102,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         MealEntity meal = mealDtoIn.toMealEntity();
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
             System.out.println("test");
@@ -124,7 +123,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealDtout getMealByID(Integer id) throws InvalidMealInformationAdminException, MealNotFoundAdminException {
+    public MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException {
 
         IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", id);
 
