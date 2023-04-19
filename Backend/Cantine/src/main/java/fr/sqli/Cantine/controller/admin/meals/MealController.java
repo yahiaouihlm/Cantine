@@ -3,11 +3,11 @@ package fr.sqli.Cantine.controller.admin.meals;
 
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
-import fr.sqli.Cantine.service.admin.MealService;
-import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
-import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.RemoveMealAdminException;
+import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
@@ -35,26 +35,26 @@ public class MealController implements IAdminEndPoints {
 
 
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn, @RequestParam("idMeal") Integer idMeal) throws InvalidMealInformationAdminException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
+    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn, @RequestParam("idMeal") Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         this.mealService.updateMeal(mealDtoIn, idMeal);
         return ResponseEntity.ok(MEAL_UPDATED_SUCCESSFULLY);
     }
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
-    public ResponseEntity<String> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationAdminException, RemoveMealAdminException, ImagePathException {
+    public ResponseEntity<String> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
         this.mealService.removeMeal(idMeal);
         return ResponseEntity.ok(MEAL_DELETED_SUCCESSFULLY);
     }
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
+    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok(MEAL_ADDED_SUCCESSFULLY);
     }
 
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
-    public ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationAdminException {
+    public ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationException {
         var meal = this.mealService.getMealByID(idMeal);
         return ResponseEntity.ok(meal);
     }

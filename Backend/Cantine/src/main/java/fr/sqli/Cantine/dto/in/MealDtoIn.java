@@ -2,13 +2,13 @@ package fr.sqli.Cantine.dto.in;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class MealDtoIn implements Serializable {
+public class MealDtoIn  extends AbstractDtoIn implements Serializable {
 
     private String category;
     private String description;
@@ -23,11 +23,11 @@ public class MealDtoIn implements Serializable {
      * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid
      *
      * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
-     * @throws InvalidMealInformationAdminException if the meal information is not valid
+     * @throws InvalidMealInformationException if the meal information is not valid
      */
 
     @JsonIgnore
-    public MealEntity toMealEntity() throws InvalidMealInformationAdminException {
+    public MealEntity toMealEntity() throws InvalidMealInformationException {
         this.checkMealInformationValidity(); // check if the meal information is valid
         return this.createMealEntity(); // create the MealEntity object
     }
@@ -35,10 +35,10 @@ public class MealDtoIn implements Serializable {
     /**
      * Check if the meal information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
      *
-     * @throws InvalidMealInformationAdminException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
+     * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
      */
     @JsonIgnore
-    public MealEntity toMealEntityWithoutImage() throws InvalidMealInformationAdminException {
+    public MealEntity toMealEntityWithoutImage() throws InvalidMealInformationException {
         this.checkValidityExceptImage(); // check if the meal information is valid except the image
         return this.createMealEntity(); // create the MealEntity object
     }
@@ -48,14 +48,14 @@ public class MealDtoIn implements Serializable {
      * the method also make a  trim() on the label, description and category before creating the MealEntity object
      *
      * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
-     * @throws InvalidMealInformationAdminException if the meal information is not valid
+     * @throws InvalidMealInformationException if the meal information is not valid
      */
     @JsonIgnore
-    public MealEntity createMealEntity() throws InvalidMealInformationAdminException {
+    public MealEntity createMealEntity() throws InvalidMealInformationException {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setCategory(this.category.trim());
         mealEntity.setDescription(this.description.trim());
-        mealEntity.setLabel(this.removeSpaces(this.label));
+        mealEntity.setLabel(super.removeSpaces(this.label));
         mealEntity.setPrice(this.price);
         mealEntity.setQuantity(quantity);
         mealEntity.setStatus(this.status);
@@ -67,82 +67,41 @@ public class MealDtoIn implements Serializable {
      * Check if the meal information is valid or not and throw an exception
      * if it is not valid ( if one of the arguments is null or empty or less than 0)
      *
-     * @throws InvalidMealInformationAdminException if the meal information is not valid
+     * @throws InvalidMealInformationException if the meal information is not valid
      */
     @JsonIgnore
-    public void checkMealInformationValidity() throws InvalidMealInformationAdminException {
+    public void checkMealInformationValidity() throws InvalidMealInformationException {
         this.checkValidityExceptImage();
-        if (this.image == null || this.image.isEmpty()) {
-            throw new InvalidMealInformationAdminException("IMAGE_IS_MANDATORY");
-        }
+        super.checImageValididty(this.image);
     }
+
 
     /**
      * Check if the meal information is valid or not and throw an exception if it is not valid
      * ( if one of the arguments is null or empty or less than 0) except the image
      *
-     * @throws InvalidMealInformationAdminException if the meal information is not valid except the image
+     * @throws InvalidMealInformationException if the meal information is not valid except the image
      */
     @JsonIgnore
-    public void checkValidityExceptImage() throws InvalidMealInformationAdminException {
-        if (this.label == null || this.label.trim().isEmpty()) {
-            throw new InvalidMealInformationAdminException("LABEL_IS_MANDATORY");
-        }
-        if (this.description == null || this.description.trim().isEmpty()) {
-            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_MANDATORY");
-        }
+    public  void checkValidityExceptImage() throws InvalidMealInformationException {
         if (this.category == null || this.category.trim().isEmpty()) {
-            throw new InvalidMealInformationAdminException("CATEGORIES_IS_MANDATORY");
-        }
-        if (this.price == null) {
-            throw new InvalidMealInformationAdminException("PRICE_IS_MANDATORY");
-        }
-        if (this.status == null) {
-            throw new InvalidMealInformationAdminException("STATUS_IS_MANDATORY");
+            throw new InvalidMealInformationException("CATEGORIES_IS_MANDATORY");
         }
 
-        if (this.removeSpaces(this.label).length() < 3) {
-            throw new InvalidMealInformationAdminException("LABEL_IS_TOO_SHORT");
-        }
-        if (this.label.length() > 100) {
-            throw new InvalidMealInformationAdminException("LABEL_IS_TOO_LONG");
-        }
 
-        if (this.removeSpaces(this.description).length() < 5) {
-            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_SHORT");
-        }
 
-        if (this.description.length() > 600) {
-            throw new InvalidMealInformationAdminException("DESCRIPTION_IS_TOO_LONG");
-        }
 
         if (this.category.length() > 45) {
-            throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_LONG");
+            throw new InvalidMealInformationException("CATEGORIES_IS_TOO_LONG");
         }
 
         if (this.removeSpaces(this.category).length() < 3) {
-            throw new InvalidMealInformationAdminException("CATEGORIES_IS_TOO_SHORT");
-        }
-
-        if (this.price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidMealInformationAdminException("PRICE MUST BE GREATER THAN 0");
-        }
-
-        if (this.quantity == null || this.quantity < 0) {
-            throw new InvalidMealInformationAdminException("QUANTITY_IS_MANDATORY");
-        }
-
-
-        if (this.status != 0 && this.status != 1) {
-            throw new InvalidMealInformationAdminException("STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE ");
+            throw new InvalidMealInformationException("CATEGORIES_IS_TOO_SHORT");
         }
     }
 
 
-    @JsonIgnore
-    public String removeSpaces(String str) {
-        return str.replaceAll("\\s+", "");
-    }
+
 
     public String getCategory() {
         return category;
