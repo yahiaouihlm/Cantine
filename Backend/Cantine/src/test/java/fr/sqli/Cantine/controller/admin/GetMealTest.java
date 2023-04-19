@@ -6,6 +6,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,30 +43,35 @@ class GetMealTest {
 
    @Test
    @Rollback(true)
+   @DisplayName("Get all meals test after  Makin  In Data Base ")
+
+
     public void testGetAllMealsTest() throws Exception {
-        System.out.println("it should return all meals");
         // given  : 2 meals in database
-        ImageEntity image = new ImageEntity();
-        image.setImagename("ImageMealForTest.jpg");
+       ImageEntity image = new ImageEntity();
+       image.setImagename("ImageMealForTest.jpg");
 
        ImageEntity image1 = new ImageEntity();
        image1.setImagename("ImageMealForTest1.jpg");
-        List<MealEntity> meals =
+
+       List<MealEntity> meals =
                 List.of(
                         new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1 ,  1 , image),
                         new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1 ,  1 , image1)
                 );
-        mealDao.saveAll(meals);
+        this.mealDao.saveAll(meals);
 
         // when : get all meals
-       var   result  =   this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/meal/getAllMeals"));
+       var   result  =   this.mockMvc.perform(MockMvcRequestBuilders.get("/cantine/api/admin/meals/getAll"));
 
 
        // then : 2 meals are returned  (verify status is 200)
-       result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(meals.size())));
        this.mealDao.deleteAll();
 
     }
+
+
 
 }

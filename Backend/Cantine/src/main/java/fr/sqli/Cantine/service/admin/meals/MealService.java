@@ -119,7 +119,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public List<MealDtout> getAllMeals() {
+    public List<MealDtout> getAllMeals()  {
         return this.mealDao.findAll().stream().map(meal -> new MealDtout(meal, this.MEALS_IMAGES_URL)).toList();
     }
 
