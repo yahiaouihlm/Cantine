@@ -4,9 +4,8 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.MealService;
-import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +43,7 @@ class GetMealsTest {
 
 
     @BeforeEach
-    void setUp() throws MealNotFoundAdminException, InvalidMealInformationAdminException {
+    void setUp() throws MealNotFoundAdminException, InvalidMealInformationException {
         this.environment = new MockEnvironment();
         this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
         this.iMealService = new MealService(environment, iMealDao, null);
@@ -110,7 +109,7 @@ class GetMealsTest {
     /******************************************* getMealByid methode *****************************************************/
     @Test
     @DisplayName("Test  getMealByID with valid ID  return a Meal Instanced By Mokito ")
-    void geMealWithValidId() throws MealNotFoundAdminException, InvalidMealInformationAdminException {
+    void geMealWithValidId() throws MealNotFoundAdminException, InvalidMealInformationException {
         final Integer idMeal = 1;
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
@@ -145,7 +144,7 @@ class GetMealsTest {
     @DisplayName("Test  getMealByID with invalid ID  with negative value (-1 ) ")
     void getMealIdWithInvalidID() {
         Integer IdTest = -1;
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             this.iMealService.getMealByID(IdTest);
         });
 
@@ -155,7 +154,7 @@ class GetMealsTest {
     @DisplayName("Test  getMealByID with null ID  ")
     void getMealByIdWithNullID() {
         Integer IdTest = null;
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             this.iMealService.getMealByID(IdTest);
         });
     }

@@ -4,7 +4,7 @@ package fr.sqli.Cantine.controller.admin;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.MealService;
+import fr.sqli.Cantine.service.admin.meals.MealService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc

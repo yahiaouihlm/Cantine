@@ -6,9 +6,8 @@ import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 
-import fr.sqli.Cantine.service.admin.MealService;
-import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
-import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Optional;
 
 
@@ -75,8 +73,8 @@ class AddAndRemoveMealTest {
    */
     @Test
     @DisplayName("Test the removeMeal method with positive id")
-    void removeMealTestWithNegativeID() throws InvalidMealInformationAdminException {
-        Assertions.assertThrows(InvalidMealInformationAdminException.class,
+    void removeMealTestWithNegativeID() throws InvalidMealInformationException {
+        Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.removeMeal(-1));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
@@ -85,7 +83,7 @@ class AddAndRemoveMealTest {
     @Test
     @DisplayName("Test the removeMeal method with NULL id")
     void removeMealTestWithNullId() {
-        Assertions.assertThrows(InvalidMealInformationAdminException.class,
+        Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.removeMeal(null));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
@@ -149,7 +147,7 @@ class AddAndRemoveMealTest {
         this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
-        Assertions.assertThrows(InvalidMealInformationAdminException.class,
+        Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
 
 
@@ -169,13 +167,13 @@ class AddAndRemoveMealTest {
         this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
-        Assertions.assertThrows(InvalidMealInformationAdminException.class,
+        Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
     }
 
     @Test
     @DisplayName("Test the addMeal method with null image")
-    void testAddMealWithNullImage() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationAdminException {
+    void testAddMealWithNullImage() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategory("Frites");
@@ -184,7 +182,7 @@ class AddAndRemoveMealTest {
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
         this.mealDtoIn.setImage(null);
-        Assertions.assertThrows(InvalidMealInformationAdminException.class,
+        Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
 
         Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
@@ -194,9 +192,9 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with null meal information")
-    void testAddMealWithNullMealInformation() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationAdminException {
+    void testAddMealWithNullMealInformation() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
         this.mealDtoIn = new MealDtoIn();
-        Assertions.assertThrows(InvalidMealInformationAdminException.class,
+        Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
 
         Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
@@ -206,7 +204,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void testAddMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationAdminException, ExistingMeal {
+    public void testAddMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal {
 
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");

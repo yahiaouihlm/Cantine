@@ -5,10 +5,9 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.MealService;
-import fr.sqli.Cantine.service.admin.exceptions.ExistingMeal;
-import fr.sqli.Cantine.service.admin.exceptions.InvalidMealInformationAdminException;
-import fr.sqli.Cantine.service.admin.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -78,7 +77,7 @@ public class UpdateMealTest {
 
    @Test
    @DisplayName("Update Meal With Valid ID And Meal Found")
-   void  updateMealTestWithRightMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationAdminException, ExistingMeal {
+   void  updateMealTestWithRightMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationException, ExistingMeal {
        this.mealDtoIn.setLabel("Meal 1 Updated");
        this.mealDtoIn.setImage(null );
        Mockito.when(mealDao.findById(1)).thenReturn(Optional.ofNullable(mealEntity));
@@ -116,7 +115,7 @@ public class UpdateMealTest {
     void updateMealTestWithTooLongLable() {
         String tooLangString = "Lorem ipsum dolor sit adccdcmet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m";
         this.mealDtoIn.setLabel(tooLangString);
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, 1);
         });
     }
@@ -125,7 +124,7 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With NULL Label")
     void updateMealTestWithNullPrice() {
         this.mealDtoIn.setPrice(null);
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, 1);
         });
     }
@@ -134,7 +133,7 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With NULL Label")
     void updateMealTestWithNullLable() {
         this.mealDtoIn.setLabel(null);
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, 1);
         });
     }
@@ -142,7 +141,7 @@ public class UpdateMealTest {
     @Test
     @DisplayName("Update Meal With Valid ID")
     void updateMealTestWithNegativeID() {
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, -1);
         });
     }
@@ -150,7 +149,7 @@ public class UpdateMealTest {
     @Test
     @DisplayName("Update Meal With Null ID")
     void updateMealTestWithNullID() {
-        Assertions.assertThrows(InvalidMealInformationAdminException.class, () -> {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, null);
         });
     }
