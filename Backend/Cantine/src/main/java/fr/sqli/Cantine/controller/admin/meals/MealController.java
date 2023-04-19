@@ -8,6 +8,7 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
@@ -35,7 +36,7 @@ public class MealController implements IAdminEndPoints {
 
 
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn, @RequestParam("idMeal") Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal {
+    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn, @RequestParam("idMeal") Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
         this.mealService.updateMeal(mealDtoIn, idMeal);
         return ResponseEntity.ok(MEAL_UPDATED_SUCCESSFULLY);
     }

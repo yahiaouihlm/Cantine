@@ -91,11 +91,11 @@ public abstract class AbstractDtoIn {
         return str.replaceAll("\\s+", "");
     }
 
-    public void  checImageValididty (MultipartFile image) throws InvalidMealInformationException {
+    public void  checImageValididty ( Object  type,  MultipartFile image) throws InvalidMealInformationException, InvalidMenuInformationException {
 
         if (image == null || image.isEmpty()) {
-            throw new InvalidMealInformationException("IMAGE_IS_MANDATORY");
-        }
+            throwRightException ( type , "IMAGE_IS_MANDATORY");
+           }
          }
 
 
