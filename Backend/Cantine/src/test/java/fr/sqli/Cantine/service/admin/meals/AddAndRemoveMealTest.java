@@ -8,6 +8,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -204,7 +205,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void testAddMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal {
+    public void testAddMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
 
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");

@@ -41,7 +41,7 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      */
     @JsonIgnore
     public MealEntity toMealEntityWithoutImage() throws InvalidMealInformationException, InvalidMenuInformationException {
-        this.checkValidityExceptImage(); // check if the meal information is valid except the image
+        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category); // check if the meal information is valid except the image
         return this.createMealEntity(); // create the MealEntity object
     }
 
@@ -70,27 +70,15 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      * if it is not valid ( if one of the arguments is null or empty or less than 0)
      *
      * @throws InvalidMealInformationException if the meal information is not valid
+     * @throws InvalidMenuInformationException if the menu information is not valid but  in  this  cas  it will never be thrown
+     *      *                                        because the method is called only in the MealDtoIn class with  type  MealEntity
      */
     @JsonIgnore
     public void checkMealInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
-        this.checkValidityExceptImage();
+        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category);
         super.checImageValididty( MealEntity.class ,   this.image);
     }
 
-
-    /**
-     * Check if the meal information is valid or not and throw an exception if it is not valid
-     * ( if one of the arguments is null or empty or less than 0) except the image
-     *
-     * @throws InvalidMealInformationException if the meal information is not valid except the image
-     * @throws InvalidMenuInformationException if the menu information is not valid but  in  this  cas  it will never be thrown
-     *                                        because the method is called only in the MealDtoIn class with  type  MealEntity
-     */
-    @JsonIgnore
-    public  void checkValidityExceptImage() throws InvalidMealInformationException, InvalidMenuInformationException {
-          super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category);
-
-    }
 
 
 
