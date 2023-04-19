@@ -42,7 +42,9 @@ public class ImageService implements IImageService {
         if (image.getContentType() == null || image.getContentType().isEmpty() ||
                 (!image.getContentType().equals("image/png")
                         && !image.getContentType().equals("image/jpg")
-                        && !image.getContentType().equals("image/jpeg"))) {
+                        && !image.getContentType().equals("image/jpeg")
+                       && !image.getContentType().equals("image/svg")
+                )) {
             LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE IMAGE TYPE IS NOT VALID in the uploadImage METHOD");
             throw new InvalidTypeImageException("INVALID IMAGE TYPE ONLY PNG , JPG , JPEG ARE ACCEPTED ");
         }
