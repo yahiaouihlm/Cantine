@@ -6,6 +6,10 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +28,8 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
-class GetMealTest {
+class GetMealTest  extends  AbstractMealTest {
 
-     @Container
-     private PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
-             .withDatabaseName("cantine_tests")
-             .withUsername("postgres")
-             .withPassword("halim");
     @Autowired
     private MealService mealService;
 
@@ -41,16 +39,22 @@ class GetMealTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @BeforeEach //  clean database before each test
+    public void setUp()   {
+        this.mealDao.deleteAll();
+    }
+
+    @AfterEach //  clean database after each test
+    public void tearDown() {
+        this.mealDao.deleteAll();
+    }
    @Test
    @Rollback(true)
    @DisplayName("Get all meals tests  : 2 meals in database")
-
-
     public void testGetAllMealsTest() throws Exception {
 ////        given  : 2 meals in database
        ImageEntity image = new ImageEntity();
        image.setImagename("ImageMealForTest.jpg");
-
        ImageEntity image1 = new ImageEntity();
        image1.setImagename("ImageMealForTest1.jpg");
 
@@ -62,16 +66,28 @@ class GetMealTest {
         this.mealDao.saveAll(meals);
 
         // when : get all meals
-       var   result  =   this.mockMvc.perform(MockMvcRequestBuilders.get("/cantine/api/admin/meals/getAll"));
+       var   result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(super.GET_ALL_MEALS_URL));
 
 
        // then : 2 meals are returned  (verify status is 200)
         result.andExpect(MockMvcResultMatchers.status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(meals.size())));
-       this.mealDao.deleteAll();
+        result.andExpect(MockMvcResultMatchers.jsonPath("$[0].label").value(CoreMatchers.is(meals.get(0).getLabel())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$[0].category").value(CoreMatchers.is(meals.get(0).getCategory())));
+
+       result.andExpect(MockMvcResultMatchers.jsonPath("$[1].label").value(CoreMatchers.is(meals.get(1).getLabel())));
+       result.andExpect(MockMvcResultMatchers.jsonPath("$[1].category").value(CoreMatchers.is(meals.get(1).getCategory())));
+
+       result.andExpect(MockMvcResultMatchers.jsonPath("$[1].image").value(Matchers.not(Matchers.isEmptyOrNullString())));
+       result.andExpect(MockMvcResultMatchers.jsonPath("$[1].image").value(Matchers.not(Matchers.isEmptyOrNullString())));
 
     }
 
-
-
+    @Test
+    @DisplayName("Get all meals tests  : empty database")
+   public void testGetAllMealsWillEmptyDbTest() throws Exception {
+        var result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(super.GET_ALL_MEALS_URL));
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(0)));
+   }
 }
