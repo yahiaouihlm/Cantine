@@ -62,13 +62,16 @@ section {
   }
 
   .images-presentation {
-    position:  relative;
-    overflow: hidden;
-    border: 1px solid black;
-    transition: transform 0.5s  ease-out;
     .presentation-footer{
-        position: absolute;
-      width: 100%;
+       position: relative;
+        background: red ;
+         width: 100%;
+       .presentation-footer-container{
+         background: yellow;
+         position: absolute;
+         width: 100%;
+         top: 75%;
+      }
     }
 
     h4 {
