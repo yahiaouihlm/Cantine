@@ -89,11 +89,11 @@ public class MealService implements IMealService {
             throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
         }
         var meal = overemotional.get();
-       /* if (meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
+        if (meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         {
             MealService.LOG.debug("THE MEAL WITH AN ID = {} IS PRESENT IN A MENU AND CAN NOT BE DELETED ", id);
             throw new RemoveMealAdminException("THE MEAL WITH AN label  = " + meal.getLabel() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED ");
-        }*/
+        }
 
         var image = meal.getImage();
         this.imageService.deleteImage(image.getImagename(), "images/meals");
@@ -105,6 +105,7 @@ public class MealService implements IMealService {
     @Override
     public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
         MealEntity meal = mealDtoIn.toMealEntity();
+        System.out.println(meal.getLabel());
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
             throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
 
@@ -141,7 +142,7 @@ public class MealService implements IMealService {
 
     @Override
     public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMeal {
-        return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label.trim().toLowerCase(),  category.trim().toLowerCase() , description.trim().toLowerCase() );
+        return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label.trim(),  category.trim() , description.trim() );
 
     }
 

@@ -159,7 +159,15 @@ public class MealEntity implements Serializable {
         this.image = image;
     }
 
-/* public List<OrderEntity> getCommandes() {
+    public List<MenuEntity> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<MenuEntity> menus) {
+        this.menus = menus;
+    }
+
+    /* public List<OrderEntity> getCommandes() {
         return this.commandes;
     }
 
