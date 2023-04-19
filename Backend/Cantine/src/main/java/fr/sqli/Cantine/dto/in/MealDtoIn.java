@@ -76,7 +76,7 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
     @JsonIgnore
     public void checkMealInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
         super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category);
-        super.checImageValididty( MealEntity.class ,   this.image);
+        super.checkImageValididty( MealEntity.class ,   this.image);
     }
 
 

@@ -1,7 +1,6 @@
 package fr.sqli.Cantine.dto.in;
 
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
@@ -97,7 +96,7 @@ public abstract class AbstractDtoIn {
         return str.replaceAll("\\s+", "");
     }
 
-    public void checImageValididty(Class type, MultipartFile image) throws InvalidMealInformationException, InvalidMenuInformationException {
+    public void checkImageValididty(Class type, MultipartFile image) throws InvalidMealInformationException, InvalidMenuInformationException {
 
         if (image == null || image.isEmpty()) {
             throwRightException(type, "IMAGE_IS_MANDATORY");
