@@ -85,9 +85,11 @@ section {
 
 @media (max-width: 768px) {
   section {
-    img {
-      width: 80%;
-      height: 50vh;
+    .images-prestation {
+      img {
+        width: 100%;
+        height: calc(100% - 20px);
+      }
     }
   }
 }
