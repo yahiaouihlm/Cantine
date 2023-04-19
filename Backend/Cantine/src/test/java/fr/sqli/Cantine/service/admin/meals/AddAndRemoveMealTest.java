@@ -63,10 +63,29 @@ class AddAndRemoveMealTest {
 
     }
 
+    @AfterEach
+    public void tearDown() {
+        mealEntity = null;
+        mealDtoIn = null;
+    }
+
+       /**************************** Remove Meal Test ****************************/
 
     @Test
+    @DisplayName("Test  removeMeal method with  valid iformation")
+    void removeMealWithValidateInformationtest () throws ImagePathException, MealNotFoundAdminException, InvalidMealInformationException, RemoveMealAdminException {
+
+        this.mealEntity.setMenus(List.of()); //  empty list of  menu
+        Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
+        Mockito.doNothing().when(this.imageService).deleteImage(null, "images/meals");
+        var result = mealService.removeMeal(1);
+        // tests
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(this.mealEntity.getLabel(), result.getLabel());
+    }
+    @Test
     @DisplayName("Test  removeMeal method with positive id and meal not in  association with menu ")
-    void removeMealTestWithMealInAssociationWithMenu() {
+    void removeMealTestWithMealInAssociationWithMenutest() {
         //add A menu ro  meal
         this.mealEntity.setMenus(List.of(new MenuEntity(), new MenuEntity()));
         Mockito.when(mealDao.findById(1)).thenReturn(java.util.Optional.ofNullable(mealEntity));
@@ -78,7 +97,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the removeMeal method with positive id")
-    void removeMealTestWithNegativeID() throws InvalidMealInformationException {
+    void removeMealTestWithNegativeIDtest() throws InvalidMealInformationException {
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.removeMeal(-1));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);
@@ -87,7 +106,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the removeMeal method with NULL id")
-    void removeMealTestWithNullId() {
+    void removeMealTestWithNullIdtest() {
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.removeMeal(null));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);
@@ -96,33 +115,10 @@ class AddAndRemoveMealTest {
 
 
     /**************************** Add Meal Test ****************************/
-    @Test
-    @DisplayName("Test the addMeal method with valid meal")
-    void testeaddMealTestWithValidMeal() throws MealNotFoundAdminException, RemoveMealAdminException, ImagePathException, InvalidMealInformationException {
-        this.mealEntity.setMenus(List.of()); // make  menu  with  empty list ==> meal  is not in association with menu
-        Mockito.when(mealDao.findById(1)).thenReturn(java.util.Optional.ofNullable(mealEntity));
-       Mockito.doNothing().when(this.imageService).deleteImage(null, "images/meals");
 
-
-
-       var result = mealService.removeMeal(1);
-
-        // tests
-        Assertions.assertEquals("Meal 1", result.getLabel());
-     /* Assertions.assertEquals("first Meal To  Test", result.getDescription());
-        Assertions.assertEquals("Frites", result.getCategory());
-        Assertions.assertEquals(BigDecimal.valueOf(1.3), result.getPrice());*/
-
-        ///  verify  the  calls  to  the  methods
-      /*  Mockito.verify(mealDao, Mockito.times(1)).findById(1);  // the meal is found the method findById is called once
-      Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase ("Meal 1",  "Frites", "first Meal To  Test");
-
-        Mockito.verify(this.imageService, Mockito.times(1)).deleteImage(null, "images/meals"); // the image is deleted
-        Mockito.verify(mealDao, Mockito.times(1)).delete(this.mealEntity);*/
-    }
-    @Test
+   @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void testAddMealWihValidInformation() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWihValidInformationtest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
 
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
@@ -161,7 +157,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with Existing meal")
-    void testAddMealWithExistingMeal() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void AddMealWithExistingMealtest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategory("Frites");
@@ -181,7 +177,7 @@ class AddAndRemoveMealTest {
     }
     @Test
     @DisplayName("Test the addMeal method with negative price")
-    void testAddMealWithNegativePrice() throws InvalidTypeImageException, InvalidImageException, ImagePathException {
+    void AddMealWithNegativePricetest() throws InvalidTypeImageException, InvalidImageException, ImagePathException {
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategory("Frites");
@@ -198,7 +194,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with too lang label")
-    void testAddMealWithTooLangLabel() throws InvalidTypeImageException, InvalidImageException, ImagePathException {
+    void AddMealWithTooLangLabeltest() throws InvalidTypeImageException, InvalidImageException, ImagePathException {
         String tooLangString = "Lorem ipsum dolor sit adccdcmet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m";
 
         this.mealDtoIn = new MealDtoIn();
@@ -215,7 +211,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with null image")
-    void testAddMealWithNullImage() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
+    void AddMealWithNullImagetest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
         this.mealDtoIn = new MealDtoIn();
         this.mealDtoIn.setLabel("Meal 1");
         this.mealDtoIn.setCategory("Frites");
@@ -234,7 +230,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with null meal information")
-    void testAddMealWithNullMealInformation() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
+    void AddMealWithNullMealInformationtest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
         this.mealDtoIn = new MealDtoIn();
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
