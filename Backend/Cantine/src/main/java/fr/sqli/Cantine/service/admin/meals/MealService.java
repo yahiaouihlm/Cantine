@@ -119,7 +119,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public List<MealDtout> getAllMeals()  {
+    public List<MealDtout> getAllMeals() {
         return this.mealDao.findAll().stream().map(meal -> new MealDtout(meal, this.MEALS_IMAGES_URL)).toList();
     }
 
@@ -129,8 +129,8 @@ public class MealService implements IMealService {
         IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", id);
 
         var meal = this.mealDao.findById(id);
-        if (meal.isPresent()) {
 
+        if (meal.isPresent()) {
             return new MealDtout(meal.get(), this.MEALS_IMAGES_URL);
         }
 

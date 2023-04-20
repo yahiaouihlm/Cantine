@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,15 +24,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class GetMealsTest {
 
-    @Mock
-    MealService iMealService;
 
     @Mock
     IMealDao iMealDao;
+    @InjectMocks
+    MealService iMealService;
 
     MealEntity mealEntity;
     @Mock
@@ -46,7 +48,7 @@ class GetMealsTest {
     void setUp() throws MealNotFoundAdminException, InvalidMealInformationException {
         this.environment = new MockEnvironment();
         this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
-        this.iMealService = new MealService(environment, iMealDao, null);
+        this.iMealService = new MealService(environment, iMealDao, imageService);
         this.mealEntity = new MealEntity();
         this.mealEntity.setId(1);
         this.mealEntity.setStatus(1);
@@ -90,7 +92,7 @@ class GetMealsTest {
         Assertions.assertEquals(ListToGetAsDtout.get(1).getId(), result.get(1).getId());
         Assertions.assertEquals(ListToGetAsDtout.get(1).getDescription(), result.get(1).getDescription());
 
-        Mockito.verify(this.iMealDao).findAll();
+        Mockito.verify(this.iMealDao, times(1)).findAll();
 
     }
 
@@ -108,25 +110,27 @@ class GetMealsTest {
 
     /******************************************* getMealByid methode *****************************************************/
     @Test
-    @DisplayName("Test  getMealByID with valid ID  return a Meal Instanced By Mokito ")
+    @DisplayName("Test  getMealByID with valid ID  return a Meal Instanced By Mockito ")
     void geMealWithValidId() throws MealNotFoundAdminException, InvalidMealInformationException {
         final Integer idMeal = 1;
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
         Mockito.when(this.iMealDao.findById(1)).thenReturn(Optional.of(this.mealEntity));
+
         MealDtout resultTest = this.iMealService.getMealByID(1);
-        MealDtout shouldBeresult = new MealDtout(this.mealEntity, urlMealImage);
 
-        Assertions.assertEquals(shouldBeresult.getId(), resultTest.getId());
-        Assertions.assertEquals(shouldBeresult.getCategory(), resultTest.getCategory());
-        Assertions.assertEquals(shouldBeresult.getPrice(), resultTest.getPrice());
+        MealDtout shouldResult = new MealDtout(this.mealEntity, urlMealImage);
 
-        Mockito.verify(this.iMealDao).findById(idMeal);
+        Assertions.assertEquals(shouldResult.getId(), resultTest.getId());
+        Assertions.assertEquals(shouldResult.getCategory(), resultTest.getCategory());
+        Assertions.assertEquals(shouldResult.getPrice(), resultTest.getPrice());
+
+        Mockito.verify(this.iMealDao, times(1)).findById(idMeal);
     }
 
     @Test
     @DisplayName("Test  getMealByID with invalid ID  with MAX_VALUE Because this ID Can't be recorded in the database ")
-    void getMealByIdWithNoutFoundID() {
+    void getMealByIdWithNotFoundID() {
         final Integer idMeal = Integer.MAX_VALUE;
 
         Mockito.when(this.iMealDao.findById(idMeal)).thenReturn(Optional.empty());
@@ -136,7 +140,7 @@ class GetMealsTest {
             this.iMealService.getMealByID(idMeal);
         });
 
-        Mockito.verify(this.iMealDao).findById(idMeal);
+        Mockito.verify(this.iMealDao, times(1)).findById(idMeal);
     }
 
 
@@ -153,9 +157,8 @@ class GetMealsTest {
     @Test
     @DisplayName("Test  getMealByID with null ID  ")
     void getMealByIdWithNullID() {
-        Integer IdTest = null;
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
-            this.iMealService.getMealByID(IdTest);
+            this.iMealService.getMealByID(null);
         });
     }
 
