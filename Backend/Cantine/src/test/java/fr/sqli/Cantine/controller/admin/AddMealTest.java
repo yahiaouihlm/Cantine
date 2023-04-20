@@ -72,6 +72,48 @@ public class AddMealTest extends AbstractMealTest {
     /*
     add containerTest  for  Label  with   Too short
    */
+
+    @Test
+    void AddMealTestWithTooLongDescription() throws Exception {
+        // given :  remove label from formData
+        this.formData.remove("description");
+        // word  with  101  characters
+        String tooLongLabel = """
+                   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                       Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\s
+                                       Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
+                                       fringilla vel, aliquet nec, vulputate eget, arcu. In  justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam
+                                       dictum felis eu pede mollis pretium. Integejtger tincidunt. Cras dapibus. Vivamus elementum semper nisi.
+                """;
+        this.formData.add("description", tooLongLabel); // length  must be  < 3 without spaces
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
+    }
+    @Test
+    void AddMealTestWithNullDescriptionValue() throws Exception {
+        this.formData.remove("description");
+        this.formData.add("description", null);
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
     @Test
     void AddMealWithoutDescription () throws Exception {
 
@@ -89,7 +131,6 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
     }
-
     @Test
     void AddMealTestWithTooShortDescription () throws Exception {
         // given :  remove label from formData
