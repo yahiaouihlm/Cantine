@@ -17,7 +17,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootTest
@@ -73,6 +72,22 @@ public class AddMealTest extends AbstractMealTest {
     /*
     add containerTest  for  Label Too short
    */
+    @Test
+    void AddMealTestWithNullCategoryValue() throws Exception {
+        this.formData.remove("category");
+        this.formData.add("category", null);
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
+    }
     @Test
     void AddMealTestWithTooShortCategory () throws Exception {
         // given :  remove label from formData
