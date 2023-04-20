@@ -37,6 +37,20 @@ public interface IMealService {
     }
 
 
+
+
+    /**
+     * this methode is  used  to  check if the meal is already present in the database or not with the same label, description and category
+     * if the meal is present in the database it will throw an ExistingMeal exception
+     *
+     * @param label       the label of the meal
+     * @param description the description of the meal
+     * @param category    the category of the meal
+     * @throws ExistingMeal if the meal is already present in the database with the same label, description and category
+     */
+    Optional<MealEntity> checkExistMeal (String label, String description, String category) throws ExistingMeal;
+
+
     /**
      * this method is used to update a meal in the database and save the image in the (images/meals)
      * directory if the meal is not present in any menu all the feilds must be filled in the mealDtoIn
@@ -52,18 +66,6 @@ public interface IMealService {
      * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
      * @throws IOException                          if the image is not found or  the jvm cannot create the file
      */
-
-
-    /**
-     * this methode is  used  to  check if the meal is already present in the database or not with the same label, description and category
-     * if the meal is present in the database it will throw an ExistingMeal exception
-     *
-     * @param label       the label of the meal
-     * @param description the description of the meal
-     * @param category    the category of the meal
-     * @throws ExistingMeal if the meal is already present in the database with the same label, description and category
-     */
-    Optional<MealEntity> checkExistMeal (String label, String description, String category) throws ExistingMeal;
 
     MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException;
 

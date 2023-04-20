@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 @RestController
-public class ImageController implements IImageContriller {
+public class ImageController implements IImageController {
     private final ImageService imageService;
 
     @Autowired
