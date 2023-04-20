@@ -1,31 +1,21 @@
 package fr.sqli.Cantine.controller.admin;
 
-import ch.qos.logback.core.net.ObjectWriter;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.dto.in.MealDtoIn;
-import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.nio.file.Files;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -83,7 +73,7 @@ public class AddMealTest   extends  AbstractMealTest {
     }
 
    @Test
-   void  AddMealTestWithNullLableValue () throws Exception {
+   void AddMealTestWithNullLabelValue() throws Exception {
        // given :  remove label from formData
        this.formData.remove("label" );
        this.formData.add("label", null );
