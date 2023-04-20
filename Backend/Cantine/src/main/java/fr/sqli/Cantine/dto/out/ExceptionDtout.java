@@ -2,17 +2,18 @@ package fr.sqli.Cantine.dto.out;
 
 public class ExceptionDtout {
 
-    private  String  excptionMessage ;
+    private  String  exceptionMessage ;
 
-    public ExceptionDtout(String excptionMessage) {
-        this.excptionMessage = excptionMessage;
+    public ExceptionDtout(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 
-    public String getExcptionMessage() {
-        return excptionMessage;
+
+    public  String  getExceptionMessage() {
+        return exceptionMessage;
     }
 
-    public void setExcptionMessage(String excptionMessage) {
-        this.excptionMessage = excptionMessage;
+    public void setExceptionMessage( String  exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 }
