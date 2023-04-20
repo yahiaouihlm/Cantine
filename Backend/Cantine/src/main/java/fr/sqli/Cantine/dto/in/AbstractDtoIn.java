@@ -90,7 +90,7 @@ public abstract class AbstractDtoIn {
 
 
         if (status != 0 && status != 1) {
-            throwRightException(type, "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE ");
+            throwRightException(type, "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE");
         }
     }
 

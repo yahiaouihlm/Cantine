@@ -30,7 +30,11 @@ public class AbstractMealTest {
      */
     protected  String  exceptionMessage(String exceptionMessage) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(this.exceptionMessage, exceptionMessage);
+        if (exceptionMessage==null) {
+            jsonObject.put(this.exceptionMessage, "Exception message is null");
+        } else {
+            jsonObject.put(this.exceptionMessage, exceptionMessage);
+        }
         return jsonObject.toString();
 
     }

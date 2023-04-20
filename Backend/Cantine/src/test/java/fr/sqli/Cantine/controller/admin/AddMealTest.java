@@ -33,8 +33,10 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
             Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
             Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
-            Map.entry("ShortCategoryLength", "CATEGORY_IS_TOO_SHORT")
-
+            Map.entry("ShortCategoryLength", "CATEGORY_IS_TOO_SHORT"),
+            Map.entry("LongCategoryLength", "CATEGORY_IS_TOO_LONG"),
+            Map.entry("InvalidStatus", "ARGUMENT NOT VALID"),
+            Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE")
 
     );
 
@@ -73,6 +75,106 @@ public class AddMealTest extends AbstractMealTest {
     add containerTest  for  Label  with   Too short
    */
 
+    /********************************* Tests for Status *********************************/
+    @Test
+    void AddMealTestWithOutSideStatusValue3 () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", "3 ");
+
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+    @Test
+    void AddMealTestWithOutSideStatusValue2 () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", "-5");
+
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+    @Test
+    void AddMealTestWithOutSideStatusValue () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", "5");
+
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+    @Test
+    void AddMealTestWithEmptyStatusValue () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", " ");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+    }
+    @Test
+    void AddMealTestWithInvalidStatusValue2 () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", "-5rffr");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidStatus"))));
+    }
+    @Test
+    void AddMealTestWithInvalidStatusValue () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", "564rffr");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidStatus"))));
+    }
     @Test
     void AddMealTestWithNullStatusValue() throws Exception {
         this.formData.remove("status");
@@ -105,7 +207,16 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
     }
+
+
+
+
+
+
     /*****************************************  Tests For   Description  *****************************************/
+
+
+
 
     @Test
     void AddMealTestWithTooLongDescription() throws Exception {
@@ -184,6 +295,8 @@ public class AddMealTest extends AbstractMealTest {
     }
 
 
+
+
     /******************************************** Tests for Category ********************************************/
     @Test
     void AddMealTestWithTooLongCategory() throws Exception {
@@ -209,8 +322,9 @@ public class AddMealTest extends AbstractMealTest {
 
 
         // then :
+
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongCategory"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongCategoryLength"))));
     }
     @Test
     void AddMealTestWithNullCategoryValue() throws Exception {
@@ -262,6 +376,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
     }
+
+
+
 
 
 

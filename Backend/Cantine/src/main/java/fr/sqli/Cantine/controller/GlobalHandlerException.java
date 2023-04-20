@@ -37,7 +37,7 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionDtout> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout("ARGUMENT NOT VALID "));
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout("ARGUMENT NOT VALID"));
     }
 
     /**
@@ -50,7 +50,7 @@ public class GlobalHandlerException {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionDtout> handleMealAlreadyExistAdminException(MethodArgumentNotValidException e) {
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout("ARGUMENT NOT VALID  "));
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout("ARGUMENT NOT VALID"));
     }
 
 
