@@ -23,17 +23,20 @@ import java.util.Map;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AddMealTest extends AbstractMealTest {
-    private  final HashMap<String,  String> exceptions = new HashMap<>(
-            Map.of(
-                    "Label", "LABEL_IS_MANDATORY",
-                    "Category", "CATEGORY_IS_MANDATORY",
-                    "Description", "DESCRIPTION_IS_MANDATORY",
-                    "Price", "PRICE_IS_MANDATORY",
-                    "Quantity", "QUANTITY_IS_MANDATORY",
-                    "Status", "STATUS_IS_MANDATORY",
-                    "ShortLabelLength", "LABEL_IS_TOO_SHORT",
-                    "LongLabelLength", "LABEL_IS_TOO_LONG"
-            )
+    private final Map<String, String> exceptionsMap = Map.ofEntries(
+            Map.entry("Label", "LABEL_IS_MANDATORY"),
+            Map.entry("Category", "CATEGORY_IS_MANDATORY"),
+            Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
+            Map.entry("Price", "PRICE_IS_MANDATORY"),
+            Map.entry("Quantity", "QUANTITY_IS_MANDATORY"),
+            Map.entry("Status", "STATUS_IS_MANDATORY"),
+            Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
+            Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
+            Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
+            Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
+            Map.entry("ShortCategoryLength", "CATEGORY_IS_TOO_SHORT")
+
+
     );
 
     @Autowired
@@ -51,7 +54,7 @@ public class AddMealTest extends AbstractMealTest {
 
 
     @BeforeEach
-    public void initMeaDtoIn() throws IOException {
+    public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("label", "MealTest");
         this.formData.add("price", "1.5");
@@ -70,7 +73,23 @@ public class AddMealTest extends AbstractMealTest {
     /*
     add containerTest  for  Label Too short
    */
+    @Test
+    void AddMealTestWithTooShortCategory () throws Exception {
+        // given :  remove label from formData
+        this.formData.remove("category");
+        this.formData.add("category", "    ad     "); // length  must be  < 3 without spaces
 
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortCategoryLength"))));
+    }
     @Test
     void AddMealWithCategory () throws Exception {
 
@@ -86,7 +105,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptions.get("Category"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
     }
 
 
@@ -106,7 +125,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptions.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
 
     }
 
@@ -125,7 +144,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptions.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
 
     }
 
@@ -144,7 +163,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptions.get("ShortLabelLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortLabelLength"))));
 
     }
 
@@ -173,7 +192,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptions.get("LongLabelLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongLabelLength"))));
 
 
     }
