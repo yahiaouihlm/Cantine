@@ -70,8 +70,36 @@ public class AddMealTest extends AbstractMealTest {
     }
 
     /*
-    add containerTest  for  Label Too short
+    add containerTest  for  Label  with   Too short
    */
+
+    @Test
+    void AddMealTestWithTooLongCategory() throws Exception {
+        // given :  remove label from formData
+        this.formData.remove("category");
+        // word  with  101  characters
+        String tooLongLabel = """
+                                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                 Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. 
+                                 Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
+                                 fringilla vel, aliquet nec, vulputate eget, arcu. In  justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam
+                                 dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapielementum semper nisi. Aenean vulputate
+                                   eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, 
+                                    viverra quis, feugiat a,e
+                             """;
+        this.formData.add("category", tooLongLabel); // length  must be  < 3 without spaces
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongCategory"))));
+    }
     @Test
     void AddMealTestWithNullCategoryValue() throws Exception {
         this.formData.remove("category");
