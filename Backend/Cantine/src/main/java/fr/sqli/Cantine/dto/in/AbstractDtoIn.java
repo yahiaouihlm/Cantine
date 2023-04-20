@@ -40,7 +40,7 @@ public abstract class AbstractDtoIn {
             throwRightException(type, "STATUS_IS_MANDATORY");
         }
 
-        if (MealEntity.class.isAssignableFrom(type) ){
+        if (MealEntity.class.isAssignableFrom(type)) {
             if (category == null || category.trim().isEmpty()) {
                 throwRightException(type, "CATEGORIES_IS_MANDATORY");
             }
