@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 
 public class MealDtoIn  extends AbstractDtoIn implements Serializable {
 
+    private String label;
     private String category;
     private String description;
-    private String label;
     private BigDecimal price;
     private Integer quantity;
     private Integer status;
