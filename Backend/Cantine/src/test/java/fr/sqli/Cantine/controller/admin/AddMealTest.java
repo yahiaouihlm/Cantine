@@ -72,7 +72,44 @@ public class AddMealTest extends AbstractMealTest {
     /*
     add containerTest  for  Label  with   Too short
    */
+    @Test
+    void AddMealWithoutDescription () throws Exception {
 
+        // given :  remove label from formData
+        this.formData.remove("description");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
+
+    @Test
+    void AddMealTestWithTooShortDescription () throws Exception {
+        // given :  remove label from formData
+        this.formData.remove("description");
+        this.formData.add("description", "    ad     "); // length  must be  < 3 without spaces
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
+    }
+
+
+    /******************************************** Tests for Category ********************************************/
     @Test
     void AddMealTestWithTooLongCategory() throws Exception {
         // given :  remove label from formData
@@ -134,7 +171,7 @@ public class AddMealTest extends AbstractMealTest {
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortCategoryLength"))));
     }
     @Test
-    void AddMealWithCategory () throws Exception {
+    void AddMealWithoutCategory () throws Exception {
 
         // given :  remove label from formData
         this.formData.remove("category");
@@ -155,7 +192,7 @@ public class AddMealTest extends AbstractMealTest {
 
     /******************************************** Tests for Label ********************************************/
     @Test
-    void AddMealWithNullLabel() throws Exception {
+    void AddMealWithoutLabel() throws Exception {
         // given :  remove label from formData
         this.formData.remove("label");
 
