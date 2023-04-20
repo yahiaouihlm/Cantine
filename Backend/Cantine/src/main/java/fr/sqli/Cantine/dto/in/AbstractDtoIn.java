@@ -40,14 +40,17 @@ public abstract class AbstractDtoIn {
             throwRightException(type, "STATUS_IS_MANDATORY");
         }
 
-        if (MealEntity.class.isAssignableFrom(type)) {
+        if (MealEntity.class.isAssignableFrom(type)) { // if the type is a meal
             if (category == null || category.trim().isEmpty()) {
-                throwRightException(type, "CATEGORIES_IS_MANDATORY");
+                throwRightException(type, "CATEGORY_IS_MANDATORY");
             }
 
             if (this.removeSpaces(category).length() < 3)
-                throwRightException(type, "CATEGORIES_IS_TOO_SHORT");
+                throwRightException(type, "CATEGORY_IS_TOO_SHORT");
 
+            if (category.length() > 44) {
+                throwRightException(type, "CATEGORY_IS_TOO_LONG");
+            }
 
             if (description.length() > 600) {
                 throwRightException(type, "DESCRIPTION_IS_TOO_LONG");
