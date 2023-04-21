@@ -35,8 +35,10 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
             Map.entry("ShortCategoryLength", "CATEGORY_IS_TOO_SHORT"),
             Map.entry("LongCategoryLength", "CATEGORY_IS_TOO_LONG"),
-            Map.entry("InvalidStatus", "ARGUMENT NOT VALID"),
-            Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE")
+            Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
+            Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE"),
+            Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
+            Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH")
 
     );
 
@@ -74,6 +76,123 @@ public class AddMealTest extends AbstractMealTest {
     /*
     add containerTest  for  Label  with   Too short
    */
+
+
+    /************************************* Tests for  Quantity  *************************************/
+    @Test
+    void addMealTestWithTooLongQuantity() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity",Integer.toString(Integer.MAX_VALUE-99) );
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighQuantity"))));
+    }
+
+    @Test
+    void addMealTestWithNegativeQuantity() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", "-1");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+
+    @Test
+    void addMealTestWithInvalidQuantity3() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", "-1.2");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void addMealTestWithInvalidQuantity2() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", "1.2");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void addMealTestWithInvalidQuantity() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", "null");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMealTestWithEmptyQuantity() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", "");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+    @Test
+    void addMealTestWithNullQuantity() throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", null);
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+    @Test
+    void addMealTestWithOutQuantity() throws Exception {
+        this.formData.remove("quantity");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+
+
+
+
+
+
+
 
     /********************************* Tests for Status *********************************/
     @Test
@@ -157,7 +276,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidStatus"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
     @Test
     void AddMealTestWithInvalidStatusValue () throws Exception {
@@ -173,7 +292,22 @@ public class AddMealTest extends AbstractMealTest {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidStatus"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void AddMealTestWithNegativeStatusValue3 () throws Exception {
+        this.formData.remove("status");
+        this.formData.add("status", "-1");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
     }
     @Test
     void AddMealTestWithNullStatusValue() throws Exception {
@@ -223,13 +357,7 @@ public class AddMealTest extends AbstractMealTest {
         // given :  remove label from formData
         this.formData.remove("description");
         // word  with  101  characters
-        String tooLongLabel = """
-                   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                       Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\s
-                                       Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
-                                       fringilla vel, aliquet nec, vulputate eget, arcu. In  justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam
-                                       dictum felis eu pede mollis pretium. Integejtger tincidunt. Cras dapibus. Vivamus elementum semper nisi.
-                """;
+        String tooLongLabel = "a".repeat(601);
         this.formData.add("description", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
@@ -303,15 +431,7 @@ public class AddMealTest extends AbstractMealTest {
         // given :  remove label from formData
         this.formData.remove("category");
         // word  with  101  characters
-        String tooLongLabel = """
-                                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                 Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. 
-                                 Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
-                                 fringilla vel, aliquet nec, vulputate eget, arcu. In  justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam
-                                 dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapielementum semper nisi. Aenean vulputate
-                                   eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, 
-                                    viverra quis, feugiat a,e
-                             """;
+        String tooLongLabel = "t".repeat(45);
         this.formData.add("category", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
@@ -444,15 +564,7 @@ public class AddMealTest extends AbstractMealTest {
         // given :  remove label from formData
         this.formData.remove("label");
         // word  with  101  characters
-        String tooLongLabel = """
-                                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                 Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. 
-                                 Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
-                                 fringilla vel, aliquet nec, vulputate eget, arcu. In  justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam
-                                 dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapielementum semper nisi. Aenean vulputate
-                                   eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, 
-                                    viverra quis, feugiat a,e
-                             """;
+        String tooLongLabel = "test".repeat(26);
         this.formData.add("label", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
