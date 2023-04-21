@@ -15,16 +15,20 @@ import {MainFooterComponent} from "../globalComponents/main-footer/main-footer.c
 
 
 
+
+
 const routes: Routes = [
   {path: '', component: MainCoreCantineComponent,
     children: [
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
       {path: 'menu', component: MenuComponent},
+
     ]
   },
 
-  {path:'', redirectTo:'cantine/home', pathMatch:'full'},
+  {path: '', redirectTo:'cantine/home', pathMatch:'full'},
+
 ];
 @NgModule({
   declarations: [
@@ -35,7 +39,7 @@ const routes: Routes = [
     MainFooterComponent,
   ],
   exports: [
-    MainFooterComponent
+    MainFooterComponent,
   ],
   imports: [
     CommonModule,

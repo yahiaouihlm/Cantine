@@ -9,16 +9,16 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {RouterModule, Routes} from "@angular/router";
 import {CoreCantineModule} from "../core-cantine/core-cantine.module";
 import { HomeAdminComponent } from './home-admin/home-admin.component';
+import {PageNotFoundComponent} from "../globalComponents/page-not-found/page-not-found.component";
 
 
 const routes: Routes = [
-  {path: '', component: MainAdminComponent,
+  {path: '', component:HomeAdminComponent ,
     children: [
         {path: 'home', component: HomeAdminComponent},
     ]
   },
-
-  {path:'', redirectTo:'cantine/home', pathMatch:'full'},
+  {path: '',  component: PageNotFoundComponent}
 ];
 
 
