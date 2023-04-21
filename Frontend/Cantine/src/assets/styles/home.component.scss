@@ -61,7 +61,7 @@ section {
     margin-top: 50px;
   }
 
-  .images-presentation {
+ .images-presentation {
     .presentation-footer{
        position: relative;
         background: red ;
@@ -82,17 +82,16 @@ section {
     }
     img {
       border-radius: 20px;
-      width: 70%;
+       width: 200px;
       box-shadow: 5px 5px 3px 1px rgba(0, 0, 0, 0.7);
     }
-    .cola-img {
-       height: 43vh;
-    }
+
   }
 
   p, h2, h4, .row {
     margin-bottom: 0px;
   }
+
 }
 
 
