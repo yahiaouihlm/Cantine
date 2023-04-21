@@ -5,6 +5,7 @@ import {PageNotFoundComponent} from "./globalComponents/page-not-found/page-not-
 const routes: Routes = [
 
  {path:'cantine', loadChildren:() => import('./core-cantine/core-cantine.module').then(m => m.CoreCantineModule)},
+    {path:'cantine/admin', loadChildren:() => import('./admin/admin.module').then(m => m.AdminModule)},
     {path:'', redirectTo:'cantine/home', pathMatch:'full'},
     {path:'**', component: PageNotFoundComponent}
 ];

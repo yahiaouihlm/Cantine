@@ -34,6 +34,9 @@ const routes: Routes = [
     MenuComponent,
     MainFooterComponent,
   ],
+  exports: [
+    MainFooterComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
