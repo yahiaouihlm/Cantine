@@ -108,7 +108,7 @@ public abstract class AbstractDtoIn {
         return str.replaceAll("\\s+", "");
     }
 
-    public void checkImageValididty(Class type, MultipartFile image) throws InvalidMealInformationException, InvalidMenuInformationException {
+    public void checkImageValidity(Class type, MultipartFile image) throws InvalidMealInformationException, InvalidMenuInformationException {
 
         if (image == null || image.isEmpty()) {
             throwRightException(type, "IMAGE_IS_MANDATORY");

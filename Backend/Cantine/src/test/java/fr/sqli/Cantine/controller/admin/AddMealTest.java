@@ -18,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,6 +30,7 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("Price", "PRICE_IS_MANDATORY"),
             Map.entry("Quantity", "QUANTITY_IS_MANDATORY"),
             Map.entry("Status", "STATUS_IS_MANDATORY"),
+            Map.entry("Image", "IMAGE_IS_MANDATORY"),
             Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
             Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
             Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
@@ -41,7 +43,6 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0")
-
     );
 
     @Autowired
@@ -76,6 +77,18 @@ public class AddMealTest extends AbstractMealTest {
     }
 
     /* TODO ;  check  Existing Meal and  image */
+
+    @Test
+    void addMealTestWithOutImage() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+
+
+    }
 
 
     /*******************************  Tests  For Price  **********************************/
