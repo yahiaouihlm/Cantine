@@ -61,36 +61,31 @@ section {
     margin-top: 50px;
   }
 
- .images-presentation {
-    .presentation-footer{
-       position: relative;
-        background: red ;
-         width: 100%;
-       .presentation-footer-container{
-         background: yellow;
-         position: absolute;
-         width: 100%;
-         top: 75%;
-      }
-    }
-
+  .images-presentation {
     h4 {
       font-family: 'Dancing Script', cursive;
       font-size: 1.8em;
       margin: 15px;
       font-weight: 500;
     }
+
     img {
       border-radius: 20px;
-       width: 200px;
+      width: 200px;
       box-shadow: 5px 5px 3px 1px rgba(0, 0, 0, 0.7);
     }
 
+    img:hover {
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+
   }
 
-  p, h2, h4, .row {
-    margin-bottom: 0px;
-  }
+
+
+
 
 }
 
@@ -99,7 +94,7 @@ section {
   section {
     .images-presentation {
       img {
-        width: 100%;
+        width: 80%;
         height: calc(100% - 20px);
       }
     }
