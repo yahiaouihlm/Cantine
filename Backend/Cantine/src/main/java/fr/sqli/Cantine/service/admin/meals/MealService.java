@@ -52,7 +52,7 @@ public class MealService implements IMealService {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", idMeal);
             throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
         }
-        var meal = overemotional.get();
+        var meal = overemotional.get(); // change the  meal  with  the  new  values
         meal.setPrice(mealEntity.getPrice());
         meal.setLabel(mealEntity.getLabel());
         meal.setDescription(mealEntity.getDescription());
@@ -63,7 +63,7 @@ public class MealService implements IMealService {
         //check  if the  meal  is  already  present  in  the  database despite  the  update
         Optional<MealEntity> mealEntity1 = this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
         if (mealEntity1.isPresent()){
-            if (mealEntity1.get().getId() != meal.getId()) {
+            if (mealEntity1.get().getId() != meal.getId()) { // if the  meal  is  already  present  in  the  database and  the  id  are   different  from  the  id  of  the  meal  we  want  to  update  we  throw  an  exception
                 throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
             }
         }
