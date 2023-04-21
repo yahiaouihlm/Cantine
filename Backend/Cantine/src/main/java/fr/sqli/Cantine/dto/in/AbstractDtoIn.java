@@ -67,8 +67,11 @@ public abstract class AbstractDtoIn {
 
         }
 
-        if (quantity == null || quantity < 0) {
+        if (quantity == null) {
             throwRightException(type, "QUANTITY_IS_MANDATORY");
+        }
+        if (quantity < 0) {
+            throwRightException(type, "QUANTITY MUST BE GREATER THAN 0");
         }
 
         if (quantity > Integer.MAX_VALUE-100 ) {
