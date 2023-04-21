@@ -75,7 +75,7 @@ public class AddMealTest extends AbstractMealTest {
 
     }
 
-    /* TODO ;  check  Existing Meal */
+    /* TODO ;  check  Existing Meal and  image */
 
 
     /*******************************  Tests  For Price  **********************************/
