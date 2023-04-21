@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.dto.in;
 
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,7 +60,7 @@ public abstract class AbstractDtoIn {
 
         }
 
-        if (MealEntity.class.isAssignableFrom(type)) {
+        if (MenuEntity.class.isAssignableFrom(type)) {
             if (description.length() > 700) {
                 throwRightException(type, "DESCRIPTION_IS_TOO_LONG");
             }
@@ -70,6 +71,9 @@ public abstract class AbstractDtoIn {
             throwRightException(type, "QUANTITY_IS_MANDATORY");
         }
 
+        if (quantity > Integer.MAX_VALUE-100 ) {
+            throwRightException(type, "QUANTITY_IS_TOO_HIGH");
+        }
 
         if (this.removeSpaces(label).length() < 3) {
 
@@ -87,7 +91,9 @@ public abstract class AbstractDtoIn {
         if (price.compareTo(BigDecimal.ZERO) <= 0) {
             throwRightException(type, "PRICE MUST BE GREATER THAN 0");
         }
-
+        if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
+            throwRightException(type, "PRICE MUST BE LESS THAN 1000");
+        }
 
         if (status != 0 && status != 1) {
             throwRightException(type, "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE");
