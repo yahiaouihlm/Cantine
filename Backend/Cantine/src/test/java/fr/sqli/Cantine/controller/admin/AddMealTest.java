@@ -38,7 +38,9 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE"),
             Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
-            Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH")
+            Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
+            Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
+            Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0")
 
     );
 
@@ -73,16 +75,143 @@ public class AddMealTest extends AbstractMealTest {
 
     }
 
-    /*
-    add containerTest  for  Label  with   Too short
-   */
+    /* TODO ;  check  Existing Meal */
+
+
+    /*******************************  Tests  For Price  **********************************/
+
+    @Test
+    void addMealTestWithTooLongPrice() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", "1000.1");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighPrice"))));
+    }
+
+    @Test
+    void addMealTestWithNegativePrice() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", "-1.5");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativePrice"))));
+    }
+
+    @Test
+    void addMealTestWithInvalidPrice4() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", ".5-");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMealTestWithInvalidPrice3() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", "-1c");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMealTestWithInvalidPrice2() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", "1.d");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMealTestWithInvalidPrice() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", "0edez");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMealTestWitEmptyPrice() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", "");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
+    }
+
+    @Test
+    void addMealTestWithNullPrice() throws Exception {
+        this.formData.remove("price");
+        this.formData.add("price", null);
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
+    }
+
+    @Test
+    void addMealTestWithOutPrice() throws Exception {
+        this.formData.remove("price");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
+    }
 
 
     /************************************* Tests for  Quantity  *************************************/
     @Test
     void addMealTestWithTooLongQuantity() throws Exception {
         this.formData.remove("quantity");
-        this.formData.add("quantity",Integer.toString(Integer.MAX_VALUE-99) );
+        this.formData.add("quantity", Integer.toString(Integer.MAX_VALUE - 99));
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -104,7 +233,7 @@ public class AddMealTest extends AbstractMealTest {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativeQuantity"))));
     }
 
     @Test
@@ -120,6 +249,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
+
     @Test
     void addMealTestWithInvalidQuantity2() throws Exception {
         this.formData.remove("quantity");
@@ -133,6 +263,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
+
     @Test
     void addMealTestWithInvalidQuantity() throws Exception {
         this.formData.remove("quantity");
@@ -160,6 +291,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
     }
+
     @Test
     void addMealTestWithNullQuantity() throws Exception {
         this.formData.remove("quantity");
@@ -173,6 +305,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
     }
+
     @Test
     void addMealTestWithOutQuantity() throws Exception {
         this.formData.remove("quantity");
@@ -188,15 +321,9 @@ public class AddMealTest extends AbstractMealTest {
     }
 
 
-
-
-
-
-
-
     /********************************* Tests for Status *********************************/
     @Test
-    void AddMealTestWithOutSideStatusValue3 () throws Exception {
+    void AddMealTestWithOutSideStatusValue3() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", "3 ");
 
@@ -212,8 +339,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
     }
+
     @Test
-    void AddMealTestWithOutSideStatusValue2 () throws Exception {
+    void AddMealTestWithOutSideStatusValue2() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", "-5");
 
@@ -229,8 +357,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
     }
+
     @Test
-    void AddMealTestWithOutSideStatusValue () throws Exception {
+    void AddMealTestWithOutSideStatusValue() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", "5");
 
@@ -246,8 +375,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
     }
+
     @Test
-    void AddMealTestWithEmptyStatusValue () throws Exception {
+    void AddMealTestWithEmptyStatusValue() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", " ");
 
@@ -262,8 +392,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
     }
+
     @Test
-    void AddMealTestWithInvalidStatusValue2 () throws Exception {
+    void AddMealTestWithInvalidStatusValue2() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", "-5rffr");
 
@@ -278,8 +409,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
+
     @Test
-    void AddMealTestWithInvalidStatusValue () throws Exception {
+    void AddMealTestWithInvalidStatusValue() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", "564rffr");
 
@@ -294,8 +426,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
+
     @Test
-    void AddMealTestWithNegativeStatusValue3 () throws Exception {
+    void AddMealTestWithNegativeStatusValue3() throws Exception {
         this.formData.remove("status");
         this.formData.add("status", "-1");
 
@@ -309,6 +442,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
     }
+
     @Test
     void AddMealTestWithNullStatusValue() throws Exception {
         this.formData.remove("status");
@@ -327,7 +461,7 @@ public class AddMealTest extends AbstractMealTest {
     }
 
     @Test
-    void  AddMealWithoutStatus () throws Exception {
+    void AddMealWithoutStatus() throws Exception {
         this.formData.remove("status");
 
         // when : call addMeal
@@ -343,13 +477,7 @@ public class AddMealTest extends AbstractMealTest {
     }
 
 
-
-
-
-
     /*****************************************  Tests For   Description  *****************************************/
-
-
 
 
     @Test
@@ -371,6 +499,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
     }
+
     @Test
     void AddMealTestWithNullDescriptionValue() throws Exception {
         this.formData.remove("description");
@@ -387,8 +516,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
     }
+
     @Test
-    void AddMealWithoutDescription () throws Exception {
+    void AddMealWithoutDescription() throws Exception {
 
         // given :  remove label from formData
         this.formData.remove("description");
@@ -404,8 +534,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
     }
+
     @Test
-    void AddMealTestWithTooShortDescription () throws Exception {
+    void AddMealTestWithTooShortDescription() throws Exception {
         // given :  remove label from formData
         this.formData.remove("description");
         this.formData.add("description", "    ad     "); // length  must be  < 3 without spaces
@@ -421,8 +552,6 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
     }
-
-
 
 
     /******************************************** Tests for Category ********************************************/
@@ -446,6 +575,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongCategoryLength"))));
     }
+
     @Test
     void AddMealTestWithNullCategoryValue() throws Exception {
         this.formData.remove("category");
@@ -462,8 +592,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
     }
+
     @Test
-    void AddMealTestWithTooShortCategory () throws Exception {
+    void AddMealTestWithTooShortCategory() throws Exception {
         // given :  remove label from formData
         this.formData.remove("category");
         this.formData.add("category", "    ad     "); // length  must be  < 3 without spaces
@@ -479,8 +610,9 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortCategoryLength"))));
     }
+
     @Test
-    void AddMealWithoutCategory () throws Exception {
+    void AddMealWithoutCategory() throws Exception {
 
         // given :  remove label from formData
         this.formData.remove("category");
@@ -496,10 +628,6 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
     }
-
-
-
-
 
 
     /******************************************** Tests for Label ********************************************/
@@ -580,9 +708,6 @@ public class AddMealTest extends AbstractMealTest {
 
 
     }
-
-
-
 
 
 }
