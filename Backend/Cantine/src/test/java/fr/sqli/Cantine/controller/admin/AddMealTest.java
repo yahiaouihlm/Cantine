@@ -79,6 +79,24 @@ public class AddMealTest extends AbstractMealTest {
     /* TODO ;  check  Existing Meal and  image */
 
     @Test
+    void addMealTestWithWrongImage () throws Exception {
+        this.imageData = new MockMultipartFile(
+                "WrongImageName",                         // nom du champ de fichier
+                "ImageMealForTest.jpg",          // nom du fichier
+                "image/jpg",                    // type MIME
+                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+
+    }
+    @Test
     void addMealTestWithOutImage() throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .params(this.formData)
