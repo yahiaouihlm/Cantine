@@ -8,12 +8,13 @@ import {MatListModule} from "@angular/material/list";
 import {MatBadgeModule} from "@angular/material/badge";
 import {RouterModule, Routes} from "@angular/router";
 import {CoreCantineModule} from "../core-cantine/core-cantine.module";
+import { HomeAdminComponent } from './home-admin/home-admin.component';
 
 
 const routes: Routes = [
   {path: '', component: MainAdminComponent,
     children: [
-
+        {path: 'home', component: HomeAdminComponent},
     ]
   },
 
@@ -23,7 +24,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    MainAdminComponent
+    MainAdminComponent,
+    HomeAdminComponent
   ],
   imports: [
     CommonModule,
