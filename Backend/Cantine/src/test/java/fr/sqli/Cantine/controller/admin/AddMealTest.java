@@ -86,7 +86,7 @@ public class AddMealTest extends AbstractMealTest {
                 "image",                         // nom du champ de fichier
                 "ImageMealForTest.jpg",          // nom du fichier
                 "image/gif",                    // type MIME
-                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+                new FileInputStream("src/test/java/fr/sqli/Cantine/service/images/filesTests/Babidi_TestGifFormat.gif"));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
@@ -99,7 +99,7 @@ public class AddMealTest extends AbstractMealTest {
 
     }
     @Test
-    void addMealTestWithWrongImage () throws Exception {
+    void addMealTestWithWrongImageName () throws Exception {
         this.imageData = new MockMultipartFile(
                 "WrongImageName",                         // nom du champ de fichier
                 "ImageMealForTest.jpg",          // nom du fichier
