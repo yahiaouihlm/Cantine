@@ -103,8 +103,15 @@ public abstract class AbstractDtoIn {
         }
     }
 
-
+    /**
+     * remove all the spaces in a string
+     * @param str the string to remove the spaces
+     * @return the string without spaces
+     */
     public String removeSpaces(String str) {
+        if (str == null) {
+            return "";
+        }
         return str.replaceAll("\\s+", "");
     }
 
