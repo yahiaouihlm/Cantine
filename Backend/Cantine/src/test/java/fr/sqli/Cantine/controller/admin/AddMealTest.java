@@ -43,7 +43,8 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
-            Map.entry("InvalidImageFormat" , "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED")
+            Map.entry("InvalidImageFormat" , "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED"),
+            Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY")
     );
 
     @Autowired
@@ -79,7 +80,55 @@ public class AddMealTest extends AbstractMealTest {
 
     /* TODO ;  check  Existing Meal and  image */
 
+   @Test
+    void addMealTestWithExistingMeal() throws Exception {
+        /// 1- add meal
+        var result  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
+        // 2- check if meal is added to  database
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get(""))));
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**********************************************  Tests  Fot Images  *********************************************/
     @Test
     void addMealWithWrongImageFormat() throws Exception {
         this.imageData = new MockMultipartFile(
