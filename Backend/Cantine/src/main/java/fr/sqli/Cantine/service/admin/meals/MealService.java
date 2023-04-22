@@ -104,11 +104,12 @@ public class MealService implements IMealService {
 
     @Override
     public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+
         MealEntity meal = mealDtoIn.toMealEntity();
-        System.out.println(meal.getLabel());
+
+       //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
             throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
-
         }
         MultipartFile image = mealDtoIn.getImage();
         var imagename = this.imageService.uploadImage(image, "images/meals");

@@ -82,15 +82,19 @@ public class AddMealTest extends AbstractMealTest {
 
    @Test
     void addMealTestWithExistingMeal() throws Exception {
-        /// 1- add meal
-        var result  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+
+       var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+               + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+       // 3  Test  With  Trying  to  add The Same Meal again
+       var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-        // 2- check if meal is added to  database
-        result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MealAddedSuccessfully"))));
+
+       result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
 
     }
 
