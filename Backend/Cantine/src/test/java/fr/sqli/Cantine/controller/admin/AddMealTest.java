@@ -1,7 +1,13 @@
 package fr.sqli.Cantine.controller.admin;
 
 import fr.sqli.Cantine.dao.IMealDao;
+import fr.sqli.Cantine.entity.ImageEntity;
+import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +23,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -80,22 +87,45 @@ public class AddMealTest extends AbstractMealTest {
 
     /* TODO ;  check  Existing Meal and  image */
 
-   @Test
+    //  make  one  Meal in  the  database
+    // this  meal  will  be  used  only for    the  tests  of  the  method  addMealTestWithExistingMeal because we have to make a meal in DataBase
+
+
+    public void  initDataBase() {
+        ImageEntity image = new ImageEntity();
+        image.setImagename("ImageMealForTest.jpg");
+
+        MealEntity mealEntity = new MealEntity("MealTest category", "MealTest description"
+                ,"MealTest", new BigDecimal(1.5), 10,1, image);
+
+        this.mealDao.save(mealEntity);
+    }
+    //  clear  the  database  after  all
+    // this  method  will  be  used  only for  the  tests  of  the  method  addMealTestWithExistingMeal because we have to clear the database after all tests (addMealTestWithExistingMeal)
+
+    public void  clearDataBase() {
+        this.mealDao.deleteAll();
+    }
+
+    @Test()
     void addMealTestWithExistingMeal() throws Exception {
 
-       var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category")
-               + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        initDataBase(); //  make  one  Meal in  the  database
 
-       // 3  Test  With  Trying  to  add The Same Meal again
-       var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-       result2.andExpect(MockMvcResultMatchers.status().isConflict())
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
 
+        clearDataBase(); //  clear  the  database  after  all
     }
 
 
