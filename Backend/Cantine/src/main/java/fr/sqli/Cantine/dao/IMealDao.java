@@ -22,4 +22,8 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
               "TRIM(meal.label) = ?1 AND TRIM(meal.category)= ?2 AND TRIM(meal.description)= ?3" +
            ")")
    Optional  <MealEntity>   findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
+
+
+
+
 }
