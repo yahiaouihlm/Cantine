@@ -139,7 +139,7 @@ public class MealService implements IMealService {
     }
 
 
-    // fr i t e s
+
     @Override
     public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMeal {
         return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label.trim().toLowerCase(),  category.trim().toLowerCase() , description.trim().toLowerCase() );
