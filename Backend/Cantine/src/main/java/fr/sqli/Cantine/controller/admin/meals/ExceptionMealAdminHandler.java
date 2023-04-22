@@ -23,7 +23,7 @@ public class ExceptionMealAdminHandler {
      */
     @ExceptionHandler(ExistingMeal.class)
     public ResponseEntity<ExceptionDtout> handleExistingMeal(ExistingMeal e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage().toUpperCase()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 
 
