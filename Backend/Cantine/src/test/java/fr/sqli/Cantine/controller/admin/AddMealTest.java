@@ -90,7 +90,7 @@ public class AddMealTest extends AbstractMealTest {
 
         // 2- check if meal is added to  database
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get(""))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MealAddedSuccessfully"))));
 
     }
 
