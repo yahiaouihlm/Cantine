@@ -42,7 +42,8 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
-            Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0")
+            Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
+            Map.entry("InvalidImageFormat" , "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED")
     );
 
     @Autowired
@@ -78,6 +79,24 @@ public class AddMealTest extends AbstractMealTest {
 
     /* TODO ;  check  Existing Meal and  image */
 
+    @Test
+    void addMealWithWrongImageFormat() throws Exception {
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                "ImageMealForTest.jpg",          // nom du fichier
+                "image/gif",                    // type MIME
+                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+    }
     @Test
     void addMealTestWithWrongImage () throws Exception {
         this.imageData = new MockMultipartFile(
@@ -143,6 +162,7 @@ public class AddMealTest extends AbstractMealTest {
     void addMealTestWithInvalidPrice4() throws Exception {
         this.formData.remove("price");
         this.formData.add("price", ".5-");
+
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -731,7 +751,6 @@ public class AddMealTest extends AbstractMealTest {
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
-
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
