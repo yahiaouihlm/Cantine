@@ -115,7 +115,8 @@ public class AddMealTest extends AbstractMealTest {
                 .andExpect(MockMvcResultMatchers.content().string(this.exceptionsMap.get("MealAddedSuccessfully")));
 
         //  clear  the  database  after
-        // in  this  test we will  base on our delete  method provided from  the service
+        //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
+        // finally  we  delete  the  meal  from  the  database
 
         var mealadded =  this.mealDao.findAll().get(0);
         String imageName  =  mealadded.getImage().getImagename();
