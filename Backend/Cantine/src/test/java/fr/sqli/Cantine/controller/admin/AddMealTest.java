@@ -4,8 +4,6 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -104,7 +101,29 @@ public class AddMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+    @Test
+    void addMealTestWithExistingMealWithAddSpacesToCategory() throws Exception {
+        initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("category");
+        this.formData.add("category", "   M e a l Test c  ate gor y ");
 
+
+        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+
+        clearDataBase(); //  clear  the  database  after  all
+
+    }
      @Test
      void addMealTestWithExistingMealWithAddSpacesToDescription() throws Exception {
          initDataBase(); //  make  one  Meal in  the  database
@@ -130,7 +149,7 @@ public class AddMealTest extends AbstractMealTest {
      }
 
 
-
+ ////////////////Label
 
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
