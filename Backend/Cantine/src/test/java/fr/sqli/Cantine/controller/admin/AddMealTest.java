@@ -542,6 +542,22 @@ public class AddMealTest extends AbstractMealTest {
 
 
     /************************************* Tests for  Quantity  *************************************/
+
+
+    @Test
+    void addMealTestWithQuantityOutBoundOfInger () throws Exception {
+        this.formData.remove("quantity");
+        this.formData.add("quantity", "2000000000000000000000000000000000000000000000000000000000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
     @Test
     void addMealTestWithTooLongQuantity() throws Exception {
         this.formData.remove("quantity");
