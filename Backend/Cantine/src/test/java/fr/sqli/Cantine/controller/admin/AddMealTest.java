@@ -4,6 +4,7 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -101,6 +103,27 @@ public class AddMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+    @Test
+    void addMealTestWithAllValidateInformation () throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(this.exceptionsMap.get("MealAddedSuccessfully")));
+
+        //  clear  the  database  after
+        // in  this  test we will  base on our delete  method provided from  the service
+
+        var mealadded =  this.mealDao.findAll().get(0);
+        String imageName  =  mealadded.getImage().getImagename();
+
+        File file = new File("images/meals/" + imageName);
+        file.delete();
+        this.mealDao.delete(mealadded);
+    }
 
 
     @Test
