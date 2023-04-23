@@ -101,6 +101,35 @@ public class AddMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+
+
+    @Test
+    void addMealTestWithExistingMealWithAddSpacesAndChangingCase4() throws Exception {
+        initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("label");
+        this.formData.remove("category");
+        this.formData.remove("description");
+        this.formData.add("category", "   M e a l TEST c  ate gor y ");
+        this.formData.add("label", "ME                  AlTES t");
+        this.formData.add("description", "mEAlT E s t DESC          RI P T i oN");
+
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+
+        clearDataBase(); //  clear  the  database  after  all
+
+    }
+
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase3() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
