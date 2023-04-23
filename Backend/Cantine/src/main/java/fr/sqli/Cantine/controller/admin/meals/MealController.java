@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.admin.meals;
 
 
+import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.service.admin.meals.MealService;
@@ -26,14 +27,14 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequestMapping(value = MEALS_URL_ADMIN)
 public class MealController implements IAdminEndPoints {
 
-
+    @Autowired
+    private IMealDao mealDao;
     private final MealService mealService;
 
     @Autowired
     public MealController(MealService mealService) {
         this.mealService = mealService;
     }
-
 
 
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)

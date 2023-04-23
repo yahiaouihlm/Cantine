@@ -11,19 +11,23 @@ import java.util.Optional;
 
 @Repository
 public interface IMealDao extends JpaRepository<MealEntity, Integer> {
-  /* TODO:  CHANGE THE METHODE */
+    /**
+     * the  method  is  used  to  find  a  meal  by  its  label and  its  category and  its  description ignoring  the  case of  the  characters and  the  spaces
+     *
+     * @param label       label of the meal
+     * @param category    category of the meal
+     * @param description description of the meal
+     * @return the meal if it exists
+     */
 
-   @Query(value = "SELECT meal FROM MealEntity meal" +
-           " WHERE (" +
-           "LOWER(TRIM(meal.label)) = ?1 AND LOWER(TRIM(meal.category))= ?2 AND LOWER(TRIM(meal.description))= ?3" +
-            " OR " +
-           "UPPER(TRIM(meal.label)) = ?1 AND UPPER(TRIM(meal.category))= ?2 AND UPPER(TRIM(meal.description))= ?3" +
-            " OR " +
-              "TRIM(meal.label) = ?1 AND TRIM(meal.category)= ?2 AND TRIM(meal.description)= ?3" +
-           ")")
-   Optional  <MealEntity>   findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
+    @Query(value = "SELECT meal FROM MealEntity meal WHERE (" +
+            "LOWER(REPLACE(meal.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
+            "AND LOWER(REPLACE(meal.category, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
+            "AND LOWER(REPLACE(meal.description, ' ', '')) = LOWER(REPLACE(?3, ' ', ''))" +
+            ")"
 
-
+    )
+    Optional<MealEntity> findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
 
 
 }
