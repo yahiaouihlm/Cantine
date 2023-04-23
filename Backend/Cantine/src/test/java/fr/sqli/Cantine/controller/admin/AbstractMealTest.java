@@ -11,6 +11,7 @@ public class AbstractMealTest {
 
     protected   final   String ADD_MEAL_URL  =  BASE_MEAL_URL  +  "/add";
 
+    protected  final String  DELETE_MEAL_URL  =  BASE_MEAL_URL  +  "/delete";
 
 
     static   final PostgreSQLContainer    postgreSQLContainer ;
