@@ -24,14 +24,17 @@ public class MealEntity implements Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
 
+
+
+    @Column(nullable=false, length=100)
+    private String label;
+
+
     @Column(nullable=false, length=45)
     private String category ;
 
     @Column(nullable=false, length=590)
     private String description;
-
-    @Column(nullable=false, length=100)
-    private String label;
 
     @Column(nullable=false, precision=5, scale=2)
     @Check(constraints = "price > 0")
@@ -81,7 +84,7 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/
 
-    public MealEntity(String category, String description, String label, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
+    public MealEntity( String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
         this.category = category;
         this.description = description;
         this.label = label;
