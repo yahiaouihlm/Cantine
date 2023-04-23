@@ -104,6 +104,34 @@ public class AddMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+
+     @Test
+     void addMealTestWithExistingMealWithAddSpacesToDescription() throws Exception {
+         initDataBase(); //  make  one  Meal in  the  database
+         this.formData.remove("description");
+         this.formData.add("description", "   MealTest description   ");
+
+
+         var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+                 + " AND A DESCRIPTION = " + this.formData.getFirst("description").trim() + " IS ALREADY PRESENT IN THE DATABASE ";
+
+         // 3  Test  With  Trying  to  add The Same Meal again
+         var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                 .file(this.imageData)
+                 .params(this.formData)
+                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+         result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+
+         clearDataBase(); //  clear  the  database  after  all
+
+     }
+
+
+
+
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel3() throws Exception {
