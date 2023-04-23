@@ -4,7 +4,9 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +46,7 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
-            Map.entry("InvalidImageFormat" , "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED"),
+            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED"),
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY")
     );
 
@@ -79,40 +81,41 @@ public class AddMealTest extends AbstractMealTest {
 
     }
 
-    /* TODO ;  check  Existing Meal and  image */
-
-    //  make  one  Meal in  the  database
-    // this  meal  will  be  used  only for    the  tests  of  the  method  addMealTestWithExistingMeal because we have to make a meal in DataBase
-
-
-    public void  initDataBase() {
+    /**
+     * make  one  Meal in  the  database
+     * this  meal  will  be  used  only for    the  tests  of  the  method  addMealTestWithExistingMeal because we have to make a meal in DataBase
+     **/
+    public void initDataBase() {
         ImageEntity image = new ImageEntity();
         image.setImagename("ImageMealForTest.jpg");
 
-        MealEntity mealEntity = new MealEntity("MealTest","MealTest category", "MealTest description"
-                , new BigDecimal(1.5), 10,1, image);
+        MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
+                , new BigDecimal("1.5"), 10, 1, image);
 
         this.mealDao.save(mealEntity);
     }
     //  clear  the  database  after  all
     // this  method  will  be  used  only for  the  tests  of  the  method  addMealTestWithExistingMeal because we have to clear the database after all tests (addMealTestWithExistingMeal)
 
-    public void  clearDataBase() {
+    public void clearDataBase() {
         this.mealDao.deleteAll();
     }
 
     @Test
-    void addMealTestWithExistingMealWithAddSpacesToCategory() throws Exception {
+    void addMealTestWithExistingMealWithAddSpacesAndChangingCase3() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("label");
         this.formData.remove("category");
-        this.formData.add("category", "   M e a l Test c  ate gor y ");
+        this.formData.remove("description");
+        this.formData.add("category", "   M e a l TEST c  ate gor y ".toLowerCase());
+        this.formData.add("label", "ME                  AlTES t".toLowerCase());
+        this.formData.add("description", "mEAlT E s t DESC          RI P T i oN");
 
-
-        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -124,32 +127,107 @@ public class AddMealTest extends AbstractMealTest {
         clearDataBase(); //  clear  the  database  after  all
 
     }
-     @Test
-     void addMealTestWithExistingMealWithAddSpacesToDescription() throws Exception {
-         initDataBase(); //  make  one  Meal in  the  database
-         this.formData.remove("description");
-         this.formData.add("description", "   MealTest description   ");
+
+    @Test
+    void addMealTestWithExistingMealWithAddSpacesAndChangingCase2() throws Exception {
+        initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("label");
+        this.formData.remove("category");
+        this.formData.remove("description");
+        this.formData.add("category", "   M e a l TEST c  ate gor y ");
+        this.formData.add("label", "ME                  AlTES t");
+        this.formData.add("description", "MEALTEST DESCRIPTION");
+
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-         var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category")
-                 + " AND A DESCRIPTION = " + this.formData.getFirst("description").trim() + " IS ALREADY PRESENT IN THE DATABASE ";
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
 
-         // 3  Test  With  Trying  to  add The Same Meal again
-         var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
-                 .file(this.imageData)
-                 .params(this.formData)
-                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        clearDataBase(); //  clear  the  database  after  all
+
+    }
+
+    @Test
+    void addMealTestWithExistingMealWithAddSpacesAndChangingCase() throws Exception {
+        initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("label");
+        this.formData.remove("category");
+        this.formData.add("category", "   M e a l TEST c  ate gor y ");
+        this.formData.add("label", "ME                  AlTES t");
+
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-         result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
 
-         clearDataBase(); //  clear  the  database  after  all
+        clearDataBase(); //  clear  the  database  after  all
 
-     }
+    }
+
+    @Test
+    void addMealTestWithExistingMealWithAddSpacesToCategory() throws Exception {
+        initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("category");
+        this.formData.add("category", "   M e a l Test c  ate gor y ");
 
 
- ////////////////Label
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+
+        clearDataBase(); //  clear  the  database  after  all
+
+    }
+
+    @Test
+    void addMealTestWithExistingMealWithAddSpacesToDescription() throws Exception {
+        initDataBase(); //  make  one  Meal in  the  database
+        this.formData.remove("description");
+        this.formData.add("description", "   MealTest description   ");
+
+
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
+                + " AND A DESCRIPTION = " + this.formData.getFirst("description").trim() + " IS ALREADY PRESENT IN THE DATABASE ";
+
+        // 3  Test  With  Trying  to  add The Same Meal again
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result2.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+
+        clearDataBase(); //  clear  the  database  after  all
+
+    }
+
 
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
@@ -160,11 +238,11 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.add("label", "MealTes t");
 
 
-        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -175,7 +253,6 @@ public class AddMealTest extends AbstractMealTest {
 
         clearDataBase(); //  clear  the  database  after  all
     }
-
 
 
     @Test
@@ -187,11 +264,11 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.add("label", " M eal T e s t ");
 
 
-        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -202,9 +279,6 @@ public class AddMealTest extends AbstractMealTest {
 
         clearDataBase(); //  clear  the  database  after  all
     }
-
-
-
 
 
     @Test
@@ -216,11 +290,11 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.add("label", " M e a  l T e s t ");
 
 
-        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -231,20 +305,6 @@ public class AddMealTest extends AbstractMealTest {
 
         clearDataBase(); //  clear  the  database  after  all
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     @Test
@@ -253,11 +313,11 @@ public class AddMealTest extends AbstractMealTest {
 
         initDataBase(); //  make  one  Meal in  the  database
 
-        var  errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label")+ " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2  =  this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -268,39 +328,6 @@ public class AddMealTest extends AbstractMealTest {
 
         clearDataBase(); //  clear  the  database  after  all
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**********************************************  Tests  Fot Images  *********************************************/
@@ -322,8 +349,9 @@ public class AddMealTest extends AbstractMealTest {
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
 
     }
+
     @Test
-    void addMealTestWithWrongImageName () throws Exception {
+    void addMealTestWithWrongImageName() throws Exception {
         this.imageData = new MockMultipartFile(
                 "WrongImageName",                         // nom du champ de fichier
                 "ImageMealForTest.jpg",          // nom du fichier
@@ -340,6 +368,7 @@ public class AddMealTest extends AbstractMealTest {
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
 
     }
+
     @Test
     void addMealTestWithOutImage() throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
