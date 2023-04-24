@@ -78,7 +78,13 @@
 
     </mat-sidenav>
     <mat-sidenav-content>
-        <main>    <!-- content  -->
+        <main>  <!-- we  make  style here  because   we  want to  share it between  all  admin  pages  -->
+            <header style="width: 100%;
+             height: 40vh;
+             background: url('../../../assets/images/homepage.jpg') 30% 30% no-repeat;
+             background-size: cover;
+             background-color: #f8f8f8;">
+            </header><!-- content  -->
             <router-outlet></router-outlet>     <!--  main  container  -->
         </main>
         <app-main-footer></app-main-footer>
