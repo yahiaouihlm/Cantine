@@ -13,9 +13,9 @@ export class NewMealComponent {
   newMeal: FormGroup = new FormGroup({
     label : new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(400), Validators.minLength(5)]),
+    category: new FormControl('', [Validators.required ,  Validators.maxLength(44), Validators.minLength(3)] ),
     price: new FormControl('' , [Validators.required]),
     quantity: new FormControl('' , [Validators.required]),
-    category: new FormControl('', [Validators.required]),
     Image: new FormControl('' ,  [Validators.required]),
     status :  new FormControl('', [Validators.required])
   });
