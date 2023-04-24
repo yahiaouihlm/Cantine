@@ -6,6 +6,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +39,8 @@ public class RemoveMealTest  extends   AbstractMealTest{
             Map.entry("InvalidMealID", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("missingParam", "MISSING PARAMETER"),
-            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID")
+            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID"),
+            Map.entry("mealDeleted", "MEAL DELETED SUCCESSFULLY")
             );
     @Autowired
     private IMealDao mealDao;
@@ -66,6 +74,32 @@ public class RemoveMealTest  extends   AbstractMealTest{
         this.mealDao.deleteAll();
     }
 
+
+    BufferedImage saveTestFile () throws IOException {
+        File image  =  new File("images/meals/ImageMealForTest.jpg");
+       return  ImageIO.read(image);
+    }
+
+    @Test
+    void  removeMealTest() throws Exception {
+        var idMealToRemove = this.mealDao.findAll().get(0).getId();
+
+        var  image =  saveTestFile(); // save  image before  delete meal
+
+        var result =  this.mockMvc.perform(delete(super.DELETE_MEAL_URL+"?idMeal="+idMealToRemove));
+
+
+        result.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(exceptionsMap.get("mealDeleted")));
+
+        Assertions.assertEquals(1, this.mealDao.findAll().size());
+
+        //  reload image in images/meals to make  test  pass
+        File outputFile = new File("images/meals/ImageMealForTest.jpg");
+        ImageIO.write(image, "jpg", outputFile);
+
+
+    }
 
  /*  TODO whe We Make Menu */
   /* @Test
