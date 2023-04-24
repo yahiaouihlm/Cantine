@@ -11,6 +11,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MainFooterComponent} from "../sharedmodule/main-footer/main-footer.component";
+import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 
 
 
@@ -41,11 +42,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatSidenavModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatListModule,
-    MatBadgeModule,
+    SharedmoduleModule,
   ]
 })
 export class CoreCantineModule { }

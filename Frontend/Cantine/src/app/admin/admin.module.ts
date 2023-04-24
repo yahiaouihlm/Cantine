@@ -34,11 +34,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatSidenavModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatListModule,
-    MatBadgeModule,
+
     SharedmoduleModule,
   ]
 })
