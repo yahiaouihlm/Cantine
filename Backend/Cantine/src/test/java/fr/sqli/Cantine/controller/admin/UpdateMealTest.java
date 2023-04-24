@@ -5,7 +5,6 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
-import fr.sqli.Cantine.service.images.ImageService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -90,22 +88,135 @@ public class UpdateMealTest  extends   AbstractMealTest {
 
 
 
-    /******************************************* ID MEAL ********************************************/
+    /********************************************* ID MEAL ************************************************/
 
-   @Test
-    void  updateMealWithOutID() throws Exception {
+    @Test
+    void updateMealWithInvalidArgumentID2() throws Exception {
+        this.formData.set("id", "0.2");
 
-        this.formData.remove("id");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
 
-       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
-               .file(this.imageData)
-               .params(this.formData));
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
+    }
 
+    @Test
+    void updateMealWithInvalidArgumentID() throws Exception {
+        this.formData.set("id", "1.0");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void updateMealWithNegativeID() throws Exception {
+        this.formData.set("id", "-5");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
+    }
+
+
+    @Test
+    void updateMealWithEmptyID() throws Exception {
+        this.formData.set("id", "");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
+    }
+    @Test
+    void updateMealWithInvalidID() throws Exception {
+        this.formData.set("id", "");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
+    }
+    @Test
+    void updateMealWithIDNull() throws Exception {
+
+        this.formData.set("id", null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
     }
+
+    @Test
+    void  updateMealWithOutID() throws Exception {
+
+        this.formData.remove("id");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
+    }
+
+
+
+
+    @Test
+    void updateMealWithInvalidIDArgument3() throws Exception {
+        this.formData.set("id", "1.eoje");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void updateMealWithInvalidIDArgument2() throws Exception {
+        this.formData.set("id", "1.5");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void updateMealWithInvalidIDArgument() throws Exception {
+        this.formData.set("id", "erfzr");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
+    }
+
+
 
 
 }
