@@ -86,13 +86,13 @@ public class MealService implements IMealService {
         var overemotional = this.mealDao.findById(id);
         if (overemotional.isEmpty()) {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE removeMeal METHOD ", id);
-            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
+            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID");
         }
         var meal = overemotional.get();
         if (meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         {
             MealService.LOG.debug("THE MEAL WITH AN ID = {} IS PRESENT IN A MENU AND CAN NOT BE DELETED ", id);
-            throw new RemoveMealAdminException("THE MEAL WITH AN label  = " + meal.getLabel() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED ");
+            throw new RemoveMealAdminException("THE MEAL WITH AN label  = " + meal.getLabel() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED");
         }
 
         var image = meal.getImage();

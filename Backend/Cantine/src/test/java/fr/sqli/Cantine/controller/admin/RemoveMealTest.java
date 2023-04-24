@@ -3,6 +3,7 @@ package fr.sqli.Cantine.controller.admin;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,8 @@ public class RemoveMealTest  extends   AbstractMealTest{
     private final Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("InvalidMealID", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
-            Map.entry("missingParam", "MISSING PARAMETER")
+            Map.entry("missingParam", "MISSING PARAMETER"),
+            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID")
             );
     @Autowired
     private IMealDao mealDao;
@@ -38,6 +40,7 @@ public class RemoveMealTest  extends   AbstractMealTest{
     @Autowired
     private IMealService  mealService;
 
+    private     List<MealEntity> meals;
     @Autowired
     private MockMvc mockMvc;
     /*TODO
@@ -50,7 +53,7 @@ public class RemoveMealTest  extends   AbstractMealTest{
         ImageEntity image1 = new ImageEntity();
         image1.setImagename("ImageMealForTest1.jpg");
 
-        List<MealEntity> meals =
+     this.meals =
                 List.of(
                         new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1 ,  1 , image),
                         new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1 ,  1 , image1)
@@ -61,6 +64,67 @@ public class RemoveMealTest  extends   AbstractMealTest{
     @AfterEach
     void  cleanUp(){
         this.mealDao.deleteAll();
+    }
+
+
+ /*  TODO whe We Make Menu */
+  /* @Test
+    void removeMealInAssociationWithMenu () throws Exception {
+        var  expectedExceptionMessage=  "THE MEAL WITH AN label  = " + this.meals.get(0).getLabel() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED" ;
+        this.meals.get(0).setMenus(List.of(new MenuEntity()));
+
+        var idMealToRemov = this.mealDao.save(this.meals.get(0)).getId();
+//        MealEntity  mealToFind = this.meals.get(0);
+//
+//        var mealsInDbL =   this.mealDao.findAll();
+//        Integer idMealToRemov  = null ;
+//       for ( MealEntity mealEntity : mealsInDbL ) {
+//             if (mealEntity.getLabel().equals("Entrée")) {
+//               idMealToRemov = mealEntity.getId();
+//               break;
+//           }
+//       }
+//
+
+
+        var result =  this.mockMvc.perform(delete(super.DELETE_MEAL_URL+"?idMeal="+idMealToRemov));
+
+        result.andExpect(status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get(expectedExceptionMessage) )));
+
+
+
+    }*/
+
+
+    @Test
+    void  removeMealTestWithMealNotFound() throws Exception {
+
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=" + (Integer.MAX_VALUE - 10)));
+
+        result.andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealNotFound"))));
+
+    }
+
+    @Test
+    void  removeMealTestWithNegativeID() throws Exception {
+        var result =  this.mockMvc.perform(delete(super.DELETE_MEAL_URL+"?idMeal=-5"));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidMealID"))));
+
+    }
+
+
+
+    @Test
+    void  removeMealTestWithInValidID2() throws Exception {
+        var result =  this.mockMvc.perform(delete(super.DELETE_MEAL_URL+"?idMeal=1000000000000000000000000000000000000000000"));
+
+        result.andExpect(status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+
     }
 
     @Test
