@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class UpdateMealTest  extends   AbstractMealTest {
    //THE ID  CAN NOT BE NULL OR LESS THAN 0
    private final Map<String, String> exceptionsMap = Map.ofEntries(
-           Map.entry("InvalidID", "The id can not be null or less than 0"),
+           Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0"),
            Map.entry("InvalidArgument", "ARGUMENT NOT VALID")
            );
      @Autowired
@@ -92,19 +93,18 @@ public class UpdateMealTest  extends   AbstractMealTest {
     /******************************************* ID MEAL ********************************************/
 
    @Test
-    void  updateMealWithOutLabel() throws Exception {
+    void  updateMealWithOutID() throws Exception {
 
         this.formData.remove("id");
 
-       var requestBuilder = MockMvcRequestBuilders.multipart(super.UPDATE_MEAL_URL)
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
                .file(this.imageData)
-               .params(this.formData);
-
-       var result = this.mockMvc.perform(requestBuilder.method(HttpMethod.PUT));
+               .params(this.formData));
 
 
-       result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                        .andExpect(MockMvcResultMatchers.content().json((this.exceptionsMap.get("InvalidArgument"))));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
     }
 
 
