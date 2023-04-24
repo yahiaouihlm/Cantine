@@ -11,6 +11,7 @@ import {CoreCantineModule} from "../core-cantine/core-cantine.module";
 import { HomeAdminComponent } from './home-admin/home-admin.component';
 import {PageNotFoundComponent} from "../sharedmodule/page-not-found/page-not-found.component";
 import {MainFooterComponent} from "../sharedmodule/main-footer/main-footer.component";
+import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 
 
 const routes: Routes = [
@@ -19,7 +20,7 @@ const routes: Routes = [
         {path: 'home', component: HomeAdminComponent},
     ]
   },
-  {path: '',  component: PageNotFoundComponent}
+  {path : '',  redirectTo: 'cantine/admin/home', pathMatch: 'full'},
 ];
 
 
@@ -38,6 +39,7 @@ const routes: Routes = [
     MatToolbarModule,
     MatListModule,
     MatBadgeModule,
+    SharedmoduleModule,
   ]
 })
 export class AdminModule { }
