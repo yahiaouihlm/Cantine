@@ -18,6 +18,7 @@ const routes: Routes = [
   {path: '', component:MainAdminComponent ,
     children: [
         {path: 'home', component: HomeAdminComponent},
+        {path:'meals', loadChildren:() => import('./meals/meals.module').then(m => m.MealsModule)},
     ]
   },
   {path : '',  redirectTo: 'cantine/admin/home', pathMatch: 'full'},
