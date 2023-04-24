@@ -1,1 +1,32 @@
-<p>new-meal works!</p>
+<div class="container red ">
+    <div class="row">
+    <div class="text-center">
+        <img class="form-logo" src="../../../../assets/images/logo.png" width="80px" alt="logo">
+        <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
+    </div>
+
+    <div class="register-form">
+        <form [formGroup]="newMeal" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label>Le Nom du Plat </label>
+                <input type="text" formControlName="mealname" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f['label'].errors }"
+                       placeholder="Le Nom du  Plat " />
+                <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
+                    <div *ngIf="f['label'].errors['required']"> Nom du plat est requis </div>
+                    <div *ngIf="f['label'].errors['maxlength']">
+                        le nom du plat ne doit pas dépasser 16 charctéres
+                    </div>
+                    <div *ngIf="f['label'].errors['minlength']">
+                        le nom du plat ne doit avoir plus de 3 charctéres
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    </div>
+</div>
+
+

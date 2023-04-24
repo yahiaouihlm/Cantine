@@ -21,7 +21,7 @@ const routes: Routes = [
         {path:'meals', loadChildren:() => import('./meals/meals.module').then(m => m.MealsModule)},
     ]
   },
-  {path : '',  redirectTo: 'cantine/admin/home', pathMatch: 'full'},
+    {path: '',  redirectTo: 'home', pathMatch: 'full'},
 ];
 
 
@@ -35,7 +35,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-
     SharedmoduleModule,
   ]
 })

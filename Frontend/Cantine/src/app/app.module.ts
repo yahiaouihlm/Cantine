@@ -17,9 +17,9 @@ import {AdminModule} from "./admin/admin.module";
   imports: [
     BrowserModule,
     RouterModule,
-    AdminModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    AdminModule,
     CoreCantineModule,
 
   ],

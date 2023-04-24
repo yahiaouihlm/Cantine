@@ -5,12 +5,7 @@ import {RouterModule, Routes} from "@angular/router";
 import { MainCoreCantineComponent } from './main-core-cantine/main-core-cantine.component';
 import { MealsComponent } from './meals/meals.component';
 import { MenuComponent } from './menu/menu.component';
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {MatIconModule} from "@angular/material/icon";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatListModule} from "@angular/material/list";
-import {MatBadgeModule} from "@angular/material/badge";
-import {MainFooterComponent} from "../sharedmodule/main-footer/main-footer.component";
+
 import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 
 

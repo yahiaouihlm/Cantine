@@ -6,6 +6,13 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 import {MatBadgeModule} from "@angular/material/badge";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatCardModule} from "@angular/material/card";
+import {HttpClientModule} from "@angular/common/http";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 
 
 
@@ -14,12 +21,19 @@ import {MatBadgeModule} from "@angular/material/badge";
       MainFooterComponent,
   ],
   imports: [
-    CommonModule,
     MatSidenavModule,
     MatIconModule,
     MatToolbarModule,
     MatListModule,
     MatBadgeModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatDialogModule,
+    MatCardModule,
+    HttpClientModule,
+    MatFormFieldModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   exports : [
     MainFooterComponent,
@@ -28,6 +42,12 @@ import {MatBadgeModule} from "@angular/material/badge";
     MatToolbarModule,
     MatListModule,
     MatBadgeModule,
+    ReactiveFormsModule,
+    MainFooterComponent,
+    MatFormFieldModule,
+    MatOptionModule,
+    MatSelectModule
+
     ]
 
 })
