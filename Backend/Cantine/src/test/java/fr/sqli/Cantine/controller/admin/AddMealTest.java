@@ -130,12 +130,9 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase4() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
-        this.formData.remove("label");
-        this.formData.remove("category");
-        this.formData.remove("description");
-        this.formData.add("category", "   M e a l TEST c  ate gor y ");
-        this.formData.add("label", "ME                  AlTES t");
-        this.formData.add("description", "mEAlT E s t DESC          RI P T i oN");
+        this.formData.set("category", "   M e a l TEST c  ate gor y ");
+        this.formData.set("label", "ME                  AlTES t");
+        this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
@@ -157,12 +154,9 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase3() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
-        this.formData.remove("label");
-        this.formData.remove("category");
-        this.formData.remove("description");
-        this.formData.add("category", "   M e a l TEST c  ate gor y ".toLowerCase());
-        this.formData.add("label", "ME                  AlTES t".toLowerCase());
-        this.formData.add("description", "mEAlT E s t DESC          RI P T i oN");
+        this.formData.set("category", "   M e a l TEST c  ate gor y ".toLowerCase());
+        this.formData.set("label", "ME                  AlTES t".toLowerCase());
+        this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
@@ -184,12 +178,9 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase2() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
-        this.formData.remove("label");
-        this.formData.remove("category");
-        this.formData.remove("description");
-        this.formData.add("category", "   M e a l TEST c  ate gor y ");
-        this.formData.add("label", "ME                  AlTES t");
-        this.formData.add("description", "MEALTEST DESCRIPTION");
+        this.formData.set("category", "   M e a l TEST c  ate gor y ");
+        this.formData.set("label", "ME                  AlTES t");
+        this.formData.set("description", "MEALTEST DESCRIPTION");
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
@@ -211,10 +202,8 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
-        this.formData.remove("label");
-        this.formData.remove("category");
-        this.formData.add("category", "   M e a l TEST c  ate gor y ");
-        this.formData.add("label", "ME                  AlTES t");
+        this.formData.set("category", "   M e a l TEST c  ate gor y ");
+        this.formData.set("label", "ME                  AlTES t");
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
@@ -236,8 +225,7 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void addMealTestWithExistingMealWithAddSpacesToCategory() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
-        this.formData.remove("category");
-        this.formData.add("category", "   M e a l Test c  ate gor y ");
+        this.formData.set("category", "   M e a l Test c  ate gor y ");
 
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
@@ -260,8 +248,7 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void addMealTestWithExistingMealWithAddSpacesToDescription() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
-        this.formData.remove("description");
-        this.formData.add("description", "   MealTest description   ");
+        this.formData.set("description", "   MealTest description   ");
 
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
@@ -287,8 +274,7 @@ public class AddMealTest extends AbstractMealTest {
     void addMealTestWithExistingMealWithAddSpacesToLabel3() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
 
-        this.formData.remove("label");
-        this.formData.add("label", "MealTes t");
+        this.formData.set("label", "MealTes t");
 
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
@@ -313,8 +299,7 @@ public class AddMealTest extends AbstractMealTest {
     void addMealTestWithExistingMealWithAddSpacesToLabel2() throws Exception {
         initDataBase(); //  make  one  Meal in  the  database
 
-        this.formData.remove("label");
-        this.formData.add("label", " M eal T e s t ");
+        this.formData.set("label", " M eal T e s t ");
 
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
@@ -439,8 +424,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithTooLongPrice() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", "1000.1");
+        this.formData.set("price", "1000.1");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -453,8 +437,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithNegativePrice() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", "-1.5");
+        this.formData.set("price", "-1.5");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -467,8 +450,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidPrice4() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", ".5-");
+        this.formData.set("price", ".5-");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
@@ -482,8 +464,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidPrice3() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", "-1c");
+        this.formData.set("price", "-1c");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -496,8 +477,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidPrice2() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", "1.d");
+        this.formData.set("price", "1.d");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -510,8 +490,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidPrice() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", "0edez");
+        this.formData.set("price", "0edez");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -524,8 +503,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWitEmptyPrice() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", "");
+        this.formData.set("price", "");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -538,8 +516,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithNullPrice() throws Exception {
-        this.formData.remove("price");
-        this.formData.add("price", null);
+        this.formData.set("price", null);
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -570,8 +547,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithQuantityOutBoundOfInger () throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", "2000000000000000000000000000000000000000000000000000000000");
+        this.formData.set("quantity", "2000000000000000000000000000000000000000000000000000000000");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
@@ -584,8 +560,7 @@ public class AddMealTest extends AbstractMealTest {
     }
     @Test
     void addMealTestWithTooLongQuantity() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", Integer.toString(Integer.MAX_VALUE - 99));
+        this.formData.set("quantity", Integer.toString(Integer.MAX_VALUE - 99));
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -598,8 +573,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithNegativeQuantity() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", "-1");
+        this.formData.set("quantity", "-1");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -612,8 +586,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidQuantity3() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", "-1.2");
+        this.formData.set("quantity", "-1.2");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -626,8 +599,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidQuantity2() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", "1.2");
+        this.formData.set("quantity", "1.2");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -640,8 +612,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithInvalidQuantity() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", "null");
+        this.formData.set("quantity", "null");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -654,8 +625,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithEmptyQuantity() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", "");
+        this.formData.set("quantity", "");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -668,8 +638,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void addMealTestWithNullQuantity() throws Exception {
-        this.formData.remove("quantity");
-        this.formData.add("quantity", null);
+        this.formData.set("quantity", null);
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -698,8 +667,7 @@ public class AddMealTest extends AbstractMealTest {
     /********************************* Tests for Status *********************************/
     @Test
     void AddMealTestWithOutSideStatusValue3() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", "3 ");
+        this.formData.set("status", "3 ");
 
 
         // when : call addMeal
@@ -716,8 +684,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithOutSideStatusValue2() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", "-5");
+        this.formData.set("status", "-5");
 
 
         // when : call addMeal
@@ -734,8 +701,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithOutSideStatusValue() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", "5");
+        this.formData.set("status", "5");
 
 
         // when : call addMeal
@@ -752,8 +718,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithEmptyStatusValue() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", " ");
+        this.formData.set("status", " ");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -769,8 +734,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithInvalidStatusValue2() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", "-5rffr");
+        this.formData.set("status", "-5rffr");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -786,8 +750,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithInvalidStatusValue() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", "564rffr");
+        this.formData.set("status", "564rffr");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -803,8 +766,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithNegativeStatusValue3() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", "-1");
+        this.formData.set("status", "-1");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -819,8 +781,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithNullStatusValue() throws Exception {
-        this.formData.remove("status");
-        this.formData.add("status", null);
+        this.formData.set("status", null);
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -857,10 +818,9 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithTooLongDescription() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("description");
         // word  with  101  characters
         String tooLongLabel = "a".repeat(601);
-        this.formData.add("description", tooLongLabel); // length  must be  < 3 without spaces
+        this.formData.set("description", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -876,8 +836,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithNullDescriptionValue() throws Exception {
-        this.formData.remove("description");
-        this.formData.add("description", null);
+        this.formData.set("description", null);
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -912,8 +871,7 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithTooShortDescription() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("description");
-        this.formData.add("description", "    ad     "); // length  must be  < 3 without spaces
+        this.formData.set("description", "    ad     "); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -932,10 +890,9 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithTooLongCategory() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("category");
         // word  with  101  characters
         String tooLongLabel = "t".repeat(45);
-        this.formData.add("category", tooLongLabel); // length  must be  < 3 without spaces
+        this.formData.set("category", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -952,8 +909,7 @@ public class AddMealTest extends AbstractMealTest {
 
     @Test
     void AddMealTestWithNullCategoryValue() throws Exception {
-        this.formData.remove("category");
-        this.formData.add("category", null);
+        this.formData.set("category", null);
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -970,8 +926,7 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithTooShortCategory() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("category");
-        this.formData.add("category", "    ad     "); // length  must be  < 3 without spaces
+        this.formData.set("category", "    ad     "); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -1026,8 +981,7 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithNullLabelValue() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("label");
-        this.formData.add("label", null);
+        this.formData.set("label", null);
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -1045,8 +999,7 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithTooShortLabel() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("label");
-        this.formData.add("label", "    a        d     "); // length  must be  < 3 without spaces  ( all spaces are removed )
+        this.formData.set("label", "    a        d     "); // length  must be  < 3 without spaces  ( all spaces are removed )
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -1064,10 +1017,9 @@ public class AddMealTest extends AbstractMealTest {
     @Test
     void AddMealTestWithTooLongLabel() throws Exception {
         // given :  remove label from formData
-        this.formData.remove("label");
         // word  with  101  characters
         String tooLongLabel = "test".repeat(26);
-        this.formData.add("label", tooLongLabel); // length  must be  < 3 without spaces
+        this.formData.set("label", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
