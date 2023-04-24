@@ -10,7 +10,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 import {MatBadgeModule} from "@angular/material/badge";
-import {MainFooterComponent} from "../globalComponents/main-footer/main-footer.component";
+import {MainFooterComponent} from "../sharedmodule/main-footer/main-footer.component";
+
 
 
 
@@ -36,10 +37,6 @@ const routes: Routes = [
     MainCoreCantineComponent,
     MealsComponent,
     MenuComponent,
-    MainFooterComponent,
-  ],
-  exports: [
-    MainFooterComponent,
   ],
   imports: [
     CommonModule,

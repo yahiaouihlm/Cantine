@@ -9,11 +9,12 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {RouterModule, Routes} from "@angular/router";
 import {CoreCantineModule} from "../core-cantine/core-cantine.module";
 import { HomeAdminComponent } from './home-admin/home-admin.component';
-import {PageNotFoundComponent} from "../globalComponents/page-not-found/page-not-found.component";
+import {PageNotFoundComponent} from "../sharedmodule/page-not-found/page-not-found.component";
+import {MainFooterComponent} from "../sharedmodule/main-footer/main-footer.component";
 
 
 const routes: Routes = [
-  {path: '', component:HomeAdminComponent ,
+  {path: '', component:MainAdminComponent ,
     children: [
         {path: 'home', component: HomeAdminComponent},
     ]
@@ -25,18 +26,18 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     MainAdminComponent,
-    HomeAdminComponent
+    HomeAdminComponent,
+
   ],
+
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-
     MatSidenavModule,
     MatIconModule,
     MatToolbarModule,
     MatListModule,
     MatBadgeModule,
-    CoreCantineModule,
   ]
 })
 export class AdminModule { }
