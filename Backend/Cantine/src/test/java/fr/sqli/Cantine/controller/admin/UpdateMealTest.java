@@ -26,29 +26,29 @@ import java.util.Map;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UpdateMealTest  extends   AbstractMealTest {
-   //THE ID  CAN NOT BE NULL OR LESS THAN 0
-   private final Map<String, String> exceptionsMap = Map.ofEntries(
-           Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0"),
-           Map.entry("InvalidArgument", "ARGUMENT NOT VALID")
-           );
-     @Autowired
-     private IMealDao mealDao;
+public class UpdateMealTest extends AbstractMealTest {
+    //THE ID  CAN NOT BE NULL OR LESS THAN 0
+    private final Map<String, String> exceptionsMap = Map.ofEntries(
+            Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0"),
+            Map.entry("InvalidArgument", "ARGUMENT NOT VALID")
+    );
+    @Autowired
+    private IMealDao mealDao;
 
-     @Autowired
-     private MealService mealService;
+    @Autowired
+    private MealService mealService;
 
-     @Autowired
-     private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-     private LinkedMultiValueMap<String, String> formData;
-     private MockMultipartFile imageData;
+    private LinkedMultiValueMap<String, String> formData;
+    private MockMultipartFile imageData;
 
 
     @BeforeEach
     public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
-        this.formData.add("id" , "1");
+        this.formData.add("id", "1");
         this.formData.add("label", "MealTest");
         this.formData.add("price", "1.5");
         this.formData.add("category", "MealTest category");
@@ -65,27 +65,24 @@ public class UpdateMealTest  extends   AbstractMealTest {
 
     @BeforeEach
     void initDatabase() {
-       ImageEntity image = new ImageEntity();
-       image.setImagename("ImageMealForTest.jpg");
-       ImageEntity image1 = new ImageEntity();
-       image1.setImagename("ImageMealForTest1.jpg");
+        ImageEntity image = new ImageEntity();
+        image.setImagename("ImageMealForTest.jpg");
+        ImageEntity image1 = new ImageEntity();
+        image1.setImagename("ImageMealForTest1.jpg");
 
-       List<MealEntity> meals =
-               List.of(
-                       new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1 ,  1 , image),
-                       new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1 ,  1 , image1)
-               );
-       this.mealDao.saveAll(meals);
+        List<MealEntity> meals =
+                List.of(
+                        new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1, 1, image),
+                        new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1, 1, image1)
+                );
+        this.mealDao.saveAll(meals);
 
-      }
-   @AfterEach
+    }
+
+    @AfterEach
     void cleanDatabase() {
         this.mealDao.deleteAll();
     }
-
-
-
-
 
 
     /********************************************* ID MEAL ************************************************/
@@ -94,7 +91,7 @@ public class UpdateMealTest  extends   AbstractMealTest {
     void updateMealWithInvalidArgumentID2() throws Exception {
         this.formData.set("id", "0.2");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -106,7 +103,7 @@ public class UpdateMealTest  extends   AbstractMealTest {
     void updateMealWithInvalidArgumentID() throws Exception {
         this.formData.set("id", "1.0");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -118,7 +115,7 @@ public class UpdateMealTest  extends   AbstractMealTest {
     void updateMealWithNegativeID() throws Exception {
         this.formData.set("id", "-5");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -131,30 +128,32 @@ public class UpdateMealTest  extends   AbstractMealTest {
     void updateMealWithEmptyID() throws Exception {
         this.formData.set("id", "");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
     }
+
     @Test
     void updateMealWithInvalidID() throws Exception {
         this.formData.set("id", "");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
     }
+
     @Test
     void updateMealWithIDNull() throws Exception {
 
         this.formData.set("id", null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -164,11 +163,11 @@ public class UpdateMealTest  extends   AbstractMealTest {
     }
 
     @Test
-    void  updateMealWithOutID() throws Exception {
+    void updateMealWithOutID() throws Exception {
 
         this.formData.remove("id");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -176,15 +175,13 @@ public class UpdateMealTest  extends   AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidID"))));
     }
-
-
 
 
     @Test
     void updateMealWithInvalidIDArgument3() throws Exception {
         this.formData.set("id", "1.eoje");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -196,7 +193,7 @@ public class UpdateMealTest  extends   AbstractMealTest {
     void updateMealWithInvalidIDArgument2() throws Exception {
         this.formData.set("id", "1.5");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
@@ -208,15 +205,13 @@ public class UpdateMealTest  extends   AbstractMealTest {
     void updateMealWithInvalidIDArgument() throws Exception {
         this.formData.set("id", "erfzr");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( HttpMethod.PUT,super.UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData));
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
     }
-
-
 
 
 }

@@ -4,7 +4,6 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,7 +103,7 @@ public class AddMealTest extends AbstractMealTest {
     }
 
     @Test
-    void addMealTestWithAllValidateInformation () throws Exception {
+    void addMealTestWithAllValidateInformation() throws Exception {
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
@@ -118,8 +117,8 @@ public class AddMealTest extends AbstractMealTest {
         //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
         // finally  we  delete  the  meal  from  the  database
 
-        var mealadded =  this.mealDao.findAll().get(0);
-        String imageName  =  mealadded.getImage().getImagename();
+        var mealadded = this.mealDao.findAll().get(0);
+        String imageName = mealadded.getImage().getImagename();
 
         File file = new File("images/meals/" + imageName);
         file.delete();
@@ -546,7 +545,7 @@ public class AddMealTest extends AbstractMealTest {
 
 
     @Test
-    void addMealTestWithQuantityOutBoundOfInger () throws Exception {
+    void addMealTestWithQuantityOutBoundOfInger() throws Exception {
         this.formData.set("quantity", "2000000000000000000000000000000000000000000000000000000000");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -558,6 +557,7 @@ public class AddMealTest extends AbstractMealTest {
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
+
     @Test
     void addMealTestWithTooLongQuantity() throws Exception {
         this.formData.set("quantity", Integer.toString(Integer.MAX_VALUE - 99));
