@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UpdateMealTest extends AbstractMealTest {
-    //THE ID  CAN NOT BE NULL OR LESS THAN 0
+    final String MEAL_UPDATED_SUCCESSFULLY = "MEAL UPDATED SUCCESSFULLY";
     private final Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
@@ -68,7 +70,7 @@ public class UpdateMealTest extends AbstractMealTest {
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("id", "1");
         this.formData.add("label", "MealTest");
-        this.formData.add("price", "1.5");
+        this.formData.add("price", "3.75");
         this.formData.add("category", "MealTest category");
         this.formData.add("description", "MealTest description");
         this.formData.add("status", "1");
@@ -102,14 +104,35 @@ public class UpdateMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+    @Test
+    void updateMealWithOutImage() throws Exception {
+        var idMeal = this.mealDao.findAll().get(0).getId();
+        this.formData.set("id", String.valueOf(idMeal));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(MEAL_UPDATED_SUCCESSFULLY));
+
+        // add other tests  to  check if the meal is updated in database
+
+        var updatedMeal = this.mealDao.findById(idMeal).get();
+        Assertions.assertEquals(this.formData.getFirst("label"), updatedMeal.getLabel());
+        Assertions.assertEquals(this.formData.getFirst("category"), updatedMeal.getCategory());
+        Assertions.assertEquals(this.formData.getFirst("description"), updatedMeal.getDescription());
+        Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("status"))), updatedMeal.getStatus());
+        Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("quantity"))), updatedMeal.getQuantity());
+        Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.getPrice());
+        Assertions.assertEquals(this.imageData.getOriginalFilename(), updatedMeal.getImage().getImagename());
+    }
 
 
-
-
-  //  Test UPDATE Meal With  Not Found Meal
-   @Test
-   void updateMealTestWithNotFoundMeal() throws Exception {
-        var idMeal  = Integer.MAX_VALUE-100;
+    //  Test UPDATE Meal With  Not Found Meal
+    @Test
+    void updateMealTestWithNotFoundMeal() throws Exception {
+        var idMeal = Integer.MAX_VALUE - 100;
         this.formData.set("id", String.valueOf(idMeal));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
@@ -120,7 +143,6 @@ public class UpdateMealTest extends AbstractMealTest {
 
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealNotFound"))));
-
 
 
     }
