@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -104,7 +105,41 @@ public class UpdateMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+    /**
+     * the method  is used  to  rename after update the image of the meal
+     */
+    boolean renameTestImage(String oldName, String newName) {
+        File file = new File("images/meals/" + oldName);
+        return file.renameTo(new File("images/meals/" + newName));
+    }
 
+    @Test
+    void updateMealWithImage() throws Exception {
+        var idMeal = this.mealDao.findAll().get(0).getId();
+        this.formData.set("id", String.valueOf(idMeal));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(MEAL_UPDATED_SUCCESSFULLY));
+
+        // add other tests  to  check if the meal is updated in database
+
+
+        var updatedMeal = this.mealDao.findById(idMeal).get();
+        Assertions.assertEquals(this.formData.getFirst("label"), updatedMeal.getLabel());
+        Assertions.assertEquals(this.formData.getFirst("category"), updatedMeal.getCategory());
+        Assertions.assertEquals(this.formData.getFirst("description"), updatedMeal.getDescription());
+        Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("status"))), updatedMeal.getStatus());
+        Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("quantity"))), updatedMeal.getQuantity());
+        Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.getPrice());
+        var newImageName = updatedMeal.getImage().getImagename();
+
+        Assertions.assertTrue(renameTestImage(newImageName, "ImageMealForTest.jpg"), "The change must  return  true to  verify  that the image is updated to  his original name");
+    }
 
 
     @Test
@@ -132,7 +167,7 @@ public class UpdateMealTest extends AbstractMealTest {
     }
 
     @Test
-    void  updateMealWithWrongImageFormat() throws Exception {
+    void updateMealWithWrongImageFormat() throws Exception {
         var idMeal = this.mealDao.findAll().get(0).getId();
         this.formData.set("id", String.valueOf(idMeal));
         this.imageData = new MockMultipartFile(
