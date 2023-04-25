@@ -9,7 +9,7 @@ public class MealDtout {
     private  final   Integer id ;
     private  final String label ;
     private final String description;
-    private String category;
+    private  final  String category;
     private  final   BigDecimal price ;
     private final  Integer quantity;
     private final Integer status;
@@ -47,10 +47,6 @@ public class MealDtout {
 
     public String getCategory() {
         return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public BigDecimal getPrice() {
