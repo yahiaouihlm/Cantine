@@ -3,7 +3,8 @@ package fr.sqli.Cantine.controller.admin;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.meals.MealService;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,8 +53,7 @@ public class AddMealTest extends AbstractMealTest {
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY")
     );
 
-    @Autowired
-    private MealService mealService;
+
 
     @Autowired
     private IMealDao mealDao;
@@ -117,11 +118,13 @@ public class AddMealTest extends AbstractMealTest {
         //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
         // finally  we  delete  the  meal  from  the  database
 
-        var mealadded = this.mealDao.findAll().get(0);
+        MealEntity mealadded;
+        mealadded = this.mealDao.findAll().get(0);
         String imageName = mealadded.getImage().getImagename();
 
         File file = new File("images/meals/" + imageName);
-        file.delete();
+        Assertions.assertTrue(file.delete());
+
         this.mealDao.delete(mealadded);
     }
 
@@ -133,7 +136,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -157,7 +160,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("label", "ME                  AlTES t".toLowerCase());
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -181,7 +184,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "MEALTEST DESCRIPTION");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -204,7 +207,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -227,7 +230,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("category", "   M e a l Test c  ate gor y ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category").trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -251,7 +254,7 @@ public class AddMealTest extends AbstractMealTest {
 
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description").trim() + " IS ALREADY PRESENT IN THE DATABASE ";
+                + " AND A DESCRIPTION = " + Objects.requireNonNull(this.formData.getFirst("description")).trim() + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -276,7 +279,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("label", "MealTes t");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -301,7 +304,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.set("label", " M eal T e s t ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -327,7 +330,7 @@ public class AddMealTest extends AbstractMealTest {
         this.formData.add("label", " M e a  l T e s t ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label").replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
