@@ -54,7 +54,7 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      * @throws InvalidMealInformationException if the meal information is not valid
      */
     @JsonIgnore
-    public MealEntity createMealEntity() throws InvalidMealInformationException {
+    private MealEntity createMealEntity() throws InvalidMealInformationException {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setCategory(this.category.trim());
         mealEntity.setDescription(this.description.trim());
@@ -75,7 +75,7 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      *      *                                        because the method is called only in the MealDtoIn class with  type  MealEntity
      */
     @JsonIgnore
-    public void checkMealInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
+    private void checkMealInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
         super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category);
         super.checkImageValidity( MealEntity.class ,   this.image);
     }
