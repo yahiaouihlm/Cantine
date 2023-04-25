@@ -50,7 +50,7 @@ public class MealService implements IMealService {
         var overemotional = this.mealDao.findById(idMeal);
         if (overemotional.isEmpty()) {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", idMeal);
-            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
+            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID");
         }
         var meal = overemotional.get(); // change the  meal  with  the  new  values
         meal.setPrice(mealEntity.getPrice());

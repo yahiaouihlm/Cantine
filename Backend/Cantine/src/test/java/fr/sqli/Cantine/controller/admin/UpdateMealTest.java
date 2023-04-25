@@ -50,7 +50,8 @@ public class UpdateMealTest extends AbstractMealTest {
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED"),
-            Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY")
+            Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
+            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID")
     );
     @Autowired
     private IMealDao mealDao;
@@ -101,6 +102,28 @@ public class UpdateMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+
+
+
+
+  //  Test UPDATE Meal With  Not Found Meal
+   @Test
+   void updateMealTestWithNotFoundMeal() throws Exception {
+        var idMeal  = Integer.MAX_VALUE-100;
+        this.formData.set("id", String.valueOf(idMeal));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealNotFound"))));
+
+
+
+    }
 
     /******************************************* PRICE TESTS ********************************************************/
 
