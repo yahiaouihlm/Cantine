@@ -3,6 +3,7 @@ package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.MenuDtoIn;
+import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -69,8 +69,10 @@ public class MenuSerive implements IMenuService {
     }
 
     @Override
-    public List<MenuEntity> getAllMenus() {
-        return this.menuDao.findAll();
+    public List<MenuDtout> getAllMenus() {
+        return this.menuDao.findAll().stream()
+                   .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_PATH))
+                    .toList();
     }
 
 

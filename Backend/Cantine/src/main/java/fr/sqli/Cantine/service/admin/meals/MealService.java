@@ -31,9 +31,8 @@ public class MealService implements IMealService {
     private static final Logger LOG = LogManager.getLogger();
     private final IMealDao mealDao;
     private final String MEALS_IMAGES_URL;
-    private  final String  MEALS_IMAGES_PATH ;
+    private final String MEALS_IMAGES_PATH;
     private final IImageService imageService;
-
 
 
     @Autowired
@@ -65,7 +64,7 @@ public class MealService implements IMealService {
 
         //check  if the  meal  is  already  present  in  the  database despite  the  update
         Optional<MealEntity> mealEntity1 = this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
-        if (mealEntity1.isPresent()){
+        if (mealEntity1.isPresent()) {
             if (mealEntity1.get().getId() != meal.getId()) { // if the  meal  is  already  present  in  the  database and  the  id  are   different  from  the  id  of  the  meal  we  want  to  update  we  throw  an  exception
                 throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
             }
@@ -74,7 +73,7 @@ public class MealService implements IMealService {
         // if  the  image is  not  null  we  update  the  image of  the  meal
         if (mealDtoIn.getImage() != null && !mealDtoIn.getImage().isEmpty()) {
             var oldImageName = meal.getImage().getImagename();
-            var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(),MEALS_IMAGES_PATH);
+            var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(), MEALS_IMAGES_PATH);
 
             meal.getImage().setImagename(newImageName);
 
@@ -110,12 +109,12 @@ public class MealService implements IMealService {
 
         MealEntity meal = mealDtoIn.toMealEntity();
 
-       //  check if  the  meal  is  already  present  in  the  database
+        //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
             throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
         }
         MultipartFile image = mealDtoIn.getImage();
-        var imageName  = this.imageService.uploadImage(image,MEALS_IMAGES_PATH );
+        var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(imageName);
         meal.setImage(imageEntity);
@@ -143,10 +142,9 @@ public class MealService implements IMealService {
     }
 
 
-
     @Override
     public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMeal {
-        return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label,  category , description );
+        return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label, category, description);
 
     }
 
