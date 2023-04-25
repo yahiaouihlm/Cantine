@@ -49,6 +49,7 @@ class AddAndRemoveMealTest {
     public void setUp() {
         env = new MockEnvironment();
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
+        env.setProperty("sqli.cantine.images.meals.path", "images/meals");
         mealService = new MealService(env, mealDao, imageService);
         this.mealEntity = new MealEntity();
         this.mealEntity.setId(1);
@@ -76,6 +77,7 @@ class AddAndRemoveMealTest {
     public void tearDown() {
         mealEntity = null;
         mealDtoIn = null;
+
     }
 
     /**************************** Remove Meal Test ****************************/
@@ -88,7 +90,7 @@ class AddAndRemoveMealTest {
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
 
-        Mockito.doNothing().when(this.imageService).deleteImage(null, "images/meals");
+        Mockito.doNothing().when(this.imageService).deleteImage(null, this.env.getProperty("sqli.cantine.images.meals.path"));
         var result = mealService.removeMeal(1);
 
         // tests

@@ -31,8 +31,9 @@ public class MealService implements IMealService {
     private static final Logger LOG = LogManager.getLogger();
     private final IMealDao mealDao;
     private final String MEALS_IMAGES_URL;
-    private  final String  MEALS_IMAGES_PATH;
+    private  final String  MEALS_IMAGES_PATH ;
     private final IImageService imageService;
+
 
 
     @Autowired
@@ -40,7 +41,7 @@ public class MealService implements IMealService {
         this.mealDao = mealDao;
         this.imageService = imageService;
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
-        this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.path.meals");
+        this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.meals.path");
     }
 
 
