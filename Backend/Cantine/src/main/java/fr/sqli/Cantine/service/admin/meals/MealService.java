@@ -31,6 +31,7 @@ public class MealService implements IMealService {
     private static final Logger LOG = LogManager.getLogger();
     private final IMealDao mealDao;
     private final String MEALS_IMAGES_URL;
+    private  final String  MEALS_IMAGES_PATH;
     private final IImageService imageService;
 
 
@@ -39,6 +40,7 @@ public class MealService implements IMealService {
         this.mealDao = mealDao;
         this.imageService = imageService;
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
+        this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.path.meals");
     }
 
 
@@ -71,7 +73,7 @@ public class MealService implements IMealService {
         // if  the  image is  not  null  we  update  the  image of  the  meal
         if (mealDtoIn.getImage() != null && !mealDtoIn.getImage().isEmpty()) {
             var oldImageName = meal.getImage().getImagename();
-            var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(), "images/meals");
+            var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(),MEALS_IMAGES_PATH);
 
             meal.getImage().setImagename(newImageName);
 
@@ -96,7 +98,7 @@ public class MealService implements IMealService {
         }
 
         var image = meal.getImage();
-        this.imageService.deleteImage(image.getImagename(), "images/meals");
+        this.imageService.deleteImage(image.getImagename(), MEALS_IMAGES_PATH);
 
         this.mealDao.delete(meal);
         return meal;
@@ -112,7 +114,7 @@ public class MealService implements IMealService {
             throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
         }
         MultipartFile image = mealDtoIn.getImage();
-        var imagename = this.imageService.uploadImage(image, "images/meals");
+        var imagename = this.imageService.uploadImage(image,MEALS_IMAGES_PATH );
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(imagename);
         meal.setImage(imageEntity);
