@@ -104,6 +104,9 @@ public class UpdateMealTest extends AbstractMealTest {
         this.mealDao.deleteAll();
     }
 
+
+
+
     @Test
     void updateMealWithOutImage() throws Exception {
         var idMeal = this.mealDao.findAll().get(0).getId();
@@ -128,6 +131,25 @@ public class UpdateMealTest extends AbstractMealTest {
         Assertions.assertEquals(this.imageData.getOriginalFilename(), updatedMeal.getImage().getImagename());
     }
 
+    @Test
+    void  updateMealWithWrongImageFormat() throws Exception {
+        var idMeal = this.mealDao.findAll().get(0).getId();
+        this.formData.set("id", String.valueOf(idMeal));
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                "ImageMealForTest.jpg",          // nom du fichier
+                "image/gif",                    // type MIME
+                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, super.UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+    }
 
     //  Test UPDATE Meal With  Not Found Meal
     @Test
@@ -148,6 +170,7 @@ public class UpdateMealTest extends AbstractMealTest {
     }
 
     /******************************************* PRICE TESTS ********************************************************/
+
 
     @Test
     void updateMealTestWithTooLongPrice() throws Exception {
