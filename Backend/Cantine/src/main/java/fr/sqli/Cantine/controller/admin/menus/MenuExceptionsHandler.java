@@ -20,7 +20,7 @@ public class MenuExceptionsHandler {
 
     @ExceptionHandler(NoMealInMenuException.class)
     public ResponseEntity<ExceptionDtout> handleNoMealInMenu(NoMealInMenuException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 
 
@@ -32,7 +32,7 @@ public class MenuExceptionsHandler {
      */
     @ExceptionHandler(InvalidMenuInformationException.class)
     public ResponseEntity<ExceptionDtout> handleExistingMenu(InvalidMenuInformationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 
 
