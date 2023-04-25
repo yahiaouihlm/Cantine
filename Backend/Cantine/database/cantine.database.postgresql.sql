@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS menu (
     id SERIAL PRIMARY KEY,
     label  VARCHAR(100) NOT NULL,
     description  TEXT NOT NULL,
-    status INT  NOT  NULL,
+    status INT  NOT  NULL,  /* 0 = disabled, 1 = enabled */
     price  DECIMAL(5,2) NOT NULL,
     image_idimage  INT NOT NULL,
     creation_date  DATE NOT NULL,
