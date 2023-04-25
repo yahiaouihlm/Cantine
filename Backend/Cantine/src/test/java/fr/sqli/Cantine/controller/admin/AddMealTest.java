@@ -545,7 +545,7 @@ public class AddMealTest extends AbstractMealTest {
 
 
     @Test
-    void addMealTestWithQuantityOutBoundOfInger() throws Exception {
+    void addMealTestWithQuantityOutBoundOfInteger() throws Exception {
         this.formData.set("quantity", "2000000000000000000000000000000000000000000000000000000000");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
