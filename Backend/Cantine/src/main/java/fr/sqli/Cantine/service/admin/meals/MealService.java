@@ -115,9 +115,9 @@ public class MealService implements IMealService {
             throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
         }
         MultipartFile image = mealDtoIn.getImage();
-        var imagename = this.imageService.uploadImage(image,MEALS_IMAGES_PATH );
+        var imageName  = this.imageService.uploadImage(image,MEALS_IMAGES_PATH );
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(imagename);
+        imageEntity.setImagename(imageName);
         meal.setImage(imageEntity);
         return this.mealDao.save(meal);
     }
