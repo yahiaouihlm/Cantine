@@ -4,7 +4,6 @@ package fr.sqli.Cantine.controller.admin;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.meals.MealService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,9 +54,6 @@ public class UpdateMealTest extends AbstractMealTest {
     );
     @Autowired
     private IMealDao mealDao;
-
-    @Autowired
-    private MealService mealService;
 
     @Autowired
     private MockMvc mockMvc;
