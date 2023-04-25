@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,7 +31,27 @@ public class UpdateMealTest extends AbstractMealTest {
     //THE ID  CAN NOT BE NULL OR LESS THAN 0
     private final Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0"),
-            Map.entry("InvalidArgument", "ARGUMENT NOT VALID")
+            Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
+            Map.entry("Label", "LABEL_IS_MANDATORY"),
+            Map.entry("Category", "CATEGORY_IS_MANDATORY"),
+            Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
+            Map.entry("Price", "PRICE_IS_MANDATORY"),
+            Map.entry("Quantity", "QUANTITY_IS_MANDATORY"),
+            Map.entry("Status", "STATUS_IS_MANDATORY"),
+            Map.entry("Image", "IMAGE_IS_MANDATORY"),
+            Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
+            Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
+            Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
+            Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
+            Map.entry("ShortCategoryLength", "CATEGORY_IS_TOO_SHORT"),
+            Map.entry("LongCategoryLength", "CATEGORY_IS_TOO_LONG"),
+            Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE"),
+            Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
+            Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
+            Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
+            Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
+            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED"),
+            Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY")
     );
     @Autowired
     private IMealDao mealDao;
@@ -83,6 +104,98 @@ public class UpdateMealTest extends AbstractMealTest {
     void cleanDatabase() {
         this.mealDao.deleteAll();
     }
+
+
+    /********************************************* Label  ************************************************/
+
+
+    @Test
+    void updateMealWithoutLabel() throws Exception {
+        // given :  remove label from formData
+        this.formData.remove("label");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+
+    }
+
+    @Test
+    void updateMealTestWithNullLabelValue() throws Exception {
+        // given :  remove label from formData
+        this.formData.set("label", null);
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+
+    }
+
+    @Test
+    void updateMealTestWithTooShortLabel() throws Exception {
+        // given :  remove label from formData
+        this.formData.set("label", "    a        d     "); // length  must be  < 3 without spaces  ( all spaces are removed )
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortLabelLength"))));
+
+    }
+
+    @Test
+    void updateMealTestWithTooLongLabel() throws Exception {
+        // given :  remove label from formData
+        // word  with  101  characters
+        String tooLongLabel = "test".repeat(26);
+        this.formData.set("label", tooLongLabel); // length  must be  < 3 without spaces
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongLabelLength"))));
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /********************************************* ID MEAL ************************************************/
