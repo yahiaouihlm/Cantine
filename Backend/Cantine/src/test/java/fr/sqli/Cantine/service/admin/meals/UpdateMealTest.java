@@ -46,6 +46,8 @@ public class UpdateMealTest {
     public void setUp() {
         env = new MockEnvironment();
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
+        env.setProperty("sqli.cantine.images.meals.path", "images/meals");
+
         mealService = new MealService(env, mealDao, imageService);
         this.mealEntity = new MealEntity();
         ImageEntity imageEntity = new ImageEntity();
@@ -95,7 +97,6 @@ public class UpdateMealTest {
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
         Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1Updated", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(mealEntity));
         Mockito.when(mealDao.save(mealEntity)).thenReturn(mealEntity);
-
 
         var result = mealService.updateMeal(mealDtoIn, 1);
 
