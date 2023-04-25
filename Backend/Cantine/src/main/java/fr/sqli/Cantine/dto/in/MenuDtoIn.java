@@ -1,11 +1,16 @@
 package fr.sqli.Cantine.dto.in;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class MenuDtoIn {
+public class MenuDtoIn extends  AbstractDtoIn {
 
 
     private String label;
@@ -27,7 +32,56 @@ public class MenuDtoIn {
 
     private List <Integer> mealIDs;
 
+    /**
+     * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid
+     * @return the MenuEntity object created from the MenuDtoIn object or throw an exception if the menu information is not valid
+     * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
+     * @throws InvalidMealInformationException it's never thrown because it's a menu
+     */
+     @JsonIgnore
+    public MenuEntity  toMenuEntity() throws InvalidMenuInformationException, InvalidMealInformationException {
+        this.checkMenuInformationValidity();
+        return this.createMenuEntity();
+    }
 
+    /**
+     * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid except the image
+     * @return the MenuEntity object created from the MenuDtoIn object or throw an exception if the menu information is not valid
+     * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
+     * @throws InvalidMealInformationException it's never thrown because it's a menu
+     */
+    @JsonIgnore
+     public  MenuEntity toMenuEntityWithoutImage() throws InvalidMenuInformationException, InvalidMealInformationException {
+        super.checkValidity(MenuEntity.class, this.label, this.description, this.price, this.status, this.quantity, null);
+        return this.createMenuEntity();
+     }
+
+    /**
+     * Convert the MenuDtoIn to a MenuEntity object and return it
+     * @return the MenuEntity object created from the MenuDtoIn object
+     */
+    @JsonIgnore
+    private MenuEntity createMenuEntity() {
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.setLabel(super.removeSpaces(this.label));
+        menuEntity.setDescription(this.description.trim());
+        menuEntity.setPrice(this.price);
+        menuEntity.setStatus(this.status);
+        menuEntity.setQuantity(this.quantity);
+        return menuEntity;
+    }
+
+    /**
+     * Check if the menu information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
+     *       the image is also checked
+     * @throws InvalidMealInformationException it's  never thrown because it's a menu
+     * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
+     */
+    @JsonIgnore
+    private  void checkMenuInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
+        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, null);
+        super.checkImageValidity( MealEntity.class ,   this.image);
+    }
 
 
 
