@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class MenuSerive implements IMenuService {
@@ -60,7 +63,14 @@ public class MenuSerive implements IMenuService {
         menuEntity.setImage(imageEntity);
 
 
+        menuEntity.setCreatedDate(LocalDate.now());
+
         return this.menuDao.save(menuEntity);
+    }
+
+    @Override
+    public List<MenuEntity> getAllMenus() {
+        return this.menuDao.findAll();
     }
 
 

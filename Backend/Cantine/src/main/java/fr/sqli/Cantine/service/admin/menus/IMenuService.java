@@ -10,6 +10,7 @@ import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IMenuService {
 
@@ -17,6 +18,6 @@ public interface IMenuService {
 
   public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
 
-
+  public List<MenuEntity> getAllMenus();
 
 }
