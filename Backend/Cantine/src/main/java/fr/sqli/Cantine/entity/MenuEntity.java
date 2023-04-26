@@ -59,7 +59,7 @@ public class MenuEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "menu_idmenu", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "meal_idmeal", nullable = false)}
     )
-    private List<MealEntity> plats;
+    private List<MealEntity> meals;
     //bi-directional many-to-one association to QuantiteEntity
    /* @OneToMany(mappedBy="menu")
     private List<QuantiteEntity> quantites;*/
@@ -119,6 +119,22 @@ public class MenuEntity implements Serializable {
         this.status = status;
     }
 
+    public ImageEntity getImage() {
+        return image;
+    }
+
+    public void setImage(ImageEntity image) {
+        this.image = image;
+    }
+
+    public List<MealEntity> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<MealEntity> meals) {
+        this.meals = meals;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -126,31 +142,6 @@ public class MenuEntity implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-
-    /* public List<OrderEntity> getCommandes() {
-        return this.commandes;
-    }
-
-    public void setCommandes(List<OrderEntity> commandes) {
-        this.commandes = commandes;
-    }*/
-
-    public ImageEntity getImage() {
-        return this.image;
-    }
-
-    public void setImage(ImageEntity image) {
-        this.image = image;
-    }
-
-    public List<MealEntity> getPlats() {
-        return this.plats;
-    }
-
-    public void setPlats(List<MealEntity> plats) {
-        this.plats = plats;
-    }
-
 }
 
   /*  public List<QuantiteEntity> getQuantites() {
