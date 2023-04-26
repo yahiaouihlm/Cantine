@@ -19,8 +19,8 @@
                            placeholder="Le quatité des plats  disponible "
                            type="number"/>
                     <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
-                        <div *ngIf="f['quantity'].errors['required']"> La quantité  est requis</div>
-                        <div *ngIf="f['quantity'].errors['pattern']">la quantity est un  entier </div>
+                        <div *ngIf="f['quantity'].errors['required']" class="center"> La quantité  est requis</div>
+                        <div *ngIf="f['quantity'].errors['pattern']" class="center" >la quantity est un  entier </div>
                     </div>
                 </div>
 
