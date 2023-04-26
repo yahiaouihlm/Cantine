@@ -36,7 +36,7 @@ public interface IMenuService {
   public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
 
 
-  public MenuDtout getMenuByID(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException;
+  public MenuDtout getMenuById(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException;
 
   public List<MenuDtout> getAllMenus();
 

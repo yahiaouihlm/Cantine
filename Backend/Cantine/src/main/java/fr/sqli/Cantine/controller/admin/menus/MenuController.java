@@ -12,10 +12,7 @@ import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,11 +30,19 @@ public class MenuController implements   IMenuController {
         this.menuService = menuService;
     }
 
-    @PostMapping(value = ENDPOINT_ADD_MENU_URL)
+
     @Override
+    @PostMapping(value = ENDPOINT_ADD_MENU_URL)
+
     public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
          this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(MENU_ADDED_SUCCESSFULLY);
+    }
+
+    @Override
+    @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
+    public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException {
+           return  ResponseEntity.ok(this.menuService.getMenuById(idMenu));
     }
 
     @Override

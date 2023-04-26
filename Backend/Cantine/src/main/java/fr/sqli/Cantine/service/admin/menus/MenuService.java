@@ -34,6 +34,8 @@ import java.util.List;
 public class MenuService implements IMenuService {
     private static final Logger LOG = LogManager.getLogger();
     private final String MENUS_IMAGES_PATH;
+
+    private final String MENUS_IMAGES_URL;
     private final String MEALS_IMAGES_PATH;
     private final IMealService mealService;
     private final IImageService imageService;
@@ -44,8 +46,9 @@ public class MenuService implements IMenuService {
         this.mealService = mealService;
         this.imageService = imageService;
         this.menuDao = menuDao;
-        this.MENUS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.menus.path");
-        this.MEALS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.url.meals");
+        this.MENUS_IMAGES_URL = environment.getProperty("sqli.cantine.images.url.menus"); // the link  to images of menus
+        this.MENUS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.menus.path"); //  the path  to the images of menus directory
+        this.MEALS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.url.meals"); //  the path  to the images of meals directory
     }
 
     @Override
@@ -77,11 +80,11 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtout getMenuByID(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException {
+    public MenuDtout getMenuById(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException {
           IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID );
           var  menu =  this.menuDao.findById(menuID);
           if (menu.isPresent()){
-                return new MenuDtout(menu.get(), this.MENUS_IMAGES_PATH  , this.MEALS_IMAGES_PATH);
+                return new MenuDtout(menu.get(), this.MENUS_IMAGES_URL , this.MEALS_IMAGES_PATH);
           }
 
 
@@ -92,7 +95,7 @@ public class MenuService implements IMenuService {
     @Override
     public List<MenuDtout> getAllMenus() {
         return this.menuDao.findAll().stream()
-                   .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_PATH , this.MEALS_IMAGES_PATH))
+                   .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_URL , this.MEALS_IMAGES_PATH))
                     .toList();
     }
 

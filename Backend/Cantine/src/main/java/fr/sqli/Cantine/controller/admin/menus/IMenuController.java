@@ -20,11 +20,14 @@ public interface IMenuController {
     String ENDPOINT_ADD_MENU_URL = "/add";
     String ENDPOINT_GET_ALL_MENUS_URL = "/getAll";
 
+    String ENDPOINT_GET_ONE_MENU_URL = "/get";
 
     /*------------------ MESSAGES ------------------*/
     String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
 
     /*------------------ METHODS ------------------*/
     public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+
+    public ResponseEntity<MenuDtout> getMenuById(Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException;
     public ResponseEntity<List<MenuDtout>> getAllMenus();
 }
