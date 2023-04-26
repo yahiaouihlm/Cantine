@@ -11,12 +11,14 @@ import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IMenuController {
 
     /*------------------ ENDPOINTS ------------------*/
     String MENUS_URL_ADMIN = "/cantine/api/admin/menus";
     String ENDPOINT_ADD_MENU_URL = "/add";
+    String ENDPOINT_GET_ALL_MENUS_URL = "/getAll";
 
 
     /*------------------ MESSAGES ------------------*/
@@ -24,5 +26,5 @@ public interface IMenuController {
 
     /*------------------ METHODS ------------------*/
     public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
-
+    public ResponseEntity<List<MenuDtout>> getAllMenus();
 }
