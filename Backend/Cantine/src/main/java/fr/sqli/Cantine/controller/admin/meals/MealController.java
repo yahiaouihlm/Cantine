@@ -27,8 +27,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequestMapping(value = MEALS_URL_ADMIN)
 public class MealController implements IMealController {
 
-    @Autowired
-    private IMealDao mealDao;
+
     private final MealService mealService;
 
     @Autowired
