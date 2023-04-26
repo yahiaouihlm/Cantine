@@ -55,7 +55,8 @@ public class MenuService implements IMenuService {
         }
 
         for (Integer mealID : menuDtoIn.getMealIDs()) {
-            this.mealService.getMealByID(mealID);
+            var  meal  =   this.mealService.getMealEntityByID(mealID);
+            menuEntity.getMeals().add(meal);
         }
 
         MultipartFile image = menuDtoIn.getImage();
