@@ -13,6 +13,8 @@ import {MatCardModule} from "@angular/material/card";
 import {HttpClientModule} from "@angular/common/http";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatRadioModule} from "@angular/material/radio";
 
 
 
@@ -44,11 +46,12 @@ import {MatSelectModule} from "@angular/material/select";
     MatBadgeModule,
     ReactiveFormsModule,
     MainFooterComponent,
-    MatFormFieldModule,
-    MatOptionModule,
-    MatSelectModule
+    MatCheckboxModule,
+    MatRadioModule,
 
-    ]
+
+
+  ]
 
 })
 export class SharedmoduleModule { }

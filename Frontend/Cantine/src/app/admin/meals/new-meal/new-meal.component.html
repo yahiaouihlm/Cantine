@@ -4,50 +4,56 @@
             <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
             <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
         </div>
-
+              <h1 class="center"> Je Ajoute un  Plat </h1>
         <div class="register-form">
-            <form (ngSubmit)="onSubmit()" [formGroup]="newMeal">
+            <form [formGroup]="newMeal" (ngSubmit)="onSubmit()">
 
-                <!---------------------- label --------------------------->
-                <div class="form-group">
-                    <label>Le Nom du Plat </label>
-                    <input [ngClass]="{ 'is-invalid': submitted && f['label'].errors }" class="form-control" formControlName="mealname"
-                           placeholder="Le Nom du  Plat "
-                           type="text"/>
-                    <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
-                        <div *ngIf="f['label'].errors['required']"> Nom du plat est requis</div>
-                        <div *ngIf="f['label'].errors['maxlength']">
-                            le nom du plat ne doit pas dépasser 60 charctéres
-                        </div>
-                        <div *ngIf="f['label'].errors['minlength']">
-                            le nom du plat ne doit avoir au minimum  de 3 charctéres
-                        </div>
-                    </div>
-                </div>
 
-                <!---------------------- price --------------------------->
+
+
+
+                <!---------------------- Quantity --------------------------->
                 <div class="form-group">
-                    <label>Le prix  </label>
-                    <input [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" class="form-control" formControlName="mealname"
-                           placeholder="Le prix du  Plat "
+                    <label>Le quatité      </label>
+                    <input [ngClass]="{ 'is-invalid': submitted && f['quantity'].errors }" class="form-control" formControlName="quantity"
+                           placeholder="Le quatité des plats  disponible "
                            type="number"/>
-                    <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
-                        <div *ngIf="f['price'].errors['required']"> Nom du plat est requis</div>
-                        <div *ngIf="f['price'].errors['maxlength']">
-                            le nom du plat ne doit pas dépasser 60 charctéres
-                        </div>
-                        <div *ngIf="f['price'].errors['minlength']">
-                            le nom du plat ne doit avoir au minimum  de 3 charctéres
-                        </div>
+                    <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
+                        <div *ngIf="f['quantity'].errors['required']"> La quantité  est requis</div>
+                        <div *ngIf="f['quantity'].errors['pattern']">la quantity est un  entier </div>
                     </div>
                 </div>
 
 
 
+
+
+
+
+
+                <!---------------------- status --------------------------->
+                <div class="form-group">
+                    <label> Le plat  est t-il  disponible ?     </label>
+                    <mat-radio-group aria-label="Select an option"[ngClass]="{ 'is-invalid': submitted && f['status'].errors }" class="form-control" formControlName="status" >
+                        <mat-radio-button value="available" > Plat Disponible </mat-radio-button>
+                        <mat-radio-button value="unavailable" > Plat n'est  Disponible </mat-radio-button>
+                    </mat-radio-group>
+                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                        <div *ngIf="f['status'].errors['required']" class="center"> le status  du  plat   est requise </div>
+                    </div>
+                </div>
 
             </form>
+            <button  (click)="onSubmit()" class="btn center">  Enregistrer </button>
+
         </div>
     </div>
+
 </div>
+
+
+
+
+
 
 
