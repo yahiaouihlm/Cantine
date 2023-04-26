@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class MenuSerive implements IMenuService {
+public class MenuService implements IMenuService {
     private static final Logger LOG = LogManager.getLogger();
     private final String MENUS_IMAGES_PATH;
     private final MealService mealService;
@@ -34,7 +34,7 @@ public class MenuSerive implements IMenuService {
     private final IMenuDao menuDao;
 
     @Autowired
-    public MenuSerive(Environment environment, MealService mealService, ImageService imageService, IMenuDao menuDao) {
+    public MenuService(Environment environment, MealService mealService, ImageService imageService, IMenuDao menuDao) {
         this.mealService = mealService;
         this.imageService = imageService;
         this.menuDao = menuDao;
@@ -46,7 +46,7 @@ public class MenuSerive implements IMenuService {
         var menuEntity = menuDtoIn.toMenuEntity();
 
         if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().size() == 0 || menuDtoIn.getMealIDs().isEmpty()) {
-           MenuSerive.LOG.error("The menu doesn't contain any meal");
+           MenuService.LOG.error("The menu doesn't contain any meal");
             throw new InvalidMenuInformationException("The menu doesn't contain any meal");
         }
 
