@@ -31,6 +31,7 @@ import java.util.List;
 public class MenuService implements IMenuService {
     private static final Logger LOG = LogManager.getLogger();
     private final String MENUS_IMAGES_PATH;
+    private final String MEALS_IMAGES_PATH;
     private final IMealService mealService;
     private final IImageService imageService;
     private final IMenuDao menuDao;
@@ -41,6 +42,7 @@ public class MenuService implements IMenuService {
         this.imageService = imageService;
         this.menuDao = menuDao;
         this.MENUS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.menus.path");
+        this.MEALS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.url.meals");
     }
 
     @Override
@@ -73,7 +75,7 @@ public class MenuService implements IMenuService {
     @Override
     public List<MenuDtout> getAllMenus() {
         return this.menuDao.findAll().stream()
-                   .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_PATH))
+                   .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_PATH , this.MEALS_IMAGES_PATH))
                     .toList();
     }
 
