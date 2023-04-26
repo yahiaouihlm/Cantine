@@ -3,6 +3,7 @@ package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.MenuDtoIn;
+import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -73,6 +74,19 @@ public class MenuService implements IMenuService {
         menuEntity.setCreatedDate(LocalDate.now());
 
         return this.menuDao.save(menuEntity);
+    }
+
+    @Override
+    public MenuDtout getMenuByID(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException {
+          IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID );
+          var  menu =  this.menuDao.findById(menuID);
+          if (menu.isPresent()){
+                return new MenuDtout(menu.get(), this.MENUS_IMAGES_PATH  , this.MEALS_IMAGES_PATH);
+          }
+
+
+        MenuService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", menuID);
+        throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
     }
 
     @Override

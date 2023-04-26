@@ -27,12 +27,12 @@ public interface IMealService {
      * @param args the meal information to check
      * @throws InvalidMealInformationException if  one of the arguments is null or empty or less than 0
      */
-    static void verifyMealInformation(String meassageException, Object... args) throws InvalidMealInformationException {
+    static void verifyMealInformation(String messageException, Object... args) throws InvalidMealInformationException {
         for (Object arg : args) {
             if (arg == null || (arg instanceof String && ((String) arg).isEmpty()))
-                throw new InvalidMealInformationException(meassageException);
+                throw new InvalidMealInformationException(messageException);
             if (arg == null || (arg instanceof Integer && (Integer) arg < 0))
-                throw new InvalidMealInformationException(meassageException);
+                throw new InvalidMealInformationException(messageException);
 
         }
     }
