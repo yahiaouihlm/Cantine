@@ -34,7 +34,7 @@ public class ImageService implements IImageService {
         }
 
         if (image == null || image.isEmpty()) {
-            LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
+            LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE IMAGE IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
             throw new InvalidImageException("INVALID IMAGE IT CANNOT BE NULL OR EMPTY ");
         }
 
