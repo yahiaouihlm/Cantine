@@ -1,8 +1,6 @@
 package fr.sqli.Cantine.controller.admin.meals;
 
-import java.io.File;
-
-public interface IAdminEndPoints {
+public interface IMealController {
 
     String MEALS_URL_ADMIN = "/cantine/api/admin/meals";
     String ENDPOINT_ADD_MEAL_URL = "/add";
