@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.admin.meals;
 
 
+import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -35,6 +36,8 @@ public interface IMealService {
 
         }
     }
+
+
 
 
 
@@ -114,6 +117,15 @@ public interface IMealService {
      */
     MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException;
 
+
+    /**
+     *  Get a meal by its id from the database and return it as a MealEntity throw an exception if the meal is not found
+     * @param id the meal id to search for
+     * @return The meal found with the given id or throw an exception if the meal is not found
+     * @throws InvalidMealInformationException if the meal id is null or less than 0
+     * @throws MealNotFoundAdminException          if the meal is not found
+     */
+    MealEntity  getMealEntityByID (Integer id) throws InvalidMealInformationException, MealNotFoundAdminException;
 
 
 }

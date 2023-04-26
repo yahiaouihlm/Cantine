@@ -128,13 +128,17 @@ public class MealService implements IMealService {
 
     @Override
     public MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException {
+        return new MealDtout(getMealEntityByID(id), this.MEALS_IMAGES_URL);
+    }
 
+    @Override
+    public MealEntity getMealEntityByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException {
         IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", id);
 
         var meal = this.mealDao.findById(id);
 
         if (meal.isPresent()) {
-            return new MealDtout(meal.get(), this.MEALS_IMAGES_URL);
+            return meal.get();
         }
 
         MealService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", id);
