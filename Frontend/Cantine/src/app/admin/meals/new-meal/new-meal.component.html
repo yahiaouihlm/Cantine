@@ -4,10 +4,45 @@
             <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
             <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
         </div>
-              <h1 class="center"> Je Ajoute un  Plat </h1>
+              <h1 class="center"> Ajouter  un  Plat </h1>
         <div class="register-form">
             <form [formGroup]="newMeal" (ngSubmit)="onSubmit()">
 
+
+
+                <!---------------------- label --------------------------->
+                <div class="form-group ">
+                    <label> Nom  </label>
+                    <input [ngClass]="{ 'is-invalid': submitted && f['label'].errors }" class="form-control" formControlName="label"
+                           placeholder="Le Nom du  Plat "
+                           type="text"/>
+                    <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
+                        <div *ngIf="f['label'].errors['required']"> Nom du plat est requis</div>
+                        <div *ngIf="f['label'].errors['maxlength']">
+                            le nom du plat ne doit pas dépasser 60 charctéres
+                        </div>
+                        <div *ngIf="f['label'].errors['minlength']">
+                            le nom du plat ne doit avoir au minimum  de 3 charctéres
+                        </div>
+                    </div>
+                </div>
+
+                <!---------------------- description --------------------------->
+                <div class="form-group">
+                    <label> Description  </label>
+                    <textarea [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" class="form-control" formControlName="description"
+                           placeholder=" Description du  Plat  "
+                           type="text"> </textarea>
+                    <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+                        <div *ngIf="f['description'].errors['required']"> Nom du plat est requis</div>
+                        <div *ngIf="f['description'].errors['maxlength']">
+                            le nom du plat ne doit pas dépasser 400 charctéres
+                        </div>
+                        <div *ngIf="f['description'].errors['minlength']">
+                            le nom du plat ne doit avoir au minimum  de 5 charctéres
+                        </div>
+                    </div>
+                </div>
 
 
 
