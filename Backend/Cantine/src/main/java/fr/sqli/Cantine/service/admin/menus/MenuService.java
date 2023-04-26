@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.MenuDtoIn;
 import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
+import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,12 +55,12 @@ public class MenuService implements IMenuService {
            MenuService.LOG.error("The menu doesn't contain any meal");
             throw new InvalidMenuInformationException("The menu doesn't contain any meal");
         }
-
+        List<MealEntity> mealsInMenu =  new ArrayList<>();
         for (Integer mealID : menuDtoIn.getMealIDs()) {
             var  meal  =   this.mealService.getMealEntityByID(mealID);
-            menuEntity.getMeals().add(meal);
+            mealsInMenu.add(meal);
         }
-
+        menuEntity.setMeals(mealsInMenu);
         MultipartFile image = menuDtoIn.getImage();
 
         var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
