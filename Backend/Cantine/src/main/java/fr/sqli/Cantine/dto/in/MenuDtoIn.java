@@ -79,7 +79,7 @@ public class MenuDtoIn extends  AbstractDtoIn {
      */
     @JsonIgnore
     private  void checkMenuInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
-        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, null);
+        super.checkValidity( MenuEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, null);
         super.checkImageValidity( MealEntity.class ,   this.image);
     }
 
