@@ -38,6 +38,7 @@ public class MealController implements IMealController {
 
 
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
+    @Override
     public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
 
         this.mealService.updateMeal(mealDtoIn, mealDtoIn.getId()  );
@@ -45,12 +46,14 @@ public class MealController implements IMealController {
     }
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
+    @Override
     public ResponseEntity<String> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
         this.mealService.removeMeal(idMeal);
         return ResponseEntity.ok(MEAL_DELETED_SUCCESSFULLY);
     }
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
+    @Override
     public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok(MEAL_ADDED_SUCCESSFULLY);
@@ -58,12 +61,14 @@ public class MealController implements IMealController {
 
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
+    @Override
     public ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationException {
         var meal = this.mealService.getMealByID(idMeal);
         return ResponseEntity.ok(meal);
     }
 
     @GetMapping(value = ENDPOINT_GET_ALL_MEALS_URL)
+    @Override
     public ResponseEntity<List<MealDtout>> getAllMeals() {
         var meals = this.mealService.getAllMeals();
         return ResponseEntity.ok(meals);
