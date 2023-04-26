@@ -6,10 +6,12 @@ import fr.sqli.Cantine.dto.in.MenuDtoIn;
 import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -29,12 +31,12 @@ import java.util.List;
 public class MenuService implements IMenuService {
     private static final Logger LOG = LogManager.getLogger();
     private final String MENUS_IMAGES_PATH;
-    private final MealService mealService;
-    private final ImageService imageService;
+    private final IMealService mealService;
+    private final IImageService imageService;
     private final IMenuDao menuDao;
 
     @Autowired
-    public MenuService(Environment environment, MealService mealService, ImageService imageService, IMenuDao menuDao) {
+    public MenuService(Environment environment, IMealService mealService, IImageService imageService, IMenuDao menuDao) {
         this.mealService = mealService;
         this.imageService = imageService;
         this.menuDao = menuDao;
