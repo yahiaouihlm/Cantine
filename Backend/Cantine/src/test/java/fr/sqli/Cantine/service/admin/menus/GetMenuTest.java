@@ -23,6 +23,7 @@ import org.springframework.mock.env.MockEnvironment;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class GetMenuTest {
@@ -75,6 +76,13 @@ class GetMenuTest {
     }
 
 
+    @Test
+    void getMenuByIdWithMenuNotFoundTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+        Mockito.when(iMenuDao.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+        Assertions.assertThrows(MealNotFoundAdminException.class, () -> menuService.getMenuById(1));
+        Mockito.verify(iMenuDao, Mockito.times(1)).findById(Mockito.anyInt());
+
+    }
     @Test
     void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(-1));
