@@ -75,11 +75,11 @@ class GetMenuTest {
     }
 
 
-   @Test
-   void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
-       Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(-1));
-       Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
-   }
+    @Test
+    void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(-1));
+        Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
+    }
     @Test
     void getMenuByIdWithNullIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(null));
@@ -87,7 +87,7 @@ class GetMenuTest {
     }
 
 
-     /******************************** getAllMenus()  ********************************/
+    /******************************** getAllMenus()  ********************************/
     @Test
     void getAllMenusWithTwoMenuTest() {
 
