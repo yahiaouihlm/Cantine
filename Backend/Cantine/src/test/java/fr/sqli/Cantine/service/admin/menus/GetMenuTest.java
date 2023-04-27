@@ -77,6 +77,17 @@ class GetMenuTest {
 
 
     @Test
+    void getMenuByIdWithValidateId() throws InvalidMenuInformationException, MealNotFoundAdminException {
+        Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
+        var  result  =  this.menuService.getMenuById(1);
+        Assertions.assertTrue(result instanceof MenuDtout);
+        Assertions.assertEquals(result.getDescription(), this.menuEntity.getDescription());
+        Assertions.assertEquals(result.getId() , this.menuEntity.getId());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findById(Mockito.anyInt());
+
+    }
+
+    @Test
     void getMenuByIdWithMenuNotFoundTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
         Mockito.when(iMenuDao.findById(Mockito.anyInt())).thenReturn(Optional.empty());
         Assertions.assertThrows(MealNotFoundAdminException.class, () -> menuService.getMenuById(1));
