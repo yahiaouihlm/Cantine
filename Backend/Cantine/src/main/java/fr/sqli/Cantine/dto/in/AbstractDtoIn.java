@@ -53,7 +53,7 @@ public abstract class AbstractDtoIn {
                 throwRightException(type, "CATEGORY_IS_TOO_LONG");
             }
 
-            if (description.length() > 600) {
+            if (description.length() > 1600) {
                 throwRightException(type, "DESCRIPTION_IS_TOO_LONG");
             }
 
@@ -61,7 +61,7 @@ public abstract class AbstractDtoIn {
         }
 
         if (MenuEntity.class.isAssignableFrom(type)) {
-            if (description.length() > 700) {
+            if (description.length() > 1700) {
                 throwRightException(type, "DESCRIPTION_IS_TOO_LONG");
             }
 

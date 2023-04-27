@@ -604,7 +604,7 @@ public class UpdateMealTest extends AbstractMealTest {
     void AddMealTestWithTooLongDescription() throws Exception {
         // given :  remove label from formData
         // word  with  101  characters
-        String tooLongLabel = "a".repeat(601);
+        String tooLongLabel = "a".repeat(1701);
         this.formData.set("description", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
