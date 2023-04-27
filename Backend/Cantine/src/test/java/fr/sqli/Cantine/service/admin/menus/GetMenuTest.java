@@ -1,6 +1,9 @@
 package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.entity.ImageEntity;
+import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.images.IImageService;
@@ -11,6 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
+
+import java.math.BigDecimal;
+import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 class GetMenuTest {
@@ -26,14 +32,48 @@ class GetMenuTest {
     @Mock
     MockEnvironment environment;
 
+    private  MealEntity mealEntity;
+    private MenuEntity menuEntity;
+
+
+
     @BeforeEach
     void setUp() {
         this.environment = new MockEnvironment();
         this.environment.setProperty("sqli.cantine.images.url.menus", "http://localhost:8080/images/menus/");
+        this.environment.setProperty("sqli.cantine.images.menus.path", "images/menus");
         this.menuService = new MenuService(environment,  iMealService , imageService , iMenuDao);
+
+
+        this.mealEntity = new MealEntity();
+        this.mealEntity.setId(1);
+        this.mealEntity.setStatus(1);
+        this.mealEntity.setPrice(BigDecimal.valueOf(1.3));
+        this.mealEntity.setQuantity(1);
+        this.mealEntity.setCategory("Frites");
+        this.mealEntity.setDescription("first Meal To  Test");
+        this.mealEntity.setLabel("Meal 1");
+        this.mealEntity.setImage(new ImageEntity());
+
+
+
+        this.menuEntity = new MenuEntity();
+        this.menuEntity.setId(1);
+        this.menuEntity.setStatus(1);
+        this.menuEntity.setPrice(BigDecimal.valueOf(1.3));
+        this.menuEntity.setQuantity(1);
+        this.menuEntity.setDescription("first Menu To  Test");
+        this.menuEntity.setLabel("Menu 1");
+        this.menuEntity.setMeals(Collections.singletonList(mealEntity));
+        this.menuEntity.setImage(new ImageEntity());
+
 ;
     }
 
+
+
+    @Test
+    void  getMenu
 
 }
 
