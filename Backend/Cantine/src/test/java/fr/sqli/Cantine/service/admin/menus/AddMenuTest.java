@@ -1,15 +1,27 @@
 package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.dto.in.MenuDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
+import org.springframework.mock.web.MockMultipartFile;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 public class AddMenuTest {
@@ -28,7 +40,48 @@ public class AddMenuTest {
     private MealEntity mealEntity;
     private MenuEntity menuEntity;
 
+    private MenuDtoIn menu  ;
 
+    @BeforeEach
+    void  init () throws IOException {
+            this.menu =  new MenuDtoIn();
+        this.menu.setLabel("label test");
+        this.menu.setDescription("description  test");
+        this.menu.setQuantity(10);
+        this.menu.setStatus(1);
+        this.menu.setPrice(new BigDecimal(1.5));
+        this.menu.setImage( new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                "ImageMealForTest.jpg",          // nom du fichier
+                "image/jpg",                    // type MIME
+                new FileInputStream("images/meals/ImageMealForTest.jpg")));
+        this.menu.setMealIDs(Collections.singletonList(1));
 
+    }
+
+  /****************************************** label ********************************************/
+
+  @Test
+  void AddMenuWithTooShortLabel (){
+      this.menu.setLabel("ab");
+      Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+  }
+  @Test
+  void AddMenuWithTooLongLabel (){
+      this.menu.setLabel("a".repeat(101));
+      Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+  }
+  @Test
+  void AddMenuWithEmptyLabelTest(){
+      this.menu.setLabel("");
+      Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+
+  }
+
+   @Test
+    void AddMenuWithNullLabelTest () {
+       this.menu.setLabel(null);
+       Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+   }
 
 }
