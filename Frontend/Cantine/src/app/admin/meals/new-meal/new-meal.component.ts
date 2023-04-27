@@ -15,7 +15,7 @@ export class NewMealComponent {
         category: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.minLength(3)]),
         price: new FormControl('', [Validators.required]),
         quantity: new FormControl('', [Validators.required,  Validators.pattern("^[0-9]+$")  ]),
-        Image: new FormControl('', [Validators.required]),
+        image: new FormControl('', [Validators.required]),
         status: new FormControl('', [Validators.required])
     });
 

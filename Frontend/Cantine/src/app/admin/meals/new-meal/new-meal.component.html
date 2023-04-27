@@ -92,7 +92,6 @@
                                 </select>
                                 <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
                                     <div *ngIf="f['category'].errors['required']" class="center"> une catégorie est requise </div>
-
                                 </div>
                             </div>
 
@@ -115,16 +114,14 @@
 
                             <!---------------------- Image --------------------------->
                             <div class="form-group">
-                                <label>Le prix  </label>
-                                <div class="input-group">
-                                    <input class="input-group-prepend" [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control" formControlName="price"
-                                           placeholder="Le prix du  Plat "
-                                           type="number"/>
-                                    <span class="input-group-text">€</span>
-                                </div>
+                                <label>Le image  </label>
 
-                                <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
-                                    <div *ngIf="f['price'].errors['required']" class="center"> le prix  du plat est requis</div>
+                                    <input class="input-group-prepend" [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control" formControlName="image"
+                                           placeholder="Le prix du  Plat "
+                                           type="file"/>
+
+                                <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['image'].errors['required']" class="center"> le image  du plat est requis</div>
                                 </div>
 
                             </div>
@@ -141,8 +138,6 @@
 
     </div>
 </div>
-
-
 
 
 
