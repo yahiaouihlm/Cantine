@@ -17,11 +17,11 @@
                            placeholder="Le Nom du  Plat "
                            type="text"/>
                     <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
-                        <div *ngIf="f['label'].errors['required']"> Nom du plat est requis</div>
-                        <div *ngIf="f['label'].errors['maxlength']">
+                        <div *ngIf="f['label'].errors['required']" class="center"> Nom du plat est requis</div>
+                        <div *ngIf="f['label'].errors['maxlength']" class="center" >
                             le nom du plat ne doit pas dépasser 60 charctéres
                         </div>
-                        <div *ngIf="f['label'].errors['minlength']">
+                        <div *ngIf="f['label'].errors['minlength']" class="center" >
                             le nom du plat ne doit avoir au minimum  de 3 charctéres
                         </div>
                     </div>
@@ -34,14 +34,26 @@
                            placeholder=" Description du  Plat  "
                            type="text"> </textarea>
                     <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
-                        <div *ngIf="f['description'].errors['required']"> Nom du plat est requis</div>
-                        <div *ngIf="f['description'].errors['maxlength']">
-                            le nom du plat ne doit pas dépasser 400 charctéres
+                        <div *ngIf="f['description'].errors['required']"  class="center"> Description du plat est requis</div>
+                        <div *ngIf="f['description'].errors['maxlength']" class="center">
+                            Description du plat ne doit pas dépasser 400 charctéres
                         </div>
-                        <div *ngIf="f['description'].errors['minlength']">
-                            le nom du plat ne doit avoir au minimum  de 5 charctéres
+                        <div *ngIf="f['description'].errors['minlength']" class="center" >
+                            Description du  plat ne doit avoir au minimum  de 5 charctéres
                         </div>
                     </div>
+                </div>
+
+                <!---------------------- price --------------------------->
+                <div class="form-group">
+                    <label>Le prix  </label>
+                    <input [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" class="form-control" formControlName="price"
+                           placeholder="Le prix du  Plat "
+                           type="number"/> <span class="input-group-addon">€</span>
+                    <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+                        <div *ngIf="f['price'].errors['required']" class="center"> le prix  du plat est requis</div>
+                    </div>
+
                 </div>
 
 
@@ -60,6 +72,23 @@
                 </div>
 
 
+                <div class="form-group">
+                    <label> Catégorie </label>
+                    <select formControlName="category" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
+                        <option value="">-- Catégorie Du Plat --</option>
+                        <option value="Hamburgers">Hamburgers </option>
+                        <option value="Nuggets de poulet">Nuggets de poulet</option>
+                        <option value="Volailles cuites">Volailles cuites</option>
+                        <option value="Viandes">Viandes</option>
+                        <option value="Plats à la volaille">Plats à la volaille</option>
+                        <option value="Poulets">Poulets</option>
+                    </select>
+                    <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
+                        <div *ngIf="f['category'].errors['required']" class="center"> une catégorie est requise </div>
+                        <
+                    </div>
+                </div>
 
 
 
