@@ -95,6 +95,18 @@ class GetMenuTest {
     }
 
 
+    @Test
+    void TestAllMenusWithOneMenuTest() {
+
+        Mockito.when(iMenuDao.findAll()).thenReturn(List.of(this.menuEntity));
+
+        var result = menuService.getAllMenus();
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
+        Assertions.assertEquals(result.get(0).getQuantity(), this.menuEntity.getQuantity());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findAll();
+    }
+
 
 }//  end class
 
