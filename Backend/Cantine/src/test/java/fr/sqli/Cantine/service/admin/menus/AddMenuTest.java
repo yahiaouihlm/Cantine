@@ -7,12 +7,14 @@ import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
+import fr.sqli.Cantine.service.images.ImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
@@ -58,7 +60,36 @@ public class AddMenuTest {
         this.menu.setMealIDs(Collections.singletonList(1));
 
     }
+  /*************************************** Description ******************************************/
+  @Test
+  void AddMenuWithTooShortDescriptionTest (){
+      this.menu.setDescription("abad");
+      Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+      Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
+  }
+    @Test
+    void AddMenuWithTooLongDescriptionTest(){
+        this.menu.setLabel("a".repeat(1701));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+    @Test
+    void AddMenuWithEmptyDescriptionTest(){
+        this.menu.setDescription("");
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    void AddMenuWithNullDescriptionTest () {
+        this.menu.setDescription(null);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
 
 
 
@@ -67,19 +98,24 @@ public class AddMenuTest {
 
   /****************************************** label ********************************************/
   @Test
-  void AddMenuWithTooShortLabel (){
+  void AddMenuWithTooShortLabelTest (){
       this.menu.setLabel("ab");
       Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+      Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
   }
   @Test
-  void AddMenuWithTooLongLabel (){
+  void AddMenuWithTooLongLabelTest (){
       this.menu.setLabel("a".repeat(101));
       Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+      Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
   }
   @Test
   void AddMenuWithEmptyLabelTest(){
       this.menu.setLabel("");
       Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+      Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
   }
 
@@ -87,6 +123,7 @@ public class AddMenuTest {
     void AddMenuWithNullLabelTest () {
        this.menu.setLabel(null);
        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+       Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
    }
 
 }
