@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
@@ -74,10 +75,15 @@ class GetMenuTest {
     }
 
 
-
+   @Test
+   void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+       Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(-1));
+       Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
+   }
     @Test
     void getMenuByIdWithNullIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(null));
+        Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
     }
 
 
@@ -98,9 +104,12 @@ class GetMenuTest {
         Mockito.when(iMenuDao.findAll()).thenReturn(List.of(this.menuEntity, menuEntity2));
 
         var result = menuService.getAllMenus();
+
+        Assertions.assertTrue(result.get(0) instanceof MenuDtout);
+        Assertions.assertTrue(result.get(1) instanceof MenuDtout);
+
         Assertions.assertEquals(2, result.size());
         Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
-
         Mockito.verify(iMenuDao, Mockito.times(1)).findAll();
     }
 
@@ -111,6 +120,7 @@ class GetMenuTest {
         Mockito.when(iMenuDao.findAll()).thenReturn(List.of(this.menuEntity));
 
         var result = menuService.getAllMenus();
+        Assertions.assertTrue(result.get(0) instanceof MenuDtout);
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
         Assertions.assertEquals(result.get(0).getQuantity(), this.menuEntity.getQuantity());
@@ -123,6 +133,7 @@ class GetMenuTest {
         Mockito.when(iMenuDao.findAll()).thenReturn(Collections.emptyList());
 
         var result = menuService.getAllMenus();
+
         Assertions.assertEquals(0, result.size());
         Mockito.verify(iMenuDao, Mockito.times(1)).findAll();
     }
