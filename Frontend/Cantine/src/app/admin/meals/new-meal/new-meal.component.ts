@@ -4,7 +4,7 @@ import {AbstractControl, FormControl, FormGroup, PatternValidator, Validators} f
 @Component({
     selector: 'app-new-meal',
     templateUrl: './new-meal.component.html',
-    styles: []
+    styleUrls: ['../../../../assets/styles/new-meal.component.scss']
 })
 export class NewMealComponent {
 
