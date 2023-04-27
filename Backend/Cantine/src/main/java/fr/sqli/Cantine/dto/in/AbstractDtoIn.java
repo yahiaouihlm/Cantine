@@ -30,6 +30,7 @@ public abstract class AbstractDtoIn {
         if (label == null || label.trim().isEmpty()) {
             throwRightException(type, "LABEL_IS_MANDATORY");
         }
+
         if (description == null || description.trim().isEmpty()) {
             throwRightException(type, "DESCRIPTION_IS_MANDATORY");
         }
@@ -127,7 +128,7 @@ public abstract class AbstractDtoIn {
         if (MealEntity.class.isAssignableFrom(type)) {
             throw new InvalidMealInformationException(messageException);
         }
-        if (MealEntity.class.isAssignableFrom(type)) {
+        if (MenuEntity.class.isAssignableFrom(type)) {
             throw new InvalidMenuInformationException(messageException);
         }
     }
