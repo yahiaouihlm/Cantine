@@ -6,6 +6,8 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +74,14 @@ class GetMenuTest {
     }
 
 
+
+    @Test
+    void getMenuByIdWithNullIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(null));
+    }
+
+
+     /******************************** getAllMenus()  ********************************/
     @Test
     void getAllMenusWithTwoMenuTest() {
 
