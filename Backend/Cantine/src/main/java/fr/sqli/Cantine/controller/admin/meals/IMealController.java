@@ -9,14 +9,12 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 public interface IMealController {
      /*------------------ ENDPOINTS ------------------*/
@@ -41,13 +39,13 @@ public interface IMealController {
 
     /*------------------ METHODS ------------------*/
 
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException ;
+    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException ;
 
 
     public ResponseEntity<String> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException ;
 
 
-    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException ;
+    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException ;
 
 
 

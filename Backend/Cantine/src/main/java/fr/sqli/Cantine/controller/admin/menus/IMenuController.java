@@ -8,7 +8,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public interface IMenuController {
     String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
 
     /*------------------ METHODS ------------------*/
-    public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException;
+    public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException;
 
     public ResponseEntity<MenuDtout> getMenuById(Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException;
     public ResponseEntity<List<MenuDtout>> getAllMenus();

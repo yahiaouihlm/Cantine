@@ -2,7 +2,7 @@ package fr.sqli.Cantine.service.images;
 
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public String uploadImage(MultipartFile image, String path) throws ImagePathException, IOException, InvalidImageException, InvalidTypeImageException {
+    public String uploadImage(MultipartFile image, String path) throws ImagePathException, IOException, InvalidImageException, InvalidFormatImageException {
 
         if (path == null || path.isEmpty()) {
             LOG.fatal("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
@@ -39,6 +39,8 @@ public class ImageService implements IImageService {
         }
 
 
+        System.out.println(image.getContentType());
+
         if (image.getContentType() == null || image.getContentType().isEmpty() ||
                 (!image.getContentType().equals("image/png")
                         && !image.getContentType().equals("image/jpg")
@@ -46,7 +48,7 @@ public class ImageService implements IImageService {
                        && !image.getContentType().equals("image/svg")
                 )) {
             LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE IMAGE TYPE IS NOT VALID in the uploadImage METHOD");
-            throw new InvalidTypeImageException("INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED");
+            throw new InvalidFormatImageException("INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED");
         }
 
         var name = image.getOriginalFilename();
@@ -98,7 +100,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidTypeImageException, InvalidImageException, IOException {
+    public String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidFormatImageException, InvalidImageException, IOException {
         var imageName = this.uploadImage(image, path);
 
         this.deleteImage(oldImageName, path);

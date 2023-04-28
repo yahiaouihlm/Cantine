@@ -3,22 +3,20 @@ package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.MenuDtoIn;
-import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
-import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
-import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +52,14 @@ public class MenuService implements IMenuService {
     }
 
     @Override  /* TODO  check  existing  Menu  In DataBase  */
-    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
         if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().size() == 0 || menuDtoIn.getMealIDs().isEmpty()) {
             MenuService.LOG.error("The menu doesn't contain any meal");
             throw new InvalidMenuInformationException("The menu doesn't contain any meal");
         }
+/
         this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
 
         List<MealEntity> mealsInMenu = new ArrayList<>();

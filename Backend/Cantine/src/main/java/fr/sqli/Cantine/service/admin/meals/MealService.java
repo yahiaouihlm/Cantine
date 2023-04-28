@@ -13,7 +13,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
         IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
@@ -105,7 +105,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
 
         MealEntity meal = mealDtoIn.toMealEntity();
 

@@ -1,13 +1,13 @@
 package fr.sqli.Cantine.service.images.exception;
 
-public class InvalidTypeImageException  extends  Exception{
+public class InvalidFormatImageException extends  Exception{
 
         /**
         *  Exception will be  thrown  when  the  image  type  is  not supported
         *  Image  type  supported :  jpg ,  jpeg ,  png
         *  @param message the detail message.
         */
-        public InvalidTypeImageException(String message) {
+        public InvalidFormatImageException(String message) {
             super(message);
         }
 }

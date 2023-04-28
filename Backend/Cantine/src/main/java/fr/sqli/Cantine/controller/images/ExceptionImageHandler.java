@@ -4,7 +4,7 @@ package fr.sqli.Cantine.controller.images;
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -29,8 +29,8 @@ public class ExceptionImageHandler {
 
     }
 
-    @ExceptionHandler(InvalidTypeImageException.class)
-    public ResponseEntity <ExceptionDtout> exceptionHandler (InvalidTypeImageException exception){
+    @ExceptionHandler(InvalidFormatImageException.class)
+    public ResponseEntity <ExceptionDtout> exceptionHandler (InvalidFormatImageException exception){
         return new ResponseEntity<ExceptionDtout>(new ExceptionDtout(exception.getMessage()) , HttpStatus.NOT_ACCEPTABLE);
     }
 

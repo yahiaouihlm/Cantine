@@ -2,7 +2,7 @@ package fr.sqli.Cantine.service.images;
 
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -20,12 +20,12 @@ public interface IImageService {
      * @throws ImagePathException        if the ( Directory ) path is invalid (null or empty)
      * @throws IOException               if  JVM can't write the image in the directory
      * @throws InvalidImageException     if the image is invalid (null or empty)
-     * @throws InvalidTypeImageException if the image type is not jpg or png or jpeg
+     * @throws InvalidFormatImageException if the image type is not jpg or png or jpeg
      * @Note <Strong> Please   Don't Add     / at The End Of Path   </Strong>
      */
 
 
-    String uploadImage(MultipartFile image, String path) throws ImagePathException, IOException, InvalidImageException, InvalidTypeImageException;
+    String uploadImage(MultipartFile image, String path) throws ImagePathException, IOException, InvalidImageException, InvalidFormatImageException;
 
 
     /**
@@ -64,12 +64,12 @@ public interface IImageService {
      * @param path         the path of the directory where the image will be saved
      * @return String the new image name
      * @throws ImagePathException        if the ( Directory ) path is invalid (null or empty) or the image name is invalid (null or empty)
-     * @throws InvalidTypeImageException if the image type is not jpg or png or jpeg
+     * @throws InvalidFormatImageException if the image type is not jpg or png or jpeg
      * @throws InvalidImageException     if the image file  is invalid (null or empty)
      * @throws IOException               if JVM can't write the image in the directory
      */
 
-    String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidTypeImageException, InvalidImageException, IOException;
+    String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidFormatImageException, InvalidImageException, IOException;
 
     /**
      * this method is used to get the image extension
