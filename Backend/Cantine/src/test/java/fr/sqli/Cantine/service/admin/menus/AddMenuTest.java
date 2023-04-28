@@ -32,13 +32,14 @@ public class AddMenuTest {
     private MealService iMealService;
     @Mock
     IImageService imageService;
+
     @InjectMocks
     private MenuService menuService;
 
     @Mock
     MockEnvironment environment;
-
     private MealEntity mealEntity;
+
     private MenuEntity menuEntity;
 
     private MenuDtoIn menu  ;
@@ -59,6 +60,39 @@ public class AddMenuTest {
         this.menu.setMealIDs(Collections.singletonList(1));
 
     }
+
+
+
+    /*************************************** Quantiy  ******************************************/
+
+
+    @Test
+    void AddMenuWithTooHeightQuantityTest(){
+        this.menu.setQuantity(Integer.MAX_VALUE);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    @Disabled
+    void AddMenuWithNegativeQuantityTest(){
+        this.menu.setQuantity(-1);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    void AddMenuWithNullQuantityTest () {
+        this.menu.setQuantity(null);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+
+
 
     /*************************************** Price ******************************************/
 
@@ -92,11 +126,6 @@ public class AddMenuTest {
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
-
-
-
-
-
 
 
 
