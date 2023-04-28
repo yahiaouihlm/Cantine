@@ -2,7 +2,7 @@ package fr.sqli.Cantine.service.images;
 
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -162,7 +162,7 @@ class ImageServiceTest {
      * and   delete the image after the test
      */
     @Test
-    void uploadImageWithValidFile() throws IOException, InvalidTypeImageException, InvalidImageException, ImagePathException {
+    void uploadImageWithValidFile() throws IOException, InvalidFormatImageException, InvalidImageException, ImagePathException {
         File imageGIF = new File("src/test/java/fr/sqli/Cantine/service/images/filesTests/normalimage.jpg");
         FileInputStream input = new FileInputStream(imageGIF);
         MockMultipartFile multipartFile = new MockMultipartFile("normalimage",
@@ -182,7 +182,7 @@ class ImageServiceTest {
         File imageGIF = new File("src/test/java/fr/sqli/Cantine/service/images/filesTests/Babidi_TestGifFormat.gif");
         MockMultipartFile multipartFile = new MockMultipartFile("file", imageGIF.getName(),
                 "image/gif", "test data".getBytes());
-        Assertions.assertThrows(InvalidTypeImageException.class,
+        Assertions.assertThrows(InvalidFormatImageException.class,
                 () -> imageService.uploadImage(multipartFile, "images/users/"));
     }
 
@@ -194,7 +194,7 @@ class ImageServiceTest {
         System.out.println(imageSVG.exists());
         MockMultipartFile multipartFile = new MockMultipartFile("file", imageSVG.getName(),
                 "image/svg", "test data".getBytes());
-        Assertions.assertThrows(InvalidTypeImageException.class,
+        Assertions.assertThrows(InvalidFormatImageException.class,
                 () -> imageService.uploadImage(multipartFile, "images/users/"));
     }
 

@@ -14,7 +14,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -145,7 +145,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with too  long category")
-    public void AddMealWithTooLongCategoryTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWithTooLongCategoryTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
         this.mealDtoIn.setCategory("test".repeat(45));
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
@@ -157,7 +157,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void AddMealWihValidInformationTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
 
         //  spaces  from  the  label  is   removed
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
@@ -187,7 +187,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with  too short label")
-    void AddMealWithTooShortLabelTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    void AddMealWithTooShortLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
         this.mealDtoIn.setLabel("   M              e        "); //  spaces  from  the  label  is   removed
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
@@ -198,7 +198,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with status out of bound status = -1")
-    public void AddMealWithStatusOutOfBoundTest1() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWithStatusOutOfBoundTest1() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
         this.mealDtoIn.setStatus(-1);
 
         Assertions.assertThrows(InvalidMealInformationException.class,
@@ -211,7 +211,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with status out of bound status = 3")
-    public void AddMealWithStatusOutOfBoundTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWithStatusOutOfBoundTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
         this.mealDtoIn.setStatus(3);
 
         Assertions.assertThrows(InvalidMealInformationException.class,
@@ -224,7 +224,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with Existing meal")
-    void AddMealWithExistingMealTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void AddMealWithExistingMealTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
         //  the spaces are  removed  from  the  label
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription())).thenReturn(Optional.of(this.mealEntity));
@@ -238,7 +238,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with negative price")
-    void AddMealWithNegativePriceTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void AddMealWithNegativePriceTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
         this.mealDtoIn.setPrice(BigDecimal.valueOf(-1.3));
 
@@ -252,7 +252,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with too lang label")
-    void AddMealWithTooLangLabelTest() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void AddMealWithTooLangLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         String tooLangString = "test".repeat(101);
 
 
@@ -267,7 +267,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with null image")
-    void AddMealWithNullImageNet() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
+    void AddMealWithNullImageNet() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
         this.mealDtoIn.setImage(null);
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
@@ -279,7 +279,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with null meal information")
-    void AddMealWithNullMealInformation() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
+    void AddMealWithNullMealInformation() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
         this.mealDtoIn = new MealDtoIn();
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));

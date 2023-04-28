@@ -12,7 +12,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,7 +83,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID And Meal Found With Image")
-    void updateMealTestWithRightMealAndWithImage() throws ExistingMeal, InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithRightMealAndWithImage() throws ExistingMeal, InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         //init
         this.mealDtoIn.setLabel("Meal 1 Updated");
         ImageEntity imageEntity = new ImageEntity();
@@ -112,7 +112,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID And Meal Found  WithOut Image")
-    void updateMealTestWithRightMealAndWithOutImage() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    void updateMealTestWithRightMealAndWithOutImage() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundAdminException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
         this.mealDtoIn.setLabel("Meal 1 Updated");
         this.mealDtoIn.setImage(null);
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
@@ -136,7 +136,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID But Existing Meal after update")
-    void updateMealTestWithExistingMealAfterUpdate() throws ExistingMeal, InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithExistingMealAfterUpdate() throws ExistingMeal, InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         var idMeal = 1;
         Mockito.when(mealDao.findById(idMeal)).thenReturn(Optional.of(mealEntity));
         // when  we  submit the  modification  of  the  meal, and we  check if  the  meal  already  exists  in  the  database we return  another  meal  with  the  another id
@@ -155,7 +155,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID But Meal Not Found")
-    void updateMealTestWithIdMealNotFound() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithIdMealNotFound() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         var mealIDNotFound = 2;
         Mockito.when(mealDao.findById(mealIDNotFound)).thenReturn(Optional.ofNullable(null));
 
@@ -170,7 +170,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With TOO LONG Label")
-    void updateMealTestWithTooLongLabel() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithTooLongLabel() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         String tooLangString = "t".repeat(101);
         this.mealDtoIn.setLabel(tooLangString);
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
@@ -183,7 +183,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With NULL Label")
-    void updateMealTestWithNullPrice() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithNullPrice() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         this.mealDtoIn.setPrice(null);
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, 1);
@@ -195,7 +195,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With NULL Label")
-    void updateMealTestWithNullLabel() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithNullLabel() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         this.mealDtoIn.setLabel(null);
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, 1);
@@ -208,7 +208,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID")
-    void updateMealTestWithNegativeID() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithNegativeID() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, -1);
         });
@@ -220,7 +220,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Null ID")
-    void updateMealTestWithNullID() throws InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithNullID() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn, null);
         });

@@ -7,15 +7,16 @@ import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -33,7 +34,7 @@ public class AddMenuTest {
     @Mock
     IImageService imageService;
 
-    @InjectMocks
+    @MockBean
     private MenuService menuService;
 
     @Mock
@@ -59,6 +60,14 @@ public class AddMenuTest {
                 new FileInputStream("images/meals/ImageMealForTest.jpg")));
         this.menu.setMealIDs(Collections.singletonList(1));
 
+    }
+
+    /*************************************** Image  ******************************************/
+    @Test
+    void AddMenuWithNullImageTest() throws IOException {
+        this.menu.setImage(null);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 
     /*************************************** Status   ******************************************/
