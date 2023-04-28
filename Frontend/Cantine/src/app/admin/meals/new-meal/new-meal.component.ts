@@ -26,6 +26,7 @@ export class NewMealComponent {
 
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: { message: " Voulez-vous vraiment sauvegarder ce plat ? " },
+            width: '40%',
         });
 
 
