@@ -59,7 +59,7 @@ public class MenuService implements IMenuService {
             MenuService.LOG.error("The menu doesn't contain any meal");
             throw new InvalidMenuInformationException("The menu doesn't contain any meal");
         }
-/
+
         this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
 
         List<MealEntity> mealsInMenu = new ArrayList<>();
