@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, PatternValidator, Validators} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {ValidatorDialogComponent} from "../validator-dialog/validator-dialog.component";
 
 @Component({
     selector: 'app-new-meal',
@@ -19,13 +21,20 @@ export class NewMealComponent {
         status: new FormControl('', [Validators.required])
     });
 
+    constructor(private matDialog: MatDialog) {}
     onSubmit() :  void  {
         this.submitted = true;
         if (this.newMeal.invalid){
             return;
         }
+       if  (this.newMeal.controls["price"].value > 50 ){
+           alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
+       }
 
-        console.log(this.newMeal.value)
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: { message: "Voulez Vous Vraiment enregistré  ce plat " }
+        });
+
     }
     get f(): { [key: string]: AbstractControl } {
         return this.newMeal.controls;

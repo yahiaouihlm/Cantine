@@ -2,11 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-validator-dialog',
-  template: `
-    <p>
-      validator-dialog works!
-    </p>
-  `,
+  templateUrl: './validator-dialog.component.html',
   styles: [
   ]
 })
