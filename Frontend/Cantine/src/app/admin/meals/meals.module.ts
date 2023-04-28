@@ -5,6 +5,9 @@ import {RouterModule, Routes} from "@angular/router";
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
+import {ValidatorDialogComponent} from "./validator-dialog/validator-dialog.component";
+
+
 
 
 
@@ -21,7 +24,9 @@ const routes: Routes = [
 ];
 @NgModule({
   declarations: [
-    NewMealComponent
+    NewMealComponent,
+      ValidatorDialogComponent
+
   ],
     imports: [
         CommonModule,
