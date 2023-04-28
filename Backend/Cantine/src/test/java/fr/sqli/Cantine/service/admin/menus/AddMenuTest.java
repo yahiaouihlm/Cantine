@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dto.in.MenuDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
@@ -24,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class AddMenuTest {
@@ -34,7 +36,7 @@ public class AddMenuTest {
     @Mock
     IImageService imageService;
 
-    @MockBean
+    @InjectMocks
     private MenuService menuService;
 
     @Mock
@@ -60,6 +62,20 @@ public class AddMenuTest {
                 new FileInputStream("images/meals/ImageMealForTest.jpg")));
         this.menu.setMealIDs(Collections.singletonList(1));
 
+    }
+
+    @Test
+    void AddMenuWithExistingMenu() {
+        Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().replaceAll("\\s+", ""), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.of(new MenuEntity()));
+
+        Assertions.assertThrows(ExistingMenuException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void AddMeuWithoutMeals () {
+        this.menu.setMealIDs(null);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 
     /*************************************** Image  ******************************************/
