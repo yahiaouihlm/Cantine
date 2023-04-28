@@ -61,9 +61,34 @@ public class AddMenuTest {
 
     }
 
+    /*************************************** Status   ******************************************/
+
+    @Test
+    void AddMenuWithInvalidStatusTest(){
+        this.menu.setStatus(2);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    void AddMenuWithNegativeStatusTest(){
+        this.menu.setQuantity(-1);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    void AddMenuWithNullStatusTest () {
+        this.menu.setStatus(null);
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
 
 
-    /*************************************** Quantiy  ******************************************/
+        /*************************************** Quantiy  ******************************************/
 
 
     @Test
@@ -75,7 +100,6 @@ public class AddMenuTest {
     }
 
     @Test
-    @Disabled
     void AddMenuWithNegativeQuantityTest(){
         this.menu.setQuantity(-1);
         Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
@@ -111,7 +135,7 @@ public class AddMenuTest {
 
     }
     @Test
-    @Disabled
+
     void AddMenuWithNegativePriceTest(){
         this.menu.setPrice(new BigDecimal("-1"));
         Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
