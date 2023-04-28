@@ -32,7 +32,7 @@ export class NewMealComponent {
     }
 
 
-   test() :  boolean{
-        return  false ;
-   }
+    goto(): void {
+        console.log('goto');
+    }
 }
