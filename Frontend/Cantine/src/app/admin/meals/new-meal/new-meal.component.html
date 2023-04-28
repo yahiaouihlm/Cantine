@@ -155,9 +155,8 @@
                                    placeholder="Le prix du  Plat "
                                    type="file"
                                    id="image"
-                                   accept="image/png, image/jpeg,  image/svg"
-                                   name="image"
-                                   title="Choisissez une  image pour le plat"
+                                   accept="image/png, image/jpeg"
+                                   (change)="onChange ($event)"
                             />
 
                             <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
