@@ -13,11 +13,13 @@
 
                         <!---------------------- label --------------------------->
                         <div class="form-group ">
-                            <label> Nom </label>
+                            <label for="label"> Nom </label>
                             <input [ngClass]="{ 'is-invalid': submitted && f['label'].errors }" class="form-control"
                                    formControlName="label"
                                    placeholder="Le Nom du  Plat "
-                                   type="text"/>
+                                   type="text"
+                                   id="label"
+                            />
                             <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
                                 <div *ngIf="f['label'].errors['required']" class="center"> Nom du plat est requis</div>
                                 <div *ngIf="f['label'].errors['maxlength']" class="center">
@@ -31,11 +33,13 @@
 
                         <!---------------------- description --------------------------->
                         <div class="form-group">
-                            <label> Description </label>
+                            <label for="description"> Description </label>
                             <textarea [ngClass]="{ 'is-invalid': submitted && f['description'].errors }"
                                       class="form-control" formControlName="description"
                                       placeholder=" Description du  Plat  "
-                                      type="text"> </textarea>
+                                      type="text"
+                                    id="description"
+                            > </textarea>
                             <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
                                 <div *ngIf="f['description'].errors['required']" class="center"> Description du plat est
                                     requis
@@ -51,13 +55,15 @@
 
                         <!---------------------- price --------------------------->
                         <div class="form-group">
-                            <label>Le prix </label>
+                            <label for="price">Le prix </label>
                             <div class="input-group">
                                 <input class="input-group-prepend"
                                        [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" class="form-control"
                                        formControlName="price"
                                        placeholder="Le prix du  Plat "
-                                       type="number"/>
+                                       type="number"
+                                        id="price"
+                                />
                                 <span class="input-group-text"><mat-icon>euro</mat-icon></span>
                             </div>
 
@@ -71,11 +77,13 @@
 
                         <!---------------------- Quantity --------------------------->
                         <div class="form-group">
-                            <label>Le quatité </label>
+                            <label for="quantity">Le quatité </label>
                             <input [ngClass]="{ 'is-invalid': submitted && f['quantity'].errors }" class="form-control"
                                    formControlName="quantity"
                                    placeholder="Le quatité des plats  disponible "
-                                   type="number"/>
+                                   type="number"
+                                   id="quantity"
+                                    />
                             <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
                                 <div *ngIf="f['quantity'].errors['required']" class="center"> La quantité est requis
                                 </div>
@@ -86,8 +94,8 @@
 
 
                         <div class="form-group">
-                            <label> Catégorie </label>
-                            <select formControlName="category" class="form-control"
+                            <label for="category"> Catégorie </label>
+                            <select formControlName="category" class="form-control" id="category"
                                     [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
                                 <option value="" disabled>-- Catégorie Du Plat --</option>
                                 <option value="Hamburgers">Hamburgers</option>
@@ -107,8 +115,8 @@
 
                         <!---------------------- status --------------------------->
                         <div class="form-group">
-                            <label> Le plat est t-il disponible ? </label>
-                            <mat-radio-group aria-label="Select an option"
+                            <label for="status"> Le plat est t-il disponible ? </label>
+                            <mat-radio-group aria-label="Select an option" id="status"
                                              [ngClass]="{ 'is-invalid': submitted && f['status'].errors }"
                                              class="form-control" formControlName="status">
                                 <mat-radio-button value="available"><span> Plat Disponible </span></mat-radio-button>
@@ -124,13 +132,18 @@
 
                         <!---------------------- Image --------------------------->
                         <div class="form-group">
-                            <label>Le image </label>
+                            <label for="image"> Choisissez une  image pour le plat  </label>
 
                             <input class="input-group-prepend"
                                    [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
                                    formControlName="image"
                                    placeholder="Le prix du  Plat "
-                                   type="file"/>
+                                   type="file"
+                                   id="image"
+                                   accept="image/png, image/jpeg,  image/svg"
+                                   name="image"
+                                   title="Choisissez une  image pour le plat"
+                             />
 
                             <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
                                 <div *ngIf="f['image'].errors['required']" class="center"> le image du plat est requis
@@ -140,15 +153,17 @@
                         </div>
 
 
+                        <div class="btns">
+                            <div class="btn-save center">
+                                <button (click)="onSubmit()" class="btn"> Enregistrer</button>
+                            </div>
+                            <span><mat-icon>arrow_back</mat-icon></span>
+                        </div>
+
                     </form>
                     <div>
 
-                    <div class="btns">
-                        <div class="btn-save center">
-                            <button (click)="onSubmit()" class="btn"> Enregistrer</button>
-                        </div>
-                           <span><mat-icon>arrow_back</mat-icon></span>
-                    </div>
+
                     </div>
                 </div>
             </div>
