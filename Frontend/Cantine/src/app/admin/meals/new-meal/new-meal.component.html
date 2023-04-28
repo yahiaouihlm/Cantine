@@ -56,23 +56,25 @@
                         <!---------------------- price --------------------------->
                         <div class="form-group">
                             <label for="price">Le prix </label>
-                            <div class="input-group">
-                                <input class="input-group-prepend"
+                            <div class="form-container">
+                                <input
                                        [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" class="form-control"
                                        formControlName="price"
                                        placeholder="Le prix du  Plat "
                                        type="number"
-                                        id="price"
+                                       id="price"
                                 />
-                                <span class="input-group-text"><mat-icon>euro</mat-icon></span>
-                            </div>
-
-                            <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+                                   <mat-icon>euro</mat-icon>
+                                 <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
                                 <div *ngIf="f['price'].errors['required']" class="center"> le prix du plat est requis
                                 </div>
                             </div>
 
+                             </div>
+
+
                         </div>
+
 
 
                         <!---------------------- Quantity --------------------------->
