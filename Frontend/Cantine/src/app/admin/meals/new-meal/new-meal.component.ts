@@ -23,6 +23,12 @@ export class NewMealComponent {
 
     constructor(private matDialog: MatDialog) {}
     onSubmit() :  void  {
+
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: { message: " Voulez-vous vraiment sauvegarder ce plat ? " },
+        });
+
+
         this.submitted = true;
         if (this.newMeal.invalid){
             return;
@@ -31,9 +37,6 @@ export class NewMealComponent {
            alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
        }
 
-        const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: { message: "Voulez Vous Vraiment enregistré  ce plat " }
-        });
 
     }
     get f(): { [key: string]: AbstractControl } {

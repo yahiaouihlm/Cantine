@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-validator-dialog',
@@ -7,5 +8,6 @@ import { Component } from '@angular/core';
   ]
 })
 export class ValidatorDialogComponent {
-
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string},  private dialogRef: MatDialogRef<ValidatorDialogComponent>) { }
+      message: string = this.data.message;
 }

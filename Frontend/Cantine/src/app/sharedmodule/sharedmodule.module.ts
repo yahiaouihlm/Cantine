@@ -8,13 +8,14 @@ import {MatListModule} from "@angular/material/list";
 import {MatBadgeModule} from "@angular/material/badge";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
-import {MatDialogModule} from "@angular/material/dialog";
+import {MatDialogActions, MatDialogContent, MatDialogModule, MatDialogTitle} from "@angular/material/dialog";
 import {MatCardModule} from "@angular/material/card";
 import {HttpClientModule} from "@angular/common/http";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
+import {MatButton, MatButtonModule} from "@angular/material/button";
 
 
 
@@ -35,7 +36,8 @@ import {MatRadioModule} from "@angular/material/radio";
     HttpClientModule,
     MatFormFieldModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+
   ],
   exports : [
     MainFooterComponent,
@@ -48,9 +50,12 @@ import {MatRadioModule} from "@angular/material/radio";
     MainFooterComponent,
     MatCheckboxModule,
     MatRadioModule,
-    MatCardModule
-
-
+    MatCardModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatButtonModule,
+    MatDialogModule,
 
   ]
 
