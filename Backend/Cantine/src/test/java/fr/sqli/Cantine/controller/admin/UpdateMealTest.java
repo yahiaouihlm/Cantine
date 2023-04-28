@@ -52,7 +52,7 @@ public class UpdateMealTest extends AbstractMealTest {
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
-            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG OR SVG  ARE ACCEPTED"),
+            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
             Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID")
     );
