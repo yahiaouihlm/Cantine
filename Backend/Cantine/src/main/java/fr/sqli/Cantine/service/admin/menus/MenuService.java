@@ -12,6 +12,7 @@ import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.ImageService;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,16 +54,18 @@ public class MenuService implements IMenuService {
     }
 
     @Override  /* TODO  check  existing  Menu  In DataBase  */
-    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
         if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().size() == 0 || menuDtoIn.getMealIDs().isEmpty()) {
-           MenuService.LOG.error("The menu doesn't contain any meal");
+            MenuService.LOG.error("The menu doesn't contain any meal");
             throw new InvalidMenuInformationException("The menu doesn't contain any meal");
         }
-        List<MealEntity> mealsInMenu =  new ArrayList<>();
+        this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
+
+        List<MealEntity> mealsInMenu = new ArrayList<>();
         for (Integer mealID : menuDtoIn.getMealIDs()) {
-            var  meal  =   this.mealService.getMealEntityByID(mealID);
+            var meal = this.mealService.getMealEntityByID(mealID);
             mealsInMenu.add(meal);
         }
         menuEntity.setMeals(mealsInMenu);
@@ -81,11 +85,11 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuDtout getMenuById(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException {
-          IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID );
-          var  menu =  this.menuDao.findById(menuID);
-          if (menu.isPresent()){
-                return new MenuDtout(menu.get(), this.MENUS_IMAGES_URL , this.MEALS_IMAGES_PATH);
-          }
+        IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID);
+        var menu = this.menuDao.findById(menuID);
+        if (menu.isPresent()) {
+            return new MenuDtout(menu.get(), this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
+        }
 
 
         MenuService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", menuID);
@@ -95,9 +99,19 @@ public class MenuService implements IMenuService {
     @Override
     public List<MenuDtout> getAllMenus() {
         return this.menuDao.findAll().stream()
-                   .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_URL , this.MEALS_IMAGES_PATH))
-                    .toList();
+                .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
+                .toList();
     }
 
+    @Override
+    public void checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException {
 
+        var menu = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
+        if (menu.isPresent()) {
+            MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", label, description, price);
+            throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
+        }
+
+
+    }
 }

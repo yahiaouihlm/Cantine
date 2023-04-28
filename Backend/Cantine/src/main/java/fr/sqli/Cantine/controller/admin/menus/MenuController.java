@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.MenuService;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -34,7 +35,7 @@ public class MenuController implements   IMenuController {
     @Override
     @PostMapping(value = ENDPOINT_ADD_MENU_URL)
 
-    public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException {
+    public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
          this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(MENU_ADDED_SUCCESSFULLY);
     }

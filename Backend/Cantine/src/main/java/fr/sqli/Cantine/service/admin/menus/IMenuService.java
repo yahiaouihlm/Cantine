@@ -5,12 +5,14 @@ import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidTypeImageException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IMenuService {
@@ -33,12 +35,16 @@ public interface IMenuService {
 
 
 
-  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException;
 
 
   public MenuDtout getMenuById(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException;
 
   public List<MenuDtout> getAllMenus();
+
+
+
+  public void checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException ;
 
 
 }

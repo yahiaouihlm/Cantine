@@ -4,6 +4,7 @@ import fr.sqli.Cantine.dto.in.MenuDtoIn;
 import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -26,7 +27,7 @@ public interface IMenuController {
     String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
 
     /*------------------ METHODS ------------------*/
-    public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException;
+    public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidTypeImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException;
 
     public ResponseEntity<MenuDtout> getMenuById(Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException;
     public ResponseEntity<List<MenuDtout>> getAllMenus();
