@@ -38,7 +38,7 @@
                                       class="form-control" formControlName="description"
                                       placeholder=" Description du  Plat  "
                                       type="text"
-                                    id="description"
+                                      id="description"
                             > </textarea>
                             <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
                                 <div *ngIf="f['description'].errors['required']" class="center"> Description du plat est
@@ -58,23 +58,30 @@
                             <label for="price">Le prix </label>
                             <div class="form-container">
                                 <input
-                                       [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" class="form-control"
-                                       formControlName="price"
-                                       placeholder="Le prix du  Plat "
-                                       type="number"
-                                       id="price"
+                                        [ngClass]="{ 'is-invalid': submitted && f['price'].errors }"
+                                        class="form-control"
+                                        formControlName="price"
+                                        placeholder="Le prix du  Plat "
+                                        type="number"
+                                        id="price"
                                 />
-                                   <mat-icon>euro</mat-icon>
-                                 <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
-                                <div *ngIf="f['price'].errors['required']" class="center"> le prix du plat est requis
+                                <mat-icon>euro</mat-icon>
+                                <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['price'].errors['required']" class="center"> le prix du plat est
+                                        requis
+                                    </div>
+                                    <div *ngIf="f['price'].errors['min']" class="center"> le prix du plat doit être
+                                        supérieur à 0.01 euro
+                                    </div>
+                                    <div *ngIf="f['price'].errors['max']" class="center"> le prix du plat doit être
+                                        inférieur strictement à 1000 euro
+                                    </div>
                                 </div>
-                            </div>
 
-                             </div>
+                            </div>
 
 
                         </div>
-
 
 
                         <!---------------------- Quantity --------------------------->
@@ -85,11 +92,17 @@
                                    placeholder="Le quatité des plats  disponible "
                                    type="number"
                                    id="quantity"
-                                    />
+                            />
                             <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
                                 <div *ngIf="f['quantity'].errors['required']" class="center"> La quantité est requis
                                 </div>
-                                <div *ngIf="f['quantity'].errors['pattern']" class="center">la quantity est un entier
+                                <div *ngIf="f['quantity'].errors['pattern']" class="center">la quantité est un entier positive
+                                </div>
+                                <div *ngIf="f['quantity'].errors['min']" class="center">la quantité doit être supérieur
+                                    à 0
+                                </div>
+                                <div *ngIf="f['quantity'].errors['max']" class="center"> la quantité doit être inférieur
+                                    strictement à 2147483500
                                 </div>
                             </div>
                         </div>
@@ -134,7 +147,7 @@
 
                         <!---------------------- Image --------------------------->
                         <div class="form-group">
-                            <label for="image"> Choisissez une  image pour le plat  </label>
+                            <label for="image"> Choisissez une image pour le plat </label>
 
                             <input class="input-group-prepend"
                                    [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
@@ -145,7 +158,7 @@
                                    accept="image/png, image/jpeg,  image/svg"
                                    name="image"
                                    title="Choisissez une  image pour le plat"
-                             />
+                            />
 
                             <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
                                 <div *ngIf="f['image'].errors['required']" class="center"> le image du plat est requis

@@ -11,10 +11,10 @@ export class NewMealComponent {
     submitted = false;
     newMeal: FormGroup = new FormGroup({
         label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
-        description: new FormControl('', [Validators.required, Validators.maxLength(400), Validators.minLength(5)]),
+        description: new FormControl('', [Validators.required, Validators.maxLength(1600), Validators.minLength(5)]),
         category: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.minLength(3)]),
-        price: new FormControl('', [Validators.required]),
-        quantity: new FormControl('', [Validators.required,  Validators.pattern("^[0-9]+$")  ]),
+        price: new FormControl('', [Validators.required , Validators.min(0.01), Validators.max(999.99) ]),
+        quantity: new FormControl('', [Validators.required, Validators.min(0), Validators.max(2147483501) , Validators.pattern("^[0-9]+$")  ]),
         image: new FormControl('', [Validators.required]),
         status: new FormControl('', [Validators.required])
     });
