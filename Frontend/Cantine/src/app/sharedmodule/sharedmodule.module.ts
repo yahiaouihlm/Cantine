@@ -48,6 +48,7 @@ import {MatRadioModule} from "@angular/material/radio";
     MainFooterComponent,
     MatCheckboxModule,
     MatRadioModule,
+    MatCardModule
 
 
 

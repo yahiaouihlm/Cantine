@@ -24,6 +24,8 @@ export class NewMealComponent {
         if (this.newMeal.invalid){
             return;
         }
+
+        console.log(this.newMeal.value)
     }
     get f(): { [key: string]: AbstractControl } {
         return this.newMeal.controls;

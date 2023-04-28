@@ -32,9 +32,9 @@
                             <!---------------------- description --------------------------->
                             <div class="form-group">
                                 <label> Description  </label>
-                                <textarea [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" class="form-control" formControlName="description"
+                                <textarea   [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" class="form-control" formControlName="description"
                                           placeholder=" Description du  Plat  "
-                                          type="text"> </textarea>
+                                          type="text" > </textarea>
                                 <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
                                     <div *ngIf="f['description'].errors['required']"  class="center"> Description du plat est requis</div>
                                     <div *ngIf="f['description'].errors['maxlength']" class="center">
@@ -82,7 +82,7 @@
                                 <label> Catégorie </label>
                                 <select formControlName="category" class="form-control"
                                         [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
-                                    <option value="">-- Catégorie Du Plat --</option>
+                                    <option value="" disabled >-- Catégorie Du Plat --</option>
                                     <option value="Hamburgers">Hamburgers </option>
                                     <option value="Nuggets de poulet">Nuggets de poulet</option>
                                     <option value="Volailles cuites">Volailles cuites</option>
@@ -104,8 +104,8 @@
                             <div class="form-group">
                                 <label> Le plat  est t-il  disponible ?     </label>
                                 <mat-radio-group aria-label="Select an option"[ngClass]="{ 'is-invalid': submitted && f['status'].errors }" class="form-control" formControlName="status" >
-                                    <mat-radio-button value="available" > Plat Disponible </mat-radio-button>
-                                    <mat-radio-button value="unavailable" > Plat n'est  Disponible </mat-radio-button>
+                                    <mat-radio-button value="available"  > <span> Plat Disponible </span> </mat-radio-button>
+                                    <mat-radio-button value="unavailable" > <span> Plat n'est  Disponible </span> </mat-radio-button>
                                 </mat-radio-group>
                                 <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
                                     <div *ngIf="f['status'].errors['required']" class="center"> le status  du  plat   est requise </div>
@@ -138,8 +138,6 @@
 
     </div>
 </div>
-
-
 
 
 
