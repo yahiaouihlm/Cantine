@@ -28,7 +28,7 @@ export class NewMealComponent {
     }
 
     onSubmit(): void {
-        this.mealServiceService.test();
+
         this.submitted = true;
         if (this.newMeal.invalid) {
             return;
