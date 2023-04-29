@@ -54,9 +54,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.add("quantity", "10");
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMealForTest.jpg",          // nom du fichier
+                "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
 
     }
 
@@ -66,7 +66,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
      **/
     public void initDataBase() {
         ImageEntity image = new ImageEntity();
-        image.setImagename("ImageMealForTest.jpg");
+        image.setImagename("ImageMenuForTest.jpg");
 
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
                 , new BigDecimal("1.5"), 10, 1, image);
@@ -352,7 +352,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     void addMealWithWrongImageFormat() throws Exception {
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMealForTest.jpg",          // nom du fichier
+                "ImageMenuForTest.jpg",          // nom du fichier
                 "image/gif",                    // type MIME
                 new FileInputStream("src/test/java/fr/sqli/Cantine/service/images/filesTests/Babidi_TestGifFormat.gif"));
 
@@ -371,9 +371,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     void addMealTestWithWrongImageName() throws Exception {
         this.imageData = new MockMultipartFile(
                 "WrongImageName",                         // nom du champ de fichier
-                "ImageMealForTest.jpg",          // nom du fichier
+                "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)

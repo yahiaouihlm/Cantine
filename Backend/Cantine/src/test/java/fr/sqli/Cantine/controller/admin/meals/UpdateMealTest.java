@@ -55,16 +55,16 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         this.formData.add("quantity", "10");
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMealForTest.jpg",          // nom du fichier
+                "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
 
     }
 
     @BeforeEach
     void initDatabase() {
         ImageEntity image = new ImageEntity();
-        image.setImagename("ImageMealForTest.jpg");
+        image.setImagename("ImageMenuForTest.jpg");
         ImageEntity image1 = new ImageEntity();
         image1.setImagename("ImageMealForTest1.jpg");
 
@@ -115,7 +115,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.getPrice());
         var newImageName = updatedMeal.getImage().getImagename();
 
-        Assertions.assertTrue(renameTestImage(newImageName, "ImageMealForTest.jpg"), "The change must  return  true to  verify  that the image is updated to  his original name");
+        Assertions.assertTrue(renameTestImage(newImageName, "ImageMenuForTest.jpg"), "The change must  return  true to  verify  that the image is updated to  his original name");
     }
 
 
@@ -149,9 +149,9 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         this.formData.set("id", String.valueOf(idMeal));
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMealForTest.jpg",          // nom du fichier
+                "ImageMenuForTest.jpg",          // nom du fichier
                 "image/gif",                    // type MIME
-                new FileInputStream("images/meals/ImageMealForTest.jpg"));
+                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MEAL_URL)
                 .file(this.imageData)

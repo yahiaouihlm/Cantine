@@ -49,7 +49,7 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
     @BeforeEach
     public void init() {
         ImageEntity image = new ImageEntity();
-        image.setImagename("ImageMealForTest.jpg");
+        image.setImagename("ImageMenuForTest.jpg");
         ImageEntity image1 = new ImageEntity();
         image1.setImagename("ImageMealForTest1.jpg");
 
@@ -68,7 +68,7 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
 
 
     BufferedImage saveTestFile() throws IOException {
-        File image = new File("images/meals/ImageMealForTest.jpg");
+        File image = new File("images/meals/ImageMenuForTest.jpg");
         return ImageIO.read(image);
     }
 
@@ -87,7 +87,7 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
         Assertions.assertEquals(1, this.mealDao.findAll().size());
 
         //  reload image in images/meals to make  test  pass
-        File outputFile = new File("images/meals/ImageMealForTest.jpg");
+        File outputFile = new File("images/meals/ImageMenuForTest.jpg");
         ImageIO.write(image, "jpg", outputFile);
 
 
