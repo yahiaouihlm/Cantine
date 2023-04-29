@@ -793,6 +793,22 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
 
     /*****************************************  Tests For   Description  *****************************************/
+    @Test
+    void AddMealTestWithEmptyDescription() throws Exception {
+        // given :  remove label from formData
+        this.formData.set("description", "         "); // length  must be  < 3 without spaces
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
 
 
     @Test
