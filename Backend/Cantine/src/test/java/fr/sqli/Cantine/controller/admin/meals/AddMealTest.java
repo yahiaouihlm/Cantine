@@ -867,6 +867,25 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
 
     /******************************************** Tests for Category ********************************************/
+
+    @Test
+    void AddMealWithEmptyCategory() throws Exception {
+
+        // given :  remove label from formData
+        this.formData.set("category",  "               ");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
+    }
+
     @Test
     void AddMealTestWithTooLongCategory() throws Exception {
         // given :  remove label from formData
