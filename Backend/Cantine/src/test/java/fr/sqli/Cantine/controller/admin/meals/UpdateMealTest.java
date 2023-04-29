@@ -56,7 +56,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
                 IMAGE_MEAL_FOR_TEST_NAME,          // nom du fichier
-                "image/jpg",                    // type MIME
+                IMAGE_MEAL_FORMAT_FOR_TEST,                    // type MIME
                 new FileInputStream(IMAGE_MEAL_FOR_TEST_PATH));
 
     }

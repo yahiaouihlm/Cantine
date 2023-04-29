@@ -16,6 +16,7 @@ public interface IMealTest {
 
     String  IMAGE_MEAL_FOR_TEST_NAME = "ImageMealForTest.jpg";
     String SECOND_IMAGE_MEAL_FOR_TEST_NAME="ImageMealForTest1.jpg";
+    String IMAGE_MEAL_FORMAT_FOR_TEST="image/jpg";
     String IMAGE_MEAL_DIRECTORY_PATH = "images/meals/";
     String   IMAGE_MEAL_FOR_TEST_PATH = IMAGE_MEAL_DIRECTORY_PATH+IMAGE_MEAL_FOR_TEST_NAME;
     final Map<String, String> exceptionsMap = Map.ofEntries(

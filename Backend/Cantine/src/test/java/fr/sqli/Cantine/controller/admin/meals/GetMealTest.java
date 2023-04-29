@@ -27,8 +27,6 @@ import java.util.List;
 @AutoConfigureMockMvc
 class GetMealTest extends AbstractContainerConfig implements   IMealTest {
 
-    @Autowired
-    private MealService mealService;
 
     @Autowired
     private IMealDao mealDao;
