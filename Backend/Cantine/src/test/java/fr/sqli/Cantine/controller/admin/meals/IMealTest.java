@@ -5,7 +5,16 @@ import java.util.Map;
 public interface IMealTest {
 
     //  Meal Tests messages  Errors and Success
-     final Map<String, String> exceptionsMap = Map.ofEntries(
+    final String BASE_MEAL_URL = "/cantine/api/admin/meals";
+    final String GET_ALL_MEALS_URL = BASE_MEAL_URL + "/getAll";
+
+    final String ADD_MEAL_URL = BASE_MEAL_URL + "/add";
+
+    final String DELETE_MEAL_URL = BASE_MEAL_URL + "/delete";
+
+    final String UPDATE_MEAL_URL = BASE_MEAL_URL + "/update";
+
+    final Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("Label", "LABEL_IS_MANDATORY"),
             Map.entry("Category", "CATEGORY_IS_MANDATORY"),
             Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
@@ -34,15 +43,6 @@ public interface IMealTest {
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0")
 
     );
-
-    final  String BASE_MEAL_URL  =  "/cantine/api/admin/meals";
-     final  String GET_ALL_MEALS_URL  =  BASE_MEAL_URL  +  "/getAll";
-
-       final   String ADD_MEAL_URL  =  BASE_MEAL_URL  +  "/add";
-
-      final String  DELETE_MEAL_URL  =  BASE_MEAL_URL  +  "/delete";
-
-      final String  UPDATE_MEAL_URL  =  BASE_MEAL_URL  +  "/update";
 
 
 }

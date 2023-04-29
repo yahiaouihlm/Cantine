@@ -56,7 +56,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
                 "image",                         // nom du champ de fichier
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
+                new FileInputStream("images/meals/ImageMealForTest.jpg"));
 
     }
 
@@ -373,7 +373,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
                 "WrongImageName",                         // nom du champ de fichier
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
+                new FileInputStream("images/meals/ImageMealForTest.jpg"));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
@@ -1014,6 +1014,26 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     }
 
+    @Test
+    void AddMealTestWithEmptyLabel() throws Exception
+    {
+        // given :  remove label from formData
+        // word  with  101  characters
+
+        this.formData.set("label", "    "); // length  must be  < 3 without spaces
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+
+
+    }
 
 }
 
