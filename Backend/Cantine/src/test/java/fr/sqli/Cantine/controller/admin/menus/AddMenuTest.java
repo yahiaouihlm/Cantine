@@ -54,6 +54,57 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
     /*********************************** Status *********************************************/
     @Test
+    void AddMenuTestWithOutSideStatusValue3() throws Exception {
+        this.formData.set("status", "3 ");
+
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+
+    @Test
+    void AddMenuTestWithOutSideStatusValue2() throws Exception {
+        this.formData.set("status", "-5");
+
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+
+    @Test
+    void AddMenuTestWithOutSideStatusValue() throws Exception {
+        this.formData.set("status", "5");
+
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+
+    @Test
     void AddMealTestWithEmptyStatusValue() throws Exception {
         this.formData.set("status", " ");
 
