@@ -1,6 +1,7 @@
-package fr.sqli.Cantine.controller.admin;
+package fr.sqli.Cantine.controller.admin.meals;
 
 
+import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class GetMealTest extends AbstractMealTest {
+class GetMealTest extends AbstractContainerConfig implements   IMealTest {
 
     @Autowired
     private MealService mealService;
@@ -63,7 +64,7 @@ class GetMealTest extends AbstractMealTest {
         this.mealDao.saveAll(meals);
 
         // when : get all meals
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(super.GET_ALL_MEALS_URL));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_MEALS_URL));
 
 
         // then : 2 meals are returned  (verify status is 200)
@@ -83,7 +84,7 @@ class GetMealTest extends AbstractMealTest {
     @Test
     @DisplayName("Get all meals tests  : empty database")
     public void testGetAllMealsWillEmptyDbTest() throws Exception {
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(super.GET_ALL_MEALS_URL));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_MEALS_URL));
         result.andExpect(MockMvcResultMatchers.status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(0)));
     }

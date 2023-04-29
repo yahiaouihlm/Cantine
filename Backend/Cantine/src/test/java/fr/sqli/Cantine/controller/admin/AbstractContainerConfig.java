@@ -4,18 +4,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public class AbstractMealTest {
+public class AbstractContainerConfig {
+
     private final  String exceptionMessage = "exceptionMessage";
-    protected  final  String BASE_MEAL_URL  =  "/cantine/api/admin/meals";
-    protected final  String GET_ALL_MEALS_URL  =  BASE_MEAL_URL  +  "/getAll";
 
-    protected   final   String ADD_MEAL_URL  =  BASE_MEAL_URL  +  "/add";
-
-    protected  final String  DELETE_MEAL_URL  =  BASE_MEAL_URL  +  "/delete";
-
-    protected  final String  UPDATE_MEAL_URL  =  BASE_MEAL_URL  +  "/update";
-
-    static   final PostgreSQLContainer    postgreSQLContainer ;
+    static   final PostgreSQLContainer postgreSQLContainer ;
     static {
         postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
                 .withDatabaseName("cantine_tests")

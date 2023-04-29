@@ -1,5 +1,6 @@
-package fr.sqli.Cantine.controller.admin;
+package fr.sqli.Cantine.controller.admin.meals;
 
+import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -27,17 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RemoveMealTest extends AbstractMealTest {
+public class RemoveMealTest extends AbstractContainerConfig   implements     IMealTest {
 
 
     //"THE ID CAN NOT BE NULL OR LESS THAN 0"
-    private final Map<String, String> exceptionsMap = Map.ofEntries(
-            Map.entry("InvalidMealID", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
-            Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
-            Map.entry("missingParam", "MISSING PARAMETER"),
-            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID"),
-            Map.entry("mealDeleted", "MEAL DELETED SUCCESSFULLY")
-    );
+
     @Autowired
     private IMealDao mealDao;
 
@@ -83,7 +78,7 @@ public class RemoveMealTest extends AbstractMealTest {
 
         var image = saveTestFile(); // save  image before  delete meal
 
-        var result = this.mockMvc.perform(delete(super.DELETE_MEAL_URL + "?idMeal=" + idMealToRemove));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=" + idMealToRemove));
 
 
         result.andExpect(status().isOk())
@@ -140,40 +135,40 @@ public class RemoveMealTest extends AbstractMealTest {
 
     @Test
     void removeMealTestWithNegativeID() throws Exception {
-        var result = this.mockMvc.perform(delete(super.DELETE_MEAL_URL + "?idMeal=-5"));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=-5"));
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidMealID"))));
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidMealID"))));
 
     }
 
 
     @Test
     void removeMealTestWithInValidID2() throws Exception {
-        var result = this.mockMvc.perform(delete(super.DELETE_MEAL_URL + "?idMeal=1000000000000000000000000000000000000000000"));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=1000000000000000000000000000000000000000000"));
 
         result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
 
     }
 
     @Test
     void removeMealTestWithInvalidID() throws Exception {
-        var result = this.mockMvc.perform(delete(super.DELETE_MEAL_URL + "?idMeal=ozzedoz"));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=ozzedoz"));
 
         result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
 
     }
 
 
     @Test
     void removeMealTestWithNullID() throws Exception {
-        var result = this.mockMvc.perform(delete(super.DELETE_MEAL_URL + "?idMeal="));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal="));
 
 
         result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("missingParam"))));
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("missingParam"))));
 
     }
 
