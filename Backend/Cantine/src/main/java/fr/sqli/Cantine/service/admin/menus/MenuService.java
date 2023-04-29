@@ -70,14 +70,14 @@ public class MenuService implements IMenuService {
         menuEntity.setMeals(mealsInMenu);
         MultipartFile image = menuDtoIn.getImage();
 
-       // var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
+        var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
 
-        //ImageEntity imageEntity = new ImageEntity();
-        //imageEntity.setImagename(imageName);
-        //menuEntity.setImage(imageEntity);
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename(imageName);
+        menuEntity.setImage(imageEntity);
 
 
-        //menuEntity.setCreatedDate(LocalDate.now());
+        menuEntity.setCreatedDate(LocalDate.now());
 
         return  new MenuEntity(); //this.menuDao.save(menuEntity);
     }
