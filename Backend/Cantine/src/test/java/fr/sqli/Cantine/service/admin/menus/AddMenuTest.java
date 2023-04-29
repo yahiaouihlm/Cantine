@@ -57,9 +57,9 @@ public class AddMenuTest {
         this.menu.setPrice(new BigDecimal(1.5));
         this.menu.setImage( new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMealForTest.jpg",          // nom du fichier
+                "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMealForTest.jpg")));
+                new FileInputStream("images/menus/ImageMenuForTest.jpg")));
         this.menu.setMealIDs(Collections.singletonList(1));
 
     }
