@@ -25,7 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Objects;
 
 @SpringBootTest
@@ -55,18 +55,18 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         this.formData.add("quantity", "10");
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMenuForTest.jpg",          // nom du fichier
+                IMAGE_MEAL_FOR_TEST_NAME,          // nom du fichier
                 "image/jpg",                    // type MIME
-                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
+                new FileInputStream(IMAGE_MEAL_FOR_TEST_PATH));
 
     }
 
     @BeforeEach
     void initDatabase() {
         ImageEntity image = new ImageEntity();
-        image.setImagename("ImageMenuForTest.jpg");
+        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         ImageEntity image1 = new ImageEntity();
-        image1.setImagename("ImageMealForTest1.jpg");
+        image1.setImagename(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
 
         List<MealEntity> meals =
                 List.of(
@@ -86,8 +86,8 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
      * the method  is used  to  rename after update the image of the meal
      */
     boolean renameTestImage(String oldName, String newName) {
-        File file = new File("images/meals/" + oldName);
-        return file.renameTo(new File("images/meals/" + newName));
+        File file = new File(IMAGE_MEAL_DIRECTORY_PATH + oldName);
+        return file.renameTo(new File(IMAGE_MEAL_DIRECTORY_PATH + newName));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         var idMeal = this.mealDao.findAll().get(0).getId();
         this.formData.set("id", String.valueOf(idMeal));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,UPDATE_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -115,7 +115,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.getPrice());
         var newImageName = updatedMeal.getImage().getImagename();
 
-        Assertions.assertTrue(renameTestImage(newImageName, "ImageMenuForTest.jpg"), "The change must  return  true to  verify  that the image is updated to  his original name");
+        Assertions.assertTrue(renameTestImage(newImageName, IMAGE_MEAL_FOR_TEST_NAME), "The change must  return  true to  verify  that the image is updated to  his original name");
     }
 
 
@@ -149,9 +149,9 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         this.formData.set("id", String.valueOf(idMeal));
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMenuForTest.jpg",          // nom du fichier
+                IMAGE_MEAL_FOR_TEST_NAME,          // nom du fichier
                 "image/gif",                    // type MIME
-                new FileInputStream("images/meals/ImageMenuForTest.jpg"));
+                new FileInputStream(IMAGE_MEAL_FOR_TEST_PATH));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MEAL_URL)
                 .file(this.imageData)

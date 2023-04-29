@@ -52,9 +52,9 @@ class GetMealTest extends AbstractContainerConfig implements   IMealTest {
     public void testGetAllMealsTest() throws Exception {
 ////        given  : 2 meals in database
         ImageEntity image = new ImageEntity();
-        image.setImagename("ImageMenuForTest.jpg");
+        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         ImageEntity image1 = new ImageEntity();
-        image1.setImagename("ImageMealForTest1.jpg");
+        image1.setImagename(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
 
         List<MealEntity> meals =
                 List.of(
