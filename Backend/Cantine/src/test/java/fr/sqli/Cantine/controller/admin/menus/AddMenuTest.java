@@ -52,6 +52,98 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 IMAGE_MENU_FORMAT_FOR_TEST,                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
+    /*********************************** Status *********************************************/
+    @Test
+    void AddMealTestWithEmptyStatusValue() throws Exception {
+        this.formData.set("status", " ");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+    }
+
+    @Test
+    void AddMenuTestWithInvalidStatusValue2() throws Exception {
+        this.formData.set("status", "-5rffr");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void AddMenuTestWithInvalidStatusValue() throws Exception {
+        this.formData.set("status", "564rffr");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void AddMenuTestWithNegativeStatusValue3() throws Exception {
+        this.formData.set("status", "-1");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+    }
+    @Test
+    void AddMenuTestWithNullStatusValue() throws Exception {
+        this.formData.set("status", null);
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+    }
+    @Test
+    void AddMenuWithoutStatus() throws Exception {
+        this.formData.remove("status");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+    }
 
     /*********************************** Description ****************************************/
     @Test

@@ -19,6 +19,8 @@ public interface IMenuTest {
             Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
             Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
             Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
-            Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG")
+            Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
+            Map.entry("Status", "STATUS_IS_MANDATORY"),
+            Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE")
     );
 }
