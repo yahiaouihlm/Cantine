@@ -1015,8 +1015,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     }
 
     @Test
-    void AddMealTestWithEmptyLabel() throws Exception
-    {
+    void AddMealTestWithEmptyLabel() throws Exception {
         // given :  remove label from formData
         // word  with  101  characters
 
