@@ -53,6 +53,75 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
 
+    /*********************************** Description ****************************************/
+    @Test
+    void AddMealTestWithEmptyDescription() throws Exception {
+
+        this.formData.set("description", "    "); // length  must be  < 3 without spaces
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+
+
+    }
+    @Test
+    void testAddMenuWithTooShortDescription() throws Exception {
+        this.formData.set("description", "aau");
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+        );
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
+    }
+    @Test
+    void testAddMenuWithTooLongDescription() throws Exception {
+        this.formData.set("description", "a".repeat(1701));
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+        );
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
+    }
+    @Test
+    void  testAddMenuWithNullDescription() throws Exception {
+        this.formData.set("description", null);
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+        );
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
+    @Test
+    void testAddMenuWithOutDescription() throws Exception {
+        this.formData.remove("description");
+
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+        );
+
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
+
+
+
     /*********************************** label ********************************************/
     @Test
     void AddMealTestWithEmptyLabel() throws Exception {

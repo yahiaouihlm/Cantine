@@ -26,7 +26,7 @@ public class AbstractContainerConfig {
     protected  String  exceptionMessage(String exceptionMessage) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         if (exceptionMessage==null) {
-            jsonObject.put(this.exceptionMessage, "Exception message is null");
+            jsonObject.put(this.exceptionMessage, "Exception message is null in Method AbstractContainerConfig.exceptionMessage");
         } else {
             jsonObject.put(this.exceptionMessage, exceptionMessage);
         }

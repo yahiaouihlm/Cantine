@@ -8,7 +8,7 @@ public interface IMenuTest {
 
 
     String  IMAGE_MENU_FOR_TEST_NAME = "ImageMenuForTest.jpg";
-    String IMAGE_MENU_DIRECTORY_PATH = "images/menu/";
+    String IMAGE_MENU_DIRECTORY_PATH = "images/menus/";
 
     String  IMAGE_MENU_FORMAT_FOR_TEST="image/jpg";
     String   IMAGE_MENU_FOR_TEST_PATH = IMAGE_MENU_DIRECTORY_PATH+IMAGE_MENU_FOR_TEST_NAME;
@@ -16,6 +16,9 @@ public interface IMenuTest {
             Map.entry("Label", "LABEL_IS_MANDATORY"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
-            Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT")
+            Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
+            Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
+            Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
+            Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG")
     );
 }
