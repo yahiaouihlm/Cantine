@@ -48,9 +48,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.add("quantity", "10");
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
-                "ImageMenuForTest.jpg",          // nom du fichier
-                "image/jpg",                    // type MIME
-                new FileInputStream("images/menus/ImageMenuForTest.jpg"));
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                IMAGE_MENU_FORMAT_FOR_TEST,                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
 
     /*********************************** label ********************************************/
