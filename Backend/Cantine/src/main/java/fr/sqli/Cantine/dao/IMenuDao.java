@@ -13,10 +13,10 @@ import java.util.Optional;
 @Repository
 public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
 
-    @Query(value = "SELECT meal FROM MealEntity meal WHERE (" +
-            "LOWER(REPLACE(meal.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
-            "AND LOWER(REPLACE(meal.description, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
-             "AND meal.price = ?3 "+
+    @Query(value = "SELECT menu FROM MenuEntity menu WHERE (" +
+            "LOWER(REPLACE(menu.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
+            "AND LOWER(REPLACE(menu.description, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
+             "AND menu.price = ?3 "+
             ")"
 
     )

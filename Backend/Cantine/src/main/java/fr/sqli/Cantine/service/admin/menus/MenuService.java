@@ -70,16 +70,16 @@ public class MenuService implements IMenuService {
         menuEntity.setMeals(mealsInMenu);
         MultipartFile image = menuDtoIn.getImage();
 
-        var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
+       // var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
 
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(imageName);
-        menuEntity.setImage(imageEntity);
+        //ImageEntity imageEntity = new ImageEntity();
+        //imageEntity.setImagename(imageName);
+        //menuEntity.setImage(imageEntity);
 
 
-        menuEntity.setCreatedDate(LocalDate.now());
+        //menuEntity.setCreatedDate(LocalDate.now());
 
-        return this.menuDao.save(menuEntity);
+        return  new MenuEntity(); //this.menuDao.save(menuEntity);
     }
 
     @Override
@@ -106,6 +106,7 @@ public class MenuService implements IMenuService {
     public void checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException {
 
         var menu = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
+
         if (menu.isPresent()) {
             MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", label, description, price);
             throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
