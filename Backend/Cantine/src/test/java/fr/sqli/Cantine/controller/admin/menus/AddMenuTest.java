@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +65,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.mealDao.deleteAll();
     }
 
-    void initDB() throws FileNotFoundException {
+    MenuEntity initDB() throws FileNotFoundException {
         //  save  a  meal
         var meal = IMenuTest.createMeal();
         this.mealDao.save(meal);
@@ -72,9 +73,68 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.mealIDSavedInDB = meal.getId();
 
         var menu = IMenuTest.createMenu(List.of(meal));
-        this.menuDao.save(menu);
+        return this.menuDao.save(menu);
+
     }
 
+    /************************************** Existing Menu ***********************************/
+    @Test
+    void addMenuWithExistingMenu3() throws Exception {
+        var menu = initDB(); //  get menu  saved in DB to  use it  in  the  test
+
+        this.formData.set("label", menu.getLabel().toLowerCase() );
+        this.formData.set("price", menu.getPrice().toString()+"0000");
+        this.formData.set("description", menu.getDescription().toUpperCase());
+        this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+
+    }
+
+    @Test
+    void addMenuWithExistingMenu2() throws Exception {
+        var menu = initDB(); //  get menu  saved in DB to  use it  in  the  test
+
+        this.formData.set("label", "T  A     c    o      S  " );
+        this.formData.set("price", menu.getPrice().toString()+"0000");
+        this.formData.set("description", "T A C O  s  deS criP   tio      NMenu");
+        this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+
+    }
+
+
+    @Test
+    void addMenuWithExistingMenu() throws Exception {
+        var menu = initDB(); //  get menu  saved in DB to  use it  in  the  test
+
+        this.formData.set("label", menu.getLabel());
+        this.formData.set("price", menu.getPrice().toString());
+        this.formData.set("description", menu.getDescription());
+        this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+
+    }
 
     /************************************* Image *******************************************/
 
