@@ -38,7 +38,8 @@ public interface IMenuTest {
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
             Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
-            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED")
+            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
+            Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE")
 
 
     );
