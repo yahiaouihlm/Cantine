@@ -79,7 +79,7 @@ public class MenuService implements IMenuService {
 
         menuEntity.setCreatedDate(LocalDate.now());
 
-        return  new MenuEntity(); //this.menuDao.save(menuEntity);
+        return  this.menuDao.save(menuEntity);
     }
 
     @Override
