@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Autowired
     private IMenuDao menuDao;
-   @Autowired
+    @Autowired
     private IMealDao mealDao;
     @Autowired
     private MockMvc mockMvc;
@@ -45,8 +45,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     private MockMultipartFile imageData;
 
-    private  int mealIDSavedInDB;
-
+    private int mealIDSavedInDB;
 
 
     @BeforeEach
@@ -60,18 +59,19 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     @AfterEach
-    void  cleanDB() {
+    void cleanDB() {
         this.menuDao.deleteAll();
         this.mealDao.deleteAll();
     }
-    void  initDB() throws FileNotFoundException {
+
+    void initDB() throws FileNotFoundException {
         //  save  a  meal
-        var meal =  IMenuTest.createMeal() ;
+        var meal = IMenuTest.createMeal();
         this.mealDao.save(meal);
 
         this.mealIDSavedInDB = meal.getId();
 
-        var  menu  = IMenuTest.createMenu(List.of (meal) );
+        var menu = IMenuTest.createMenu(List.of(meal));
         this.menuDao.save(menu);
     }
 
@@ -81,9 +81,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuWithInvalidImageFormat() throws Exception {
         // init  DataBase
-         initDB();
+        initDB();
 
-        this.formData.set("mealIDs", String.valueOf( this.mealIDSavedInDB ) );
+        this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
@@ -101,36 +101,35 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-     @Test
-     void addMenuWithInvalidImageName() throws Exception {
+    @Test
+    void addMenuWithInvalidImageName() throws Exception {
 
-         this.imageData = new MockMultipartFile(
-                 "wrongImageName",                         // nom du champ de fichier
-                 IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
-                 "image/png",                    // type MIME
-                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+        this.imageData = new MockMultipartFile(
+                "wrongImageName",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/png",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
-                 .file(this.imageData)
-                 .params(this.formData)
-                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
-     }
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+    }
 
 
+    @Test
+    void addMenuTestWithOutImage() throws Exception {
 
-     @Test
-     void  addMenuTestWithOutImage() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
-                 .params(this.formData)
-                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
-
-         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
-     }
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+    }
 
 
     /*********************************** Price *******************************************/
@@ -254,8 +253,6 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-
-
     /*********************************** Quantity *******************************************/
 
     @Test
@@ -367,7 +364,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     void addMenuTestWithOutQuantity() throws Exception {
         this.formData.remove("quantity");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( ADD_MENU_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -378,9 +375,6 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-
-
-
     /*********************************** Status *********************************************/
     @Test
     void AddMenuTestWithOutSideStatusValue3() throws Exception {
@@ -388,7 +382,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( ADD_MENU_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -464,6 +458,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
     }
+
     @Test
     void AddMenuTestWithInvalidStatusValue() throws Exception {
         this.formData.set("status", "564rffr");
@@ -494,6 +489,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
     }
+
     @Test
     void AddMenuTestWithNullStatusValue() throws Exception {
         this.formData.set("status", null);
@@ -509,6 +505,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
     }
+
     @Test
     void AddMenuWithoutStatus() throws Exception {
         this.formData.remove("status");
@@ -524,9 +521,6 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
     }
-
-
-
 
 
     /*********************************** Description ****************************************/
@@ -545,6 +539,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
     }
+
     @Test
     void testAddMenuWithTooShortDescription() throws Exception {
         this.formData.set("description", "aau");
@@ -555,8 +550,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
     }
+
     @Test
     void testAddMenuWithTooLongDescription() throws Exception {
         this.formData.set("description", "a".repeat(1701));
@@ -567,10 +563,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
     }
+
     @Test
-    void  testAddMenuWithNullDescription() throws Exception {
+    void testAddMenuWithNullDescription() throws Exception {
         this.formData.set("description", null);
 
         var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
@@ -579,8 +576,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Description"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
     }
+
     @Test
     void testAddMenuWithOutDescription() throws Exception {
         this.formData.remove("description");
@@ -593,11 +591,8 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Description"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
     }
-
-
-
 
 
     /*********************************** label ********************************************/
@@ -616,6 +611,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
     }
+
     @Test
     void testAddMenuWithTooShortLabel() throws Exception {
         this.formData.set("label", "aa");
@@ -626,10 +622,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("ShortLabelLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortLabelLength"))));
     }
+
     @Test
-   void testAddMenuWithTooLongLabel() throws Exception {
+    void testAddMenuWithTooLongLabel() throws Exception {
         this.formData.set("label", "a".repeat(101));
 
         var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
@@ -638,10 +635,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("LongLabelLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongLabelLength"))));
     }
+
     @Test
-    void  testAddMenuWithNullLabel() throws Exception {
+    void testAddMenuWithNullLabel() throws Exception {
         this.formData.set("label", null);
 
         var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADD_MENU_URL)
@@ -650,8 +648,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
     }
+
     @Test
     void testAddMenuWithOutLabel() throws Exception {
         this.formData.remove("label");
@@ -664,7 +663,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
     }
 
 
