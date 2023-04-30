@@ -3,6 +3,8 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,6 +43,15 @@ public interface IMenuTest {
 
     );
 
+    static LinkedMultiValueMap initFormData(){
+        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("label", "MenuTest");
+        map.add("description", "Menu  description  test");
+        map.add("price", "3.87");
+        map.add("status", "1");
+        map.add("quantity", "10");
+        return map;
+    }
     static  MealEntity createMeal  () {
 
         ImageEntity imageEntity = new ImageEntity();
@@ -62,11 +73,11 @@ public interface IMenuTest {
         mealEntity.setCategory(category);
         return  mealEntity ;
     }
-    static MenuEntity createMenu (List <MealEntity> mealAssociated ) {
+     static MenuEntity createMenu (List <MealEntity> mealAssociated ) {
         MenuEntity menuEntity = new MenuEntity();
-        menuEntity.setLabel("MenuTest");
+        menuEntity.setLabel("Tacos");
         menuEntity.setPrice(new BigDecimal("3.87"));
-        menuEntity.setDescription("Menu  description  test");
+        menuEntity.setDescription("Tacos  description  Menu");
         menuEntity.setStatus(1);
         menuEntity.setQuantity(10);
         menuEntity.setMeals(mealAssociated);
