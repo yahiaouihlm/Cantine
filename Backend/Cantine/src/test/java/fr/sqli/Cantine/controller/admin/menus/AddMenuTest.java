@@ -51,12 +51,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @BeforeEach
     void initFormData() throws IOException {
-        this.formData = new LinkedMultiValueMap<>();
-        this.formData.add("label", "Tacos");
-        this.formData.add("price", "3.87");
-        this.formData.add("description", "Menu  description  of Tacos menu");
-        this.formData.add("status", "1");
-        this.formData.add("quantity", "10");
+        this.formData = IMenuTest.initFormData();
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
                 IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
@@ -80,13 +75,14 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.menuDao.save(menu);
     }
 
-    /************************************* Image *******************************************/
 
+    /************************************* Image *******************************************/
 
     @Test
     void addMenuWithInvalidImageFormat() throws Exception {
         // init  DataBase
          initDB();
+
         this.formData.set("mealIDs", String.valueOf( this.mealIDSavedInDB ) );
 
         this.imageData = new MockMultipartFile(
