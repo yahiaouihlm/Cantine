@@ -5,6 +5,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -45,12 +46,12 @@ public interface IMenuTest {
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
 
-        MealEntity mealEntity = createMealWith("MealTest" , new BigDecimal(10.0) , "MealTest  description" , 1 , 10 , imageEntity);
+        MealEntity mealEntity = createMealWith("MealTest"  , "MealTest  description","MealTest  category", new BigDecimal(10.0) , 1 , 10 , imageEntity);
 
         return  mealEntity ;
     }
 
-     static  MealEntity createMealWith( String  label , BigDecimal price , String description , int status , int quantity , ImageEntity imageEntity){
+     static  MealEntity createMealWith( String  label , String description,  String category, BigDecimal price  , int status , int quantity , ImageEntity imageEntity){
         MealEntity mealEntity = new MealEntity();
         mealEntity.setLabel(label);
         mealEntity.setPrice(price);
@@ -58,16 +59,24 @@ public interface IMenuTest {
         mealEntity.setStatus(status);
         mealEntity.setQuantity(quantity);
         mealEntity.setImage(imageEntity);
+        mealEntity.setCategory(category);
         return  mealEntity ;
     }
     static MenuEntity createMenu (List <MealEntity> mealAssociated ) {
         MenuEntity menuEntity = new MenuEntity();
-        menuEntity.setLabel("Tacos");
+        menuEntity.setLabel("MenuTest");
         menuEntity.setPrice(new BigDecimal("3.87"));
-        menuEntity.setDescription("Menu  description  of Tacos menu");
+        menuEntity.setDescription("Menu  description  test");
         menuEntity.setStatus(1);
         menuEntity.setQuantity(10);
         menuEntity.setMeals(mealAssociated);
+        menuEntity.setCreatedDate(LocalDate.now());
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+
+        menuEntity.setImage(imageEntity);
+
+
         return  menuEntity ;
     }
 }
