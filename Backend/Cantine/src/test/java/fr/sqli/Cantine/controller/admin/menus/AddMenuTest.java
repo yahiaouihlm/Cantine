@@ -95,7 +95,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
 
+
         //before  clean DataBase we remove the  image  added  in  the  test to   images/menus
+
         var menuSaved = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase("MenuTest", "Menu  description  test", BigDecimal.valueOf(3.87));
         var nameImageSaved = menuSaved.get().getImage().getImagename();
         File file = new File(IMAGE_MENU_DIRECTORY_PATH + nameImageSaved);

@@ -32,7 +32,7 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
 
 
     //"THE ID CAN NOT BE NULL OR LESS THAN 0"
-
+    final   String  MEAL_DELETED_SUCCESSFULLY="MEAL DELETED SUCCESSFULLY";
     @Autowired
     private IMealDao mealDao;
 
@@ -45,6 +45,9 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
 
     /*TODO
           to  reloas image  after    each   tests
+     */
+    /*
+        TODO please make sur that when tests are failed the image is reloaded
      */
     @BeforeEach
     public void init() {
@@ -82,7 +85,7 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
 
 
         result.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(exceptionsMap.get("mealDeleted")));
+                .andExpect(MockMvcResultMatchers.content().string(MEAL_DELETED_SUCCESSFULLY));
 
         Assertions.assertEquals(1, this.mealDao.findAll().size());
 
