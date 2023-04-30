@@ -52,6 +52,132 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 IMAGE_MENU_FORMAT_FOR_TEST,                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
+
+    /*********************************** Quantity *******************************************/
+
+    @Test
+    void addMenuTestWithQuantityOutBoundOfInteger() throws Exception {
+        this.formData.set("quantity", "2000000000000000000000000000000000000000000000000000000000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMenuTestWithTooLongQuantity() throws Exception {
+        this.formData.set("quantity", Integer.toString(Integer.MAX_VALUE - 99));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighQuantity"))));
+    }
+
+    @Test
+    void addMenuTestWithNegativeQuantity() throws Exception {
+        this.formData.set("quantity", "-1");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativeQuantity"))));
+    }
+
+    @Test
+    void addMenuTestWithInvalidQuantity3() throws Exception {
+        this.formData.set("quantity", "-1.2");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMenuTestWithInvalidQuantity2() throws Exception {
+        this.formData.set("quantity", "1.2");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMenuTestWithInvalidQuantity() throws Exception {
+        this.formData.set("quantity", "null");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void addMenuTestWithEmptyQuantity() throws Exception {
+        this.formData.set("quantity", "");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+
+    @Test
+    void addMenuTestWithNullQuantity() throws Exception {
+        this.formData.set("quantity", null);
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+
+    @Test
+    void addMenuTestWithOutQuantity() throws Exception {
+        this.formData.remove("quantity");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart( ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+    }
+
+
+
+
+
     /*********************************** Status *********************************************/
     @Test
     void AddMenuTestWithOutSideStatusValue3() throws Exception {
@@ -196,6 +322,10 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
     }
 
+
+
+
+
     /*********************************** Description ****************************************/
     @Test
     void AddMealTestWithEmptyDescription() throws Exception {
@@ -262,6 +392,8 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json( super.exceptionMessage(exceptionsMap.get("Description"))));
     }
+
+
 
 
 
