@@ -7,10 +7,7 @@ import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
+    final String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
     @Autowired
     private IMenuDao menuDao;
     @Autowired
@@ -46,11 +45,12 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     private MockMultipartFile imageData;
 
-    private int mealIDSavedInDB;
+    private  Integer mealIDSavedInDB;
 
 
     @BeforeEach
     void initFormData() throws IOException {
+        this.mealIDSavedInDB = null; //  init  mealIDSavedInDB
         this.formData = IMenuTest.initFormData();
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
@@ -59,11 +59,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
 
-    @AfterEach
+    /*@AfterEach
     void cleanDB() {
         this.menuDao.deleteAll();
         this.mealDao.deleteAll();
-    }
+    }*/
 
     MenuEntity initDB() throws FileNotFoundException {
         //  save  a  meal
@@ -76,15 +76,47 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         return this.menuDao.save(menu);
 
     }
+    /************************************** Add Menu ****************************************/
+
+    @Test
+    void addMenuTest() throws Exception {
+       //  initDB();
+        var meal =  IMenuTest.createMeal();
+        this.mealDao.save(meal);
+        this.mealIDSavedInDB = meal.getId();
+        this.formData = new LinkedMultiValueMap<>();
+        this.formData.add("label", "MenuTest");
+        this.formData.add("description", "Menu  description  test");
+        this.formData.add("price", "3.87");
+        this.formData.add("status", "1");
+        this.formData.add("quantity", "10");
+        this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(MENU_ADDED_SUCCESSFULLY));
+
+        //before  clean DataBase we remove the  image  added  in  the  test to   images/menus
+
+        var menuSaved = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase("MenuTest","Menu  description  test", BigDecimal.valueOf(3.87));
+        var nameImageSaved = menuSaved.get().getImage().getImagename()  ;
+        File file = new File(IMAGE_MENU_DIRECTORY_PATH + nameImageSaved);
+        Assertions.assertTrue(file.delete()); //  check  if  the  image  is  deleted from  the  directory*/
+
+    }
 
     /************************************** Existing Menu ***********************************/
     @Test
     void addMenuWithExistingMenu3() throws Exception {
-        var menu = initDB(); //  get menu  saved in DB to  use it  in  the  test
+        var menuSaved = initDB(); //  get menu  saved in DB to  use it  in  the  test
 
-        this.formData.set("label", menu.getLabel().toLowerCase());
-        this.formData.set("price", menu.getPrice().toString() + "0000");
-        this.formData.set("description", menu.getDescription().toUpperCase());
+        this.formData.set("label", menuSaved.getLabel().toLowerCase());
+        this.formData.set("price", menuSaved.getPrice().toString() + "0000");
+        this.formData.set("description", menuSaved.getDescription().toUpperCase());
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
@@ -99,10 +131,10 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuWithExistingMenu2() throws Exception {
-        var menu = initDB(); //  get menu  saved in DB to  use it  in  the  test
+        var menuSaved = initDB(); //  get menu  saved in DB to  use it  in  the  test
 
         this.formData.set("label", "T  A     c    o      S  ");
-        this.formData.set("price", menu.getPrice().toString() + "0000");
+        this.formData.set("price", menuSaved.getPrice().toString() + "0000");
         this.formData.set("description", "T A C O  s  deS criP   tio      NMenu");
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
@@ -119,11 +151,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuWithExistingMenu() throws Exception {
-        var menu = initDB(); //  get menu  saved in DB to  use it  in  the  test
+        var menuSaved = initDB(); //  get menu  saved in DB to  use it  in  the  test
 
-        this.formData.set("label", menu.getLabel());
-        this.formData.set("price", menu.getPrice().toString());
-        this.formData.set("description", menu.getDescription());
+        this.formData.set("label", menuSaved.getLabel());
+        this.formData.set("price", menuSaved.getPrice().toString());
+        this.formData.set("description", menuSaved.getDescription());
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
