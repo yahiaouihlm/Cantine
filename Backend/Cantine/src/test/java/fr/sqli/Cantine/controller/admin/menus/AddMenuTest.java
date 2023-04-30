@@ -2,7 +2,12 @@ package fr.sqli.Cantine.controller.admin.menus;
 
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
+import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.entity.ImageEntity;
+import fr.sqli.Cantine.entity.MealEntity;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,8 @@ import org.springframework.util.MultiValueMap;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,13 +36,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Autowired
     private IMenuDao menuDao;
-
+   @Autowired
+    private IMealDao mealDao;
     @Autowired
     private MockMvc mockMvc;
 
     private MultiValueMap<String, String> formData;
 
     private MockMultipartFile imageData;
+
+    private  int mealIDSavedInDB;
+
 
 
     @BeforeEach
@@ -52,6 +63,80 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 IMAGE_MENU_FORMAT_FOR_TEST,                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
+
+    @AfterEach
+    void  cleanDB() {
+        this.menuDao.deleteAll();
+        this.mealDao.deleteAll();
+    }
+    void  initDB() throws FileNotFoundException {
+        //  save  a  meal
+        var meal =  IMenuTest.createMeal() ;
+        this.mealDao.save(meal);
+
+        this.mealIDSavedInDB = meal.getId();
+
+        var  menu  = IMenuTest.createMenu(List.of (meal) );
+        this.menuDao.save(menu);
+    }
+
+    /************************************* Image *******************************************/
+
+
+    @Test
+    void addMenuWithInvalidImageFormat() throws Exception {
+        // init  DataBase
+         initDB();
+        this.formData.set("mealIDs", String.valueOf( this.mealIDSavedInDB ) );
+
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+    }
+
+
+     @Test
+     void addMenuWithInvalidImageName() throws Exception {
+
+         this.imageData = new MockMultipartFile(
+                 "wrongImageName",                         // nom du champ de fichier
+                 IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                 "image/png",                    // type MIME
+                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                 .file(this.imageData)
+                 .params(this.formData)
+                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+     }
+
+
+
+     @Test
+     void  addMenuTestWithOutImage() throws Exception {
+
+         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                 .params(this.formData)
+                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+     }
+
+
     /*********************************** Price *******************************************/
     @Test
     void addMenuTestWithTooLongPrice() throws Exception {
@@ -171,8 +256,6 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
     }
-
-
 
 
 
