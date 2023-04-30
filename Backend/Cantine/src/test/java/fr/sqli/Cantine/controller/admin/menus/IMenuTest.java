@@ -18,13 +18,17 @@ public interface IMenuTest {
             Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
             Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
             Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
+            Map.entry("Price", "PRICE_IS_MANDATORY"),
             Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
             Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
             Map.entry("Status", "STATUS_IS_MANDATORY"),
             Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE"),
             Map.entry("Quantity", "QUANTITY_IS_MANDATORY"),
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
-            Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0")
+            Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
+            Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
+            Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0")
+
 
     );
 }
