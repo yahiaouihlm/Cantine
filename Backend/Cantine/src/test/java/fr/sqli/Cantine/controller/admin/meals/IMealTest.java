@@ -44,7 +44,6 @@ public interface IMealTest {
             Map.entry("InvalidMealID", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("missingParam", "MISSING PARAMETER"),
             Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID"),
-            Map.entry("mealDeleted", "MEAL DELETED SUCCESSFULLY"),
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0")
 
     );

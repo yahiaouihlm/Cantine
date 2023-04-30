@@ -31,7 +31,7 @@ import java.util.Objects;
 @AutoConfigureMockMvc
 public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
-
+    final  String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
     @Autowired
     private IMealDao mealDao;
 
@@ -89,7 +89,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(this.exceptionsMap.get("MealAddedSuccessfully")));
+                .andExpect(MockMvcResultMatchers.content().string(MEAL_ADDED_SUCCESSFULLY));
 
         //  clear  the  database  after
         //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
