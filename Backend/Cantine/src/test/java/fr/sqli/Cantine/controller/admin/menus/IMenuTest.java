@@ -6,6 +6,10 @@ import fr.sqli.Cantine.entity.MenuEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -91,5 +95,10 @@ public interface IMenuTest {
 
 
         return  menuEntity ;
+    }
+
+    static BufferedImage saveTestFile() throws IOException {
+        File image = new File(IMAGE_MENU_FOR_TEST_PATH);
+        return ImageIO.read(image);
     }
 }

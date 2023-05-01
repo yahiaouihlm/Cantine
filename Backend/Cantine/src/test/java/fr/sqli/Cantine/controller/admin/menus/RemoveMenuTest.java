@@ -2,7 +2,11 @@ package fr.sqli.Cantine.controller.admin.menus;
 
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
+import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -20,12 +27,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     final String paramReq = "?"+"idMenu" + "=";
+    final  String MENU_DELETED_SUCCESSFULLY  =  "MENU DELETED SUCCESSFULLY";
     @Autowired
     private IMenuDao menuDao;
 
     @Autowired
+    private IMealDao mealDao;
+    @Autowired
     private MockMvc mockMvc;
 
+    MenuEntity initDataBase(){
+        var meal  =  IMenuTest.createMeal();
+
+        this.mealDao.save(meal);
+        var menu  = IMenuTest.createMenu(List.of(meal));
+        return this.menuDao.save(menu);
+
+    }
+    @AfterEach
+    void  cleanDataBase(){
+        this.menuDao.deleteAll();
+        this.mealDao.deleteAll();
+    }
+    @Test
+    void removeMenuWithExistingMenu() throws Exception {
+
+        var  menuIDSaved  =  this.initDataBase().getId(); // save  menu  in  database
+
+        var  image  =  IMenuTest.saveTestFile();
+
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+menuIDSaved));
+        result.andExpect( status().isOk())
+                .andExpect(content().string(MENU_DELETED_SUCCESSFULLY));
+
+        ///  remove  Image File after  each  test
+        File outputFile  =  new File(IMAGE_MENU_FOR_TEST_PATH);
+        ImageIO.write(image, "jpg", outputFile);
+
+
+    }
 
     @Test
     void  removeMenuWithNotExistingMenu() throws Exception {
