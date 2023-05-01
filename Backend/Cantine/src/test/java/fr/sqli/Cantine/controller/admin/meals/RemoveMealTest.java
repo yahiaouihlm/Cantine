@@ -140,7 +140,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +this.paramReq+"-5"));
 
         result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidMealID"))));
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidParameter"))));
 
     }
 
