@@ -14,7 +14,7 @@ import java.util.Map;
 public interface IMenuTest {
     final  String BASE_MENU_URL  =  "/cantine/api/admin/menus";
     final String ADD_MENU_URL = BASE_MENU_URL + "/add";
-
+    final String GET_ALL_MENUS_URL = BASE_MENU_URL + "/delete";
 
     String  IMAGE_MENU_FOR_TEST_NAME = "ImageMenuForTest.jpg";
     String IMAGE_MENU_DIRECTORY_PATH = "images/menus/";
@@ -39,7 +39,8 @@ public interface IMenuTest {
             Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
-            Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE")
+            Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE"),
+            Map.entry("missingParam", "MISSING PARAMETER")
     );
 
     static LinkedMultiValueMap initFormData(){
