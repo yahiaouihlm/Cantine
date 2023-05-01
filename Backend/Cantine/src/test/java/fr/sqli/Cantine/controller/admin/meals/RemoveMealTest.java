@@ -166,7 +166,17 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTestWithNullID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal="));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=" + null    ));
+
+
+        result.andExpect(status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+
+    }
+
+    @Test
+    void removeMealTestWithOutId() throws Exception {
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal="  ));
 
 
         result.andExpect(status().isNotAcceptable())
