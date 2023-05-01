@@ -111,7 +111,7 @@ public class MenuService implements IMenuService {
 
 
         MenuService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", menuID);
-        throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
+        throw new MealNotFoundAdminException("NO MENU WAS FOUND WITH THIS ID ");
     }
 
     @Override
