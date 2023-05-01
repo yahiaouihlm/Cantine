@@ -53,19 +53,21 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException {
+    public MenuEntity  removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
 
         IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID);
 
         var menu = this.menuDao.findById(menuID);
 
-        if (menu.isPresent()) {
-            this.menuDao.delete(menu.get());
-            return menu.get();
+        if (menu.isEmpty()) {
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE removeMenu METHOD ", menuID);
+            throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
         }
-       MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE removeMenu METHOD ", menuID);
 
-        throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
+        var imageName = menu.get().getImage().getImagename();
+        this.imageService.deleteImage(imageName, this.MENUS_IMAGES_PATH);
+        this.menuDao.delete(menu.get());
+        return  menu.get();
     }
 
     @Override
