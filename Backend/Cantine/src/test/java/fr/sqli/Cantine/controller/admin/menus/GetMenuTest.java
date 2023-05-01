@@ -3,7 +3,9 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.MenuEntity;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
@@ -49,7 +52,19 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
          this.mealDao.deleteAll();
     }
  /************************************* GetMenu By Id *************************************/
+
+
+ /* TODO  :  continue To  work   upon  this  test  */
  @Test
+ void getMenuByIdTest () throws Exception {
+     var  idMeal= this.menuEntity.getId(); // id must be not exist in database
+     var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL+ this.paramReq +idMeal ));
+     result.andExpect( status().isOk());
+             /*.andExpect(content().json({"label" : "menu1" }));*/
+ }
+
+
+    @Test
  void getMenuByIdWithOutMenu () throws Exception {
      var  idMeal= this.menuEntity.getId() + 3562; // id must be not exist in database
      var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL+ this.paramReq +idMeal ));
