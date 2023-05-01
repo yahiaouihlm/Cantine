@@ -41,7 +41,7 @@ public interface IMealTest {
             Map.entry("NegativeQuantity", "QUANTITY MUST BE GREATER THAN 0"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
-            Map.entry("InvalidMealID", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
+            Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("missingParam", "MISSING PARAMETER"),
             Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID"),
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0")

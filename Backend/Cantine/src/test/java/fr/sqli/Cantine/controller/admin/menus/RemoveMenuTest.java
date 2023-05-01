@@ -25,6 +25,36 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
 
     @Autowired
     private MockMvc mockMvc;
+
+
+    @Test
+    void  removeMenuWithNegativeIdTest() throws Exception {
+        var  result  =   this.mockMvc.
+                perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+"-4" ));
+        result.andExpect( status().isBadRequest())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidParameter"))));
+    }
+    @Test
+    void  removeMenuWithInvalidIdTest3() throws Exception {
+        var  result  =   this.mockMvc.
+                perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+"1.3" ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void  removeMenuWithInvalidIdTest2() throws Exception {
+        var  result  =   this.mockMvc.
+                perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+"8e5-" ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void  removeMenuWithInvalidIdTest() throws Exception {
+        var  result  =   this.mockMvc.
+                perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+"INVALID_ID" ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
     @Test
     void removeMenuWithNullIdTest() throws Exception {
         var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+null ));

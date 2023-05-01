@@ -40,7 +40,8 @@ public interface IMenuTest {
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE"),
-            Map.entry("missingParam", "MISSING PARAMETER")
+            Map.entry("missingParam", "MISSING PARAMETER"),
+            Map.entry("InvalidParameter", "THE CAN NOT BE NULL OR LESS THAN 0")
     );
 
     static LinkedMultiValueMap initFormData(){
