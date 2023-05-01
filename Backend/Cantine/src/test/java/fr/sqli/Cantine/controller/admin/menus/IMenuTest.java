@@ -20,6 +20,11 @@ public interface IMenuTest {
     final String ADD_MENU_URL = BASE_MENU_URL + "/add";
     final String DELETE_MENU_URL = BASE_MENU_URL + "/delete";
 
+    final String GET_ONE_MENU_URL = BASE_MENU_URL + "/get";
+
+
+
+    /********************** Image **************************/
     String  IMAGE_MENU_FOR_TEST_NAME = "ImageMenuForTest.jpg";
     String IMAGE_MENU_DIRECTORY_PATH = "images/menus/";
 
