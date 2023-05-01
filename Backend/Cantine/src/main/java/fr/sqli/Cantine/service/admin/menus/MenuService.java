@@ -12,6 +12,7 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationExce
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -49,6 +50,22 @@ public class MenuService implements IMenuService {
         this.MENUS_IMAGES_URL = environment.getProperty("sqli.cantine.images.url.menus"); // the link  to images of menus
         this.MENUS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.menus.path"); //  the path  to the images of menus directory
         this.MEALS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.url.meals"); //  the path  to the images of meals directory
+    }
+
+    @Override
+    public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException {
+
+        IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID);
+
+        var menu = this.menuDao.findById(menuID);
+
+        if (menu.isPresent()) {
+            this.menuDao.delete(menu.get());
+            return menu.get();
+        }
+       MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE removeMenu METHOD ", menuID);
+
+        throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
     }
 
     @Override
