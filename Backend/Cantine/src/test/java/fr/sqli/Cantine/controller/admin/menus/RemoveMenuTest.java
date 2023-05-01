@@ -19,15 +19,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest {
 
+    final String paramReq = "?"+"idMenu" + "=";
     @Autowired
     private IMenuDao menuDao;
 
     @Autowired
     private MockMvc mockMvc;
+    @Test
+    void removeMenuWithNullIdTest() throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+null ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
 
-   @Test
+    @Test
    void removeMenuWithOutIdTest() throws Exception {
-      var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(GET_ALL_MENUS_URL+"?idMeal=" ));
+      var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+ this.paramReq));
                result.andExpect( status().isNotAcceptable())
                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("missingParam"))));
   }
