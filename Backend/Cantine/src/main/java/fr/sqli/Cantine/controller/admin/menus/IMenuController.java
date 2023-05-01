@@ -6,10 +6,12 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationExce
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,10 +25,17 @@ public interface IMenuController {
 
     String ENDPOINT_GET_ONE_MENU_URL = "/get";
 
+    String ENDPOINT_DELETE_MENU_URL = "/delete";
+
     /*------------------ MESSAGES ------------------*/
     String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
+    String MENU_DELETED_SUCCESSFULLY = "MENU DELETED SUCCESSFULLY";
 
     /*------------------ METHODS ------------------*/
+
+
+    public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException, MenuNotFoundException, ImagePathException;
+
     public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException;
 
     public ResponseEntity<MenuDtout> getMenuById(Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException;

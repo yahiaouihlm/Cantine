@@ -8,6 +8,7 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException
 import fr.sqli.Cantine.service.admin.menus.MenuService;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
@@ -33,8 +34,14 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    @PostMapping(value = ENDPOINT_ADD_MENU_URL)
+    @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
+    public ResponseEntity<String> deleteMenu(Integer idMenu) throws InvalidMenuInformationException, MenuNotFoundException, ImagePathException {
+        this.menuService.removeMenu(idMenu);
+        return ResponseEntity.ok(MENU_DELETED_SUCCESSFULLY);
+    }
 
+    @Override
+    @PostMapping(value = ENDPOINT_ADD_MENU_URL)
     public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
          this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(MENU_ADDED_SUCCESSFULLY);
