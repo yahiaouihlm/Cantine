@@ -2,8 +2,10 @@ package fr.sqli.Cantine.controller.admin.meals;
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
+import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +40,7 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
     private IMealDao mealDao;
 
     @Autowired
-    private IMealService mealService;
+    private IMenuDao menuDao;
 
     private List<MealEntity> meals;
     @Autowired
@@ -66,7 +69,8 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
 
     @AfterEach
     void cleanUp() {
-        this.mealDao.deleteAll();
+        this.menuDao.deleteAll();
+        this.mealDao.deleteAll(); // clean  data  after  each  test
     }
 
 
@@ -97,33 +101,28 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
     }
 
     /*  TODO whe We Make Menu */
-  /* @Test
+   @Test
     void removeMealInAssociationWithMenu () throws Exception {
-        var  expectedExceptionMessage=  "THE MEAL WITH AN label  = " + this.meals.get(0).getLabel() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED" ;
-        this.meals.get(0).setMenus(List.of(new MenuEntity()));
+       var expectedExceptionMessage = "THE MEAL WITH AN LABEL  = " + this.meals.get(0).getLabel().toUpperCase() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED";
+       var idMealToRemove = this.mealDao.findAll().get(0);
+       MenuEntity menuEntity = new MenuEntity();
+       menuEntity.setLabel("menu1");
+       menuEntity.setPrice(new BigDecimal("2.3"));
+       menuEntity.setDescription("menu1 description test ");
+       menuEntity.setQuantity(1);
+       menuEntity.setStatus(1);
+       menuEntity.setCreatedDate(LocalDate.now());
+       ImageEntity image = new ImageEntity();
+       image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+       menuEntity.setImage(image);
+       menuEntity.setMeals(List.of(idMealToRemove));
+       this.menuDao.save(menuEntity);
 
-        var idMealToRemov = this.mealDao.save(this.meals.get(0)).getId();
-//        MealEntity  mealToFind = this.meals.get(0);
-//
-//        var mealsInDbL =   this.mealDao.findAll();
-//        Integer idMealToRemov  = null ;
-//       for ( MealEntity mealEntity : mealsInDbL ) {
-//             if (mealEntity.getLabel().equals("Entrée")) {
-//               idMealToRemov = mealEntity.getId();
-//               break;
-//           }
-//       }
-//
+         var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=" + idMealToRemove.getId()));
 
-
-        var result =  this.mockMvc.perform(delete(super.DELETE_MEAL_URL+"?idMeal="+idMealToRemov));
-
-        result.andExpect(status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get(expectedExceptionMessage) )));
-
-
-
-    }*/
+          result.andExpect(status().isConflict())
+               .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(expectedExceptionMessage)));
+    }
 
 
     @Test
