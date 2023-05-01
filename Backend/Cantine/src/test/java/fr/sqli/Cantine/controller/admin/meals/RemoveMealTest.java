@@ -85,7 +85,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
         var image = saveTestFile(); // save  image before  delete meal
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + paramReq + idMealToRemove));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove));
 
 
         result.andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         menuEntity.setMeals(List.of(idMealToRemove));
         this.menuDao.save(menuEntity);
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + paramReq + idMealToRemove.getId()));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId()));
 
         result.andExpect(status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(expectedExceptionMessage)));
@@ -128,7 +128,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     @Test
     void removeMealTestWithMealNotFound() throws Exception {
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + paramReq + (Integer.MAX_VALUE - 10)));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + (Integer.MAX_VALUE - 10)));
 
         result.andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealNotFound"))));
@@ -137,7 +137,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTestWithNegativeID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +paramReq+"-5"));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +this.paramReq+"-5"));
 
         result.andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidMealID"))));
@@ -147,7 +147,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTestWithInValidID2() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +paramReq+ "1000000000000000000000000000000000000000000"));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +this.paramReq+ "1000000000000000000000000000000000000000000"));
 
         result.andExpect(status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -156,7 +156,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTestWithInvalidID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + paramReq+"ozzedoz"));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq+"ozzedoz"));
 
         result.andExpect(status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -166,7 +166,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTestWithNullID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + paramReq + null    ));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + null    ));
 
         result.andExpect(status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -175,7 +175,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTestWithOutId() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + paramReq  ));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq  ));
 
 
         result.andExpect(status().isNotAcceptable())
