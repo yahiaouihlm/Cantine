@@ -28,6 +28,17 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
     @Test
+    void  removeMenuWithNotExistingMenu() throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+"100"));
+
+        result.andExpect( status().isNotFound())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("MenuNotFound"))));
+
+    }
+
+
+    /***********************************  Invalid ID   ********************************************/
+    @Test
     void  removeMenuWithNegativeIdTest() throws Exception {
         var  result  =   this.mockMvc.
                 perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+"-4" ));
