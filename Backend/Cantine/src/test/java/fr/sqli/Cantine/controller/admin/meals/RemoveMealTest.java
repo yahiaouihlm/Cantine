@@ -31,11 +31,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RemoveMealTest extends AbstractContainerConfig   implements     IMealTest {
+public class RemoveMealTest extends AbstractContainerConfig implements IMealTest {
 
 
     //"THE ID CAN NOT BE NULL OR LESS THAN 0"
-    final   String  MEAL_DELETED_SUCCESSFULLY="MEAL DELETED SUCCESSFULLY";
+    final String MEAL_DELETED_SUCCESSFULLY = "MEAL DELETED SUCCESSFULLY";
     @Autowired
     private IMealDao mealDao;
 
@@ -101,27 +101,27 @@ public class RemoveMealTest extends AbstractContainerConfig   implements     IMe
     }
 
     /*  TODO whe We Make Menu */
-   @Test
-    void removeMealInAssociationWithMenu () throws Exception {
-       var expectedExceptionMessage = "THE MEAL WITH AN LABEL  = " + this.meals.get(0).getLabel().toUpperCase() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED";
-       var idMealToRemove = this.mealDao.findAll().get(0);
-       MenuEntity menuEntity = new MenuEntity();
-       menuEntity.setLabel("menu1");
-       menuEntity.setPrice(new BigDecimal("2.3"));
-       menuEntity.setDescription("menu1 description test ");
-       menuEntity.setQuantity(1);
-       menuEntity.setStatus(1);
-       menuEntity.setCreatedDate(LocalDate.now());
-       ImageEntity image = new ImageEntity();
-       image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
-       menuEntity.setImage(image);
-       menuEntity.setMeals(List.of(idMealToRemove));
-       this.menuDao.save(menuEntity);
+    @Test
+    void removeMealInAssociationWithMenu() throws Exception {
+        var expectedExceptionMessage = "THE MEAL WITH AN LABEL  = " + this.meals.get(0).getLabel().toUpperCase() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED";
+        var idMealToRemove = this.mealDao.findAll().get(0);
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.setLabel("menu1");
+        menuEntity.setPrice(new BigDecimal("2.3"));
+        menuEntity.setDescription("menu1 description test ");
+        menuEntity.setQuantity(1);
+        menuEntity.setStatus(1);
+        menuEntity.setCreatedDate(LocalDate.now());
+        ImageEntity image = new ImageEntity();
+        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        menuEntity.setImage(image);
+        menuEntity.setMeals(List.of(idMealToRemove));
+        this.menuDao.save(menuEntity);
 
-         var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=" + idMealToRemove.getId()));
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + "?idMeal=" + idMealToRemove.getId()));
 
-          result.andExpect(status().isConflict())
-               .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(expectedExceptionMessage)));
+        result.andExpect(status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(expectedExceptionMessage)));
     }
 
 
