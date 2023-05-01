@@ -4,17 +4,22 @@ package fr.sqli.Cantine.service.admin.menus;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.MealDtoIn;
 import fr.sqli.Cantine.dto.in.MenuDtoIn;
+import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -57,23 +63,62 @@ public class RemoveMealTest {
                 "image/jpg",                    // type MIME
                 new FileInputStream("images/menus/ImageMenuForTest.jpg")));
         this.mealDtoIn.setMealIDs(Collections.singletonList(1));
+
+         this.menuEntity = new MenuEntity();
+        this.menuEntity.setLabel("label test");
+        this.menuEntity.setDescription("description  test");
+        this.menuEntity.setQuantity(10);
+        this.menuEntity.setStatus(1);
+        this.menuEntity.setPrice(new BigDecimal(1.5));
+        ImageEntity image =  new ImageEntity();
+        image.setImagename("ImageMenuForTest.jpg");
+        this.menuEntity.setImage(image);
+        this.menuEntity.setMeals(Collections.singletonList(new MealEntity()));
     }
+
+    @AfterEach
+    void tearDown() {
+        this.mealDtoIn = null;
+        this.mealEntity = null;
+        this.menuEntity = null;
+    }
+
+
+    @Test
+    void  removeMenuWithMenuDoesNotExist(){
+        Mockito.when(this.iMenuDao.findById(1)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(MenuNotFoundException.class, () -> {
+            this.menuService.removeMenu(1);
+        });
+        Mockito.verify(this.iMenuDao, Mockito.times(1)).findById(1);
+       Mockito.verify(this.iMenuDao, Mockito.times(0)).deleteById(Mockito.any());
+    }
+
+
     @Test
     void removeMenuWithInvalidID2(){
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> {
             this.menuService.removeMenu(-10);
         });
+        Mockito.verify(this.iMenuDao, Mockito.times(0)).findById(Mockito.any());
+        Mockito.verify(this.iMenuDao, Mockito.times(0)).deleteById(Mockito.any());
     }
     @Test
     void removeMenuWithInvalidID(){
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> {
             this.menuService.removeMenu(-1);
         });
+        Mockito.verify(this.iMenuDao, Mockito.times(0)).findById(Mockito.any());
+        Mockito.verify(this.iMenuDao, Mockito.times(0)).deleteById(Mockito.any());
     }
     @Test
     void removeMenuWithNullID(){
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> {
             this.menuService.removeMenu(null);
         });
+        Mockito.verify(this.iMenuDao, Mockito.times(0)).findById(Mockito.any());
+        Mockito.verify(this.iMenuDao, Mockito.times(0)).deleteById(Mockito.any());
     }
+
 }
