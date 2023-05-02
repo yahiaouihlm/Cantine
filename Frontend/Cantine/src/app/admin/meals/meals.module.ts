@@ -14,13 +14,13 @@ import { AllMealsComponent } from './all-meals/all-meals.component';
 
 
 const routes: Routes = [
-  {path: '' , component:  AllMealsComponent,
+  {path: '' , component:  AllMealsComponent,  /*TODO  make  this compenet  as the  main  shell  of our module    */
     children: [
       {path: 'new', component: NewMealComponent},
     ]
   },
 
-  {path : '',  redirectTo: 'cantine/admin/home', pathMatch: 'full'}
+  {path : 'meals',  redirectTo: 'all', pathMatch: 'full'}
 
 ];
 @NgModule({
