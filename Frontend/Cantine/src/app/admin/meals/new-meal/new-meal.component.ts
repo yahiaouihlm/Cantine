@@ -28,6 +28,7 @@ export class NewMealComponent {
     }
 
     onSubmit(): void {
+
         this.submitted = true;
         if (this.newMeal.invalid) {
             return;

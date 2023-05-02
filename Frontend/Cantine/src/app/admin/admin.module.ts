@@ -8,13 +8,16 @@ import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 
 
 const routes: Routes = [
-  {path: '', component:MainAdminComponent ,
+  {path: 'cantine/admin',  redirectTo: '/home', pathMatch: 'full'},
+
+  {path: '', component: MainAdminComponent,
     children: [
-        {path: 'home', component: HomeAdminComponent},
-        {path:'meals', loadChildren:() => import('./meals/meals.module').then(m => m.MealsModule)},
+      {path:'meals', loadChildren:() => import('./meals/meals.module').then(m => m.MealsModule)},
+      {path: 'home', component: HomeAdminComponent},
+      {path: '', redirectTo: 'home', pathMatch: 'full'},
     ]
   },
-    {path: '',  redirectTo: 'home', pathMatch: 'full'},
+
 ];
 
 

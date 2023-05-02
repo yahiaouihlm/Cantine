@@ -54,7 +54,6 @@ import {MatButton, MatButtonModule} from "@angular/material/button";
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatButtonModule,
     MatDialogModule,
 
   ]
