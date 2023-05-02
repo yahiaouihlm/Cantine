@@ -85,7 +85,14 @@ public class MenuService implements IMenuService {
         menuEntity.setPrice(menu.getPrice());
         menuEntity.setStatus(menu.getStatus());
         menuEntity.setQuantity(menu.getQuantity());
-        menuEntity.setMeals(menu.getMeals());
+
+        List<MealEntity> mealsInMenu = new ArrayList<>(); //  check  existing meals in the   database  and  add them to the menu
+        for (Integer mealID : menuDtoIn.getMealIDs()) {
+            var meal = this.mealService.getMealEntityByID(mealID);
+            mealsInMenu.add(meal);
+        }
+
+        menuEntity.setMeals(mealsInMenu);
 
         if (menuDtoIn.getImage() != null && !menuDtoIn.getImage().isEmpty()) {
             var oldImageName = menuEntity.getImage().getImagename();
