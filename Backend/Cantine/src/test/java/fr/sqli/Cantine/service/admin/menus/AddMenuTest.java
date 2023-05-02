@@ -66,7 +66,7 @@ public class AddMenuTest {
 
     @Test
     void AddMenuWithExistingMenu() {
-        Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().replaceAll("\\s+", ""), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.of(new MenuEntity()));
+        Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.of(new MenuEntity()));
 
         Assertions.assertThrows(ExistingMenuException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
