@@ -133,7 +133,7 @@ public class MealService implements IMealService {
 
     @Override
     public MealEntity getMealEntityByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException {
-        IMealService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", id);
+        IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
 
         var meal = this.mealDao.findById(id);
 

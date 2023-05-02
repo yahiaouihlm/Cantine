@@ -23,11 +23,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class GetMealTest extends AbstractContainerConfig implements   IMealTest {
 
-
+    final  String paramReq = "?" + "idMeal" + "=";
     @Autowired
     private IMealDao mealDao;
 
@@ -86,4 +89,42 @@ class GetMealTest extends AbstractContainerConfig implements   IMealTest {
         result.andExpect(MockMvcResultMatchers.status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(0)));
     }
+
+
+    /**************************************** Get meal by id tests ****************************************/
+
+
+
+    @Test
+    void getMenuByIdWithInvalidId2 () throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq + "54fd" ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void getMenuByIdWithInvalidId () throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq + "1.2" ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+    @Test
+    void getMenuByIdWithNegativeId () throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq + "-1" ));
+        result.andExpect( status().isBadRequest())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidParameter"))));
+    }
+    @Test
+    void getMenuByIdWithNullId () throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq + null ));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+    }
+
+    @Test
+    void getMenuByIdWithOutID () throws Exception {
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq));
+        result.andExpect( status().isNotAcceptable())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("missingParam"))));
+    }
+
 }

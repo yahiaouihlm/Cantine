@@ -103,7 +103,7 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuDtout getMenuById(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException {
-        IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID);
+        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuID);
         var menu = this.menuDao.findById(menuID);
         if (menu.isPresent()) {
             return new MenuDtout(menu.get(), this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
