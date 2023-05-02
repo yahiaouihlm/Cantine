@@ -12,4 +12,7 @@ export class HomeAdminComponent {
   goto(): void {
      this.router.navigate(['/admin']);
   }
+  gotoMeals(): void {
+     this.router.navigate(['/admin/meals']);
+  }
 }

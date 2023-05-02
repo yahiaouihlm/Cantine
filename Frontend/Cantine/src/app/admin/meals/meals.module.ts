@@ -14,7 +14,7 @@ import { AllMealsComponent } from './all-meals/all-meals.component';
 
 
 const routes: Routes = [
-  {path: '' ,
+  {path: '' , component:  AllMealsComponent,
     children: [
       {path: 'new', component: NewMealComponent},
     ]
