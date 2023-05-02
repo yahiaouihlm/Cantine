@@ -63,7 +63,7 @@ public class MenuDtoIn extends  AbstractDtoIn {
     @JsonIgnore
     private MenuEntity createMenuEntity() {
         MenuEntity menuEntity = new MenuEntity();
-        menuEntity.setLabel(super.removeSpaces(this.label));
+        menuEntity.setLabel(this.label.trim());
         menuEntity.setDescription(this.description.trim());
         menuEntity.setPrice(this.price);
         menuEntity.setStatus(this.status);

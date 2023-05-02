@@ -58,7 +58,7 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setCategory(this.category.trim());
         mealEntity.setDescription(this.description.trim());
-        mealEntity.setLabel(super.removeSpaces(this.label));
+        mealEntity.setLabel(this.label.trim());
         mealEntity.setPrice(this.price);
         mealEntity.setQuantity(quantity);
         mealEntity.setStatus(this.status);
