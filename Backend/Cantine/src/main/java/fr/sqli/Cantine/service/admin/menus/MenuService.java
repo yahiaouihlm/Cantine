@@ -91,7 +91,7 @@ public class MenuService implements IMenuService {
 
         if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().isEmpty() || menuDtoIn.getMealIDs().size() == 0  ) {
             MenuService.LOG.error("The menu doesn't contain any meal");
-            throw new InvalidMenuInformationException("The menu doesn't contain any meal");
+            throw new InvalidMenuInformationException("THE MENU DOESN'T CONTAIN ANY MEAL");
         }
 
         var  menu  =   this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());

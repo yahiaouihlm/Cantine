@@ -151,6 +151,107 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
 
     }
+    /*************************************** MealIDs *************************************/
+
+    @Test
+    void  addMenuWithInvalidMealIDs3() throws Exception {
+        this.formData.remove("mealIDs" , "{1, 2}" );
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+
+    @Test
+    void  addMenuWithInvalidMealIDs2() throws Exception {
+        this.formData.remove("mealIDs" , "[1, 2]" );
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  addMenuWithInvalidMealIDs () throws Exception {
+        this.formData.remove("mealIDs" , "jhnzserbj" );
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  addMenuWithEmptyMealIDs () throws Exception {
+        this.formData.remove("mealIDs" , "" );
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+
+    @Test
+    void  addMenuWithNullMealIDs () throws Exception {
+        this.formData.remove("mealIDs" , null );
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  addMenuWithOutMealIDs () throws Exception {
+        this.formData.remove("mealIDs");
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+
 
     /************************************* Image *******************************************/
 
