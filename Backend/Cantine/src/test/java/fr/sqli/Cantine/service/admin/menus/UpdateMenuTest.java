@@ -7,6 +7,7 @@ import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -64,7 +66,13 @@ public class UpdateMenuTest {
 
     }
 
-
+    @Test
+    void  updateMenuWithMenuNotFoundTest () {
+        Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(MenuNotFoundException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Mockito.verify(iMenuDao, Mockito.times(1)).findById(1);
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+    }
 
 
 
