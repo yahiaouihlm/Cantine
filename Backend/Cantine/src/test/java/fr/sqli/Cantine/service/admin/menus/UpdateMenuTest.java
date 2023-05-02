@@ -64,13 +64,43 @@ public class UpdateMenuTest {
 
     }
 
+    /****************************************** label ********************************************/
+    @Test
+    void AddMenuWithTooShortLabelTest (){
+        this.menu.setLabel("ab");
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+    @Test
+    void AddMenuWithTooLongLabelTest (){
+        this.menu.setLabel("a".repeat(101));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+    @Test
+    void AddMenuWithEmptyLabelTest(){
+        this.menu.setLabel("");
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu , 1 ));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    void AddMenuWithNullLabelTest () {
+        this.menu.setLabel(null);
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+    }
+
 
     /************************************ Menu ID************************************/
 
     @Test
     void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu,-1));
-        Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void getMenuByIdWithNullIdTest()  {
