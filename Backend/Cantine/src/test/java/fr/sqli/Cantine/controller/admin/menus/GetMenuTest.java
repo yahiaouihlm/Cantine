@@ -57,7 +57,15 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
   }
   /************************************** Get All Menus *************************************/
 
+  @Test
+  void  getAllMenusWithOneMenuDatabase() throws Exception {
 
+      var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_MENUS_URL));
+      result.andExpect(MockMvcResultMatchers.status().isOk());
+      result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(1)));
+      result.andExpect(MockMvcResultMatchers.jsonPath("$[0].label").value(CoreMatchers.is(this.menuEntity.getLabel())));
+      result.andExpect(MockMvcResultMatchers.jsonPath("$[0].description", CoreMatchers.is(this.menuEntity.getDescription())));
+  }
   @Test
   void  getAllMenusWithEmptyDatabase() throws Exception {
       this.menuDao.deleteAll();
