@@ -50,25 +50,55 @@ public class MenuService implements IMenuService {
         this.mealService = mealService;
         this.imageService = imageService;
         this.menuDao = menuDao;
-        this.MENUS_IMAGES_URL = environment.getProperty("sqli.cantine.images.url.menus"); // the link  to images of menus
+        this.MENUS_IMAGES_URL = environment.getProperty("sqli.cantine.images.url.menus"); // the link  to images of menus (url used in the front end) "http://localhost:8080/images/menus/"
         this.MENUS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.menus.path"); //  the path  to the images of menus directory
         this.MEALS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.url.meals"); //  the path  to the images of meals directory
     }
 
     @Override
-    public MenuEntity updateMenu(MenuDtoIn menuDtoIn, Integer idMenu) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException {
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn, Integer idMenu) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException {
 
-           IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", idMenu);
-           var menu =  menuDtoIn.toMenuEntityWithoutImage();
+        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", idMenu);
+        var menu = menuDtoIn.toMenuEntityWithoutImage();
+        IMenuService.ValidateMealID(menuDtoIn);
 
-          IMenuService.ValidateMealID(menuDtoIn);
-          var  menuUpdatedDoesExist =   this.checkExistingMenu(menu.getLabel(), menu.getDescription(), menu.getPrice());
 
-    return  null ;
+        var menuToUpdate = this.menuDao.findById(idMenu);
+        if (menuToUpdate.isEmpty()) {
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE updateMenu METHOD ", idMenu);
+            throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
+        }
+
+
+        var menuUpdatedDoesExist = this.checkExistingMenu(menu.getLabel(), menu.getDescription(), menu.getPrice());
+
+        if (menuUpdatedDoesExist.isPresent()) {
+            if (menuUpdatedDoesExist.get().getId() != menuToUpdate.get().getId()) {
+                MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menu.getLabel(), menu.getDescription(), menu.getPrice());
+                throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
+            }
+        }
+
+        var menuEntity = menuToUpdate.get();
+        menuEntity.setLabel(menu.getLabel());
+        menuEntity.setDescription(menu.getDescription());
+        menuEntity.setPrice(menu.getPrice());
+        menuEntity.setStatus(menu.getStatus());
+        menuEntity.setQuantity(menu.getQuantity());
+        menuEntity.setMeals(menu.getMeals());
+
+        if (menuDtoIn.getImage() != null && !menuDtoIn.getImage().isEmpty()) {
+            var oldImageName = menuEntity.getImage().getImagename();
+            var newImageName = this.imageService.updateImage(oldImageName, menuDtoIn.getImage(), this.MENUS_IMAGES_PATH);
+            menuEntity.getImage().setImagename(newImageName);
+        }
+
+        return this.menuDao.save(menuEntity);
+
     }
 
     @Override
-    public MenuEntity  removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
+    public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
 
         IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuID);
 
@@ -82,16 +112,16 @@ public class MenuService implements IMenuService {
         var imageName = menu.get().getImage().getImagename();
         this.imageService.deleteImage(imageName, this.MENUS_IMAGES_PATH);
         this.menuDao.delete(menu.get());
-        return  menu.get();
+        return menu.get();
     }
 
     @Override
     public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
-         IMenuService.ValidateMealID(menuDtoIn);
+        IMenuService.ValidateMealID(menuDtoIn);
 
-        var  menu  =   this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
+        var menu = this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
         if (menu.isPresent()) {
             MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
             throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
@@ -115,7 +145,7 @@ public class MenuService implements IMenuService {
 
         menuEntity.setCreatedDate(LocalDate.now());
 
-        return  this.menuDao.save(menuEntity);
+        return this.menuDao.save(menuEntity);
     }
 
     @Override
@@ -140,8 +170,8 @@ public class MenuService implements IMenuService {
 
 
     @Override
-    public Optional<MenuEntity> checkExistingMenu (String label, String description, BigDecimal price) {
-           return    this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
+    public Optional<MenuEntity> checkExistingMenu(String label, String description, BigDecimal price) {
+        return this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
 
     }
   /*  @Override
