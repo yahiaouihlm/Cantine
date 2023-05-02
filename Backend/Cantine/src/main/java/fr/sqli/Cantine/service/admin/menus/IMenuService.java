@@ -15,6 +15,7 @@ import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface IMenuService {
 
@@ -35,6 +36,9 @@ public interface IMenuService {
   }
 
 
+  public MenuEntity updateMenu(MenuDtoIn menuDtoIn ,  Integer idMenu ) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException;
+
+
   public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException;
 
 
@@ -47,7 +51,7 @@ public interface IMenuService {
 
 
 
-  public void checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException ;
+  public Optional<MenuEntity> checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException ;
 
 
 }

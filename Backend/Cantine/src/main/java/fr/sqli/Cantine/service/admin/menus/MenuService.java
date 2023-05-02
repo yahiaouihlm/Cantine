@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuService implements IMenuService {
@@ -50,6 +51,20 @@ public class MenuService implements IMenuService {
         this.MENUS_IMAGES_URL = environment.getProperty("sqli.cantine.images.url.menus"); // the link  to images of menus
         this.MENUS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.menus.path"); //  the path  to the images of menus directory
         this.MEALS_IMAGES_PATH = environment.getProperty("sqli.cantine.images.url.meals"); //  the path  to the images of meals directory
+    }
+
+    @Override
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn, Integer idMenu) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException {
+
+           IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", idMenu);
+           var menu =  menuDtoIn.toMenuEntityWithoutImage();
+
+        if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().isEmpty() || menuDtoIn.getMealIDs().size() == 0  ) {
+            MenuService.LOG.error("The menu doesn't contain any meal");
+            throw new InvalidMenuInformationException("The menu doesn't contain any meal");
+        }
+
+    return  null ;
     }
 
     @Override
@@ -74,12 +89,17 @@ public class MenuService implements IMenuService {
     public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
-        if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().size() == 0 || menuDtoIn.getMealIDs().isEmpty()) {
+        if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().isEmpty() || menuDtoIn.getMealIDs().size() == 0  ) {
             MenuService.LOG.error("The menu doesn't contain any meal");
             throw new InvalidMenuInformationException("The menu doesn't contain any meal");
         }
 
-        this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
+        var  menu  =   this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
+        if (menu.isPresent()) {
+            MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
+            throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
+        }
+
 
         List<MealEntity> mealsInMenu = new ArrayList<>();
         for (Integer mealID : menuDtoIn.getMealIDs()) {
@@ -121,7 +141,13 @@ public class MenuService implements IMenuService {
                 .toList();
     }
 
+
     @Override
+    public Optional<MenuEntity> checkExistingMenu (String label, String description, BigDecimal price) throws ExistingMenuException {
+           return    this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
+
+    }
+  /*  @Override
     public void checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException {
 
         var menu = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
@@ -132,5 +158,5 @@ public class MenuService implements IMenuService {
         }
 
 
-    }
+    }*/
 }
