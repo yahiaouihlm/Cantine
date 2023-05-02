@@ -85,10 +85,14 @@ public class MenuDtoIn extends  AbstractDtoIn {
 
 
     @JsonIgnore
-    public  List<Integer> fromStringMealIDsToIntegerMealIDs(){
-        return this.getMealIDs().stream().map((id)-> id.replaceAll("[^0-9]+", "")).map(
-                Integer::parseInt).toList();
-
+    public  List<Integer> fromStringMealIDsToIntegerMealIDs() throws  InvalidMenuInformationException{
+        try {
+            return this.getMealIDs().stream().map((id)-> id.replaceAll("[^0-9]+", "")).map(
+                    Integer::parseInt).toList();
+        }
+        catch (NumberFormatException e){
+            throw new InvalidMenuInformationException("INVALID  MEALS IDS");
+        }
     }
 
 
