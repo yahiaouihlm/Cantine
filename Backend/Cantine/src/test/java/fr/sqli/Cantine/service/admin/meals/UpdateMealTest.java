@@ -95,16 +95,16 @@ public class UpdateMealTest {
         // when
         Mockito.when(imageService.updateImage("oldImage", this.mealDtoIn.getImage(), "images/meals")).thenReturn("newImage");
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
-        Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1Updated", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(mealEntity));
+        Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(mealEntity));
         Mockito.when(mealDao.save(mealEntity)).thenReturn(mealEntity);
 
         var result = mealService.updateMeal(mealDtoIn, 1);
 
         // the spaces in label are removed in  MealDtoIn  and saved in database with spaces
-        Assertions.assertEquals("Meal1Updated", result.getLabel());
+        Assertions.assertEquals("Meal 1 Updated", result.getLabel());
         Assertions.assertEquals("Frites", result.getCategory());
         Assertions.assertEquals("newImage", result.getImage().getImagename());
-        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1Updated", mealEntity.getCategory(), mealEntity.getDescription());
+        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription());
         Mockito.verify(mealDao, Mockito.times(1)).findById(1);
         Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(1)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
@@ -116,7 +116,7 @@ public class UpdateMealTest {
         this.mealDtoIn.setLabel("Meal 1 Updated");
         this.mealDtoIn.setImage(null);
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
-        Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1Updated", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(mealEntity));
+        Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(mealEntity));
 
         Mockito.when(mealDao.save(mealEntity)).thenReturn(mealEntity);
 
@@ -124,10 +124,10 @@ public class UpdateMealTest {
         var result = mealService.updateMeal(mealDtoIn, 1);
 
         // the spaces in label are removed in  MealDtoIn  and saved in database with spaces
-        Assertions.assertEquals("Meal1Updated", result.getLabel());
+        Assertions.assertEquals("Meal 1 Updated", result.getLabel());
         Assertions.assertEquals("Frites", result.getCategory());
 
-        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1Updated", mealEntity.getCategory(), mealEntity.getDescription());
+        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription());
         Mockito.verify(mealDao, Mockito.times(1)).findById(1);
         Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
@@ -140,14 +140,14 @@ public class UpdateMealTest {
         var idMeal = 1;
         Mockito.when(mealDao.findById(idMeal)).thenReturn(Optional.of(mealEntity));
         // when  we  submit the  modification  of  the  meal, and we  check if  the  meal  already  exists  in  the  database we return  another  meal  with  the  another id
-        Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(new MealEntity() {{
+        Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(new MealEntity() {{
             setId(2);
         }}));
 
         Assertions.assertThrows(ExistingMeal.class, () -> {
             this.mealService.updateMeal(mealDtoIn, idMeal);
         });
-        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", mealEntity.getCategory(), mealEntity.getDescription());
+        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", mealEntity.getCategory(), mealEntity.getDescription());
         Mockito.verify(mealDao, Mockito.times(1)).findById(idMeal);
         Mockito.verify(mealDao, Mockito.times(0)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());

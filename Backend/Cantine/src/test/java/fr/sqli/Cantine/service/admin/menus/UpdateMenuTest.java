@@ -6,6 +6,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
@@ -65,7 +66,20 @@ public class UpdateMenuTest {
         this.menu.setMealIDs(Collections.singletonList("1"));
 
     }
+    @Test
+    void  updateMenuWithExistingTest () {
+        this.menuEntity = new MenuEntity();
+        Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
 
+        Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().replaceAll("\\s+", ""), this.menu.getDescription(),  this.menu.getPrice()))
+                  .thenReturn(Optional.of(this.menuEntity));
+
+        Assertions.assertThrows(ExistingMenuException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+
+        Mockito.verify(iMenuDao, Mockito.times(1)).findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel(), this.menu.getDescription(),  this.menu.getPrice());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findById(1);
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+    }
     @Test
     void  updateMenuWithMenuNotFoundTest () {
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.empty());
@@ -77,9 +91,7 @@ public class UpdateMenuTest {
 
 
 
-
-
-
+   /*************************************** status  ******************************************/
 
 
 
