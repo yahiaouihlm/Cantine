@@ -6,11 +6,15 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
+import fr.sqli.Cantine.service.images.exception.ImagePathException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +73,32 @@ public class UpdateMenuTest {
     }
 
 
-     /* TODO  continue  other  Tests  */
+     @Test
+     void updateMenuTest () throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, MenuNotFoundException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
+         this.menuEntity = new MenuEntity();
+         this.menuEntity.setLabel("Test label");
+         this.menuEntity.setDescription("Test description");
+         this.menuEntity.setPrice(new BigDecimal(1.5));
+         this.menuEntity.setId(1);
+         this.menuEntity.setImage(new ImageEntity());
+         this.menu.setImage(null);
+
+         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
+
+         Mockito.when(this.iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(),  this.menu.getPrice()))
+                 .thenReturn(Optional.of(this.menuEntity));
+
+         Mockito.when(this.iMenuDao.save(this.menuEntity)).thenReturn(this.menuEntity);
+
+          var  result = this.menuService.updateMenu(this.menu, 1 );
+            Assertions.assertEquals(this.menu.getLabel(), result.getLabel());
+            Assertions.assertEquals(this.menu.getDescription(), result.getDescription());
+            Assertions.assertEquals(this.menu.getPrice(), result.getPrice());
+
+         Mockito.verify(iMenuDao, Mockito.times(1)).findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel(), this.menu.getDescription(),  this.menu.getPrice());
+         Mockito.verify(iMenuDao, Mockito.times(1)).findById(1);
+         Mockito.verify(iMenuDao, Mockito.times(1)).save(this.menuEntity);
+     }
 
     @Test
     void  updateMenuWithInvalidMealsId () {
