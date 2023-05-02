@@ -22,6 +22,7 @@ public interface IMenuTest {
 
     final String GET_ONE_MENU_URL = BASE_MENU_URL + "/get";
 
+    final  String  GET_ALL_MENUS_URL = BASE_MENU_URL + "/getAll";
 
 
     /********************** Image **************************/

@@ -1,5 +1,6 @@
 package fr.sqli.Cantine.controller.admin.menus;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
@@ -16,8 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,17 +53,32 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
       this.menuEntity = null;
       this.menuDao.deleteAll();
          this.mealDao.deleteAll();
-    }
+
+  }
+  /************************************** Get All Menus *************************************/
+
+
+  void  getAllMenusWithEmptyDatabase() throws Exception {
+      this.menuDao.deleteAll();
+      var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_MENUS_URL));
+      result.andExpect(status().isOk())
+              .andExpect(content().string("[]"));
+  }
+
+
  /************************************* GetMenu By Id *************************************/
 
 
- /* TODO  :  continue To  work   upon  this  test  */
+
  @Test
  void getMenuByIdTest () throws Exception {
      var  idMeal= this.menuEntity.getId(); // id must be not exist in database
      var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL+ this.paramReq +idMeal ));
+
      result.andExpect( status().isOk());
-             /*.andExpect(content().json({"label" : "menu1" }));*/
+    result.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(idMeal)));
+     result.andExpect(MockMvcResultMatchers.jsonPath("$.label", CoreMatchers.is(this.menuEntity.getLabel())));
+     result.andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(this.menuEntity.getDescription())));
  }
 
 
@@ -102,5 +120,8 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
      result.andExpect( status().isNotAcceptable())
              .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("missingParam"))));
  }
+
+
+
 
 }
