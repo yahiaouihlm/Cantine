@@ -55,7 +55,7 @@ public class MenuService implements IMenuService {
     @Override
     public MenuEntity  removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
 
-        IMenuService.verifyMealInformation("THE CAN NOT BE NULL OR LESS THAN 0", menuID);
+        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuID);
 
         var menu = this.menuDao.findById(menuID);
 

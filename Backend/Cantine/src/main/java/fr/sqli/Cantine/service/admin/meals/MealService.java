@@ -142,7 +142,7 @@ public class MealService implements IMealService {
         }
 
         MealService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", id);
-        throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID ");
+        throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID");
     }
 
 
