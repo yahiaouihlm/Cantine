@@ -124,14 +124,14 @@ public class UpdateMenuTest {
     @Test
     void AddMenuWithTooHeightPriceTest(){
         this.menu.setPrice(new BigDecimal(1001   ));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
     @Test
     void AddMenuWithZeroPriceTest(){
         this.menu.setPrice( new BigDecimal(0));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () ->this.menuService.updateMenu(this.menu, 1 ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -139,7 +139,7 @@ public class UpdateMenuTest {
 
     void AddMenuWithNegativePriceTest(){
         this.menu.setPrice(new BigDecimal("-1"));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -147,7 +147,7 @@ public class UpdateMenuTest {
     @Test
     void AddMenuWithNullPriceTest () {
         this.menu.setPrice(null);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
