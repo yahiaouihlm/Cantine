@@ -93,6 +93,30 @@ class GetMealTest extends AbstractContainerConfig implements   IMealTest {
 
     /**************************************** Get meal by id tests ****************************************/
 
+    @Test
+    void getMenuByIdTest () throws Exception {
+        ImageEntity image = new ImageEntity();
+        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+
+        MealEntity meal  = new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1, 1, image);
+        var idMeal =  this.mealDao.save(meal).getId();
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq +idMeal ));
+
+        result.andExpect( status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(idMeal)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.label", CoreMatchers.is(meal.getLabel())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(meal.getDescription())));
+    }
+
+
+    @Test
+    void getMenuByIdWithOutMenu () throws Exception {
+        var  idMeal=  + 3; // id must be not exist in database
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL+ this.paramReq +idMeal ));
+        result.andExpect( status().isNotFound())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("mealNotFound"))));
+    }
+
 
 
     @Test
