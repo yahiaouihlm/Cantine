@@ -160,7 +160,7 @@ class AddAndRemoveMealTest {
     public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
 
         //  spaces  from  the  label  is   removed
-        Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
+        Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
 
         String imageName = "test-image.jpg";
         Mockito.when(imageService.uploadImage(mealDtoIn.getImage(), "images/meals")).thenReturn(imageName);
@@ -180,7 +180,7 @@ class AddAndRemoveMealTest {
         Assertions.assertEquals(mealDtoIn.getPrice(), result.getPrice());
         Assertions.assertNotNull(result.getImage());
 
-        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", mealDtoIn.getCategory(), mealDtoIn.getDescription());
+        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", mealDtoIn.getCategory(), mealDtoIn.getDescription());
         Mockito.verify(mealDao, Mockito.times(1)).save(Mockito.any(MealEntity.class));
         Mockito.verify(imageService, Mockito.times(1)).uploadImage(mealDtoIn.getImage(), "images/meals");
     }
@@ -227,12 +227,12 @@ class AddAndRemoveMealTest {
     void AddMealWithExistingMealTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
         //  the spaces are  removed  from  the  label
-        Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription())).thenReturn(Optional.of(this.mealEntity));
+        Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription())).thenReturn(Optional.of(this.mealEntity));
         Assertions.assertThrows(ExistingMeal.class,
                 () -> mealService.addMeal(mealDtoIn));
 
         Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
-        Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal1", this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription());
         Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
     }
 

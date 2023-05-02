@@ -5,10 +5,7 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,6 +57,11 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     }
 
+    @AfterEach
+    public void clearDataBase() {
+        this.mealDao.findAll();
+        this.mealDao.deleteAll();
+    }
     /**
      * make  one  Meal in  the  database
      * this  meal  will  be  used  only for    the  tests  of  the  method  addMealTestWithExistingMeal because we have to make a meal in DataBase
@@ -76,9 +78,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     //  clear  the  database  after  all
     // this  method  will  be  used  only for  the  tests  of  the  method  addMealTestWithExistingMeal because we have to clear the database after all tests (addMealTestWithExistingMeal)
 
-    public void clearDataBase() {
-        this.mealDao.deleteAll();
-    }
+
 
     @Test
     void addMealTestWithAllValidateInformation() throws Exception {
@@ -113,7 +113,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -137,7 +137,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t".toLowerCase());
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -161,7 +161,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "MEALTEST DESCRIPTION");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -184,7 +184,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim()+ " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -256,7 +256,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "MealTes t");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim()+ " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -281,7 +281,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", " M eal T e s t ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
@@ -307,7 +307,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.add("label", " M e a  l T e s t ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).replaceAll("\\s+", "") + " AND A CATEGORY = " + this.formData.getFirst("category")
+        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
         // 3  Test  With  Trying  to  add The Same Meal again
