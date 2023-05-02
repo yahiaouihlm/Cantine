@@ -31,9 +31,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.ErrorManager;
 
 @Service
 public class MenuService implements IMenuService {
+
     private static final Logger LOG = LogManager.getLogger();
     private final String MENUS_IMAGES_PATH;
 
@@ -59,10 +61,8 @@ public class MenuService implements IMenuService {
            IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", idMenu);
            var menu =  menuDtoIn.toMenuEntityWithoutImage();
 
-        if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().isEmpty() || menuDtoIn.getMealIDs().size() == 0  ) {
-            MenuService.LOG.error("The menu doesn't contain any meal");
-            throw new InvalidMenuInformationException("The menu doesn't contain any meal");
-        }
+          IMenuService.ValidateMealID(menuDtoIn);
+          var  menuUpdatedDoesExist =   this.checkExistingMenu(menu.getLabel(), menu.getDescription(), menu.getPrice());
 
     return  null ;
     }
@@ -89,10 +89,7 @@ public class MenuService implements IMenuService {
     public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
-        if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().isEmpty() || menuDtoIn.getMealIDs().size() == 0  ) {
-            MenuService.LOG.error("The menu doesn't contain any meal");
-            throw new InvalidMenuInformationException("THE MENU DOESN'T CONTAIN ANY MEAL");
-        }
+         IMenuService.ValidateMealID(menuDtoIn);
 
         var  menu  =   this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
         if (menu.isPresent()) {
@@ -143,7 +140,7 @@ public class MenuService implements IMenuService {
 
 
     @Override
-    public Optional<MenuEntity> checkExistingMenu (String label, String description, BigDecimal price) throws ExistingMenuException {
+    public Optional<MenuEntity> checkExistingMenu (String label, String description, BigDecimal price) {
            return    this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
 
     }
