@@ -30,7 +30,7 @@ public class MenuDtoIn extends  AbstractDtoIn {
      *  the client will send  only  the ids of the meals ( check the meals id validity in the service) and the service will fetch the meals from the database
      */
 
-    private List <Integer> mealIDs;
+    private List <String> mealIDs;
 
     /**
      * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid
@@ -84,6 +84,13 @@ public class MenuDtoIn extends  AbstractDtoIn {
     }
 
 
+    @JsonIgnore
+    public  List<Integer> fromStringMealIDsToIntegerMealIDs(){
+        return this.getMealIDs().stream().map((id)-> id.replaceAll("[^0-9]+", "")).map(
+                Integer::parseInt).toList();
+
+    }
+
 
 
     public String getLabel() {
@@ -134,11 +141,11 @@ public class MenuDtoIn extends  AbstractDtoIn {
         this.quantity = quantity;
     }
 
-    public List<Integer> getMealIDs() {
+    public List<String> getMealIDs() {
         return mealIDs;
     }
 
-    public void setMealIDs(List<Integer> mealIDs) {
+    public void setMealIDs(List<String> mealIDs) {
         this.mealIDs = mealIDs;
     }
 }

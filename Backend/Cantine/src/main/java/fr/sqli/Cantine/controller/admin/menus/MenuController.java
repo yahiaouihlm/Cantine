@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static fr.sqli.Cantine.controller.admin.menus.IMenuController.MENUS_URL_ADMIN;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping(value  = MENUS_URL_ADMIN)
@@ -33,28 +34,40 @@ public class MenuController implements   IMenuController {
     }
 
 
+
+    @PutMapping (value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
     @Override
+    public ResponseEntity<String> update(Integer idMenu, MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException {
+         this.menuService.updateMenu( menuDtoIn, idMenu);
+        return ResponseEntity.ok(MENU_UPDATED_SUCCESSFULLY);
+    }
+
+
     @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
+    @Override
     public ResponseEntity<String> deleteMenu(Integer idMenu) throws InvalidMenuInformationException, MenuNotFoundException, ImagePathException {
         this.menuService.removeMenu(idMenu);
         return ResponseEntity.ok(MENU_DELETED_SUCCESSFULLY);
     }
 
+
+    @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
     @Override
-    @PostMapping(value = ENDPOINT_ADD_MENU_URL)
     public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
          this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(MENU_ADDED_SUCCESSFULLY);
     }
 
-    @Override
+
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
+    @Override
     public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException {
            return  ResponseEntity.ok(this.menuService.getMenuById(idMenu));
     }
 
-    @Override
+
     @GetMapping(value = ENDPOINT_GET_ALL_MENUS_URL)
+    @Override
     public ResponseEntity<List<MenuDtout>> getAllMenus() {
         return ResponseEntity.ok(this.menuService.getAllMenus());
     }

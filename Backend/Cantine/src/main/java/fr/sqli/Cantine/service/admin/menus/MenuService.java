@@ -86,8 +86,9 @@ public class MenuService implements IMenuService {
         menuEntity.setStatus(menu.getStatus());
         menuEntity.setQuantity(menu.getQuantity());
 
+        var  mealIDs = menuDtoIn.fromStringMealIDsToIntegerMealIDs();
         List<MealEntity> mealsInMenu = new ArrayList<>(); //  check  existing meals in the   database  and  add them to the menu
-        for (Integer mealID : menuDtoIn.getMealIDs()) {
+        for (Integer mealID : mealIDs ) {
             var meal = this.mealService.getMealEntityByID(mealID);
             mealsInMenu.add(meal);
         }
@@ -134,9 +135,10 @@ public class MenuService implements IMenuService {
             throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
         }
 
-
+        List<Integer> mealIDs = menuDtoIn.fromStringMealIDsToIntegerMealIDs();
         List<MealEntity> mealsInMenu = new ArrayList<>();
-        for (Integer mealID : menuDtoIn.getMealIDs()) {
+
+        for (Integer mealID : mealIDs) {
             var meal = this.mealService.getMealEntityByID(mealID);
             mealsInMenu.add(meal);
         }
@@ -181,16 +183,5 @@ public class MenuService implements IMenuService {
         return this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
 
     }
-  /*  @Override
-    public void checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException {
 
-        var menu = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
-
-        if (menu.isPresent()) {
-            MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", label, description, price);
-            throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
-        }
-
-
-    }*/
 }

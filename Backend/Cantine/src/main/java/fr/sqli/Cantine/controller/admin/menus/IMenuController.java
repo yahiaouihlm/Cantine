@@ -20,18 +20,24 @@ public interface IMenuController {
 
     /*------------------ ENDPOINTS ------------------*/
     String MENUS_URL_ADMIN = "/cantine/api/admin/menus";
+
+    String  ENDPOINT_UPDATE_MENU_URL = "/update";
     String ENDPOINT_ADD_MENU_URL = "/add";
+    String ENDPOINT_DELETE_MENU_URL = "/delete";
     String ENDPOINT_GET_ALL_MENUS_URL = "/getAll";
 
     String ENDPOINT_GET_ONE_MENU_URL = "/get";
 
-    String ENDPOINT_DELETE_MENU_URL = "/delete";
+
 
     /*------------------ MESSAGES ------------------*/
+    String  MENU_UPDATED_SUCCESSFULLY = "MENU UPDATED SUCCESSFULLY";
     String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
     String MENU_DELETED_SUCCESSFULLY = "MENU DELETED SUCCESSFULLY";
 
     /*------------------ METHODS ------------------*/
+
+    public ResponseEntity<String> update (@RequestParam("idMenu")Integer idMenu,   MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException;
 
 
     public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException, MenuNotFoundException, ImagePathException;
