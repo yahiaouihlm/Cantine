@@ -5,10 +5,17 @@ import fr.sqli.Cantine.dto.in.MenuDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -17,6 +24,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
 
+
+@ExtendWith(MockitoExtension.class)
 public class UpdateMenuTest {
     @Mock
     private IMenuDao iMenuDao;
@@ -38,6 +47,8 @@ public class UpdateMenuTest {
 
     @BeforeEach
     void  init () throws IOException {
+
+
         this.menu =  new MenuDtoIn();
         this.menu.setLabel("label test");
         this.menu.setDescription("description  test");
@@ -51,6 +62,20 @@ public class UpdateMenuTest {
                 new FileInputStream("images/menus/ImageMenuForTest.jpg")));
         this.menu.setMealIDs(Collections.singletonList("1"));
 
+    }
+
+
+    /************************************ Menu ID************************************/
+
+    @Test
+    void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu,-1));
+        Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
+    }
+    @Test
+    void getMenuByIdWithNullIdTest()  {
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.updateMenu(this.menu,-1));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 
 }
