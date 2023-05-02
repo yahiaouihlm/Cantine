@@ -67,6 +67,21 @@ public class UpdateMenuTest {
         this.menu.setMealIDs(Collections.singletonList("1"));
 
     }
+
+
+    @Test
+    void  updateMenuWithInvalidMealsId () {
+        this.menuEntity = new MenuEntity();
+        this.menuEntity.setLabel("Test label");
+        this.menuEntity.setDescription("Test description");
+        this.menuEntity.setPrice(new BigDecimal(1.5));
+        this.menuEntity.setId(1);
+        this.menuEntity.setImage(new ImageEntity());
+        this.menu.setMealIDs(Collections.singletonList("invalid id"));
+        Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
+    }
     @Test
     void  updateMenuWithExistingTest () {
         this.menuEntity = new MenuEntity();
