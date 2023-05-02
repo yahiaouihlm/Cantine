@@ -60,7 +60,7 @@ public class AddMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("images/menus/ImageMenuForTest.jpg")));
-        this.menu.setMealIDs(Collections.singletonList(1));
+        this.menu.setMealIDs(Collections.singletonList("1"));
 
     }
 
