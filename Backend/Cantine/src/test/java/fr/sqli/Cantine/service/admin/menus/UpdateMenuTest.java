@@ -2,6 +2,7 @@ package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.MenuDtoIn;
+import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
@@ -69,10 +70,18 @@ public class UpdateMenuTest {
     @Test
     void  updateMenuWithExistingTest () {
         this.menuEntity = new MenuEntity();
+        this.menuEntity.setLabel("Test label");
+        this.menuEntity.setDescription("Test description");
+        this.menuEntity.setPrice(new BigDecimal(1.5));
+        this.menuEntity.setId(1);
+        this.menuEntity.setImage(new ImageEntity());
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
 
-        Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().replaceAll("\\s+", ""), this.menu.getDescription(),  this.menu.getPrice()))
-                  .thenReturn(Optional.of(this.menuEntity));
+        var  menuWithOtherID =  new MenuEntity(); // change menu id  after  the     tests
+          menuWithOtherID.setId(2);
+
+        Mockito.when(this.iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(),  this.menu.getPrice()))
+                  .thenReturn(Optional.of(menuWithOtherID));
 
         Assertions.assertThrows(ExistingMenuException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
 
