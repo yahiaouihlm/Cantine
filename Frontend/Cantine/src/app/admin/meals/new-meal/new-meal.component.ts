@@ -28,8 +28,7 @@ export class NewMealComponent {
     }
 
      onSubmit() {
-        let test =  this.openDialog(); //  we  have  to  test  the  return  value  of  the  dialog  to  send  the  meal  or  not
-        console.log(test)
+
         this.submitted = true;
         if (this.newMeal.invalid) {
             return;
@@ -68,5 +67,22 @@ export class NewMealComponent {
     }
 
 
+    confirmAndSendNewMeal(): void {
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
+            width: '40%',
+        });
+
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                // this.sendNewMeal();
+                console.log("ok")
+            } else {
+                return;
+            }
+        });
+
+
+    }
 
 }
