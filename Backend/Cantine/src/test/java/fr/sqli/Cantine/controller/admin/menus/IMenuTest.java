@@ -17,6 +17,8 @@ import java.util.Map;
 
 public interface IMenuTest {
     final  String BASE_MENU_URL  =  "/cantine/api/admin/menus";
+
+    final  String  UPDATE_MENU_URL = BASE_MENU_URL + "/update";
     final String ADD_MENU_URL = BASE_MENU_URL + "/add";
     final String DELETE_MENU_URL = BASE_MENU_URL + "/delete";
 
