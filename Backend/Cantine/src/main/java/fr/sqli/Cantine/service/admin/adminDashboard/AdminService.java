@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.AdminEntity;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -40,6 +41,11 @@ public class AdminService implements  IAdminDashboard {
             throw  new InvalidPersonInformationException(" YOUR FUNCTIONALITY IS NOT VALID");
         }
 
+
+    }
+
+    @Override
+    public void exstingAdmin(AdminDtoIn adminDtoIn) throws ExistingAdminException {
 
     }
 }
