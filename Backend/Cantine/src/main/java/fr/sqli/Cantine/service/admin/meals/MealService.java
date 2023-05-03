@@ -5,7 +5,7 @@ import fr.sqli.Cantine.dto.in.food.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
@@ -45,7 +45,7 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
@@ -66,7 +66,7 @@ public class MealService implements IMealService {
         Optional<MealEntity> mealEntity1 = this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
         if (mealEntity1.isPresent()) {
             if (mealEntity1.get().getId() != meal.getId()) { // if the  meal  is  already  present  in  the  database and  the  id  are   different  from  the  id  of  the  meal  we  want  to  update  we  throw  an  exception
-                throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
+                throw new ExistingMealException("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
             }
         }
 
@@ -105,13 +105,13 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
 
         MealEntity meal = mealDtoIn.toMealEntity();
 
         //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
-            throw new ExistingMeal("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
+            throw new ExistingMealException("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
         }
         MultipartFile image = mealDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
@@ -147,7 +147,7 @@ public class MealService implements IMealService {
 
 
     @Override
-    public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMeal {
+    public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMealException {
         return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label, category, description);
 
     }

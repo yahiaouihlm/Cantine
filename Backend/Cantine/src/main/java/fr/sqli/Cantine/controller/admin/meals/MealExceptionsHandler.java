@@ -1,7 +1,7 @@
 package fr.sqli.Cantine.controller.admin.meals;
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
@@ -21,8 +21,8 @@ public class MealExceptionsHandler {
      * @param e ExistingMeal exception when the meal with the same  label ,  category and description already exist
      * @return ResponseEntity<ExceptionDtout> with the message of the exception
      */
-    @ExceptionHandler(ExistingMeal.class)
-    public ResponseEntity<ExceptionDtout> handleExistingMeal(ExistingMeal e) {
+    @ExceptionHandler(ExistingMealException.class)
+    public ResponseEntity<ExceptionDtout> handleExistingMeal(ExistingMealException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 

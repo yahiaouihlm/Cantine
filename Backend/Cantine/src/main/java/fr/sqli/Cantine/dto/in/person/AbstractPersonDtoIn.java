@@ -13,6 +13,10 @@ public  abstract  class AbstractPersonDtoIn {
     private  String phone;
     private MultipartFile image;
 
+
+
+
+
     public String getFirstname() {
         return firstname;
     }

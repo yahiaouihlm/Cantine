@@ -2,7 +2,7 @@ package fr.sqli.Cantine.controller.admin.meals;
 
 import fr.sqli.Cantine.dto.in.food.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
@@ -39,13 +39,13 @@ public interface IMealController {
 
     /*------------------ METHODS ------------------*/
 
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException ;
+    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException ;
 
 
     public ResponseEntity<String> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundAdminException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException ;
 
 
-    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException ;
+    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException ;
 
 
 

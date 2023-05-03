@@ -4,7 +4,7 @@ package fr.sqli.Cantine.controller.admin.meals;
 import fr.sqli.Cantine.dto.in.food.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.service.admin.meals.MealService;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
@@ -39,7 +39,7 @@ public class MealController implements IMealController {
 
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
 
         this.mealService.updateMeal(mealDtoIn, mealDtoIn.getId()  );
         return ResponseEntity.ok(MEAL_UPDATED_SUCCESSFULLY);
@@ -54,7 +54,7 @@ public class MealController implements IMealController {
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMeal, InvalidMenuInformationException {
+    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok(MEAL_ADDED_SUCCESSFULLY);
     }

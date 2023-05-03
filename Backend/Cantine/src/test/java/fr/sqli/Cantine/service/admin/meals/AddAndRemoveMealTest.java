@@ -6,7 +6,7 @@ import fr.sqli.Cantine.dto.in.food.MealDtoIn;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMeal;
+import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
@@ -145,7 +145,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with too  long category")
-    public void AddMealWithTooLongCategoryTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWithTooLongCategoryTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMealException, InvalidMenuInformationException {
         this.mealDtoIn.setCategory("test".repeat(45));
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
@@ -157,7 +157,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMealException, InvalidMenuInformationException {
 
         //  spaces  from  the  label  is   removed
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
@@ -187,7 +187,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with  too short label")
-    void AddMealWithTooShortLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    void AddMealWithTooShortLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMealException, InvalidMenuInformationException {
         this.mealDtoIn.setLabel("   M              e        "); //  spaces  from  the  label  is   removed
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
@@ -198,7 +198,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with status out of bound status = -1")
-    public void AddMealWithStatusOutOfBoundTest1() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWithStatusOutOfBoundTest1() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMealException, InvalidMenuInformationException {
         this.mealDtoIn.setStatus(-1);
 
         Assertions.assertThrows(InvalidMealInformationException.class,
@@ -211,7 +211,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with status out of bound status = 3")
-    public void AddMealWithStatusOutOfBoundTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMeal, InvalidMenuInformationException {
+    public void AddMealWithStatusOutOfBoundTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException, ExistingMealException, InvalidMenuInformationException {
         this.mealDtoIn.setStatus(3);
 
         Assertions.assertThrows(InvalidMealInformationException.class,
@@ -228,7 +228,7 @@ class AddAndRemoveMealTest {
 
         //  the spaces are  removed  from  the  label
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1", this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription())).thenReturn(Optional.of(this.mealEntity));
-        Assertions.assertThrows(ExistingMeal.class,
+        Assertions.assertThrows(ExistingMealException.class,
                 () -> mealService.addMeal(mealDtoIn));
 
         Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
