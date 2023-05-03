@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 //import {environment} from "../../../environments/environment";
 import {HttpClient, HttpErrorResponse, HttpStatusCode} from "@angular/common/http";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {catchError, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,9 @@ export class MealServiceService {
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   constructor(private httpClient: HttpClient) { }
   addMeal(meal: Object ) { //  we have  to  add  a  token  after
-    return this.httpClient.post <string>(this.ADD_MEAL_URL, meal).pipe();
+    return this.httpClient.post <string>(this.ADD_MEAL_URL, meal).pipe(
+         catchError( (error) => this.handleError(error))
+    );
   }
 
     private handleError(error: HttpErrorResponse) {
@@ -31,6 +35,7 @@ export class MealServiceService {
         else {
                 console.log(" error  inconnu  !")
          }
+        return throwError(() => new Error('Something bad happened; please try again later.'));
 
     }
 }
