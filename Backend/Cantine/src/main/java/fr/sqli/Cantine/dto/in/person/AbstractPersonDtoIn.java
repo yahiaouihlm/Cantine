@@ -17,7 +17,7 @@ public  abstract  class AbstractPersonDtoIn {
     private  String phone;
     private MultipartFile image;
 
-    public  void ValidatePersonInformationWithOutImageAndPhone() throws InvalidPersonInformationException {
+    protected   void ValidatePersonInformationWithOutPhone() throws InvalidPersonInformationException {
         if  (this.firstname == null || this.firstname.isEmpty() || this.firstname.isBlank())
             throw new InvalidPersonInformationException("FIRSTNAME IS  REQUIRED");
 
@@ -64,10 +64,7 @@ public  abstract  class AbstractPersonDtoIn {
 
     }
 
-    protected void imageValidator () throws InvalidPersonInformationException {
-        if (this.image == null || this.image.isEmpty() || this.image.isEmpty())
-            throw new InvalidPersonInformationException("IMAGE IS  REQUIRED");
-    }
+
 
 
 

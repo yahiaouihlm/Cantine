@@ -12,7 +12,7 @@ public class FunctionEntity {
     @Column(unique=true, nullable=false)
     private Integer id;
 
-    @Column(name = "name",  nullable=false, length=99)
+    @Column(name = "name",  nullable=false, length=299)
     private  String name  ;
 
     public Integer getId() {
