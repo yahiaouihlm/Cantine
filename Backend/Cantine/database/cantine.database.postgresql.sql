@@ -26,17 +26,17 @@ CREATE TABLE IF NOT EXISTS  class_id {
 -- Table `cantiniere`.`function`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS  "function" {
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    }
 
+CREATE TABLE IF NOT EXISTS "function" (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+    );
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`Student`
 -- -----------------------------------------------------
 
-CREATE TABLE  IF NOT EXISTS  studient {
+CREATE TABLE  IF NOT EXISTS  studient (
     id SERIAL PRIMARY KEY,
     "name" VARCHAR(100) NOT NULL,
     fullname VARCHAR(100) NOT NULL,
@@ -54,11 +54,11 @@ CREATE TABLE  IF NOT EXISTS  studient {
 
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (class_id) REFERENCES class_id (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    }
+    )
 -- -----------------------------------------------------
 -- Table `cantiniere`.`admin`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS "admin" {
+CREATE  TABLE IF NOT EXISTS "admin" (
       id SERIAL PRIMARY KEY,
       "name" VARCHAR(100) NOT NULL,
       fullname VARCHAR(100) NOT NULL,
@@ -75,11 +75,11 @@ CREATE  TABLE IF NOT EXISTS "admin" {
       unique(email),
       FOREIGN KEY (function_id) REFERENCES "function" (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
       FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
-    }
+    )
 
 
 
- CREATE table  if NOT EXIST payment {
+ CREATE table  if NOT EXIST payment (
     id SERIAL PRIMARY KEY,
     student_id INT NOT NULL,
     admin_id INT NOT NULL,
@@ -88,13 +88,13 @@ CREATE  TABLE IF NOT EXISTS "admin" {
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (admin_id) REFERENCES admin (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 
-}
+)
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`order`
 -- -----------------------------------------------------
 
-CREATE table  if NOT EXIST "order" {
+CREATE table  if NOT EXIST "order" (
      id SERIAL PRIMARY KEY,
      student_id INT NOT NULL,
      status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
@@ -105,7 +105,7 @@ CREATE table  if NOT EXIST "order" {
      qr_code VARCHAR(100) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
-}
+)
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`plat`
