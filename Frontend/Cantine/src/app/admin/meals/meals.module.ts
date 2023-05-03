@@ -7,6 +7,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {ValidatorDialogComponent} from "./validator-dialog/validator-dialog.component";
 import { AllMealsComponent } from './all-meals/all-meals.component';
+import { MainMealsComponent } from './main-meals/main-meals.component';
 
 
 
@@ -27,7 +28,8 @@ const routes: Routes = [
   declarations: [
     NewMealComponent,
       ValidatorDialogComponent,
-      AllMealsComponent
+      AllMealsComponent,
+      MainMealsComponent
 
   ],
     imports: [
