@@ -9,6 +9,29 @@ CREATE TABLE IF NOT EXISTS image(
 );
 
 
+-- -----------------------------------------------------
+-- Table `cantiniere`.`admin`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS "admin" {
+      id SERIAL PRIMARY KEY,
+      "name" VARCHAR(100) NOT NULL,
+      fullname VARCHAR(100) NOT NULL,
+      birthdate DATE NOT NULL,
+      registration_date DATE NOT NULL,
+      email VARCHAR(300) NOT NULL,
+      password VARCHAR(2000) NOT NULL,
+      town VARCHAR(100) NOT NULL,
+      address VARCHAR(100) NOT NULL,
+      phone VARCHAR(100) NOT NULL,
+      function_id INT NOT NULL,
+      image_idimage INT NOT NULL,
+      status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+      FOREIGN KEY (function_id) REFERENCES "function" (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+      FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
+    }
+
+
+
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`plat`
