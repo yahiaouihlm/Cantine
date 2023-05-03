@@ -44,8 +44,8 @@ CREATE TABLE  IF NOT EXISTS  studient (
     registration_date DATE NOT NULL,
     email VARCHAR(300) NOT NULL,
     password VARCHAR(2000) NOT NULL,
-    town VARCHAR(100) NOT NULL,
-    phone VARCHAR(100);
+    town VARCHAR(400) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
     class_id INT NOT NULL,
     image_idimage INT NOT NULL,
     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
@@ -66,9 +66,9 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       registration_date DATE NOT NULL,
       email VARCHAR(300) NOT NULL,
       password VARCHAR(2000) NOT NULL,
-      town VARCHAR(100) NOT NULL,
-      address VARCHAR(100) NOT NULL,
-      phone VARCHAR(100) NOT NULL,
+      town VARCHAR(400) NOT NULL,
+      address VARCHAR(1000) NOT NULL,
+      phone VARCHAR(50) NOT NULL,
       function_id INT NOT NULL,
       image_idimage INT NOT NULL,
       status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
