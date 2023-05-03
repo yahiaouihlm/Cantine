@@ -2,7 +2,7 @@ package fr.sqli.Cantine.service.admin.menus;
 
 
 import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.dto.in.MenuDtoIn;
+import fr.sqli.Cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.Cantine.dto.out.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -17,7 +17,6 @@ import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.ErrorManager;
 
 @Service
 public class MenuService implements IMenuService {

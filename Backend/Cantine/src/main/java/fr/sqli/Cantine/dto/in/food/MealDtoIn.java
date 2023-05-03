@@ -1,6 +1,7 @@
-package fr.sqli.Cantine.dto.in;
+package fr.sqli.Cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fr.sqli.Cantine.dto.in.food.AbstractDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;

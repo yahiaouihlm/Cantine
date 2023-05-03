@@ -1,14 +1,13 @@
 package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.dto.in.MenuDtoIn;
+import fr.sqli.Cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 

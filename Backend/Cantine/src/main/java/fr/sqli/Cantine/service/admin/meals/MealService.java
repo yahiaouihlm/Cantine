@@ -1,7 +1,7 @@
 package fr.sqli.Cantine.service.admin.meals;
 
 import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.dto.in.MealDtoIn;
+import fr.sqli.Cantine.dto.in.food.MealDtoIn;
 import fr.sqli.Cantine.dto.out.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;

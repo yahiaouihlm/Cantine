@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.dto.in;
+package fr.sqli.Cantine.dto.in.food;
 
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
