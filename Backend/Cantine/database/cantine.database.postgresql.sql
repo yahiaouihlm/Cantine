@@ -8,16 +8,30 @@ CREATE TABLE IF NOT EXISTS image(
     imageName VARCHAR(400) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS  class {
+-- -----------------------------------------------------
+-- Table `cantiniere`.`class_id`
+-- -----------------------------------------------------
+
+
+CREATE TABLE IF NOT EXISTS  class_id {
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
 
     }
+
+-- -----------------------------------------------------
+-- Table `cantiniere`.`function`
+-- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS  "function" {
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     }
+
+
+-- -----------------------------------------------------
+-- Table `cantiniere`.`Student`
+-- -----------------------------------------------------
 
 CREATE TABLE  IF NOT EXISTS  studient {
     id SERIAL PRIMARY KEY,
@@ -29,8 +43,12 @@ CREATE TABLE  IF NOT EXISTS  studient {
     password VARCHAR(2000) NOT NULL,
     town VARCHAR(100) NOT NULL,
     phone VARCHAR(100);
-class_id INT NOT NULL,
+    class_id INT NOT NULL,
+    image_idimage INT NOT NULL,
+    status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
 
+    FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (class_id) REFERENCES class_id (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     }
 -- -----------------------------------------------------
 -- Table `cantiniere`.`admin`
@@ -55,6 +73,31 @@ CREATE  TABLE IF NOT EXISTS "admin" {
 
 
 
+ CREATE table  if NOT EXIST payment {
+    id SERIAL PRIMARY KEY,
+    student_id INT NOT NULL,
+    admin_id INT NOT NULL,
+    amount DECIMAL(5,2) NOT NULL,
+    payement_date DATE NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (admin_id) REFERENCES admin (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+
+}
+
+-- -----------------------------------------------------
+-- Table `cantiniere`.`order`
+-- -----------------------------------------------------
+
+CREATE table  if NOT EXIST "order" {
+     id SERIAL PRIMARY KEY,
+     student_id INT NOT NULL,
+     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+     creation_date DATE NOT NULL,
+     creation_time TIME NOT NULL,
+     price DECIMAL(5,2) NOT NULL,
+     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+    FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+}
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`plat`
