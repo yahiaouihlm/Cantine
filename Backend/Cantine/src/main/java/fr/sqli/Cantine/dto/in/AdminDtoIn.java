@@ -1,2 +1,4 @@
-package fr.sqli.Cantine.dto.in;public class AdminDtoIn {
+package fr.sqli.Cantine.dto.in;
+
+public class AdminDtoIn {
 }
