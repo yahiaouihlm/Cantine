@@ -45,7 +45,7 @@ CREATE TABLE  IF NOT EXISTS  studient (
     email VARCHAR(300) NOT NULL,
     password VARCHAR(2000) NOT NULL,
     town VARCHAR(400) NOT NULL,
-    phone VARCHAR(50) NOT NULL,
+    phone VARCHAR(50) ,
     class_id INT NOT NULL,
     image_idimage INT NOT NULL,
     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
