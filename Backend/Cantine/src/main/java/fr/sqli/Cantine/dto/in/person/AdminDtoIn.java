@@ -35,7 +35,8 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
             throw new InvalidPersonInformationException("function is required");
         }
     }
-    public String getFunction() {
+    public String getFunction() throws InvalidPersonInformationException {
+        functionValidator();
         return function;
     }
 

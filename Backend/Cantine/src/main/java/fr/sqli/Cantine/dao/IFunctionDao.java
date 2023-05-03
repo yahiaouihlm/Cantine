@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IFunctionDao extends JpaRepository<FunctionEntity, Integer> {
+    public  FunctionEntity findByName(String name);
 }
