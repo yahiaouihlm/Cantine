@@ -1,6 +1,6 @@
 package fr.sqli.Cantine.dto.in.person;
 
-import fr.sqli.Cantine.service.admin.registration.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;

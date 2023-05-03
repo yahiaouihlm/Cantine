@@ -1,10 +1,8 @@
 package fr.sqli.Cantine.dto.in.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.service.admin.registration.exceptions.InvalidPersonInformationException;
-import org.springframework.web.multipart.MultipartFile;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 
 public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
