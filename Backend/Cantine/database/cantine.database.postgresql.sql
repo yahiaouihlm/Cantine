@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS  class_id {
 
 CREATE TABLE IF NOT EXISTS "function" (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(300) NOT NULL
     );
 
 -- -----------------------------------------------------
