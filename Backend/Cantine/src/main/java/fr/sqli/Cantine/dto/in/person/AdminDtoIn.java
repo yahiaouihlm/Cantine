@@ -31,7 +31,12 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
     }
 
 
-
+   @JsonIgnore
+   public  void  functionValidator() throws InvalidPersonInformationException {
+        if (this.function == null || this.function.isEmpty()) {
+            throw new InvalidPersonInformationException("function is required");
+        }
+    }
     public String getFunction() {
         return function;
     }

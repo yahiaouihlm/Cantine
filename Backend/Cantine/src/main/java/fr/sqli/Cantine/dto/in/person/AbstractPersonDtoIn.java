@@ -39,11 +39,32 @@ public  abstract  class AbstractPersonDtoIn {
         if (this.adresse == null || this.adresse.isEmpty() || this.adresse.isBlank())
             throw new InvalidPersonInformationException("ADRESSE IS  REQUIRED");
 
+        if  (this.firstname.length() < 3)
+            throw new InvalidPersonInformationException("FIRSTNAME MUST BE AT LEAST 3 CHARACTERS");
+
+        if  (this.lastname.length() < 3)
+            throw new InvalidPersonInformationException("LASTNAME MUST BE AT LEAST 3 CHARACTERS");
+
+        if  (this.password.length() < 6)
+            throw new InvalidPersonInformationException("PASSWORD MUST BE AT LEAST 6 CHARACTERS");
+
+        if (this.firstname.length() > 90 )
+            throw new InvalidPersonInformationException("FIRSTNAME MUST BE LESS THAN 90 CHARACTERS");
+
+        if (this.lastname.length() > 90 )
+            throw new InvalidPersonInformationException("LASTNAME MUST BE LESS THAN 90 CHARACTERS");
+
+         if (this.email.length() > 90 )
+            throw new InvalidPersonInformationException("EMAIL MUST BE LESS THAN 90 CHARACTERS");
+
+         if (this.password.length() > 20 )
+            throw new InvalidPersonInformationException("PASSWORD MUST BE LESS THAN 20 CHARACTERS");
+
     }
 
 
     private   void birthdateValidator () throws InvalidPersonInformationException {
-        if (this.birthdateAsString != null && !this.birthdateAsString.isEmpty() && !this.birthdateAsString.isBlank())
+        if (this.birthdateAsString == null || this.birthdateAsString.isEmpty() || this.birthdateAsString.isBlank())
               throw  new InvalidPersonInformationException("BIRTHDATE IS  REQUIRED");
         try {
             this.birthdate = LocalDate.parse(this.birthdateAsString);
