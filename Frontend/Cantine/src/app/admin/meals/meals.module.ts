@@ -15,14 +15,17 @@ import { MainMealsComponent } from './main-meals/main-meals.component';
 
 
 const routes: Routes = [
-  {path: '' , component:  AllMealsComponent,  /*TODO  make  this compenet  as the  main  shell  of our module    */
+
+  {path: '',
     children: [
+      {path: '', component: AllMealsComponent},
       {path: 'new', component: NewMealComponent},
+
     ]
   },
 
-  {path : 'meals',  redirectTo: 'all', pathMatch: 'full'}
 
+  //
 ];
 @NgModule({
   declarations: [

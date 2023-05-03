@@ -7,11 +7,12 @@ import {HttpClient} from "@angular/common/http";
 })
 export class MealServiceService {
  // private apiUrl = environment.apiUrl;
-  //private BASIC_ENDPOINT = this.apiUrl + 'admin/meals';
+  private BASIC_ENDPOINT = "http://localhost:8080/cantine" + 'admin/api/meals';
 
 
   //private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   constructor(private httpClient: HttpClient) { }
+  addMeal(meal: any) {
 
-
+  }
 }
