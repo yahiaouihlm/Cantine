@@ -72,6 +72,7 @@ CREATE  TABLE IF NOT EXISTS "admin" {
       function_id INT NOT NULL,
       image_idimage INT NOT NULL,
       status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+      unique(email),
       FOREIGN KEY (function_id) REFERENCES "function" (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
       FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
     }
@@ -100,7 +101,9 @@ CREATE table  if NOT EXIST "order" {
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
-     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */pour fai
+     qr_code VARCHAR(100) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
+     unique(qr_code),
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 }
 
