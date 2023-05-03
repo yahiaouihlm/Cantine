@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS "function" (
 
 CREATE TABLE  IF NOT EXISTS  studient (
     id SERIAL PRIMARY KEY,
-    "name" VARCHAR(100) NOT NULL,
-    fullname VARCHAR(100) NOT NULL,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
     birthdate DATE NOT NULL,
     registration_date DATE NOT NULL,
     email VARCHAR(300) NOT NULL,
@@ -60,8 +60,8 @@ CREATE TABLE  IF NOT EXISTS  studient (
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS "admin" (
       id SERIAL PRIMARY KEY,
-      "name" VARCHAR(100) NOT NULL,
-      fullname VARCHAR(100) NOT NULL,
+       firstname VARCHAR(100) NOT NULL,
+       lastname VARCHAR(100) NOT NULL,
       birthdate DATE NOT NULL,
       registration_date DATE NOT NULL,
       email VARCHAR(300) NOT NULL,
