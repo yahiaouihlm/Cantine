@@ -55,6 +55,23 @@ export class NewMealComponent {
         console.log('goto');
     }
 
+    confirmAndSendNewMeal(): void {
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
+            width: '40%',
+        });
+
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                this.sendNewMeal();
+                console.log("ok")
+            } else {
+                return;
+            }
+        });
+
+
+    }
 
     sendNewMeal(): void {
         const formData = new FormData();
@@ -64,25 +81,17 @@ export class NewMealComponent {
         formData.append('price', this.newMeal.controls['price'].value);
         formData.append('quantity', this.newMeal.controls['quantity'].value);
         formData.append('image', this.image);
+        if  (this.newMeal.controls['status'].value == "available") {
+            formData.append('status', "1");
+        } else {
+            formData.append('status', "0");
+        }
+        this.mealServiceService.addMeal(formData).subscribe((result) => {
+            console.log(result);
+        });
     }
 
 
-    confirmAndSendNewMeal(): void {
-        const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
-            width: '40%',
-        });
 
-        result.afterClosed().subscribe((result) => {
-            if (result != undefined && result == true) {
-                // this.sendNewMeal();
-                console.log("ok")
-            } else {
-                return;
-            }
-        });
-
-
-    }
 
 }
