@@ -56,7 +56,7 @@ CREATE TABLE  IF NOT EXISTS  studient (
     FOREIGN KEY (class_id) REFERENCES class_id (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     )
 -- -----------------------------------------------------
--- Table `cantiniere`.`admin`
+-- Table `cantiniere`.`adminService`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS "admin" (
       id SERIAL PRIMARY KEY,
