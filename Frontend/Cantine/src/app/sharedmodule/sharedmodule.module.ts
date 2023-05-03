@@ -16,6 +16,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatButton, MatButtonModule} from "@angular/material/button";
+import {Meal} from "./models/meal";
 
 
 
@@ -55,7 +56,6 @@ import {MatButton, MatButtonModule} from "@angular/material/button";
     MatDialogContent,
     MatDialogActions,
     MatDialogModule,
-
   ]
 
 })
