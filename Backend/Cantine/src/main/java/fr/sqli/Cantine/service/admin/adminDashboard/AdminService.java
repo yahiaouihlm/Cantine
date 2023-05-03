@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class AdminService implements  IAdminDashboard {
 
     final  String ADMIN_IMAGE_NAME ;
+    final  String EMAIL_ADMIN_DOMAIN ;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private IFunctionDao functionDao;
     private AdminDao adminDao;
@@ -28,24 +29,37 @@ public class AdminService implements  IAdminDashboard {
             this.functionDao = functionDao;
             this.bCryptPasswordEncoder = bCryptPasswordEncoder;
             this.ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.user.imagename");
+            this.EMAIL_ADMIN_DOMAIN = environment.getProperty("sqli.cantine.admin.email.domain");
+
         }
 
 
     @Override
-    public void signUp(AdminDtoIn adminDtoIn, String function) throws InvalidPersonInformationException {
+    public void signUp(AdminDtoIn adminDtoIn, String function) throws InvalidPersonInformationException, ExistingAdminException {
         AdminEntity adminEntity = adminDtoIn.toAdminEntityWithOutFunction();
 
         //check  function  validity
         var  functionAdmin =  adminDtoIn.getFunction();
+
         if  (this.functionDao.findByName(functionAdmin).isEmpty()){
             throw  new InvalidPersonInformationException(" YOUR FUNCTIONALITY IS NOT VALID");
         }
+
+        //check  email  validity
+        if (!adminEntity.getEmail().endsWith(EMAIL_ADMIN_DOMAIN) ){
+            throw  new InvalidPersonInformationException(" YOUR EMAIL IS NOT VALID");
+        }
+
+        //check  if  admin  is  already  existing by  email
+        this.exstingAdmin(adminEntity.getEmail());
 
 
     }
 
     @Override
-    public void exstingAdmin(AdminDtoIn adminDtoIn) throws ExistingAdminException {
-
+    public void exstingAdmin(String  adminEmail ) throws ExistingAdminException {
+          if  (this.adminDao.findByEmail(adminEmail).isPresent()){
+              throw  new ExistingAdminException("THIS ADMIN IS ALREADY EXISTING");
+          }
     }
 }

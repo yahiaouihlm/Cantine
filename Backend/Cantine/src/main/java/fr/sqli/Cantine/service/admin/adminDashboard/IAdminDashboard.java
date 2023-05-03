@@ -7,8 +7,8 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 public interface IAdminDashboard {
 
 
-    public void  signUp (AdminDtoIn  adminDtoIn, String function) throws InvalidPersonInformationException;
+    public void  signUp (AdminDtoIn  adminDtoIn, String function) throws InvalidPersonInformationException, ExistingAdminException;
 
 
-    public  void  exstingAdmin (AdminDtoIn  adminDtoIn) throws ExistingAdminException;
+    public  void  exstingAdmin (String  adminEmail ) throws ExistingAdminException;
 }
