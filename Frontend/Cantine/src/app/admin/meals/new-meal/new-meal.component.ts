@@ -37,6 +37,7 @@ export class NewMealComponent {
             alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
         }
 
+        this.confirmAndSendNewMeal();
 
     }
 

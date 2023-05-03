@@ -8,7 +8,7 @@ import {catchError, throwError} from "rxjs";
 export class MealServiceService {
  // private apiUrl = environment.apiUrl;
 
-  private BASIC_ENDPOINT = "http://localhost:8080/cantine" + 'admin/api/meals';
+  private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/meals';
 
 
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
@@ -32,7 +32,7 @@ export class MealServiceService {
              console.log("error  404")
          }
         else {
-                console.log(" error  inconnu  !")
+                console.log(error)
          }
         return throwError(() => new Error('Something bad happened; please try again later.'));
 
