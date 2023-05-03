@@ -4,11 +4,10 @@ import {HttpClient, HttpErrorResponse, HttpStatusCode} from "@angular/common/htt
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {catchError, throwError} from "rxjs";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MealServiceService {
  // private apiUrl = environment.apiUrl;
+
   private BASIC_ENDPOINT = "http://localhost:8080/cantine" + 'admin/api/meals';
 
 

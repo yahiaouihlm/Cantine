@@ -8,6 +8,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {ValidatorDialogComponent} from "./validator-dialog/validator-dialog.component";
 import { AllMealsComponent } from './all-meals/all-meals.component';
 import { MainMealsComponent } from './main-meals/main-meals.component';
+import {MealServiceService} from "./meal-service.service";
 
 
 
@@ -39,8 +40,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         SharedmoduleModule,
-
-
-    ]
+    ],
+  providers: [MealServiceService],
 })
 export class MealsModule { }
