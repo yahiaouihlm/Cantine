@@ -27,8 +27,9 @@ export class NewMealComponent {
     constructor(private mealServiceService: MealServiceService, private matDialog: MatDialog) {
     }
 
-    onSubmit(): void {
-
+     onSubmit() {
+        let test =  this.openDialog(); //  we  have  to  test  the  return  value  of  the  dialog  to  send  the  meal  or  not
+        console.log(test)
         this.submitted = true;
         if (this.newMeal.invalid) {
             return;
@@ -36,11 +37,6 @@ export class NewMealComponent {
         if (this.newMeal.controls["price"].value > 50) {
             alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
         }
-
-        const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
-            width: '40%',
-        });
 
 
     }
@@ -70,4 +66,7 @@ export class NewMealComponent {
         formData.append('quantity', this.newMeal.controls['quantity'].value);
         formData.append('image', this.image);
     }
+
+
+
 }

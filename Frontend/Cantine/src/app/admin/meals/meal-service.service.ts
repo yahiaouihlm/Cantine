@@ -13,7 +13,7 @@ export class MealServiceService {
 
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   constructor(private httpClient: HttpClient) { }
-  addMeal(meal: Object ) { //  we have  to  add  a  token  after
+  addMeal(meal: FormData ) { //  we have  to  add  a  token  after
     return this.httpClient.post <string>(this.ADD_MEAL_URL, meal).pipe(
          catchError( (error) => this.handleError(error))
     );

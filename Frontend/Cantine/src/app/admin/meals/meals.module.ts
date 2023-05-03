@@ -21,7 +21,6 @@ const routes: Routes = [
     children: [
       {path: '', component: AllMealsComponent},
       {path: 'new', component: NewMealComponent},
-
     ]
   },
 
