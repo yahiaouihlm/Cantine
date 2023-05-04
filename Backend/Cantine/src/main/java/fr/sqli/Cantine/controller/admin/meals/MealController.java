@@ -2,7 +2,7 @@ package fr.sqli.Cantine.controller.admin.meals;
 
 
 import fr.sqli.Cantine.dto.in.food.MealDtoIn;
-import fr.sqli.Cantine.dto.out.MealDtout;
+import fr.sqli.Cantine.dto.out.food.MealDtout;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;

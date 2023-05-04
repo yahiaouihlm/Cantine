@@ -1,8 +1,6 @@
-package fr.sqli.Cantine.dto.out;
+package fr.sqli.Cantine.dto.out.food;
 
-import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
-import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,11 +1,10 @@
 package fr.sqli.Cantine.service.admin.menus;
 
 import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.dto.out.MenuDtout;
+import fr.sqli.Cantine.dto.out.food.MenuDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
-import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
