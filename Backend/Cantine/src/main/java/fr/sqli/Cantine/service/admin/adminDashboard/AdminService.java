@@ -53,6 +53,8 @@ public class AdminService implements  IAdminDashboard {
         //check  if  admin  is  already  existing by  email
         this.exstingAdmin(adminEntity.getEmail());
 
+        adminEntity.setStatus(0);
+
         // check If Image Exsit
         /*TODO  :  image  processing   */
 
