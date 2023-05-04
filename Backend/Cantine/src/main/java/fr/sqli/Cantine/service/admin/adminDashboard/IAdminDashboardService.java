@@ -10,10 +10,10 @@ import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 
 import java.io.IOException;
 
-public interface IAdminDashboard {
+public interface IAdminDashboardService {
 
 
-    public AdminEntity signUp (AdminDtoIn  adminDtoIn, String function) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
+    public AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 
 
     public  void  exstingAdmin (String  adminEmail ) throws ExistingAdminException;

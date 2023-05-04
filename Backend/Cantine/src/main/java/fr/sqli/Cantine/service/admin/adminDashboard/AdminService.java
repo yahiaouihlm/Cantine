@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Service
-public class AdminService implements  IAdminDashboard {
+public class AdminService implements IAdminDashboardService {
 
     final  String DEFAULT_ADMIN_IMAGE_NAME;
     final  String EMAIL_ADMIN_DOMAIN ;
@@ -46,7 +46,7 @@ public class AdminService implements  IAdminDashboard {
 
 
     @Override
-    public AdminEntity signUp(AdminDtoIn adminDtoIn, String function) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+    public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         AdminEntity adminEntity = adminDtoIn.toAdminEntityWithOutFunction();
 
         //check  function  validity
