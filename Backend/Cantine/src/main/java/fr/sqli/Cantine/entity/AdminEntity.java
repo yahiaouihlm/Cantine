@@ -41,6 +41,9 @@ public class AdminEntity {
     private Integer status ;
 
 
+    @Column(name = "registration_date" , nullable=false )
+    private LocalDate registrationDate ;
+
     @ManyToOne(cascade =  CascadeType.ALL)
     @JoinColumn(name="image_idimage", nullable=false)
     private ImageEntity image;
@@ -109,6 +112,14 @@ public class AdminEntity {
 
     public String getAddress() {
         return address;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public void setAddress(String address) {
