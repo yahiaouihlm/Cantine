@@ -2,15 +2,24 @@ package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.service.admin.adminDashboard.AdminService;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.images.exception.ImagePathException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static fr.sqli.Cantine.controller.admin.adminDashboard.IAdminDashboardController.ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT;
+import java.io.IOException;
+
+import static fr.sqli.Cantine.controller.admin.adminDashboard.IAdminDashboardController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
-@RequestMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
+@RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)
 public class AdminController  implements IAdminDashboardController {
 
     private AdminService adminService;
@@ -22,7 +31,9 @@ public class AdminController  implements IAdminDashboardController {
 
 
     @Override
-    public ResponseEntity<String> signUp(AdminDtoIn adminDtoIn) {
+    @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
+    public ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException {
         this.adminService.signUp(adminDtoIn);
+        return ResponseEntity.ok(ADMIN_ADDED_SUCCESSFULLY);
     }
 }

@@ -62,7 +62,7 @@ public class AdminService implements IAdminDashboardService {
         }
 
         //check  if  admin  is  already  existing by  email
-        this.exstingAdmin(adminEntity.getEmail());
+        this.existingAdmin(adminEntity.getEmail());
 
         adminEntity.setStatus(0);
 
@@ -89,7 +89,7 @@ public class AdminService implements IAdminDashboardService {
     }
 
     @Override
-    public void exstingAdmin(String  adminEmail ) throws ExistingAdminException {
+    public void existingAdmin(String  adminEmail ) throws ExistingAdminException {
           if  (this.adminDao.findByEmail(adminEmail).isPresent()){
               throw  new ExistingAdminException("THIS ADMIN IS ALREADY EXISTING");
           }

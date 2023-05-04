@@ -16,5 +16,5 @@ public interface IAdminDashboardService {
     public AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 
 
-    public  void  exstingAdmin (String  adminEmail ) throws ExistingAdminException;
+    public  void existingAdmin(String  adminEmail ) throws ExistingAdminException;
 }
