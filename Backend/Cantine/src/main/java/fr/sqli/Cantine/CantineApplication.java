@@ -50,7 +50,8 @@ public class CantineApplication {
 			Stream.of(
 					new File("images/meals"),
 		         			new File("images/menus"),
-	                		new File("images/users")
+	                		new File("images/persons/admin"),
+						    new File("images/persons/students")
 					       ).forEach( (file) -> {
 				   if  (!file.exists() || !file.isDirectory()){
 					   CantineApplication.LOG.fatal(" \u001B[31m FATAL ERROR APPLICATION EXITED BECAUSE {} DOES NOT EXISTS \u001B[0m",file.getName());
