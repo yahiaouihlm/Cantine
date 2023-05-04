@@ -17,7 +17,7 @@ public class SuperAdminService {
     }
 
 
-    public FunctionEntity  addFunction (FunctionEntity functionEntity){
+    public FunctionEntity  addFunction (  Fun){
         return  null;
     }
 
