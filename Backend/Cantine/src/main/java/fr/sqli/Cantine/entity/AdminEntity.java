@@ -27,12 +27,12 @@ public class AdminEntity {
     @Column(name = "birthdate" , nullable=false )
     private LocalDate birthdate ;
 
-    @Column(name = "towen" , nullable=false , length = 399)
-    private String towen ;
+    @Column(name = "town" , nullable=false , length = 399)
+    private String town;
 
 
-    @Column(name = "adresse" , nullable=false , length = 999)
-    private String adresse ;
+    @Column(name = "address" , nullable=false , length = 999)
+    private String address;
 
     @Column(name = "phone" , nullable=false , length = 99)
     private String phone ;
@@ -99,20 +99,20 @@ public class AdminEntity {
         this.birthdate = birthdate;
     }
 
-    public String getTowen() {
-        return towen;
+    public String getTown() {
+        return town;
     }
 
-    public void setTowen(String towen) {
-        this.towen = towen;
+    public void setTown(String town) {
+        this.town = town;
     }
 
-    public String getAdresse() {
-        return adresse;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getPhone() {
