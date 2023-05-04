@@ -34,10 +34,10 @@ public  abstract  class AbstractPersonDtoIn {
             birthdateValidator ();
 
         if (this.town == null || this.town.isEmpty() || this.town.isBlank())
-            throw new InvalidPersonInformationException("TOWEN IS  REQUIRED");
+            throw new InvalidPersonInformationException("TOWN IS  REQUIRED");
 
         if (this.address == null || this.address.isEmpty() || this.address.isBlank())
-            throw new InvalidPersonInformationException("ADRESSE IS  REQUIRED");
+            throw new InvalidPersonInformationException("ADDRESS IS  REQUIRED");
 
         if  (this.firstname.length() < 3)
             throw new InvalidPersonInformationException("FIRSTNAME MUST BE AT LEAST 3 CHARACTERS");

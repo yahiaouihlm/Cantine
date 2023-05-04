@@ -71,7 +71,7 @@ public class GlobalHandlerException {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ExceptionDtout> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout("THE MEAL  WITH SAME LABEL , CATEGORY , PRICE AND DESCRIPTION ALREADY EXIST "));
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout(e.getMessage()  ));
     }
 
 

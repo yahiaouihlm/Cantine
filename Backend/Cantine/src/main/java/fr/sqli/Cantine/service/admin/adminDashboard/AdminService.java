@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @Service
 public class AdminService implements IAdminDashboardService {
@@ -51,11 +52,12 @@ public class AdminService implements IAdminDashboardService {
 
         //check  function  validity
         var  functionAdmin =  adminDtoIn.getFunction();
-
-        if  (this.functionDao.findByName(functionAdmin).isEmpty()){
+        var functionAdminEntity = this.functionDao.findByName(functionAdmin);
+        if  (functionAdminEntity.isEmpty()){
             throw  new InvalidPersonInformationException(" YOUR FUNCTIONALITY IS NOT VALID");
         }
 
+        adminEntity.setFunction(functionAdminEntity.get());
         //check  email  validity
         if (!adminEntity.getEmail().endsWith(EMAIL_ADMIN_DOMAIN) ){
             throw  new InvalidPersonInformationException(" YOUR EMAIL IS NOT VALID");
@@ -83,8 +85,7 @@ public class AdminService implements IAdminDashboardService {
             imageEntity.setImagename(this.DEFAULT_ADMIN_IMAGE_NAME);
             adminEntity.setImage(imageEntity);
         }
-        // check If Image Exsit
-        /*TODO  :  image  processing   */
+        adminEntity.setRegistrationDate(LocalDate.now());
          return this.adminDao.save(adminEntity);
     }
 
