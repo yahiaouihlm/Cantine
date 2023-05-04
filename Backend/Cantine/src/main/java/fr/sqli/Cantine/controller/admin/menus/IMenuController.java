@@ -19,7 +19,7 @@ import java.util.List;
 public interface IMenuController {
 
     /*------------------ ENDPOINTS ------------------*/
-    String MENUS_URL_ADMIN = "/cantine/api/admin/menus";
+    String MENUS_BASIC_URL_ADMIN = "/cantine/api/admin/menus";
 
     String  ENDPOINT_UPDATE_MENU_URL = "/update";
     String ENDPOINT_ADD_MENU_URL = "/add";

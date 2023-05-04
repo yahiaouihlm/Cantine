@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface IMealController {
      /*------------------ ENDPOINTS ------------------*/
-    String MEALS_URL_ADMIN = "/cantine/api/admin/meals";
+    String MEALS_BASIC_URL_ADMIN = "/cantine/api/admin/meals";
     String ENDPOINT_ADD_MEAL_URL = "/add";
     String ENDPOINT_DELETE_MEAL_URL = "/delete";
 

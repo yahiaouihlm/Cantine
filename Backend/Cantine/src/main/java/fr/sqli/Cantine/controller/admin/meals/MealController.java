@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-import static fr.sqli.Cantine.controller.admin.meals.IMealController.MEALS_URL_ADMIN;
+import static fr.sqli.Cantine.controller.admin.meals.IMealController.MEALS_BASIC_URL_ADMIN;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 
 @RestController
-@RequestMapping(value = MEALS_URL_ADMIN)
+@RequestMapping(value = MEALS_BASIC_URL_ADMIN)
 
 public class MealController implements IMealController {
 
