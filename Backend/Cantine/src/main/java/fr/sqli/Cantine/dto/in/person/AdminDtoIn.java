@@ -21,8 +21,8 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
           admin.setEmail(this.getEmail().trim().toLowerCase());
           admin.setPassword(this.getPassword());
           admin.setBirthdate(this.getBirthdate());
-          admin.setTowen(this.getTowen().trim());
-          admin.setAdresse(this.getAdresse().trim());
+          admin.setTowen(this.getTown().trim());
+          admin.setAdresse(this.getAddress().trim());
           admin.setPhone(this.getPhone().trim());
              return admin;
 

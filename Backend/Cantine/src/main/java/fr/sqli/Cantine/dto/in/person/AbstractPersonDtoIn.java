@@ -12,8 +12,8 @@ public  abstract  class AbstractPersonDtoIn {
     private  String password;
     private  String birthdateAsString;
     private LocalDate birthdate;
-    private  String towen;
-    private  String adresse;
+    private  String town;
+    private  String address;
     private  String phone;
     private MultipartFile image;
 
@@ -33,10 +33,10 @@ public  abstract  class AbstractPersonDtoIn {
 
             birthdateValidator ();
 
-        if (this.towen == null || this.towen.isEmpty() || this.towen.isBlank())
+        if (this.town == null || this.town.isEmpty() || this.town.isBlank())
             throw new InvalidPersonInformationException("TOWEN IS  REQUIRED");
 
-        if (this.adresse == null || this.adresse.isEmpty() || this.adresse.isBlank())
+        if (this.address == null || this.address.isEmpty() || this.address.isBlank())
             throw new InvalidPersonInformationException("ADRESSE IS  REQUIRED");
 
         if  (this.firstname.length() < 3)
@@ -138,20 +138,20 @@ public  abstract  class AbstractPersonDtoIn {
         this.birthdate = birthdate;
     }
 
-    public String getTowen() {
-        return towen;
+    public String getTown() {
+        return town;
     }
 
-    public void setTowen(String towen) {
-        this.towen = towen;
+    public void setTown(String town) {
+        this.town = town;
     }
 
-    public String getAdresse() {
-        return adresse;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getPhone() {
