@@ -15,6 +15,7 @@ public class FunctionEntity {
     @Column(name = "name",  nullable=false, length=299)
     private  String name  ;
 
+
     public Integer getId() {
         return id;
     }
@@ -30,4 +31,8 @@ public class FunctionEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+
+
+
 }
