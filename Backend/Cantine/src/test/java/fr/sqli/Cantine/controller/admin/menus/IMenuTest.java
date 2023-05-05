@@ -13,14 +13,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 public interface IMenuTest {
     final  String BASE_MENU_URL  =  "/cantine/api/admin/menus";
-    final  String DIRECTORY_TEST_IMAGE_MENU  = "imagesForTests/menus/";
+    final  String DIRECTORY_IMAGE_MENU = "images/menus/";
     final  String  UPDATE_MENU_URL = BASE_MENU_URL + "/update";
     final String ADD_MENU_URL = BASE_MENU_URL + "/add";
     final String DELETE_MENU_URL = BASE_MENU_URL + "/delete";
@@ -33,10 +32,10 @@ public interface IMenuTest {
     /********************** Image **************************/
     String  IMAGE_MENU_FOR_TEST_NAME = "ImageMenuForTest.jpg";
     String  SECOND_IMAGE_MENU_FOR_TEST_NAME = "ImageMealForTest1.jpg";
-    String IMAGE_MENU_DIRECTORY_PATH = "images/menus/";
+    String IMAGE_MENU_DIRECTORY_TESTS_PATH = "imagesForTests/menus/";
 
     String  IMAGE_MENU_FORMAT_FOR_TEST="image/jpg";
-    String   IMAGE_MENU_FOR_TEST_PATH = IMAGE_MENU_DIRECTORY_PATH+IMAGE_MENU_FOR_TEST_NAME;
+    String   IMAGE_MENU_FOR_TEST_PATH = IMAGE_MENU_DIRECTORY_TESTS_PATH +IMAGE_MENU_FOR_TEST_NAME;
     Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("Label", "LABEL_IS_MANDATORY"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
@@ -65,24 +64,15 @@ public interface IMenuTest {
     );
 
 
+      @BeforeAll
+      static void  checkExistingTestFiles () {
+          File image = new File(IMAGE_MENU_FOR_TEST_PATH);
+            if (!image.exists()) {
+               throw  new RuntimeException("The image ' ImageMenuForTest ' for test doesn't exist");
+            }
+      }
 
 
-    @BeforeAll
-    static  void copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
-        File firstMenuImageTest = new File( IMAGE_MENU_DIRECTORY_PATH + IMAGE_MENU_FOR_TEST_NAME);
-        var result = firstMenuImageTest.createNewFile();
-       File SecondMenuImageTest = new File(DIRECTORY_TEST_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME);
-
-       Files.copy(firstMenuImageTest.toPath(), new File(IMAGE_MENU_DIRECTORY_PATH +IMAGE_MENU_FOR_TEST_NAME ).toPath());
-    }
-
-    @AfterAll
-    static  void  removeTheImgeTestIfExist() throws IOException {
-        File firstMenuImageTest = new File( IMAGE_MENU_DIRECTORY_PATH + IMAGE_MENU_FOR_TEST_NAME);
-        if (firstMenuImageTest.exists()) {
-            FileUtils.forceDelete(firstMenuImageTest);
-        }
-    }
 
 
     static LinkedMultiValueMap initFormData(){
