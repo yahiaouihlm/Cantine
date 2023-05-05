@@ -129,7 +129,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("description", "T A C O  s  deS criP   tio      NMenu");
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
 
@@ -548,7 +550,10 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("status", "564rffr");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :

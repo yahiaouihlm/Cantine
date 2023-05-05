@@ -83,6 +83,14 @@ public interface IMenuTest {
         Files.copy(sourceFile.toPath(), destFile.toPath());
     }
 
+    @AfterAll
+    static  void deleteImageTestFromImageMenuDirectory() throws IOException {
+        String destination = DIRECTORY_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME;
+        File destFile = new File(destination);
+        Files.delete(destFile.toPath());
+    }
+
+
     static LinkedMultiValueMap initFormData(){
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("label", "MenuTest");
@@ -116,7 +124,7 @@ public interface IMenuTest {
      static MenuEntity createMenu (List <MealEntity> mealAssociated ) {
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setLabel("Tacos");
-        menuEntity.setPrice(new BigDecimal("3.807"));
+        menuEntity.setPrice(new BigDecimal("3.87"));
         menuEntity.setDescription("Tacos  description  Menu");
         menuEntity.setStatus(1);
         menuEntity.setQuantity(10);
