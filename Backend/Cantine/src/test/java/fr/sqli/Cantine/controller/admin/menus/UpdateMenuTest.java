@@ -3,6 +3,7 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,8 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     private MockMultipartFile  imageData;
 
     private MenuEntity menuSaved   ;
+
+    private MealEntity mealSaved   ;
    @Autowired
    MockMvc mockMvc;
 
@@ -61,9 +64,9 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
     @BeforeEach
     void initDaBase () {
-        var meal =  IMenuTest.createMeal();
-        mealDao.save(meal);
-        var menu = IMenuTest.createMenu(List.of(meal));
+        this.mealSaved =  IMenuTest.createMeal();
+        mealDao.save( this.mealSaved);
+        var menu = IMenuTest.createMenu(List.of( this.mealSaved));
         this.menuSaved =   menuDao.save(menu);
     }
 
@@ -72,7 +75,75 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         mealDao.deleteAll();
         menuDao.deleteAll();
     }
-    /************************************** Menu  With  Out  Image  **************************************/
+    /**************************************  Update Menu  With Existing  Menu *************************************/
+    @Test
+    void updateMenuTestExistingMenuTest3() throws Exception {
+        // create new Menu in  DataBase
+        MenuEntity menu =   IMenuTest.createMenu(List.of( this.mealSaved));
+        menu.setLabel("Menu2");
+        menu.setDescription("Menu  description  test 2");
+        menu.setPrice(new BigDecimal("5"));
+        this.menuDao.save(menu);
+
+        // update  Menu with  try  to  change  label  to  existing  label and  description  to  existing  description and  price  to  existing  price in other menu
+        this.formData.set("label", "M e n u 2".toUpperCase());
+        this.formData.set("description", "M  E n u  d  escri pti on  T e S t 2");
+        this.formData.set("price", "5.000");
+
+        this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+    }
+
+    @Test
+    void updateMenuTestExistingMenuTest2() throws Exception {
+        // create new Menu in  DataBase
+        MenuEntity menu =   IMenuTest.createMenu(List.of( this.mealSaved));
+        menu.setLabel("Menu2");
+        menu.setDescription("Menu  description  test 2");
+        menu.setPrice(new BigDecimal("5"));
+        this.menuDao.save(menu);
+
+        // update  Menu with  try  to  change  label  to  existing  label and  description  to  existing  description and  price  to  existing  price in other menu
+        this.formData.set("label", "M e n u 2");
+        this.formData.set("description", "M  e n u  d  escri pti on  t e s t 2");
+        this.formData.set("price", "5");
+
+        this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+    }
+
+    @Test
+    void updateMenuTestExistingMenuTest() throws Exception {
+        // create new Menu in  DataBase
+        MenuEntity menu =   IMenuTest.createMenu(List.of( this.mealSaved));
+        menu.setLabel("Menu2");
+        menu.setDescription("Menu  description  test 2");
+        menu.setPrice(new BigDecimal("5"));
+        this.menuDao.save(menu);
+
+        // update  Menu with  try  to  change  label  to  existing  label and  description  to  existing  description and  price  to  existing  price in other menu
+        this.formData.set("label", "Menu2");
+        this.formData.set("description", "Menu  description  test 2");
+        this.formData.set("price", "5");
+
+        this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+    }
 
 
     /************************************** Menu  With  Out  Meals  **************************************/
