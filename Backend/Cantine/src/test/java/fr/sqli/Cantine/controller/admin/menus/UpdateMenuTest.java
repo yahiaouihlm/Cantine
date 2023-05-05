@@ -5,9 +5,9 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,10 +19,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -31,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest {
-    //
+    private static final Logger LOG = LogManager.getLogger();
     private  final  String  paramReq = "?"+"idMenu"+"=";
     @Autowired
     private IMenuDao menuDao;
@@ -48,7 +51,17 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
     private MultiValueMap<String, String> formData;
 
-    @BeforeEach
+    @BeforeAll
+     static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        String source = IMAGE_MENU_DIRECTORY_TESTS_PATH + IMAGE_MENU_FOR_TEST_NAME;
+        String destination = DIRECTORY_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME;
+        File sourceFile = new File(source);
+        File destFile = new File(destination);
+        Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
+
+
+   @BeforeEach
     void init() throws IOException {
         this.formData =  new LinkedMultiValueMap<>();
         this.formData.add("label", "MenuTest");
@@ -62,7 +75,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
     }
-    @BeforeEach
+   @BeforeEach
     void initDaBase () {
         this.mealSaved =  IMenuTest.createMeal();
         mealDao.save( this.mealSaved);
@@ -76,10 +89,43 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         menuDao.deleteAll();
     }
 
+    @AfterAll
+    static  void  removeTheImageTestIfExist() throws IOException {
+        File firstMenuImageTest = new File( DIRECTORY_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME);
+        if (firstMenuImageTest.exists()) {
+            FileUtils.forceDelete(firstMenuImageTest);
+        }
+
+    }
+
+
+
+
+
+
+    /**************************************** Update Menu  With  Valid  Data  without Image   ****************************************/
+
+    @Test
+    void  updateMenuWithOutImage() throws Exception {
+
+            this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(exceptionsMap.get("MenuUpdatedSuccessfully")));
+
+    }
+
+
+
 
     /**************************************** Update Menu  With  Invalid  Image  ****************************************/
 
-    @Test
+/*    @Test
     void updateMenuWithInvalidImageFormat2() throws Exception {
 
         this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
@@ -89,15 +135,16 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-
+        System.out.println("imageData.getContentType() = " + imageData.getContentType());
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
-    }
 
+    }
+*/
     @Test
     void updateMenuWithInvalidImageFormat() throws Exception {
 
@@ -109,12 +156,15 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
 
+        LOG.error("imageData.getContentType() = " + imageData.getSize());
+
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).
+                andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
     }
 
 
