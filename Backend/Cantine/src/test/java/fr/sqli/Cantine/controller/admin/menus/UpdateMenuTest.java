@@ -79,6 +79,46 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
     /**************************************** Update Menu  With  Invalid  Image  ****************************************/
 
+    @Test
+    void updateMenuWithInvalidImageFormat2() throws Exception {
+
+        this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+    }
+
+    @Test
+    void updateMenuWithInvalidImageFormat() throws Exception {
+
+        this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/gif",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+    }
+
+
+
     /**************************************  Update Menu  With Existing  Menu *************************************/
     @Test
     void updateMenuTestExistingMenuTest3() throws Exception {
@@ -150,7 +190,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
-    /************************************** Menu  With  Invalid Meals ID  **************************************/
+    /************************************** Update  Menu  With  Invalid Meals ID  **************************************/
 
     @Test
     void  addMenuWithInvalidMealIDs2() throws Exception {
