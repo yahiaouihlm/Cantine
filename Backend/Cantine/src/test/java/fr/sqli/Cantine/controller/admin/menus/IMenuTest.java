@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,14 @@ public interface IMenuTest {
       }
 
 
-
+    @BeforeAll
+    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        String source = IMAGE_MENU_DIRECTORY_TESTS_PATH + IMAGE_MENU_FOR_TEST_NAME;
+        String destination = DIRECTORY_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME;
+        File sourceFile = new File(source);
+        File destFile = new File(destination);
+        Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
 
     static LinkedMultiValueMap initFormData(){
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
