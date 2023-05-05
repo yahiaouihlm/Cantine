@@ -73,6 +73,75 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         menuDao.deleteAll();
     }
 
+
+
+    /*********************************** Description ****************************************/
+    @Test
+    void updateMenuWithEmptyDescriptionTest() throws Exception {
+
+        this.formData.set("description", "    "); // length  must be  < 3 without spaces
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+
+
+    }
+
+    @Test
+    void updateMenuWithTooShortDescriptionTest() throws Exception {
+        this.formData.set("description", "aau");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
+    }
+
+    @Test
+    void updateMenuWithTooLongDescriptionTest() throws Exception {
+        this.formData.set("description", "a".repeat(1701));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
+    }
+
+    @Test
+    void updateMenuWithNullDescriptionTest() throws Exception {
+        this.formData.set("description", null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
+
+    @Test
+    void updateMenuWithOutDescriptionTest() throws Exception {
+        this.formData.remove("description");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .file(this.imageData)
+                .params(this.formData)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+    }
+
+
+
     /*********************************************** LABEL *******************************************************/
     @Test
     void updateMenuWithEmptyLabelTest() throws Exception {

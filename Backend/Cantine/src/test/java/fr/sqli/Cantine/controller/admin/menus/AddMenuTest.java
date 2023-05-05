@@ -634,7 +634,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     /*********************************** label ********************************************/
     @Test
-    void AddMealTestWithEmptyLabel() throws Exception {
+    void AddMenuTestWithEmptyLabel() throws Exception {
 
         this.formData.set("label", "    "); // length  must be  < 3 without spaces
 
