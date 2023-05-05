@@ -108,7 +108,7 @@ public interface IMenuTest {
      static MenuEntity createMenu (List <MealEntity> mealAssociated ) {
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setLabel("Tacos");
-        menuEntity.setPrice(new BigDecimal("3.87"));
+        menuEntity.setPrice(new BigDecimal("3.807"));
         menuEntity.setDescription("Tacos  description  Menu");
         menuEntity.setStatus(1);
         menuEntity.setQuantity(10);

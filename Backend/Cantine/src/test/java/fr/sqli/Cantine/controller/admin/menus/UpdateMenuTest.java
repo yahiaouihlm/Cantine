@@ -83,11 +83,11 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.menuSaved =   menuDao.save(menu);
     }
 
-    @AfterEach
+  /* @AfterEach
     void cleanDaBase () {
         mealDao.deleteAll();
         menuDao.deleteAll();
-    }
+    }*/
 
     @AfterAll
     static  void  removeTheImageTestIfExist() throws IOException {
@@ -99,7 +99,34 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
+   @Test
+   void updateMenuTest () throws Exception {
 
+       this.formData.set("label", "MenuTestUpdated");
+         this.formData.set("description", "Menu  description  test  updated");
+         this.formData.set("price", "100");
+
+       this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
+
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                       .file(this.imageData)
+               .params(this.formData)
+               .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+       result.andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content()
+                       .string(exceptionsMap.get("MenuUpdatedSuccessfully")));
+
+     var  menusaved  =  this.menuDao.findById(this.menuSaved.getId()).get();
+         Assertions.assertEquals("MenuTestUpdated",menusaved.getLabel());
+            Assertions.assertEquals("Menu  description  test  updated",menusaved.getDescription());
+            Assertions.assertEquals(new BigDecimal("3.807"),menusaved.getPrice());
+
+            var  imageName= menusaved.getImage().getImagename();
+
+            Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
+
+   }
 
 
 
