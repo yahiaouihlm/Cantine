@@ -3,21 +3,24 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
+import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 public interface IMenuTest {
     final  String BASE_MENU_URL  =  "/cantine/api/admin/menus";
-
+    final  String DIRECTORY_TEST_IMAGE_MENU  = "imagesForTests/menus/";
     final  String  UPDATE_MENU_URL = BASE_MENU_URL + "/update";
     final String ADD_MENU_URL = BASE_MENU_URL + "/add";
     final String DELETE_MENU_URL = BASE_MENU_URL + "/delete";
@@ -29,6 +32,7 @@ public interface IMenuTest {
 
     /********************** Image **************************/
     String  IMAGE_MENU_FOR_TEST_NAME = "ImageMenuForTest.jpg";
+    String  SECOND_IMAGE_MENU_FOR_TEST_NAME = "ImageMealForTest1.jpg";
     String IMAGE_MENU_DIRECTORY_PATH = "images/menus/";
 
     String  IMAGE_MENU_FORMAT_FOR_TEST="image/jpg";
@@ -56,8 +60,30 @@ public interface IMenuTest {
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("MenuNotFound", "NO MENU WAS FOUND WITH THIS ID "),
             Map.entry("MenuWithOutMeals", "THE MENU DOESN'T CONTAIN ANY MEAL"),
-            Map.entry("NoMealFound", "NO MEAL WAS FOUND WITH THIS ID")
+            Map.entry("NoMealFound", "NO MEAL WAS FOUND WITH THIS ID"),
+            Map.entry("MenuUpdatedSuccessfully", "MENU UPDATED SUCCESSFULLY")
     );
+
+
+
+
+    @BeforeAll
+    static  void copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        File firstMenuImageTest = new File( IMAGE_MENU_DIRECTORY_PATH + IMAGE_MENU_FOR_TEST_NAME);
+        var result = firstMenuImageTest.createNewFile();
+       File SecondMenuImageTest = new File(DIRECTORY_TEST_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME);
+
+       Files.copy(firstMenuImageTest.toPath(), new File(IMAGE_MENU_DIRECTORY_PATH +IMAGE_MENU_FOR_TEST_NAME ).toPath());
+    }
+
+    @AfterAll
+    static  void  removeTheImgeTestIfExist() throws IOException {
+        File firstMenuImageTest = new File( IMAGE_MENU_DIRECTORY_PATH + IMAGE_MENU_FOR_TEST_NAME);
+        if (firstMenuImageTest.exists()) {
+            FileUtils.forceDelete(firstMenuImageTest);
+        }
+    }
+
 
     static LinkedMultiValueMap initFormData(){
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
