@@ -252,6 +252,17 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
     }
 
+    @Test
+    void  updateMenuWithInvalidMealsIDs () throws Exception {
+
+        this.formData.set("mealIDs", List.of(new String("1")).toString());
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NoMealFound"))));
+    }
 
     /************************************* Image *******************************************/
 

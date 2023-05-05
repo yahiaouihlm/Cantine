@@ -75,6 +75,10 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         mealDao.deleteAll();
         menuDao.deleteAll();
     }
+
+
+    /**************************************** Update Menu  With  Invalid  Image  ****************************************/
+
     /**************************************  Update Menu  With Existing  Menu *************************************/
     @Test
     void updateMenuTestExistingMenuTest3() throws Exception {
@@ -146,7 +150,78 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
-    /************************************** Menu  With  Out  Meals  **************************************/
+    /************************************** Menu  With  Invalid Meals ID  **************************************/
+
+    @Test
+    void  addMenuWithInvalidMealIDs2() throws Exception {
+        this.formData.remove("mealIDs" , "[1, 2]" );
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  addMenuWithInvalidMealIDs () throws Exception {
+        this.formData.remove("mealIDs" , "jhnzserbj" );
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  addMenuWithEmptyMealIDs () throws Exception {
+        this.formData.remove("mealIDs" , "" );
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+
+    @Test
+    void  addMenuWithNullMealIDs () throws Exception {
+        this.formData.remove("mealIDs" , null );
+
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  addMenuWithOutMealIDs () throws Exception {
+        this.formData.remove("mealIDs");
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+    @Test
+    void  updateMenuWithInvalidMealsIDs () throws Exception {
+
+        this.formData.set("mealIDs", List.of(new String("1")).toString());
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NoMealFound"))));
+    }
 
     @Test
     void  updateMenuWithOutMeals() throws Exception {
@@ -157,6 +232,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
     }
+
 
     /*********************************** Price *******************************************/
     @Test

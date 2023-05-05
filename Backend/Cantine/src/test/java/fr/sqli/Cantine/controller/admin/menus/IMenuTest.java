@@ -55,7 +55,8 @@ public interface IMenuTest {
             Map.entry("missingParam", "MISSING PARAMETER"),
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("MenuNotFound", "NO MENU WAS FOUND WITH THIS ID "),
-            Map.entry("MenuWithOutMeals", "THE MENU DOESN'T CONTAIN ANY MEAL")
+            Map.entry("MenuWithOutMeals", "THE MENU DOESN'T CONTAIN ANY MEAL"),
+            Map.entry("NoMealFound", "NO MEAL WAS FOUND WITH THIS ID")
     );
 
     static LinkedMultiValueMap initFormData(){
