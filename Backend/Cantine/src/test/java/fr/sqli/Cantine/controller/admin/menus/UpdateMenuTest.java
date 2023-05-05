@@ -125,7 +125,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
     /**************************************** Update Menu  With  Invalid  Image  ****************************************/
 
-/*    @Test
+  @Test
     void updateMenuWithInvalidImageFormat2() throws Exception {
 
         this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
@@ -144,7 +144,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
 
     }
-*/
+
     @Test
     void updateMenuWithInvalidImageFormat() throws Exception {
 
