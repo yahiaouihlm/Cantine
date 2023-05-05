@@ -87,8 +87,9 @@ public interface IMenuTest {
     static  void deleteImageTestFromImageMenuDirectory() throws IOException {
         String destination = DIRECTORY_IMAGE_MENU + IMAGE_MENU_FOR_TEST_NAME;
         File destFile = new File(destination);
-        Files.delete(destFile.toPath());
-    }
+        if (destFile.exists())
+               Files.delete(destFile.toPath());
+      }
 
 
     static LinkedMultiValueMap initFormData(){
@@ -139,8 +140,5 @@ public interface IMenuTest {
         return  menuEntity ;
     }
 
-    static BufferedImage saveTestFile() throws IOException {
-        File image = new File(IMAGE_MENU_FOR_TEST_PATH);
-        return ImageIO.read(image);
-    }
+
 }

@@ -7,6 +7,7 @@ import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,19 +53,17 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void removeMenuWithExistingMenu() throws Exception {
 
-        var  menuIDSaved  =  this.initDataBase().getId(); // save  menu  in  database
+        var  menuSaved  =  this.initDataBase(); // save  menu  in  database
 
-        var  image  =  IMenuTest.saveTestFile();
 
-        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+menuIDSaved));
+
+        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_MENU_URL+this.paramReq+menuSaved.getId()));
         result.andExpect( status().isOk())
                 .andExpect(content().string(MENU_DELETED_SUCCESSFULLY));
 
-        ///  remove  Image File after  each  test
-        File outputFile  =  new File(IMAGE_MENU_FOR_TEST_PATH);
-        ImageIO.write(image, "jpg", outputFile);
-
-
+          //check  if  the image  is  really   deleted
+       var imageName = menuSaved.getImage().getImagename();
+        Assertions.assertTrue(!new File(DIRECTORY_IMAGE_MENU+imageName).exists());
     }
 
     @Test
