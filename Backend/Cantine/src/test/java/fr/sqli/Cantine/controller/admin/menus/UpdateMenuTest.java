@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -70,6 +71,20 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void cleanDaBase () {
         mealDao.deleteAll();
         menuDao.deleteAll();
+    }
+    /************************************** Menu  With  Out  Image  **************************************/
+
+
+    /************************************** Menu  With  Out  Meals  **************************************/
+
+    @Test
+    void  updateMenuWithOutMeals() throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL + paramReq + this.menuSaved.getId())
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
     }
 
     /*********************************** Price *******************************************/
