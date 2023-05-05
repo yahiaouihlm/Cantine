@@ -4,8 +4,6 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +45,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     private Integer mealIDSavedInDB;
 
+    private MenuEntity menuEntitySavedInDB;
+
+    private MenuEntity menuSaved;
 
     @BeforeEach
     void initFormData() throws IOException {
@@ -58,13 +59,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
 
-    @AfterEach
-    void cleanDB() {
-        this.menuDao.deleteAll();
-        this.mealDao.deleteAll();
-    }
 
-    MenuEntity initDB() throws FileNotFoundException {
+    @BeforeEach
+    void initDB() throws FileNotFoundException {
         //  save  a  meal
         var meal = IMenuTest.createMeal();
         this.mealDao.save(meal);
@@ -72,15 +69,23 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.mealIDSavedInDB = meal.getId();
 
         var menu = IMenuTest.createMenu(List.of(meal));
-        return this.menuDao.save(menu);
+        this.menuSaved = this.menuDao.save(menu);
 
+    }
+
+    @AfterEach
+    void cleanDB() {
+        this.menuDao.deleteAll();
+        this.mealDao.deleteAll();
     }
 
     /************************************** Add Menu ****************************************/
 
     @Test
     void addMenuTest() throws Exception {
-          initDB();
+        // to  find the image  we have to  remove all  menus  saved in DB and  save  a  new  menu and  get  its  image  to  check  if  its saved seccessfully
+        this.menuDao.deleteAll();
+
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("label", "MenuTest");
         this.formData.add("description", "Menu  description  test");
@@ -93,26 +98,20 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
         result.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(MENU_ADDED_SUCCESSFULLY));
 
-
-
-
-        //before  clean DataBase we remove the  image  added  in  the  test to   images/menus
-
-        var menuSaved = this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase("MenuTest", "Menu  description  test", BigDecimal.valueOf(3.87));
-        var nameImageSaved = menuSaved.get().getImage().getImagename();
-        File file = new File(IMAGE_MENU_DIRECTORY_PATH + nameImageSaved);
-        Assertions.assertTrue(file.delete()); //  check  if  the  image  is  deleted from  the  directory*/
-
+        var imageName = this.menuDao.findAll().get(0).getImage().getImagename();
+        Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
+        Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).delete());
     }
+
 
     /************************************** Existing Menu ***********************************/
     @Test
     void addMenuWithExistingMenu3() throws Exception {
-        var menuSaved = initDB(); //  get menu  saved in DB to  use it  in  the  test
+        //  get menu  saved in DB to  use it  in  the  test
 
-        this.formData.set("label", menuSaved.getLabel().toLowerCase());
-        this.formData.set("price", menuSaved.getPrice().toString() + "0000");
-        this.formData.set("description", menuSaved.getDescription().toUpperCase());
+        this.formData.set("label", this.menuSaved.getLabel().toLowerCase());
+        this.formData.set("price", this.menuSaved.getPrice().toString() + "0000");
+        this.formData.set("description", this.menuSaved.getDescription().toUpperCase());
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -123,10 +122,10 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuWithExistingMenu2() throws Exception {
-        var menuSaved = initDB(); //  get menu  saved in DB to  use it  in  the  test
+
 
         this.formData.set("label", "T  A     c    o      S  ");
-        this.formData.set("price", menuSaved.getPrice().toString() + "0000");
+        this.formData.set("price", this.menuSaved.getPrice().toString() + "0000");
         this.formData.set("description", "T A C O  s  deS criP   tio      NMenu");
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
@@ -139,11 +138,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuWithExistingMenu() throws Exception {
-        var menuSaved = initDB(); //  get menu  saved in DB to  use it  in  the  test
 
-        this.formData.set("label", menuSaved.getLabel());
-        this.formData.set("price", menuSaved.getPrice().toString());
-        this.formData.set("description", menuSaved.getDescription());
+
+        this.formData.set("label", this.menuSaved.getLabel());
+        this.formData.set("price", this.menuSaved.getPrice().toString());
+        this.formData.set("description", this.menuSaved.getDescription());
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -151,11 +150,12 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
 
     }
+
     /*************************************** MealIDs *************************************/
 
     @Test
-    void  addMenuWithInvalidMealIDs3() throws Exception {
-        this.formData.remove("mealIDs" , "{1, 2}" );
+    void addMenuWithInvalidMealIDs3() throws Exception {
+        this.formData.remove("mealIDs", "{1, 2}");
 
         this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
                 IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
@@ -171,40 +171,8 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     @Test
-    void  addMenuWithInvalidMealIDs2() throws Exception {
-        this.formData.remove("mealIDs" , "[1, 2]" );
-
-        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
-                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
-                "image/svg",                    // type MIME
-                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
-
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
-                .file(this.imageData)
-                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
-
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
-    }
-    @Test
-    void  addMenuWithInvalidMealIDs () throws Exception {
-        this.formData.remove("mealIDs" , "jhnzserbj" );
-
-        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
-                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
-                "image/svg",                    // type MIME
-                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
-
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
-                .file(this.imageData)
-                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
-
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
-    }
-    @Test
-    void  addMenuWithEmptyMealIDs () throws Exception {
-        this.formData.remove("mealIDs" , "" );
+    void addMenuWithInvalidMealIDs2() throws Exception {
+        this.formData.remove("mealIDs", "[1, 2]");
 
         this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
                 IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
@@ -220,8 +188,8 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     @Test
-    void  addMenuWithNullMealIDs () throws Exception {
-        this.formData.remove("mealIDs" , null );
+    void addMenuWithInvalidMealIDs() throws Exception {
+        this.formData.remove("mealIDs", "jhnzserbj");
 
         this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
                 IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
@@ -235,8 +203,43 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
     }
+
     @Test
-    void  addMenuWithOutMealIDs () throws Exception {
+    void addMenuWithEmptyMealIDs() throws Exception {
+        this.formData.remove("mealIDs", "");
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+
+    @Test
+    void addMenuWithNullMealIDs() throws Exception {
+        this.formData.remove("mealIDs", null);
+
+        this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
+                IMAGE_MENU_FOR_TEST_NAME,          // nom du fichier
+                "image/svg",                    // type MIME
+                new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("MenuWithOutMeals"))));
+    }
+
+    @Test
+    void addMenuWithOutMealIDs() throws Exception {
         this.formData.remove("mealIDs");
 
         this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
@@ -253,7 +256,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     @Test
-    void  updateMenuWithInvalidMealsIDs () throws Exception {
+    void updateMenuWithInvalidMealsIDs() throws Exception {
 
         this.formData.set("mealIDs", List.of(new String("1")).toString());
 
@@ -268,8 +271,6 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuWithInvalidImageFormat() throws Exception {
-        // init  DataBase
-        initDB();
 
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
