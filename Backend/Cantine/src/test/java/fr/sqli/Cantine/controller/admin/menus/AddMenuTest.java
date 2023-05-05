@@ -44,7 +44,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     private MockMultipartFile imageData;
 
     private Integer mealIDSavedInDB;
-
+  /* TODO   checks tests  its  doesn't work */
     private MenuEntity menuEntitySavedInDB;
 
     private MenuEntity menuSaved;
@@ -59,25 +59,26 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
 
+    @BeforeEach
+    void cleanDB() {
 
+        this.menuDao.deleteAll();
+        this.mealDao.deleteAll();
+    }
     @BeforeEach
     void initDB() throws FileNotFoundException {
         //  save  a  meal
         var meal = IMenuTest.createMeal();
-        this.mealDao.save(meal);
 
-        this.mealIDSavedInDB = meal.getId();
+
+        this.mealIDSavedInDB = this.mealDao.save(meal).getId();;
 
         var menu = IMenuTest.createMenu(List.of(meal));
         this.menuSaved = this.menuDao.save(menu);
 
     }
 
-    @AfterEach
-    void cleanDB() {
-        this.menuDao.deleteAll();
-        this.mealDao.deleteAll();
-    }
+
 
     /************************************** Add Menu ****************************************/
 
@@ -94,9 +95,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.add("quantity", "10");
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-        result.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(MENU_ADDED_SUCCESSFULLY));
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(MENU_ADDED_SUCCESSFULLY));
 
         var imageName = this.menuDao.findAll().get(0).getImage().getImagename();
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).exists());

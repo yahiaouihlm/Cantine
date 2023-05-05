@@ -45,7 +45,7 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
      this.menuEntity = this.menuDao.save(menu);
   }
 
-  @AfterEach
+  @BeforeEach
     void cleanDatabase(){
       this.menuEntity = null;
       this.menuDao.deleteAll();
