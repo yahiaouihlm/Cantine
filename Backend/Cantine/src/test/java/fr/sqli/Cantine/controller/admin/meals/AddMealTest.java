@@ -5,6 +5,8 @@ import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,13 +23,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.Objects;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
+    private static final Logger LOG = LogManager.getLogger();
     final  String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
     @Autowired
     private IMealDao mealDao;
@@ -40,7 +42,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     private MockMultipartFile imageData;
 
 
-    @BeforeEach
+
     public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("label", "MealTest");
@@ -57,7 +59,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     }
 
-    @AfterEach
+
     public void clearDataBase() {
         this.mealDao.findAll();
         this.mealDao.deleteAll();
@@ -80,9 +82,20 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
 
 
+
+    @BeforeEach
+    void init  () throws IOException {
+        clearDataBase();
+        initFormData();
+        initDataBase();
+    }
     @Test
     void addMealTestWithAllValidateInformation() throws Exception {
 
+        this.formData.set("label", "MealTest2");
+        this.formData.set("price", "15");
+        this.formData.set("category", "MealTest2 category");
+        this.formData.set("description", "MealTest2 description");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -95,20 +108,18 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
         // finally  we  delete  the  meal  from  the  database
 
-        MealEntity mealadded;
-        mealadded = this.mealDao.findAll().get(0);
-        String imageName = mealadded.getImage().getImagename();
+        var meal = this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("MealTest2", "MealTest2 category", "MealTest2 description");
+        Assertions.assertTrue(meal.isPresent());
+        var imageName = meal.get().getImage().getImagename();
+        var  imageFile = new File(IMAGE_MEAL_DIRECTORY_PATH + imageName);
+        Assertions.assertTrue(imageFile.delete());
 
-        File file = new File(IMAGE_MEAL_DIRECTORY_PATH + imageName);
-        Assertions.assertTrue(file.delete());
-
-        this.mealDao.delete(mealadded);
     }
 
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase4() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
@@ -132,7 +143,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase3() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
         this.formData.set("category", "   M e a l TEST c  ate gor y ".toLowerCase());
         this.formData.set("label", "ME                  AlTES t".toLowerCase());
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
@@ -156,7 +167,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase2() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "MEALTEST DESCRIPTION");
@@ -180,7 +191,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
 
@@ -203,7 +214,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesToCategory() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
         this.formData.set("category", "   M e a l Test c  ate gor y ");
 
 
@@ -226,7 +237,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesToDescription() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
         this.formData.set("description", "   MealTest description   ");
 
 
@@ -251,7 +262,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel3() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
 
         this.formData.set("label", "MealTes t");
 
@@ -276,7 +287,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel2() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
 
         this.formData.set("label", " M eal T e s t ");
 
@@ -301,7 +312,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel() throws Exception {
-        initDataBase(); //  make  one  Meal in  the  database
+
 
         this.formData.remove("label");
         this.formData.add("label", " M e a  l T e s t ");
@@ -328,7 +339,7 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
     @DisplayName("add Meal with  the  same  label  and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMeal() throws Exception {
 
-        initDataBase(); //  make  one  Meal in  the  database
+
 
         var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
                 + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
