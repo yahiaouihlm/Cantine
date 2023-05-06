@@ -37,7 +37,7 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
   private MenuEntity menuEntity;
  @Autowired
  private IMealDao mealDao;
-  @BeforeEach
+
   void initDatabase(){
      var meal  = IMenuTest.createMeal();
      this.mealDao.save(meal);
@@ -45,12 +45,18 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
      this.menuEntity = this.menuDao.save(menu);
   }
 
-  @BeforeEach
     void cleanDatabase(){
       this.menuEntity = null;
       this.menuDao.deleteAll();
          this.mealDao.deleteAll();
 
+  }
+
+
+  @BeforeEach
+  void init (){
+      cleanDatabase();
+      initDatabase();
   }
   /************************************** Get All Menus *************************************/
 
