@@ -57,8 +57,32 @@ class AdminServiceTest {
                 ;  // contenu du fichier
     }
 
+    /****************************  TESTS FOR LASTNAME  ************************************/
 
-   /****************************  TESTS FOR NAME  ************************************/
+    @Test
+    void addAdminWithTooLongLastNameTest() throws IOException {
+        this.adminDtoIn.setLastname("a".repeat(91));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+
+    @Test
+    void addAdminWithTooShortLastNameTest() throws IOException {
+        this.adminDtoIn.setLastname("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithEmptyLastNameTest() throws IOException {
+        this.adminDtoIn.setLastname("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithNullLastNameTest() throws IOException {
+        this.adminDtoIn.setLastname(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+    }
+
+
+    /****************************  TESTS FOR NAME  ************************************/
    @Test
    void addAdminWithTooLongNameTest() throws IOException {
        this.adminDtoIn.setFirstname("a".repeat(91));
