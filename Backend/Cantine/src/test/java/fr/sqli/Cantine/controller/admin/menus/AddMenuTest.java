@@ -4,7 +4,10 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
+import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
+    private static final Logger LOG = LogManager.getLogger();
     final String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
     @Autowired
     private IMenuDao menuDao;
@@ -44,12 +48,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     private MockMultipartFile imageData;
 
     private Integer mealIDSavedInDB;
-  /* TODO   checks tests  its  doesn't work */
+
     private MenuEntity menuEntitySavedInDB;
 
     private MenuEntity menuSaved;
 
-    @BeforeEach
     void initFormData() throws IOException {
         this.mealIDSavedInDB = null; //  init  mealIDSavedInDB
         this.formData = IMenuTest.initFormData();
@@ -59,23 +62,25 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
     }
 
-    @BeforeEach
-    void cleanDB() {
-
-        this.menuDao.deleteAll();
-        this.mealDao.deleteAll();
-    }
-    @BeforeEach
-    void initDB() throws FileNotFoundException {
-        //  save  a  meal
+    void initDB (){
         var meal = IMenuTest.createMeal();
-
 
         this.mealIDSavedInDB = this.mealDao.save(meal).getId();;
 
         var menu = IMenuTest.createMenu(List.of(meal));
         this.menuSaved = this.menuDao.save(menu);
 
+    }
+
+    void cleanDB() {
+        this.menuDao.deleteAll();
+        this.mealDao.deleteAll();
+    }
+    @BeforeEach
+    void init() throws IOException {
+              initFormData();
+              cleanDB();
+              initDB();
     }
 
 
@@ -85,7 +90,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTest() throws Exception {
         // to  find the image  we have to  remove all  menus  saved in DB and  save  a  new  menu and  get  its  image  to  check  if  its saved seccessfully
-        this.menuDao.deleteAll();
+
 
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("label", "MenuTest");
@@ -101,7 +106,10 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(MENU_ADDED_SUCCESSFULLY));
 
-        var imageName = this.menuDao.findAll().get(0).getImage().getImagename();
+        MenuEntity menuEntity = this.menuDao.findAll().stream() // we know that  there is  only 2 menu
+                                   .filter(menu ->menu.getLabel().equals("MenuTest")).limit(1).toList().get(0);
+         var imageName = menuEntity.getImage().getImagename();
+
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).delete());
     }

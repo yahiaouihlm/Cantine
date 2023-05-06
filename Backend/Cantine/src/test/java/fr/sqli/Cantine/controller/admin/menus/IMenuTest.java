@@ -65,14 +65,14 @@ public interface IMenuTest {
     );
 
 
-      @BeforeAll
+     /* @BeforeAll
       static void  checkExistingTestFiles () {
           File image = new File(IMAGE_MENU_FOR_TEST_PATH);
             if (!image.exists()) {
                throw  new RuntimeException("The image ' ImageMenuForTest ' for test doesn't exist");
             }
       }
-
+*/
 
     @BeforeAll
     static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {

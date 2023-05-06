@@ -23,4 +23,5 @@ public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
     Optional<MenuEntity> findByLabelAndAndPriceAndDescriptionIgnoreCase(String label, String description , BigDecimal price);
 
 
+
 }
