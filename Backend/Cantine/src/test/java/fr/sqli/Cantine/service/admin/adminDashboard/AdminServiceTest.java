@@ -1,7 +1,9 @@
 package fr.sqli.Cantine.service.admin.adminDashboard;
 
 import fr.sqli.Cantine.dao.AdminDao;
+import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
@@ -16,6 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +31,8 @@ class AdminServiceTest {
     @Mock
     private IImageService imageService;
 
+    @Mock
+    private IFunctionDao functionDao;
     @Mock
     private MockEnvironment environment;
     @InjectMocks
@@ -56,6 +62,45 @@ class AdminServiceTest {
                 new FileInputStream(IMAGE_TESTS_PATH)));
                 ;  // contenu du fichier
     }
+
+    /****************************  TESTS FOR email  ************************************/
+
+
+
+   @Test
+   void addAdminWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
+       this.adminDtoIn.setLastname("a".repeat(91));
+       var  functionEntity = new FunctionEntity();
+         functionEntity.setName(this.adminDtoIn.getFunction());
+
+       Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(  Optional.of(functionEntity));
+
+       assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+
+   }
+
+
+    @Test
+    void addAdminWithTooLongEmailTest() throws IOException {
+        this.adminDtoIn.setLastname("a".repeat(91));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+
+
+    @Test
+    void addAdminWithEmptyEmailTest() throws IOException {
+        this.adminDtoIn.setEmail("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithNullEmailTest() throws IOException {
+        this.adminDtoIn.setEmail(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+    }
+
+
+
+
 
     /****************************  TESTS FOR LASTNAME  ************************************/
 
