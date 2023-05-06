@@ -52,15 +52,14 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     private MultiValueMap<String, String> formData;
 
 
-    @BeforeEach
+
     void cleanDaBase () {
         mealDao.deleteAll();
         menuDao.deleteAll();
     }
 
 
-   @BeforeEach
-    void init() throws IOException {
+    void initForData() throws IOException {
         this.formData =  new LinkedMultiValueMap<>();
         this.formData.add("label", "MenuTest");
         this.formData.add("description", "Menu  description  test");
@@ -73,7 +72,6 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
     }
-     @BeforeEach
     void initDaBase () {
         this.mealSaved =  IMenuTest.createMeal();
         mealDao.save( this.mealSaved);
@@ -81,6 +79,12 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.menuSaved =   menuDao.save(menu);
     }
 
+    @BeforeEach
+    void init () throws IOException {
+        cleanDaBase();
+        initForData();
+        initDaBase ();
+    }
 
 
    @Test
