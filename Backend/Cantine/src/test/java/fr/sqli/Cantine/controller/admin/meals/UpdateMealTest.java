@@ -5,10 +5,7 @@ import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.List;
 
 import java.util.Objects;
@@ -43,7 +41,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
     private MockMultipartFile imageData;
 
 
-    @BeforeEach
+
     public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("id", "1");
@@ -61,7 +59,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     }
 
-    @BeforeEach
+
     void initDatabase() {
         ImageEntity image = new ImageEntity();
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
@@ -77,18 +75,31 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     }
 
-    @AfterEach
+
     void cleanDatabase() {
         this.mealDao.deleteAll();
+    }
+
+    @BeforeAll
+    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        File sourceFile = new File(source);
+        File destFile = new File(destination);
+        Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
+
+
+    @BeforeEach
+    void  init () throws IOException {
+        cleanDatabase();
+        initFormData();
+        initDatabase();
     }
 
     /**
      * the method  is used  to  rename after update the image of the meal
      */
-    boolean renameTestImage(String oldName, String newName) {
-        File file = new File(IMAGE_MEAL_DIRECTORY_PATH + oldName);
-        return file.renameTo(new File(IMAGE_MEAL_DIRECTORY_PATH + newName));
-    }
 
     @Test
     void updateMealWithImage() throws Exception {
@@ -115,7 +126,8 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.getPrice());
         var newImageName = updatedMeal.getImage().getImagename();
 
-        Assertions.assertTrue(renameTestImage(newImageName, IMAGE_MEAL_FOR_TEST_NAME), "The change must  return  true to  verify  that the image is updated to  his original name");
+        Assertions.assertTrue(new File(IMAGE_MEAL_DIRECTORY_PATH + newImageName).delete());
+
     }
 
 

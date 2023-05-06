@@ -7,10 +7,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -46,14 +44,9 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     @Autowired
     private MockMvc mockMvc;
 
-    /*TODO
-          to  reloas image  after    each   tests
-     */
-    /*
-        TODO please make sur that when tests are failed the image is reloaded
-     */
-    @BeforeEach
-    public void init() {
+
+
+    public void initDB() {
         ImageEntity image = new ImageEntity();
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         ImageEntity image1 = new ImageEntity();
@@ -67,13 +60,28 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         this.mealDao.saveAll(meals);
     }
 
-    @AfterEach
+
     void cleanUp() {
         this.menuDao.deleteAll();
         this.mealDao.deleteAll(); // clean  data  after  each  test
     }
+    @BeforeAll
+    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        File sourceFile = new File(source);
+        File destFile = new File(destination);
+        Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
 
 
+
+
+    @BeforeEach
+    void init (){
+       this.cleanUp();
+        this.initDB();
+    }
     BufferedImage saveTestFile() throws IOException {
         File image = new File(IMAGE_MEAL_FOR_TEST_PATH);
         return ImageIO.read(image);
@@ -81,21 +89,20 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void removeMealTest() throws Exception {
-        var idMealToRemove = this.mealDao.findAll().get(0).getId();
+        var mealToRemove = this.mealDao.findAll().get(0);
 
-        var image = saveTestFile(); // save  image before  delete meal
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove));
+
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + mealToRemove.getId()));
 
 
         result.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(MEAL_DELETED_SUCCESSFULLY));
 
         Assertions.assertEquals(1, this.mealDao.findAll().size());
+        var  image =  mealToRemove.getImage().getImagename();
+        Assertions.assertFalse(new File(IMAGE_MEAL_DIRECTORY_PATH + image).exists());
 
-        //  reload image in images/meals to make  test  pass
-        File outputFile = new File(IMAGE_MEAL_FOR_TEST_PATH);
-        ImageIO.write(image, "jpg", outputFile);
 
 
     }

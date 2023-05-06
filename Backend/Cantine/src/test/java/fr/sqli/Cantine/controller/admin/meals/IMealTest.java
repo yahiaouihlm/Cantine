@@ -15,11 +15,15 @@ public interface IMealTest {
 
     final String UPDATE_MEAL_URL = BASE_MEAL_URL + "/update";
 
+    String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesForTests/meals/";
+
+
     String  IMAGE_MEAL_FOR_TEST_NAME = "ImageMealForTest.jpg";
     String SECOND_IMAGE_MEAL_FOR_TEST_NAME="ImageMealForTest1.jpg";
     String IMAGE_MEAL_FORMAT_FOR_TEST="image/jpg";
+
     String IMAGE_MEAL_DIRECTORY_PATH = "images/meals/";
-    String   IMAGE_MEAL_FOR_TEST_PATH = IMAGE_MEAL_DIRECTORY_PATH+IMAGE_MEAL_FOR_TEST_NAME;
+    String   IMAGE_MEAL_FOR_TEST_PATH = IMAGE_MEAL_TEST_DIRECTORY_PATH +IMAGE_MEAL_FOR_TEST_NAME;
     final Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("Label", "LABEL_IS_MANDATORY"),
             Map.entry("Category", "CATEGORY_IS_MANDATORY"),
@@ -48,6 +52,8 @@ public interface IMealTest {
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0")
 
     );
+
+
 
 
 }
