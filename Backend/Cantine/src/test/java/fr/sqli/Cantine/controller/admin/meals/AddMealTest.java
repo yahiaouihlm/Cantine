@@ -354,13 +354,14 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         result2.andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
 
-        clearDataBase(); //  clear  the  database  after  all
     }
 
 
     /**********************************************  Tests  Fot Images  *********************************************/
     @Test
     void addMealWithWrongImageFormat() throws Exception {
+        this.formData.set("label", "MealTest2"); //  we change the   label  to  avoid  the  conflict  with  the  existing  meal  in  the  database
+
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
                 IMAGE_MEAL_FOR_TEST_NAME,          // nom du fichier
