@@ -72,6 +72,35 @@ class AdminServiceTest {
         this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
     }
 
+
+
+    /****************************  TESTS FOR Town  ************************************/
+
+
+    @Test
+    void addAdminWithTooShortTownTest() throws IOException {
+        this.adminDtoIn.setTown("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithEmptyTownTest() throws IOException {
+        this.adminDtoIn.setTown("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithNullTownTest() throws IOException {
+        this.adminDtoIn.setTown(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+    }
+
+
+
+
+
+
+
+
+
     /****************************  TESTS FOR email  ************************************/
 
 
