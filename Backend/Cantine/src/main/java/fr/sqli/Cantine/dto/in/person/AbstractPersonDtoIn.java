@@ -60,6 +60,8 @@ public  abstract  class AbstractPersonDtoIn {
          if (this.password.length() > 20 )
             throw new InvalidPersonInformationException("PASSWORD MUST BE LESS THAN 20 CHARACTERS");
 
+         if  (this.town.length() <2 )
+             throw new InvalidPersonInformationException("TOWN  MUST BE AT LEAST 2 CHARACTERS");
     }
 
 
