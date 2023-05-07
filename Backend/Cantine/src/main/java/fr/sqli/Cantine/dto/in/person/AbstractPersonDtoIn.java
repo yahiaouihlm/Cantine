@@ -54,7 +54,7 @@ public  abstract  class AbstractPersonDtoIn {
         if (this.lastname.length() > 90 )
             throw new InvalidPersonInformationException("LASTNAME MUST BE LESS THAN 90 CHARACTERS");
 
-         if (this.email.length() > 90 )
+         if (this.email.length() > 1000 )
             throw new InvalidPersonInformationException("EMAIL MUST BE LESS THAN 90 CHARACTERS");
 
          if (this.password.length() > 20 )

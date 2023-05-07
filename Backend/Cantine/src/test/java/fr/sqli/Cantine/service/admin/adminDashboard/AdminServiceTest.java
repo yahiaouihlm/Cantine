@@ -6,6 +6,9 @@ import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
+import fr.sqli.Cantine.service.images.ImageService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,21 +18,24 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class AdminServiceTest {
 
+    private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesForTests/meals/ImageMealForTest.jpg";
     @Mock
     private AdminDao adminDao;
     @Mock
-    private IImageService imageService;
+    private ImageService imageService;
 
     @Mock
     private IFunctionDao functionDao;
@@ -41,10 +47,11 @@ class AdminServiceTest {
     private AdminDtoIn adminDtoIn;
 
     @BeforeEach
-    void setUp() throws IOException {
-        environment.setProperty("sqli.cantine.default.persons.admin.imagename","defaultAdminImageName");
-        environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
-        environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
+    void setUp() throws IOException, FileNotFoundException {
+        this.environment= new MockEnvironment();
+        this.environment.setProperty("sqli.cantine.default.persons.admin.imagename","defaultAdminImageName");
+        this.environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
+        this.environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
         this.adminDtoIn = new AdminDtoIn();
         this.adminDtoIn.setFirstname("firstName");
         this.adminDtoIn.setLastname("lastName");
@@ -61,6 +68,8 @@ class AdminServiceTest {
                 "images/png",                    // type MIME
                 new FileInputStream(IMAGE_TESTS_PATH)));
                 ;  // contenu du fichier
+
+        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
     }
 
     /****************************  TESTS FOR email  ************************************/
@@ -69,7 +78,7 @@ class AdminServiceTest {
 
    @Test
    void addAdminWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
-       this.adminDtoIn.setLastname("a".repeat(91));
+       this.adminDtoIn.setEmail("a".repeat(91));
        var  functionEntity = new FunctionEntity();
          functionEntity.setName(this.adminDtoIn.getFunction());
 
@@ -77,12 +86,15 @@ class AdminServiceTest {
 
        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
 
+
+       Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
+       Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
    }
 
 
     @Test
     void addAdminWithTooLongEmailTest() throws IOException {
-        this.adminDtoIn.setLastname("a".repeat(91));
+        this.adminDtoIn.setEmail("a".repeat(1001));
         assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
     }
 

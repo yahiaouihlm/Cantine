@@ -12,6 +12,8 @@ import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +25,7 @@ import java.time.LocalDate;
 
 @Service
 public class AdminService implements IAdminDashboardService {
-
+    private static final Logger LOG = LogManager.getLogger();
     final  String DEFAULT_ADMIN_IMAGE_NAME;
     final  String EMAIL_ADMIN_DOMAIN ;
     final  String ADMIN_IMAGE_PATH ;  //  path  to  admin image  directory
@@ -54,12 +56,14 @@ public class AdminService implements IAdminDashboardService {
         var  functionAdmin =  adminDtoIn.getFunction();
         var functionAdminEntity = this.functionDao.findByName(functionAdmin);
         if  (functionAdminEntity.isEmpty()){
+            AdminService.LOG.error("function  is  not  valid");
             throw  new InvalidPersonInformationException(" YOUR FUNCTIONALITY IS NOT VALID");
         }
 
         adminEntity.setFunction(functionAdminEntity.get());
         //check  email  validity
         if (!adminEntity.getEmail().endsWith(EMAIL_ADMIN_DOMAIN) ){
+            AdminService.LOG.error("email  is  not  valid");
             throw  new InvalidPersonInformationException(" YOUR EMAIL IS NOT VALID");
         }
 
