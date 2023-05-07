@@ -64,7 +64,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
        lastname VARCHAR(100) NOT NULL,
       birthdate DATE NOT NULL,
       registration_date DATE NOT NULL,
-      email VARCHAR(300) NOT NULL,
+      email VARCHAR(1000) NOT NULL,
       password VARCHAR(2000) NOT NULL,
       town VARCHAR(400) NOT NULL,
       address VARCHAR(1000) NOT NULL,
