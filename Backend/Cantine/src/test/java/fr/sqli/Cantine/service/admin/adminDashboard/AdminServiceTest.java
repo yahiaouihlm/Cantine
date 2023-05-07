@@ -74,9 +74,46 @@ class AdminServiceTest {
 
 
 
+
+
+
+
+
+
+
+    /****************************  TESTS FOR ADDRESS  ************************************/
+    @Test
+    void addAdminWithTooLongAddressTest() throws IOException {
+        this.adminDtoIn.setAddress("a".repeat(2001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+
+    @Test
+    void addAdminWithTooShortAddressTest() throws IOException {
+        this.adminDtoIn.setAddress("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithEmptyAddressTest() throws IOException {
+        this.adminDtoIn.setAddress("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithNullAddressTest() throws IOException {
+        this.adminDtoIn.setAddress(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+    }
+
+
+
+
+
+
+
+
     /****************************  TESTS FOR Town  ************************************/
     @Test
-    void addAdminWithToolONGTownTest() throws IOException {
+    void addAdminWithTooLongTownTest() throws IOException {
         this.adminDtoIn.setTown("a".repeat(2001));
         assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
     }
