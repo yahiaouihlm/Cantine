@@ -75,7 +75,11 @@ class AdminServiceTest {
 
 
     /****************************  TESTS FOR Town  ************************************/
-
+    @Test
+    void addAdminWithToolONGTownTest() throws IOException {
+        this.adminDtoIn.setTown("a".repeat(2001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
 
     @Test
     void addAdminWithTooShortTownTest() throws IOException {
