@@ -39,10 +39,10 @@ public  abstract  class AbstractPersonDtoIn {
         if (this.address == null || this.address.isEmpty() || this.address.isBlank())
             throw new InvalidPersonInformationException("ADDRESS IS  REQUIRED");
 
-        if  (this.firstname.length() < 3)
+        if  (this.firstname.trim().length() < 3)
             throw new InvalidPersonInformationException("FIRSTNAME MUST BE AT LEAST 3 CHARACTERS");
 
-        if  (this.lastname.length() < 3)
+        if  (this.lastname.trim().length() < 3)
             throw new InvalidPersonInformationException("LASTNAME MUST BE AT LEAST 3 CHARACTERS");
 
         if  (this.password.length() < 6)
@@ -57,14 +57,21 @@ public  abstract  class AbstractPersonDtoIn {
          if (this.email.length() > 1000 )
             throw new InvalidPersonInformationException("EMAIL MUST BE LESS THAN 90 CHARACTERS");
 
-         if (this.password.trim().length() > 20 )
+         if (this.password.length() > 20 )
             throw new InvalidPersonInformationException("PASSWORD MUST BE LESS THAN 20 CHARACTERS");
 
          if  (this.town.trim().length() <2 )
              throw new InvalidPersonInformationException("TOWN  MUST BE AT LEAST 2 CHARACTERS");
 
-        if  (this.town.trim().length() >2000 )
+        if  (this.town.length() >2000 )
             throw new InvalidPersonInformationException("TOWN MUST BE LESS THAN 2000 CHARACTERS");
+
+        if  (this.address.trim().length() <2 )
+            throw new InvalidPersonInformationException("ADDRESS  MUST BE AT LEAST 2 CHARACTERS");
+
+        if  (this.address.length() > 2000 )
+            throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 2000 CHARACTERS");
+
     }
 
 
