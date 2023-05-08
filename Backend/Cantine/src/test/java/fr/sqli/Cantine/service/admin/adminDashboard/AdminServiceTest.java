@@ -74,6 +74,43 @@ class AdminServiceTest {
 
 
 
+
+
+
+
+    /****************************  TESTS FOR PASSWORD  ************************************/
+    @Test
+    void addAdminWithTooLongPasswordTest() throws IOException {
+        this.adminDtoIn.setPassword("a".repeat(21));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+
+    @Test
+    void addAdminWithTooShortPasswordTest() throws IOException {
+        this.adminDtoIn.setPassword("a".repeat(5));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithEmptyPasswordTest() throws IOException {
+        this.adminDtoIn.setPassword("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithNullPasswordTest() throws IOException {
+        this.adminDtoIn.setPassword(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+    }
+
+
+
+
+
+
+
+
+
+
+
     /****************************  TESTS FOR BirthdayAsString  ************************************/
 
     @Test
