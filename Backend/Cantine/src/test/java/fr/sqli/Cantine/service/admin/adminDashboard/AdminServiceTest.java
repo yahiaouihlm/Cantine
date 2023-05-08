@@ -74,6 +74,36 @@ class AdminServiceTest {
 
 
 
+    /****************************  TESTS FOR BirthdayAsString  ************************************/
+
+    @Test
+    void addAdminWithInvalidBirthdateAsStringFormatTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("18/07/2000");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+
+    @Test
+    void addAdminWithTooLongBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("a".repeat(2001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+
+    @Test
+    void addAdminWithTooShortBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithEmptyBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+    }
+    @Test
+    void addAdminWithNullBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+    }
+
 
 
 
@@ -133,9 +163,6 @@ class AdminServiceTest {
         this.adminDtoIn.setTown(null);
         assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
     }
-
-
-
 
 
 
