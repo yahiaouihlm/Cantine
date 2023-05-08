@@ -7,9 +7,14 @@ import fr.sqli.Cantine.entity.FunctionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 @SpringBootTest
@@ -24,6 +29,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     @Autowired
     private MockMvc mockMvc;
 
+    private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
     private FunctionEntity savedFunction;
     void initDabase() {
@@ -31,7 +37,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         function.setName("Manager");
         this.savedFunction = this.functionDao.save(function);
     }
-    void initFormData() {
+    void initFormData() throws IOException {
         this.formData =new LinkedMultiValueMap<>();
         this.formData.add("firstname", "halim");
         this.formData.add("lastname", "yahiaoui");
@@ -42,6 +48,12 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         this.formData.add("address", "102  rue de cheret 75013 paris");
         this.formData.add("phone", "0631990189");
         this.formData.add("function","Manager");
+
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/png",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
 
     }
 

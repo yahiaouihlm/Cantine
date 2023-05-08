@@ -20,7 +20,6 @@ public  abstract  class AbstractPersonDtoIn {
     private  String phone;
     private MultipartFile image;
 
-    private MockMultipartFile imageData;
     protected   void ValidatePersonInformationWithOutPhone() throws InvalidPersonInformationException {
         if  (this.firstname == null || this.firstname.isEmpty() || this.firstname.isBlank())
             throw new InvalidPersonInformationException("FIRSTNAME IS  REQUIRED");
