@@ -3,12 +3,19 @@ package fr.sqli.Cantine.service.admin.adminDashboard;
 import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.ImageService;
+import fr.sqli.Cantine.service.images.exception.ImagePathException;
+import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -108,6 +115,7 @@ class AdminServiceTest {
 
 
     /****************************  TESTS FOR PASSWORD  ************************************/
+
     @Test
     void addAdminWithTooLongPasswordTest() throws IOException {
         this.adminDtoIn.setPassword("a".repeat(21));
