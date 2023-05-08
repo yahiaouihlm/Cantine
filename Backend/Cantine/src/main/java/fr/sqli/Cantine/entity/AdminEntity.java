@@ -27,11 +27,11 @@ public class AdminEntity {
     @Column(name = "birthdate" , nullable=false )
     private LocalDate birthdate ;
 
-    @Column(name = "town" , nullable=false , length = 399)
+    @Column(name = "town" , nullable=false , length = 1000)
     private String town;
 
 
-    @Column(name = "address" , nullable=false , length = 999)
+    @Column(name = "address" , nullable=false , length = 3000)
     private String address;
 
     @Column(name = "phone" , nullable=false , length = 99)
