@@ -63,17 +63,17 @@ public  abstract  class AbstractPersonDtoIn {
          if (this.password.length() > 20 )
             throw new InvalidPersonInformationException("PASSWORD MUST BE LESS THAN 20 CHARACTERS");
 
-         if  (this.town.trim().length() <2 )
+         if  (this.town.trim().length() <3 )
              throw new InvalidPersonInformationException("TOWN  MUST BE AT LEAST 2 CHARACTERS");
 
-        if  (this.town.length() >2000 )
-            throw new InvalidPersonInformationException("TOWN MUST BE LESS THAN 2000 CHARACTERS");
+        if  (this.town.length() >1000 )
+            throw new InvalidPersonInformationException("TOWN MUST BE LESS THAN 1000 CHARACTERS");
 
-        if  (this.address.trim().length() <2 )
+        if  (this.address.trim().length() <10 )
             throw new InvalidPersonInformationException("ADDRESS  MUST BE AT LEAST 2 CHARACTERS");
 
-        if  (this.address.length() > 2000 )
-            throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 2000 CHARACTERS");
+        if  (this.address.length() > 3000 )
+            throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 3000 CHARACTERS");
 
     }
 
