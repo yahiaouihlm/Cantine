@@ -7,6 +7,7 @@ import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.ImageService;
 
+import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -75,7 +76,6 @@ class AdminServiceTest {
         this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
 
     }
-
 
 
 

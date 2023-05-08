@@ -47,7 +47,6 @@ public class AdminService implements IAdminDashboardService {
             this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path");
         }
 
-
     @Override
     public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         AdminEntity adminEntity = adminDtoIn.toAdminEntityWithOutFunction();
