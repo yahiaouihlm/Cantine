@@ -1,11 +1,14 @@
 package fr.sqli.Cantine.dto.in.person;
 
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
 public  abstract  class AbstractPersonDtoIn {
+    private static final Logger LOG = LogManager.getLogger();
     private  String firstname;
     private  String lastname;
     private  String email;
@@ -81,6 +84,7 @@ public  abstract  class AbstractPersonDtoIn {
         try {
             this.birthdate = LocalDate.parse(this.birthdateAsString);
         }catch (Exception e){
+            AbstractPersonDtoIn.LOG.error("INVALID BIRTHDATE FORMAT");
             throw  new InvalidPersonInformationException(" INVALID BIRTHDATE FORMAT");
         }
     }
