@@ -20,6 +20,8 @@ public interface IAdminTest {
      Map.entry("LongFirstName", "FIRSTNAME MUST BE LESS THAN 90 CHARACTERS"),
         Map.entry("LastNameRequire", "LASTNAME IS  REQUIRED"),
         Map.entry("ShortLastName", "LASTNAME MUST BE AT LEAST 3 CHARACTERS"),
-        Map.entry("LongLastName", "LASTNAME MUST BE LESS THAN 90 CHARACTERS")
+        Map.entry("LongLastName", "LASTNAME MUST BE LESS THAN 90 CHARACTERS"),
+        Map.entry("BirthdateRequire", "BIRTHDATE IS  REQUIRED"),
+        Map.entry("InvalidBirthdateFormat", "INVALID BIRTHDATE FORMAT")
     );
 }

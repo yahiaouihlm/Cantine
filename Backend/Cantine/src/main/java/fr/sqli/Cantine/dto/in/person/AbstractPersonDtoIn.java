@@ -85,7 +85,7 @@ public  abstract  class AbstractPersonDtoIn {
             this.birthdate = LocalDate.parse(this.birthdateAsString);
         }catch (Exception e){
             AbstractPersonDtoIn.LOG.error("INVALID BIRTHDATE FORMAT");
-            throw  new InvalidPersonInformationException(" INVALID BIRTHDATE FORMAT");
+            throw  new InvalidPersonInformationException("INVALID BIRTHDATE FORMAT");
         }
     }
 
