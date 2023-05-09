@@ -81,7 +81,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
     @Test
     void  addAdminWithTooLongAddress() throws Exception {
-        this.formData.set("address",  "a".repeat(1001));
+        this.formData.set("address",  "a".repeat(3001));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
@@ -90,7 +90,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongTown"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongAddress"))));
 
 
     }
@@ -108,7 +108,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortTown"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortAddress"))));
 
 
     }
