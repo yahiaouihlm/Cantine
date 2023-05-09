@@ -80,6 +80,101 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
 
+
+
+    /***************************************** TESTS   PASSWORD  ************************************************/
+
+    @Test
+    void  addAdminWithTooLongPassword() throws Exception {
+        this.formData.set("password",  "a".repeat(91));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongPassword"))));
+
+
+    }
+
+
+
+    @Test
+    void  addAdminWithTooShortPassword() throws Exception {
+        this.formData.set("password",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortPassword"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithEmptyPassword() throws Exception {
+        this.formData.set("password",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PasswordRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithNullPassword() throws Exception {
+        this.formData.set("password",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PasswordRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithOutPassword() throws Exception {
+        this.formData.remove("password");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PasswordRequire"))));
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /***************************************** TESTS  EMAIL  ************************************************/
 
     @Test
