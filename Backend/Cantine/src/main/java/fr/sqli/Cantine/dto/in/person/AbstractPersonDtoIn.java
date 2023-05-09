@@ -58,7 +58,10 @@ public  abstract  class AbstractPersonDtoIn {
             throw new InvalidPersonInformationException("LASTNAME MUST BE LESS THAN 90 CHARACTERS");
 
          if (this.email.length() > 1000 )
-            throw new InvalidPersonInformationException("EMAIL MUST BE LESS THAN 90 CHARACTERS");
+            throw new InvalidPersonInformationException("EMAIL MUST BE LESS THAN 1000 CHARACTERS");
+
+         if (this.email.trim().length() < 5 )
+            throw new InvalidPersonInformationException("EMAIL MUST BE AT LEAST 5 CHARACTERS");
 
          if (this.password.length() > 20 )
             throw new InvalidPersonInformationException("PASSWORD MUST BE LESS THAN 20 CHARACTERS");
@@ -93,6 +96,7 @@ public  abstract  class AbstractPersonDtoIn {
 
         if (this.phone == null || this.phone.isEmpty() || this.phone.isBlank())
             throw new InvalidPersonInformationException("PHONE IS  REQUIRED");
+
 
         String regex = "^(?:(?:\\+|00)33|0)\\s*[1-9](?:[\\s.-]*\\d{2}){4}$";
 
