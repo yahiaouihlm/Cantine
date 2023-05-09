@@ -77,6 +77,109 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         initFormData();
     }
 
+
+
+
+    /***************************************** TESTS   PHONES   ************************************************/
+
+
+    @Test
+    void  addAdminWithInvalidPhoneFormat3() throws Exception {
+        this.formData.set("phone", " +33076289514 ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+    }
+
+        @Test
+    void  addAdminWithInvalidPhoneFormat2() throws Exception {
+        this.formData.set("phone",  " 06319907853654 ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithInvalidPhoneFormat() throws Exception {
+        this.formData.set("phone",  " oksfki ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+
+
+    }
+    @Test
+    void  addAdminWithEmptyPhone() throws Exception {
+        this.formData.set("phone",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PhoneRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithNullPhone() throws Exception {
+        this.formData.set("phone",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PhoneRequire"))));
+
+
+    }
+    @Test
+    void addAdminWithOutPhone() throws Exception {
+        this.formData.remove("phone");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PhoneRequire"))));
+
+
+    }
+
+
+
+
+
+
+
     /***************************************** TESTS   TOWN   ************************************************/
 
     @Test
