@@ -29,6 +29,7 @@ public class AdminService implements IAdminDashboardService {
     final  String DEFAULT_ADMIN_IMAGE_NAME;
     final  String EMAIL_ADMIN_DOMAIN ;
     final  String ADMIN_IMAGE_PATH ;  //  path  to  admin image  directory
+    final String  EMAIL_ADMIN_REGEX ;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ImageService imageService;
     private IFunctionDao functionDao;
@@ -45,6 +46,7 @@ public class AdminService implements IAdminDashboardService {
             this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename");
             this.EMAIL_ADMIN_DOMAIN = environment.getProperty("sqli.cantine.admin.email.domain");
             this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path");
+            this.EMAIL_ADMIN_REGEX  = "^[a-zA-Z0-9._-]+@"+EMAIL_ADMIN_DOMAIN+"$" ;
         }
 
     @Override
@@ -61,9 +63,9 @@ public class AdminService implements IAdminDashboardService {
 
         adminEntity.setFunction(functionAdminEntity.get());
         //check  email  validity
-        if (!adminEntity.getEmail().endsWith(EMAIL_ADMIN_DOMAIN) ){
+        if (!adminEntity.getEmail().matches(this.EMAIL_ADMIN_REGEX ) ){
             AdminService.LOG.error("email  is  not  valid");
-            throw  new InvalidPersonInformationException(" YOUR EMAIL IS NOT VALID");
+            throw  new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
         }
 
         //check  if  admin  is  already  existing by  email
