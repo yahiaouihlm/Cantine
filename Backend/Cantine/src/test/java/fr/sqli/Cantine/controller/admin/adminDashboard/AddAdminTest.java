@@ -43,7 +43,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
     private FunctionEntity savedFunction;
-    void initDabase() {
+    void initDataBase() {
         FunctionEntity function = new FunctionEntity();
         function.setName("Manager");
         this.savedFunction = this.functionDao.save(function);
@@ -77,7 +77,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     @BeforeEach
     void    init() throws IOException {
         cleanDtaBase();
-        initDabase();
+        initDataBase();
         initFormData();
     }
 
