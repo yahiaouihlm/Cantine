@@ -33,6 +33,7 @@ public interface IAdminTest {
             Map.entry("InvalidPhoneFormat", "INVALID PHONE FORMAT"),
             Map.entry("EmailRequire", "EMAIL IS  REQUIRED"),
             Map.entry("ShortEmail", "EMAIL MUST BE AT LEAST 5 CHARACTERS"),
-            Map.entry("LongEmail", "EMAIL MUST BE LESS THAN 1000 CHARACTERS")
+            Map.entry("LongEmail", "EMAIL MUST BE LESS THAN 1000 CHARACTERS"),
+            Map.entry("InvalidEmailFormat", "YOUR EMAIL IS NOT VALID")
     );
 }

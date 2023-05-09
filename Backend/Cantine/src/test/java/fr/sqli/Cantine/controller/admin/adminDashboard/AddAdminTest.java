@@ -83,6 +83,36 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     /***************************************** TESTS  EMAIL  ************************************************/
 
     @Test
+    void  addAdminWithInvalidEmail2() throws Exception {
+        this.formData.set("email",  "halim.yahiaoui@outlook.fr");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidEmailFormat"))));
+
+
+    }
+    @Test
+    void  addAdminWithInvalidEmail() throws Exception {
+        this.formData.set("email",  "yugioh@yahoo.fr");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidEmailFormat"))));
+
+
+    }
+    @Test
     void  addAdminWithTooLongEmail() throws Exception {
         this.formData.set("email",  "a".repeat(1001));
 
