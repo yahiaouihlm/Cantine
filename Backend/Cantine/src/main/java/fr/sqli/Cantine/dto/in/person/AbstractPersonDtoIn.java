@@ -48,7 +48,7 @@ public  abstract  class AbstractPersonDtoIn {
         if  (this.lastname.trim().length() < 3)
             throw new InvalidPersonInformationException("LASTNAME MUST BE AT LEAST 3 CHARACTERS");
 
-        if  (this.password.length() < 6)
+        if  (this.password.trim().length() < 6)
             throw new InvalidPersonInformationException("PASSWORD MUST BE AT LEAST 6 CHARACTERS");
 
         if (this.firstname.length() > 90 )
