@@ -55,7 +55,7 @@ public class AdminService implements IAdminDashboardService {
 
         //check  function  validity
         var  functionAdmin =  adminDtoIn.getFunction();
-        var functionAdminEntity = this.functionDao.findByName(functionAdmin);
+        var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
         if  (functionAdminEntity.isEmpty()){
             AdminService.LOG.error("function  is  not  valid");
             throw  new InvalidPersonInformationException("YOUR FUNCTIONALITY IS NOT VALID");

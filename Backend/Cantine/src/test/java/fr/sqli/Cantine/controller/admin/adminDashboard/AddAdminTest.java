@@ -4,11 +4,13 @@ import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -35,6 +37,8 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private Environment environment;
 
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
@@ -51,8 +55,8 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     }
     void initFormData() throws IOException {
         this.formData =new LinkedMultiValueMap<>();
-        this.formData.add("firstname", "halim");
-        this.formData.add("lastname", "yahiaoui");
+        this.formData.add("firstname", "Halim");
+        this.formData.add("lastname", "Yahiaoui");
         this.formData.add("email", "halim.yahiaoui@social.aston-ecole.com");
         this.formData.add("password", "test33");
         this.formData.add("birthdateAsString", "2000-07-18");
@@ -76,6 +80,33 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         initDabase();
         initFormData();
     }
+
+     @Test
+    void addAdminWithOutImage () throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(ADMIN_ADDED_SUCCESSFULLY));
+
+       var  admin = this.adminDao.findByEmail(this.formData.getFirst("email")).get();
+         Assertions.assertEquals(admin.getFirstname(), this.formData.getFirst("firstname"));
+            Assertions.assertEquals(admin.getLastname(), this.formData.getFirst("lastname"));
+            Assertions.assertEquals(admin.getEmail(), this.formData.getFirst("email"));
+           Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
+
+         var imageName =  admin.getImage().getImagename();
+         Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.default.persons.admin.imagename"));
+
+    }
+
+
+
+
+
+
 
     /***************************************** TESTS   IMAGES  ************************************************/
 
