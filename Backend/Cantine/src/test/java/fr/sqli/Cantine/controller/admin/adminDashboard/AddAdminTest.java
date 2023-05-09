@@ -77,7 +77,47 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         initFormData();
     }
 
+    /***************************************** TESTS   IMAGES  ************************************************/
 
+    @Test
+    void  addAdminWithWrongImageFormat() throws Exception {
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/pdf",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithInvalidImageFormat() throws Exception {
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/svg",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+
+    }
 
     /***************************************** TESTS   Function  ************************************************/
     @Test

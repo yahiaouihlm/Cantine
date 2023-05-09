@@ -39,6 +39,7 @@ public interface IAdminTest {
             Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
             Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
             Map.entry("FunctionRequire", "FUNCTION IS  REQUIRED"),
-            Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID")
+            Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
+            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED")
     );
 }
