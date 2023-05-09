@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -68,7 +69,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
                 IMAGE_NAME,          // nom du fichier
-                "images/png",                    // type MIME
+                "image/png",                    // type MIME
                 new FileInputStream(IMAGE_FOR_TEST_PATH));
 
     }
@@ -81,7 +82,32 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         initFormData();
     }
 
-     @Test
+
+    @Test
+    void addAdmin () throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(ADMIN_ADDED_SUCCESSFULLY));
+
+        var  admin = this.adminDao.findByEmail(this.formData.getFirst("email")).get();
+        Assertions.assertEquals(admin.getFirstname(), this.formData.getFirst("firstname"));
+        Assertions.assertEquals(admin.getLastname(), this.formData.getFirst("lastname"));
+        Assertions.assertEquals(admin.getEmail(), this.formData.getFirst("email"));
+        Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
+
+        var imageName =  admin.getImage().getImagename();
+        Assertions.assertTrue(new File(ADMIN_IMAGE_PATH + imageName).delete());
+    }
+
+
+
+
+    @Test
     void addAdminWithOutImage () throws Exception {
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
@@ -311,13 +337,6 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
     }
-
-
-
-
-
-
-
 
 
 

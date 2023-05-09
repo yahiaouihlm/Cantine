@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface IAdminTest {
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin/adminDashboard";
+
+    String ADMIN_IMAGE_PATH = "images/persons/admin/";
     String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
 
     String  IMAGE_NAME = "imageForTest.jpg";
