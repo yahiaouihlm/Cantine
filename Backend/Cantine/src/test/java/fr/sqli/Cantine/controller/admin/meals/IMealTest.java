@@ -15,10 +15,10 @@ public interface IMealTest {
 
     final String UPDATE_MEAL_URL = BASE_MEAL_URL + "/update";
 
-    String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesForTests/meals/";
+    String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
 
 
-    String  IMAGE_MEAL_FOR_TEST_NAME = "ImageMealForTest.jpg";
+    String  IMAGE_MEAL_FOR_TEST_NAME = "ImageForTest.jpg";
     String SECOND_IMAGE_MEAL_FOR_TEST_NAME="ImageMealForTest1.jpg";
     String IMAGE_MEAL_FORMAT_FOR_TEST="image/jpg";
 

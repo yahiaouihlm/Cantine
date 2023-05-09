@@ -25,6 +25,8 @@ public interface IAdminTest {
         Map.entry("InvalidBirthdateFormat", "INVALID BIRTHDATE FORMAT"),
         Map.entry("TownRequire", "TOWN IS  REQUIRED"),
         Map.entry("ShortTown", "TOWN  MUST BE AT LEAST 2 CHARACTERS"),
-        Map.entry("LongTown", "TOWN MUST BE LESS THAN 1000 CHARACTERS")
+        Map.entry("LongTown", "TOWN MUST BE LESS THAN 1000 CHARACTERS"),
+        Map.entry("AddressRequire", "ADDRESS IS  REQUIRED"),
+        Map.entry("ShortAddress", "ADDRESS  MUST BE AT LEAST 10 CHARACTERS")
     );
 }

@@ -31,9 +31,9 @@ public interface IMenuTest {
 
 
     /********************** Image **************************/
-    String  IMAGE_MENU_FOR_TEST_NAME = "ImageMenuForTest.jpg";
-    String  SECOND_IMAGE_MENU_FOR_TEST_NAME = "ImageMealForTest1.jpg";
-    String IMAGE_MENU_DIRECTORY_TESTS_PATH = "imagesForTests/menus/";
+    String  IMAGE_MENU_FOR_TEST_NAME = "ImageForTest.jpg";
+
+    String IMAGE_MENU_DIRECTORY_TESTS_PATH = "imagesTests/";
 
     String  IMAGE_MENU_FORMAT_FOR_TEST="image/jpg";
     String   IMAGE_MENU_FOR_TEST_PATH = IMAGE_MENU_DIRECTORY_TESTS_PATH +IMAGE_MENU_FOR_TEST_NAME;

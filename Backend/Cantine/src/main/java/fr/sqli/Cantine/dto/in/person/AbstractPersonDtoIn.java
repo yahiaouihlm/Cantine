@@ -70,7 +70,7 @@ public  abstract  class AbstractPersonDtoIn {
             throw new InvalidPersonInformationException("TOWN MUST BE LESS THAN 1000 CHARACTERS");
 
         if  (this.address.trim().length() <10 )
-            throw new InvalidPersonInformationException("ADDRESS  MUST BE AT LEAST 2 CHARACTERS");
+            throw new InvalidPersonInformationException("ADDRESS  MUST BE AT LEAST 10 CHARACTERS");
 
         if  (this.address.length() > 3000 )
             throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 3000 CHARACTERS");
