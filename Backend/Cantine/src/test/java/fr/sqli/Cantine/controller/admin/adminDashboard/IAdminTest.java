@@ -37,6 +37,8 @@ public interface IAdminTest {
             Map.entry("InvalidEmailFormat", "YOUR EMAIL IS NOT VALID"),
             Map.entry("PasswordRequire", "PASSWORD IS  REQUIRED"),
             Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
-            Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS")
+            Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
+            Map.entry("FunctionRequire", "FUNCTION IS  REQUIRED"),
+            Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID")
     );
 }
