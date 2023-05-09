@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AdminServiceTest {
 
     private static final Logger LOG = LogManager.getLogger();
-    final   String  IMAGE_TESTS_PATH = "imagesForTests/meals/ImageMealForTest.jpg";
+    final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
     private AdminDao adminDao;
     @Mock
