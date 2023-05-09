@@ -58,7 +58,7 @@ public class AdminService implements IAdminDashboardService {
         var functionAdminEntity = this.functionDao.findByName(functionAdmin);
         if  (functionAdminEntity.isEmpty()){
             AdminService.LOG.error("function  is  not  valid");
-            throw  new InvalidPersonInformationException(" YOUR FUNCTIONALITY IS NOT VALID");
+            throw  new InvalidPersonInformationException("YOUR FUNCTIONALITY IS NOT VALID");
         }
 
         adminEntity.setFunction(functionAdminEntity.get());
