@@ -4,17 +4,26 @@ import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -37,6 +46,11 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         function.setName("Manager");
         this.savedFunction = this.functionDao.save(function);
     }
+
+    void  cleanDtaBase() {
+        this.adminDao.deleteAll();
+        this.functionDao.deleteAll();
+    }
     void initFormData() throws IOException {
         this.formData =new LinkedMultiValueMap<>();
         this.formData.add("firstname", "halim");
@@ -58,5 +72,96 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     }
 
 
+    @BeforeEach
+    void    init() throws IOException {
+        cleanDtaBase();
+        initDabase();
+        initFormData();
+    }
+
+
+
+
+    /***************************************** TESTS   FIRSTNAME  ************************************************/
+
+    @Test
+    void  addAdminWithTooLongFirstname() throws Exception {
+        this.formData.set("firstname",  "a".repeat(91));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongFirstName"))));
+
+
+    }
+
+
+
+    @Test
+    void  addAdminWithTooShortFirstname() throws Exception {
+        this.formData.set("firstname",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortFirstName"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithEmptyFirstname() throws Exception {
+        this.formData.set("firstname",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithNullFirstname() throws Exception {
+        this.formData.set("firstname",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithOutFirstname() throws Exception {
+        this.formData.remove("firstname");
+
+     var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+             .file(this.imageData)
+             .params(this.formData)
+             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+     result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+             .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
 
 }
