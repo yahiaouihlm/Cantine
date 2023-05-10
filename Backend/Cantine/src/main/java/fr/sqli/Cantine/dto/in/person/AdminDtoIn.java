@@ -18,7 +18,7 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
         AdminEntity admin = new AdminEntity();
           admin.setFirstname(CamelCase(this.getFirstname().trim()));
           admin.setLastname(CamelCase(this.getLastname().trim()));
-          admin.setEmail(this.getEmail().trim().toLowerCase());
+          admin.setEmail(this.getEmail().replaceAll("\\s+","").toLowerCase());
           admin.setPassword(this.getPassword());
           admin.setBirthdate(this.getBirthdate());
           admin.setTown(this.getTown().trim());
