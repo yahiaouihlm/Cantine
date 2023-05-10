@@ -1,5 +1,10 @@
 package fr.sqli.Cantine.controller.admin.adminDashboard;
 
+import fr.sqli.Cantine.entity.AdminEntity;
+import fr.sqli.Cantine.entity.FunctionEntity;
+import fr.sqli.Cantine.entity.ImageEntity;
+
+import java.time.LocalDate;
 import java.util.Map;
 
 public interface IAdminTest {
@@ -44,4 +49,26 @@ public interface IAdminTest {
             Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED")
     );
+
+     static  AdminEntity  CreateAdminWithEmil (String email, FunctionEntity functionEntity){
+
+         AdminEntity adminEntity = new AdminEntity();
+            adminEntity.setEmail(email);
+            adminEntity.setFunction(functionEntity);
+            adminEntity.setFirstname("firstName");
+            adminEntity.setLastname("lastName");
+            adminEntity.setAddress("address");
+            adminEntity.setTown("town");
+            adminEntity.setPhone("0631990180");
+            adminEntity.setBirthdate(LocalDate.now());
+            adminEntity.setPassword("password");
+            ImageEntity imageEntity = new ImageEntity();
+               imageEntity.setImagename("ImageForTest");
+               adminEntity.setImage(imageEntity);
+
+            adminEntity.setStatus(0);
+
+            return adminEntity;
+
+     }
 }
