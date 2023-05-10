@@ -30,6 +30,12 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
 
     @JsonIgnore
+    public   void   checkInformationValidityExceptEmailAndPassword() throws InvalidPersonInformationException {
+        validateInformationWithOutEmailAndPassword();
+
+    }
+
+    @JsonIgnore
     private  String  CamelCase(String  str){
         if (str == null || str.isEmpty()) {
             return new String();
