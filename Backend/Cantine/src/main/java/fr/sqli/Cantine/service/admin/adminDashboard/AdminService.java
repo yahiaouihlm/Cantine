@@ -97,7 +97,7 @@ public class AdminService implements IAdminDashboardService {
     @Override
     public void existingAdmin(String  adminEmail ) throws ExistingAdminException {
           if  (this.adminDao.findByEmail(adminEmail).isPresent()){
-              throw  new ExistingAdminException("THIS ADMIN IS ALREADY EXISTING");
+              throw  new ExistingAdminException("THIS ADMIN IS ALREADY EXISTS");
           }
     }
 }

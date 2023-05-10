@@ -131,6 +131,29 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
 
+    @Test
+
+    void addAdminWithSameEmail() throws Exception {
+        var email   =   "yahiaoui@social.aston-ecole.com";
+        // save  in  database An  Admin  with  email  "yahiaoui@yahoo.fr"
+        var  adminSaved  =  IAdminTest.CreateAdminWithEmil(email, this.savedFunction);
+
+        this.adminDao.save(adminSaved);
+
+        // try to  save  another  admin  with  the  same  email
+        this.formData.set("email", email);
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingAdmin"))));
+
+    }
+
+
+
 
 
 
