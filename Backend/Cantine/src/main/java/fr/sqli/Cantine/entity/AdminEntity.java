@@ -49,7 +49,7 @@ public class AdminEntity {
     private ImageEntity image;
 
 
-    @ManyToOne(cascade =  CascadeType.ALL)
+    @ManyToOne(cascade =  CascadeType.MERGE)
     @JoinColumn(name="function_id", nullable=false)
     private FunctionEntity function;
 
