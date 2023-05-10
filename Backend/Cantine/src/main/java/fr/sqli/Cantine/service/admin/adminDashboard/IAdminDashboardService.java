@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public interface IAdminDashboardService {
 
-    public void updateAdmin(AdminDtoIn adminDtoIn, Integer idAdmin) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
+    public void updateAdminInfo(AdminDtoIn adminDtoIn, Integer idAdmin) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
     public AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 
 

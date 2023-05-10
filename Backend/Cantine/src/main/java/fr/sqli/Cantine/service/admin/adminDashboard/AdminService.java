@@ -51,7 +51,7 @@ public class AdminService implements IAdminDashboardService {
         }
 
     @Override
-    public void updateAdmin(AdminDtoIn adminDtoIn,  Integer idAdmin) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound {
+    public void updateAdminInfo(AdminDtoIn adminDtoIn,  Integer idAdmin) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound {
          IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
 
         adminDtoIn.checkInformationValidityExceptEmailAndPassword(); //  check  information  validity
