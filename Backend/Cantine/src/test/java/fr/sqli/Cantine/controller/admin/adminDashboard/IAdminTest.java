@@ -47,10 +47,11 @@ public interface IAdminTest {
             Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
             Map.entry("FunctionRequire", "FUNCTION IS  REQUIRED"),
             Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
-            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED")
+            Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
+            Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS")
     );
 
-     static  AdminEntity  CreateAdminWithEmil (String email, FunctionEntity functionEntity){
+     static  AdminEntity  CreateAdminWithEmil (String email,  FunctionEntity functionEntity){
 
          AdminEntity adminEntity = new AdminEntity();
             adminEntity.setEmail(email);
@@ -62,6 +63,7 @@ public interface IAdminTest {
             adminEntity.setPhone("0631990180");
             adminEntity.setBirthdate(LocalDate.now());
             adminEntity.setPassword("password");
+            adminEntity.setRegistrationDate(LocalDate.now());
             ImageEntity imageEntity = new ImageEntity();
                imageEntity.setImagename("ImageForTest");
                adminEntity.setImage(imageEntity);
