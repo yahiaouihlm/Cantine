@@ -20,7 +20,7 @@ public interface IAdminDashboardService {
     public  void existingAdmin(String  adminEmail ) throws ExistingAdminException;
 
     static   void  checkIDValidity(Integer idAdmin) throws InvalidPersonInformationException{
-        if (idAdmin == null || idAdmin < 0) {
+        if (idAdmin == null   || idAdmin < 0) {
             throw new InvalidPersonInformationException("INVALID ID");
         }
     }
