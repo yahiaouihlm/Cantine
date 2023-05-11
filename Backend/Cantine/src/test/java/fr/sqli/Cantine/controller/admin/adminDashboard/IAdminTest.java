@@ -12,7 +12,7 @@ public interface IAdminTest {
 
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
     String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
-
+    String  ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL +  "/updateAdmin/info";
     String  IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
     String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
@@ -21,7 +21,7 @@ public interface IAdminTest {
 
 
     //   exceptions messages
-    final Map<String, String> exceptionsMap = Map.ofEntries(
+     Map<String, String> exceptionsMap = Map.ofEntries(
       Map.entry("FirstNameRequire", "FIRSTNAME IS  REQUIRED"),
      Map.entry("ShortFirstName", "FIRSTNAME MUST BE AT LEAST 3 CHARACTERS"),
      Map.entry("LongFirstName", "FIRSTNAME MUST BE LESS THAN 90 CHARACTERS"),
@@ -48,10 +48,11 @@ public interface IAdminTest {
             Map.entry("FunctionRequire", "FUNCTION IS  REQUIRED"),
             Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
-            Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS")
+            Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS"),
+            Map.entry("MissingParam", "MISSING PARAMETER")
     );
 
-     static  AdminEntity  CreateAdminWithEmil (String email,  FunctionEntity functionEntity){
+     static  AdminEntity createAdminWith(String email, FunctionEntity functionEntity){
 
          AdminEntity adminEntity = new AdminEntity();
             adminEntity.setEmail(email);

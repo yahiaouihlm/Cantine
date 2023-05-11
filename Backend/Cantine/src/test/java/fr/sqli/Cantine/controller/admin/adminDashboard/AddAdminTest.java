@@ -136,7 +136,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     void addAdminWithSameEmail() throws Exception {
         var email   =   "yahiaoui@social.aston-ecole.com";
         // save  in  database An  Admin  with  email  "yahiaoui@yahoo.fr"
-        var  adminSaved  =  IAdminTest.CreateAdminWithEmil(email, this.savedFunction);
+        var  adminSaved  =  IAdminTest.createAdminWith(email, this.savedFunction);
 
         this.adminDao.save(adminSaved);
 
