@@ -7,7 +7,6 @@ import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.ImageService;
 
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,6 +77,36 @@ class AdminServiceTest {
     }
 
 
+    /****************************  TESTS FOR FUNCTIONS  ************************************/
+    @Test
+    void addAdminInformationEmptyFunction()  {
+
+        this.adminDtoIn.setFunction("");
+        assertThrows(InvalidPersonInformationException.class, () ->this.adminDtoIn.getFunction());
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addAdminInformationWithInvalidFunction() throws InvalidPersonInformationException {
+
+        this.adminDtoIn.setFunction("invalidFunction");
+        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.empty());
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+    @Test
+    void addAdminInformationNullFunction(){
+
+        this.adminDtoIn.setFunction(null);
+
+        assertThrows(InvalidPersonInformationException.class, () ->this.adminDtoIn.getFunction());
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
 
     /****************************  TESTS FOR Phone  ************************************/
     @Test
