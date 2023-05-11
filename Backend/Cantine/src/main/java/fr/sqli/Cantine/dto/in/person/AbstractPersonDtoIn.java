@@ -31,8 +31,6 @@ public  abstract  class AbstractPersonDtoIn {
 
         validateInformationWithOutEmailAndPassword();
 
-            birthdateValidator ();
-
 
 
         if (this.email.length() > 1000 )
@@ -86,6 +84,8 @@ public  abstract  class AbstractPersonDtoIn {
 
       if  (this.address.length() > 3000 )
           throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 3000 CHARACTERS");
+
+      birthdateValidator ();
 
   }
 
