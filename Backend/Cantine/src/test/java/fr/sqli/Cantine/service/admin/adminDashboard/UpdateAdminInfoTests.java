@@ -75,6 +75,44 @@ public class UpdateAdminInfoTests {
 
 
 
+    /****************************  TESTS FOR ADDRESS  ************************************/
+    @Test
+    void updateAdminInfoWithTooLongAddressTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setAddress("a".repeat(3001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void updateAdminInfoWithTooShortAddressTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setAddress("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInfoWithEmptyAddressTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setAddress("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithNullAddressTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setAddress(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
+
 
     /****************************  TESTS FOR Town  ************************************/
     @Test
