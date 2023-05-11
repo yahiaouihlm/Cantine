@@ -75,6 +75,55 @@ public class UpdateAdminInfoTests {
 
 
 
+    /****************************  TESTS FOR BirthdayAsString  ************************************/
+
+    @Test
+    void updateAdminInfoWithInvalidBirthdateAsStringFormatTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("18/07/2000");
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void updateAdminInfoWithTooLongBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("a".repeat(2001));
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void updateAdminInfoWithTooShortBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("ab");
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInfoWithEmptyBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString("   ");
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInfoWithNullBirthdateAsStringTest() throws IOException {
+        this.adminDtoIn.setBirthdateAsString(null);
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
+
+
     /****************************  TESTS FOR ADDRESS  ************************************/
     @Test
     void updateAdminInfoWithTooLongAddressTest() throws IOException {
