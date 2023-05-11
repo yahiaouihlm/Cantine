@@ -72,9 +72,55 @@ public class UpdateAdminInfoTests {
 
     }
 
+
+
+
+
+    /****************************  TESTS FOR Town  ************************************/
+    @Test
+    void updateAdminWithTooLongTownTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setTown("a".repeat(2001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void updateAdminWithTooShortTownTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setTown("nm");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminWithEmptyTownTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setTown("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminWithNullTownTest() throws IOException {
+        var  idMenu = 1;
+        this.adminDtoIn.setTown(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
+
+
+
+
+
+
+
     /****************************  TESTS FOR email And Password presences   ************************************/
-
-
 
 
 
