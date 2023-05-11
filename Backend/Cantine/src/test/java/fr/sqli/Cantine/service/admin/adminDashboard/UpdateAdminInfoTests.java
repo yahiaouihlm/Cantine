@@ -72,8 +72,38 @@ public class UpdateAdminInfoTests {
 
     }
 
+    /****************************  TESTS FOR FUNCTIONS  ************************************/
 
+    @Test
+    void updateAdminInformationEmptyFunction(){
 
+        this.adminDtoIn.setFunction("");
+        var idMenu = 1;
+
+        assertThrows(InvalidPersonInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInformationNullFunction(){
+
+        this.adminDtoIn.setFunction(null);
+        var idMenu = 1;
+
+        assertThrows(InvalidPersonInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void  updateAdminInformationWithInvalidFunction() throws InvalidPersonInformationException {
+        var idMenu = 1;
+        this.adminDtoIn.setFunction("invalidFunction");
+        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.empty());
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
     /****************************  TESTS FOR Phone  ************************************/
     @Test
     void updateAdminInfoWithTooLongPhoneTest() throws IOException {
