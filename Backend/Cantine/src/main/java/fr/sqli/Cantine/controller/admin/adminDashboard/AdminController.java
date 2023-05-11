@@ -10,10 +10,7 @@ import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -32,6 +29,7 @@ public class AdminController  implements IAdminDashboardController {
 
 
     @Override
+     @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     public ResponseEntity<String> updateAdminInfo(AdminDtoIn adminDtoIn, Integer idAdmin) throws InvalidPersonInformationException,InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound {
        this.adminService.updateAdminInfo(adminDtoIn, idAdmin);
             return ResponseEntity.ok(ADMIN_ADDED_SUCCESSFULLY);
