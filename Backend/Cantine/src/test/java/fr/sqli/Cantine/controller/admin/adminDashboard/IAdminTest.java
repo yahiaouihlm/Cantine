@@ -49,7 +49,9 @@ public interface IAdminTest {
             Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS"),
-            Map.entry("MissingParam", "MISSING PARAMETER")
+            Map.entry("MissingParam", "MISSING PARAMETER"),
+            Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
+            Map.entry("InvalidRequest", "INVALID INFORMATION REQUEST")
     );
 
      static  AdminEntity createAdminWith(String email, FunctionEntity functionEntity){
