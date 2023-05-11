@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -70,6 +71,31 @@ public class UpdateAdminInfoTests {
         this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
 
     }
+
+    /****************************  TESTS FOR email And Password presences   ************************************/
+
+
+
+
+
+    @Test
+    void updateAdminWithPresenceOfEmail() throws IOException {
+        this.adminDtoIn.setEmail("test");
+        var  idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminWithPresenceOfPassword() throws IOException {
+        this.adminDtoIn.setPassword("test33");
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
 
     /****************************  TESTS FOR LASTNAME  ************************************/
 
