@@ -71,6 +71,50 @@ public class UpdateAdminInfoTests {
 
     }
 
+    /****************************  TESTS FOR LASTNAME  ************************************/
+
+    @Test
+    void updateAdminInformationWithTooLongLastNameTest() throws IOException {
+        this.adminDtoIn.setLastname("a".repeat(91));
+        var idMenu = 1;
+        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void updateAdminInformationWithTooShortLastNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setLastname("ab");
+        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInformationWithEmptyLastNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setLastname("   ");
+        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInformationWithNullLastNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setLastname(null);
+        assertThrows(InvalidPersonInformationException.class,()-> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
+
+
+
+
+
+
     /****************************  TESTS FOR NAME  ************************************/
     @Test
     void updateAdminInformationWithTooLongNameTest() throws IOException {
