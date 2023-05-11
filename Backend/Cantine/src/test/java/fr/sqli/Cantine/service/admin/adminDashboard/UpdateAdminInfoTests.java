@@ -71,8 +71,44 @@ public class UpdateAdminInfoTests {
 
     }
 
+    /****************************  TESTS FOR NAME  ************************************/
+    @Test
+    void updateAdminInformationWithTooLongNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setFirstname("a".repeat(91));
+        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
 
-   /******************************** TESTS  ADMIN ID  ********************************/
+    @Test
+    void updateAdminInformationWithTooShortNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setFirstname("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInformationWithEmptyNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setFirstname("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void updateAdminInformationWithNullNameTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setFirstname(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
+    /******************************** TESTS  ADMIN ID  ********************************/
 
 
   @Test
