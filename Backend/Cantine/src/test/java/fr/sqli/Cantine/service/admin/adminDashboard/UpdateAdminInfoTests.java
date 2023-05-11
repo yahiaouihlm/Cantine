@@ -4,10 +4,12 @@ import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.ImageService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +69,6 @@ public class UpdateAdminInfoTests {
                 "images/png",                    // type MIME
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
-        this.functionEntity =  new FunctionEntity();
         this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
 
     }
@@ -373,8 +374,18 @@ public class UpdateAdminInfoTests {
 
     /******************************** TESTS  ADMIN ID  ********************************/
 
+ @Test
+ void  updateAdminInformationWithNotFoundAdmin () throws InvalidPersonInformationException {
+     Integer idMenu = 1 ;
+     Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(this.functionEntity));
+     Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
+     Assertions.assertThrows(AdminNotFound.class, () -> {
+         this.adminService.updateAdminInfo( this.adminDtoIn, idMenu);
+     });
 
-  @Test
+
+ }
+     @Test
    void updateAdminWithNegativeID (){
        Integer  idMenu =  -1;
          assertThrows(InvalidPersonInformationException.class, () -> {
