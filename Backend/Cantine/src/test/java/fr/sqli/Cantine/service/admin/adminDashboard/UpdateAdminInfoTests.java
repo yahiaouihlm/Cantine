@@ -74,6 +74,36 @@ public class UpdateAdminInfoTests {
 
 
 
+    /****************************  TESTS FOR Phone  ************************************/
+    @Test
+    void updateAdminInfoWithTooLongPhoneTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setPhone("a".repeat(21));
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+    }
+
+    @Test
+    void updateAdminInfoWithTooShortPhoneTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setPhone("a".repeat(5));
+        assertThrows(InvalidPersonInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+    }
+    @Test
+    void updateAdminInfoWithEmptyPhoneTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setPhone("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+    }
+    @Test
+    void updateAdminInfoWithNullPhoneTest() throws IOException {
+        var idMenu = 1;
+        this.adminDtoIn.setPhone(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn, idMenu));
+    }
+
+
+
+
 
     /****************************  TESTS FOR BirthdayAsString  ************************************/
 
