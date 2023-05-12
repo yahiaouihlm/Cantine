@@ -51,7 +51,8 @@ public interface IAdminTest {
             Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS"),
             Map.entry("MissingParam", "MISSING PARAMETER"),
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
-            Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED")
+            Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
+            Map.entry("InvalidId", "INVALID ID")
     );
 
      static  AdminEntity createAdminWith(String email, FunctionEntity functionEntity){

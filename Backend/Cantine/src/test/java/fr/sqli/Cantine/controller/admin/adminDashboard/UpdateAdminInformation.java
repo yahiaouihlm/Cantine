@@ -193,7 +193,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidInfo"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
     }
     @Test
     void updateAdminInfoWithInvalidIdAdmin () throws Exception {
