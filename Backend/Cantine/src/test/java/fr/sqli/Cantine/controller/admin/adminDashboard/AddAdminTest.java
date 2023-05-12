@@ -749,7 +749,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
 
-    /***************************************** TESTS   LASTNAME  ************************************************/
+    /***************************************** TESTS   BirthdateAsString  ************************************************/
 
     @Test
     void  addAdminWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {

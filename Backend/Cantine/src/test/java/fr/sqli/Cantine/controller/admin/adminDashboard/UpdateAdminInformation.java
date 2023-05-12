@@ -78,6 +78,129 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
 
+
+
+
+
+
+
+
+    /***************************************** TESTS   BirthdateAsString  ************************************************/
+
+    @Test
+    void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
+        this.formData.set("birthdateAsString",  "2000/07/18");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
+        this.formData.set("birthdateAsString",  "18/07/2000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+
+    @Test
+    void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat2() throws Exception {
+        this.formData.set("birthdateAsString",  "18-07-2000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+
+
+
+    @Test
+    void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
+        this.formData.set("birthdateAsString",  "kzjrnozr,kfjfkrfkrf");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+
+
+    @Test
+    void  updateAdminInfoWithEmptyBirthdateAsString() throws Exception {
+        this.formData.set("birthdateAsString",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("BirthdateRequire"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithNullBirthdateAsString() throws Exception {
+        this.formData.set("birthdateAsString",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("BirthdateRequire"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithOutBirthdayAsString() throws Exception {
+        this.formData.remove("birthdateAsString");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("BirthdateRequire"))));
+
+
+    }
+
+
+
+
+
+
     /***************************************** TESTS   LASTNAME  ************************************************/
 
     @Test
@@ -243,13 +366,6 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
     }
-
-
-
-
-
-
-
 
 
 
