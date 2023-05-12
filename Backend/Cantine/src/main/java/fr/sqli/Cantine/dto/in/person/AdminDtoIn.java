@@ -31,6 +31,7 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
     @JsonIgnore
     public   void   checkInformationValidityExceptEmailAndPassword() throws InvalidPersonInformationException {
+        super.phoneValidator();
         functionValidator();
         validateInformationWithOutEmailAndPassword();
 
