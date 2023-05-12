@@ -566,7 +566,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
 
 
-    /***************************************** TESTS   TOWN   ************************************************/
+    /***************************************** TESTS   ADDRESS   ************************************************/
 
     @Test
     void  addAdminWithTooLongAddress() throws Exception {
