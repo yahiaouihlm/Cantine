@@ -57,8 +57,6 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         this.formData =new LinkedMultiValueMap<>();
         this.formData.add("firstname", "Halim");
         this.formData.add("lastname", "Yahiaoui");
-        this.formData.add("email", "halim.yahiaoui@social.aston-ecole.com");
-        this.formData.add("password", "test33");
         this.formData.add("birthdateAsString", "2000-07-18");
         this.formData.add("town", "paris");
         this.formData.add("address", "102  rue de cheret 75013 paris");
@@ -78,6 +76,100 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         initDataBase();
         initFormData();
     }
+
+
+
+    /***************************************** TESTS   FIRSTNAME  ************************************************/
+
+    @Test
+    void  updateAdminInfoWithTooLongFirstname() throws Exception {
+        this.formData.set("firstname",  "a".repeat(91));
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongFirstName"))));
+
+
+    }
+
+
+
+    @Test
+    void  updateAdminInfoWithTooShortFirstname() throws Exception {
+        this.formData.set("firstname",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortFirstName"))));
+
+
+    }
+
+    @Test
+    void  updateAdminInfoWithEmptyFirstname() throws Exception {
+        this.formData.set("firstname",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithNullFirstname() throws Exception {
+        this.formData.set("firstname",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithOutFirstname() throws Exception {
+        this.formData.remove("firstname");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1")
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -101,7 +193,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidRequest"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidInfo"))));
     }
     @Test
     void updateAdminInfoWithInvalidIdAdmin () throws Exception {

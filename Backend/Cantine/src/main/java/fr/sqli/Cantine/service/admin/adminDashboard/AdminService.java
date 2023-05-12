@@ -53,7 +53,7 @@ public class AdminService implements IAdminDashboardService {
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn,  Integer idAdmin) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound {
          if (adminDtoIn.getEmail() !=null  || adminDtoIn.getPassword() !=null)
-            throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST");
+            throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
 
          IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
 
