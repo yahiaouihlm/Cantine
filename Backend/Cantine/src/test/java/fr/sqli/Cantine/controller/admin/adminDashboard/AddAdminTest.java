@@ -931,7 +931,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
     }
     @Test
-    void  addAdminWithOutLasttname() throws Exception {
+    void  addAdminWithOutLastname() throws Exception {
         this.formData.remove("lastname");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
