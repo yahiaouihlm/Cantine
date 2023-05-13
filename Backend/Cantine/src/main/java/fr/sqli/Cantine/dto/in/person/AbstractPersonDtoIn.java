@@ -9,6 +9,8 @@ import java.time.LocalDate;
 
 public  abstract  class AbstractPersonDtoIn {
     private static final Logger LOG = LogManager.getLogger();
+
+    private  Integer id ;
     private  String firstname;
     private  String lastname;
     private  String email;
@@ -114,9 +116,13 @@ public  abstract  class AbstractPersonDtoIn {
     }
 
 
+    public Integer getId() {
+        return id;
+    }
 
-
-
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getFirstname() {
         return firstname;
