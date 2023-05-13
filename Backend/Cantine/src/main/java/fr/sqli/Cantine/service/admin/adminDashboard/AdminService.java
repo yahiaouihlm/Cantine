@@ -85,7 +85,8 @@ public class AdminService implements IAdminDashboardService {
 
         if  (adminDtoIn.getImage() != null && !adminDtoIn.getImage().isEmpty()) {
             MultipartFile image = adminDtoIn.getImage();
-            var  imageName =  this.imageService.uploadImage(image, ADMIN_IMAGE_PATH );
+            var oldImageName =  adminEntity.getImage().getImagename();
+            var  imageName =  this.imageService.updateImage(oldImageName,  image, ADMIN_IMAGE_PATH );
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
             adminEntity.setImage(imageEntity);
