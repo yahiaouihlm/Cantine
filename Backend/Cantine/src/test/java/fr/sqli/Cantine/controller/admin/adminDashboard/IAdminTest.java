@@ -18,7 +18,8 @@ public interface IAdminTest {
     String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
 
 
-
+    String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
+    String  IMAGE_MEAL_FOR_TEST_NAME = "ImageForTest.jpg";
 
     //   exceptions messages
      Map<String, String> exceptionsMap = Map.ofEntries(

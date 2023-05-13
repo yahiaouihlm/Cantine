@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 
 @SpringBootTest
@@ -42,7 +45,14 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     private MultiValueMap<String, String> formData;
     private FunctionEntity savedFunction;
     private AdminEntity savedAdmin;
-
+    @BeforeAll
+    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        String destination = ADMIN_IMAGE_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        File sourceFile = new File(source);
+        File destFile = new File(destination);
+        Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
     void initDataBase() {
         FunctionEntity function = new FunctionEntity();
         function.setName("Manager");
@@ -90,7 +100,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         this.formData.set("phone", "0631800190");
 
         var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
-        this.formData.set("id" , String.valueOf(idMealToUpdate) );
+        this.formData.set("id" , String.valueOf(idMealToUpdate)  );
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, ADMIN_UPDATE_INFO )
                 .file(this.imageData)
@@ -110,6 +120,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.getAddress());
         Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.getPhone());
 
+        var imageUpdated = new File(ADMIN_IMAGE_PATH + adminUpdated.getImage().getImagename());
+
+        Assertions.assertTrue(imageUpdated.delete());
 
     }
 
