@@ -48,6 +48,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         function.setName("Manager");
         this.savedFunction = this.functionDao.save(function);
         var admin  =  IAdminTest.createAdminWith("halim.yahiaoui@social.aston-ecole.com",  this.savedFunction);
+        this.adminDao.save(admin);
     }
     void  cleanDtaBase() {
         this.adminDao.deleteAll();
@@ -645,6 +646,17 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
     /*****************************  TESTS FOR  ID ADMIN  ********************************/
 
+    @Test
+    void updateAdminInfoWithAdminNotFound () throws Exception {
+        var idMeal = this.adminDao.findAll().get(0).getId() + 1000;
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + idMeal)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("AdminNotFound"))));
+    }
     @Test
     void updateAdminInfoWithDoubleIdAdmin () throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + "1.5")
