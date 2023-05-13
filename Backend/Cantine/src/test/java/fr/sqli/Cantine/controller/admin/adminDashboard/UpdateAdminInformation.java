@@ -81,6 +81,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
     @Test
     void updateAdmin() throws Exception {
+        this.formData.set("id", "1");
         this.formData.set("firstname", "Halim-Updated");
         this.formData.set("lastname", "Yahiaoui-Updated");
         this.formData.set("birthdateAsString", "2000-07-18");
@@ -906,6 +907,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
     @Test
     void updateAdminInfoWithOutIdAdmin () throws Exception {
+        this.formData.remove("id");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
