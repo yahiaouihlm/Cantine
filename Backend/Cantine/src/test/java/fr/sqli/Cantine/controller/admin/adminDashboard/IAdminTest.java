@@ -49,7 +49,6 @@ public interface IAdminTest {
             Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS"),
-            Map.entry("MissingParam", "MISSING PARAMETER"),
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
             Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
             Map.entry("InvalidId", "INVALID ID"),
