@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.io.IOException;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UpdateAdminInformation  extends AbstractContainerConfig implements  IAdminTest {
+    private String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
     private  final  String  paramReq = "?"+"idAdmin"+"=";
     @Autowired
     private IFunctionDao functionDao;
@@ -35,8 +37,6 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private Environment environment;
 
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
@@ -78,9 +78,41 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         initFormData();
     }
 
+    /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************/
+
+    @Test
+    void updateAdminInfoWithOutImage() throws Exception {
+        this.formData.set("firstname", "Halim-Updated");
+        this.formData.set("lastname", "Yahiaoui-Updated");
+        this.formData.set("birthdateAsString", "2000-07-18");
+        this.formData.set("town", "chicago");
+        this.formData.set("address", "North Bergen New Jersey USA");
+        this.formData.set("phone", "0631800190");
+
+        var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, ADMIN_UPDATE_INFO + paramReq + idMealToUpdate)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.content().string(ADMIN_INFO_UPDATED_SUCCESSFULLY));
+
+        var adminUpdated = this.adminDao.findById(idMealToUpdate).get();
 
 
-    /***************************************** TESTS   Function  ************************************************/
+        Assertions.assertEquals(this.formData.get("firstname").get(0), adminUpdated.getFirstname());
+        Assertions.assertEquals(this.formData.get("lastname").get(0), adminUpdated.getLastname());
+        Assertions.assertEquals(this.formData.get("town").get(0), adminUpdated.getTown());
+        Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.getAddress());
+        Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.getPhone());
+        Assertions.assertEquals(IMAGE_NAME, adminUpdated.getImage().getImagename());
+
+
+    }
+
+
+    /***************************************** TESTS   FUNCTION   ************************************************/
     @Test
     void  updateAdminInfoWithInvalidFunction() throws Exception {
         this.formData.set("function",  "wrongFunction");

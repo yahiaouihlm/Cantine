@@ -70,7 +70,7 @@ public interface IAdminTest {
             adminEntity.setPassword("password");
             adminEntity.setRegistrationDate(LocalDate.now());
             ImageEntity imageEntity = new ImageEntity();
-               imageEntity.setImagename("ImageForTest");
+               imageEntity.setImagename(IMAGE_NAME);
                adminEntity.setImage(imageEntity);
 
             adminEntity.setStatus(0);
