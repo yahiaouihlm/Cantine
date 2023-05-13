@@ -79,6 +79,46 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
 
+    @Test
+    void  addAdminWithWrongImageFormat() throws Exception {
+        var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/pdf",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithInvalidImageFormat() throws Exception {
+        var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/svg",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq + idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+
+    }
+
 
     /***************************************** TESTS   PHONES   ************************************************/
 
