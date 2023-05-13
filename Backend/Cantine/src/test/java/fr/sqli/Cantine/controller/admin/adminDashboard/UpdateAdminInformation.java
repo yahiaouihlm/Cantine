@@ -79,14 +79,106 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
 
+
+    /***************************************** TESTS   Function  ************************************************/
     @Test
-    void  addAdminWithWrongImageFormat() throws Exception {
+    void  updateAdminInfoWithInvalidFunction() throws Exception {
+        this.formData.set("function",  "wrongFunction");
+        var idMealToUpdate =   1 ;
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionNotFound"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithWrongFunction() throws Exception {
+        this.formData.set("function",  "  ab ");
+        var idMealToUpdate =   1 ;
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionNotFound"))));
+
+
+    }
+
+    @Test
+    void  updateAdminInfoWithEmptyFunction() throws Exception {
+        this.formData.set("function",  "  ");
+        var idMealToUpdate =   1 ;
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionRequire"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithNullFunction() throws Exception {
+        this.formData.set("function",  null);
+        var idMealToUpdate =   1 ;
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionRequire"))));
+
+
+    }
+    @Test
+    void  updateAdminInfoWithOutFunction() throws Exception {
+        this.formData.remove("function");
+        var idMealToUpdate =   1 ;
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionRequire"))));
+
+
+    }
+
+
+
+    /*********************************** TESTS  IAMGE  **********************************************************/
+
+
+    @Test
+    void  updateAdminInfoWithWrongImageFormat() throws Exception {
         var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
                 IMAGE_NAME,          // nom du fichier
                 "images/pdf",                    // type MIME
                 new FileInputStream(IMAGE_FOR_TEST_PATH));
+
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq +  idMealToUpdate)
                 .file(this.imageData)
                 .params(this.formData)
@@ -100,7 +192,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
     @Test
-    void  addAdminWithInvalidImageFormat() throws Exception {
+    void  updateAdminInfoWithInvalidImageFormat() throws Exception {
         var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
