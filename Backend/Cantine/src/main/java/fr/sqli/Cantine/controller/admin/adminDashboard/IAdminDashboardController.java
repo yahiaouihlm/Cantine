@@ -25,6 +25,6 @@ public interface IAdminDashboardController {
    String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
    public ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException;
 
-   public ResponseEntity<String> updateAdminInfo(@ModelAttribute AdminDtoIn adminDtoIn, @RequestParam("idAdmin") Integer idAdmin) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
+    public ResponseEntity<String> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException,InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound ;
 
 }
