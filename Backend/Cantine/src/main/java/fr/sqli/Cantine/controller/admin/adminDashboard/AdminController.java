@@ -32,7 +32,7 @@ public class AdminController  implements IAdminDashboardController {
      @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     public ResponseEntity<String> updateAdminInfo(AdminDtoIn adminDtoIn, @RequestParam("idAdmin") Integer idAdmin) throws InvalidPersonInformationException,InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound {
        this.adminService.updateAdminInfo(adminDtoIn, idAdmin);
-            return ResponseEntity.ok(ADMIN_ADDED_SUCCESSFULLY);
+            return ResponseEntity.ok(ADMIN_INFO_UPDATED_SUCCESSFULLY);
     }
 
     @Override
