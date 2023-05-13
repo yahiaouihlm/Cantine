@@ -77,6 +77,39 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         initDataBase();
         initFormData();
     }
+    /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************/
+
+    @Test
+    void updateAdmin() throws Exception {
+        this.formData.set("firstname", "Halim-Updated");
+        this.formData.set("lastname", "Yahiaoui-Updated");
+        this.formData.set("birthdateAsString", "2000-07-18");
+        this.formData.set("town", "chicago");
+        this.formData.set("address", "North Bergen New Jersey USA");
+        this.formData.set("phone", "0631800190");
+
+        var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, ADMIN_UPDATE_INFO + paramReq + idMealToUpdate)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.content().string(ADMIN_INFO_UPDATED_SUCCESSFULLY));
+
+        var adminUpdated = this.adminDao.findById(idMealToUpdate).get();
+
+
+        Assertions.assertEquals(this.formData.get("firstname").get(0), adminUpdated.getFirstname());
+        Assertions.assertEquals(this.formData.get("lastname").get(0), adminUpdated.getLastname());
+        Assertions.assertEquals(this.formData.get("town").get(0), adminUpdated.getTown());
+        Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.getAddress());
+        Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.getPhone());
+
+
+    }
 
     /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************/
 
