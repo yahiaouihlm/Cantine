@@ -363,7 +363,6 @@ public class UpdateAdminInfoTests {
  @Test
  void  updateAdminInformationWithNotFoundAdmin () throws InvalidPersonInformationException {
      Integer idMenu = 1 ;
-     Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(this.functionEntity));
      Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
      Assertions.assertThrows(AdminNotFound.class, () -> {
          this.adminService.updateAdminInfo( this.adminDtoIn);
