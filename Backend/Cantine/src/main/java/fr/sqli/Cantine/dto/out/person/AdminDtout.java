@@ -23,11 +23,11 @@ public class AdminDtout extends AbstractPersonDtout{
 
 
     public String getFunction() {
-        return Function;
+        return function;
     }
 
     public void setFunction(String function) {
-        Function = function;
+        this.function = function;
     }
 
 }
