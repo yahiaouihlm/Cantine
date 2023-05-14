@@ -4,6 +4,7 @@ package fr.sqli.Cantine.service.admin.adminDashboard;
 import fr.sqli.Cantine.dao.AdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
@@ -51,12 +52,14 @@ public class AdminService implements IAdminDashboardService {
         }
 
     @Override
-    public void getAdminById(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
+    public AdminDtout getAdminById(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
         IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
 
         var  adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
                 ()-> new AdminNotFound("ADMIN NOT FOUND")
         );
+
+          return  new AdminDtout(adminEntity);
         }
 
     @Override
