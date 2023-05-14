@@ -1,6 +1,6 @@
 package fr.sqli.Cantine.service.admin.adminDashboard;
 
-import fr.sqli.Cantine.dao.AdminDao;
+import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -34,7 +34,7 @@ class AddAdminTest {
     private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private AdminDao adminDao;
+    private IAdminDao adminDao;
     @Mock
     private ImageService imageService;
 

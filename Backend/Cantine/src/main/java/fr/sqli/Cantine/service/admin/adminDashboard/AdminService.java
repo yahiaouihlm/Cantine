@@ -1,7 +1,7 @@
 package fr.sqli.Cantine.service.admin.adminDashboard;
 
 
-import fr.sqli.Cantine.dao.AdminDao;
+import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
@@ -35,11 +35,11 @@ public class AdminService implements IAdminDashboardService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ImageService imageService;
     private IFunctionDao functionDao;
-    private AdminDao adminDao;
+    private IAdminDao adminDao;
     private Environment environment;
         @Autowired
-        public AdminService(AdminDao adminDao , IFunctionDao functionDao,  ImageService imageService
-                ,Environment environment
+        public AdminService(IAdminDao adminDao , IFunctionDao functionDao, ImageService imageService
+                , Environment environment
                 , BCryptPasswordEncoder bCryptPasswordEncoder){
             this.imageService = imageService;
             this.adminDao = adminDao;

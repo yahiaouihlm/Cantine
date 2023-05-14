@@ -1,6 +1,6 @@
 package fr.sqli.Cantine.service.admin.adminDashboard;
 
-import fr.sqli.Cantine.dao.AdminDao;
+import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -34,7 +34,7 @@ public class UpdateAdminInfoTests {
     private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private AdminDao adminDao;
+    private IAdminDao adminDao;
     @Mock
     private ImageService imageService;
 
@@ -363,11 +363,19 @@ public class UpdateAdminInfoTests {
  @Test
  void  updateAdminInformationWithNotFoundAdmin () throws InvalidPersonInformationException {
      Integer idMenu = 1 ;
+     this.adminDtoIn.setId(1);
+     FunctionEntity function = new FunctionEntity();
+        function.setId(1);
+        function.setName(this.adminDtoIn.getFunction());
+
      Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
+     Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(function));
+
      Assertions.assertThrows(AdminNotFound.class, () -> {
          this.adminService.updateAdminInfo( this.adminDtoIn);
      });
 
+        Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
 
  }
      @Test
