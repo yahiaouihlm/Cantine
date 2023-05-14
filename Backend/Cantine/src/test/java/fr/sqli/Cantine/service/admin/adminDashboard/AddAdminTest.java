@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
-class AdminServiceTest {
+class AddAdminTest {
 
     private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
