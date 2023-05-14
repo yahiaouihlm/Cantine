@@ -12,7 +12,7 @@ public interface IAdminTest {
 
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
     String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
-    String ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT = "/getAdmin";
+    String ADMIN_GET_ADMIN =ADMIN_DASH_BOARD_BASIC_URL  +  "/getAdmin";
     String  ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL +  "/updateAdmin/info";
     String  IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
@@ -54,7 +54,8 @@ public interface IAdminTest {
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
             Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
             Map.entry("InvalidId", "INVALID ID"),
-            Map.entry("AdminNotFound", "ADMIN NOT FOUND")
+            Map.entry("AdminNotFound", "ADMIN NOT FOUND"),
+            Map.entry("MissingPram", "MISSING PARAMETER")
     );
 
      static  AdminEntity createAdminWith(String email, FunctionEntity functionEntity){
