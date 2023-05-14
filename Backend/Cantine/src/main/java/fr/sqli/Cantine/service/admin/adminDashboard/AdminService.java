@@ -51,6 +51,15 @@ public class AdminService implements IAdminDashboardService {
         }
 
     @Override
+    public void getAdminById(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
+        IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
+
+        var  adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
+                ()-> new AdminNotFound("ADMIN NOT FOUND")
+        );
+        }
+
+    @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound {
          if (adminDtoIn.getEmail() !=null  || adminDtoIn.getPassword() !=null)
             throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
