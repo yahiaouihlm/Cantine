@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.AdminService;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
@@ -27,6 +28,13 @@ public class AdminController  implements IAdminDashboardController {
         this.adminService = adminService;
     }
 
+
+
+    @Override
+    @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
+    public ResponseEntity<AdminDtout> getAdminById(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException {
+        return ResponseEntity.ok(this.adminService.getAdminById(idAdmin));
+    }
 
     @Override
      @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
