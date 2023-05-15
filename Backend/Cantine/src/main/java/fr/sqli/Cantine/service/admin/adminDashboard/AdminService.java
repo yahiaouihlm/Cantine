@@ -50,7 +50,18 @@ public class AdminService implements IAdminDashboardService {
             this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
             this.EMAIL_ADMIN_REGEX  = "^[a-zA-Z0-9._-]+@"+EMAIL_ADMIN_DOMAIN+"$" ;
         }
+        @Override
+      public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
 
+            IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
+
+            var  adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
+                    ()-> new AdminNotFound("ADMIN NOT FOUND")
+            );
+
+            adminEntity.setStatus(0);
+            adminEntity.setDisableDate(LocalDate.now());
+        }
     @Override
     public AdminDtout getAdminById(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
         IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity

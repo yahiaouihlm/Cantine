@@ -15,7 +15,10 @@ import java.io.IOException;
 public interface IAdminDashboardService {
 
 
-     AdminDtout getAdminById (Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
+
+     void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
+
+    AdminDtout getAdminById (Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
      void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
      AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 
