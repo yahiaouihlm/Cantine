@@ -48,6 +48,10 @@ public class AdminEntity {
     @JoinColumn(name="image_idimage", nullable=false)
     private ImageEntity image;
 
+    @Column(name = "disable_date" , nullable=true )
+    private LocalDate disableDate ;
+
+
 
     @ManyToOne(cascade =  CascadeType.MERGE)
     @JoinColumn(name="function_id", nullable=false)
@@ -156,5 +160,12 @@ public class AdminEntity {
 
     public void setFunction(FunctionEntity function) {
         this.function = function;
+    }
+    public LocalDate getDisableDate() {
+        return disableDate;
+    }
+
+    public void setDisableDate(LocalDate disableDate) {
+        this.disableDate = disableDate;
     }
 }
