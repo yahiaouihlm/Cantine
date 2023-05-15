@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +55,30 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
 
 
     }
+    @Test
+   void  getAdminByIdTest () throws Exception {
+        var  idAdmin = this.adminEntity1.getId();
+
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+                       + paramReq + String.valueOf(idAdmin) )
+               .contentType(MediaType.APPLICATION_JSON)
+               .accept(MediaType.APPLICATION_JSON));
+
+         result.andExpect(MockMvcResultMatchers.status().isOk());
+       result.andExpect(MockMvcResultMatchers.jsonPath("id").value(CoreMatchers.is(idAdmin)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("firstname").value(CoreMatchers.is(this.adminEntity1.getFirstname())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.adminEntity1.getLastname())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.adminEntity1.getEmail())));
+   }
 
   /*****************************  TESTS FOR  ID ADMIN  ********************************/
-
   @Test
   void getAdminByIDWithAdminNotFound() throws Exception {
-    var idMeal = this.adminDao.findAll().stream().map(AdminEntity::getId)
+    var idAdmin = this.adminDao.findAll().stream().map(AdminEntity::getId)
             .max(Integer::compareTo).get() + 1;
 
     var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
-                    + paramReq + String.valueOf(idMeal) )
+                    + paramReq + String.valueOf(idAdmin) )
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
 
