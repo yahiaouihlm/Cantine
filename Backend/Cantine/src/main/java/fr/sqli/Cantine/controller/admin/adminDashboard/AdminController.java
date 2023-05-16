@@ -30,6 +30,7 @@ public class AdminController  implements IAdminDashboardController {
 
 
     @Override
+    @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
     public ResponseEntity<String> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException {
        this.adminService.disableAdminAccount(idAdmin);
         return ResponseEntity.ok(ADMIN_DISABLED_SUCCESSFULLY);

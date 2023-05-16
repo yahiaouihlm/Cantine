@@ -11,6 +11,8 @@ public interface IAdminTest {
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin/adminDashboard";
 
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
+
+    String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/disableAdmin";
     String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
     String ADMIN_GET_ADMIN =ADMIN_DASH_BOARD_BASIC_URL  +  "/getAdmin";
     String  ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL +  "/updateAdmin/info";
