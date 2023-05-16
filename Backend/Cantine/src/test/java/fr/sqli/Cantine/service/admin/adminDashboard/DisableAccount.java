@@ -63,11 +63,27 @@ public class DisableAccount {
         adminEntity.setFunction(this.functionEntity);
     }
 
+    @Test  /*** No Exception thrown  ***/
+    void  disabledAccountWithValidAdmin () throws InvalidPersonInformationException, AdminNotFound {
+        Integer idMenu = 1;
+        Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.of(this.adminEntity));
+        this.adminService.disableAdminAccount(idMenu);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findById(idMenu);
+        Mockito.verify(this.adminDao, Mockito.times(1)).save(this.adminEntity);
+
+    }
+
+
+
+
+
+
+
 
     /******************************** TESTS  ADMIN ID  ********************************/
 
     @Test
-    void  disabledAccountWithNotFoundAdmin () throws InvalidPersonInformationException {
+    void  disabledAccountWithNotFoundAdmin () {
         Integer idMenu = 1 ;
 
 
@@ -78,19 +94,24 @@ public class DisableAccount {
         });
 
         Mockito.verify(this.adminDao, Mockito.times(1)).findById(idMenu);
-
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void disabledAccountWithNegativeID (){
         assertThrows(InvalidPersonInformationException.class, () -> {
             this.adminService.disableAdminAccount( -1);
         });
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void disabledAccountWithNullID(){
         assertThrows(InvalidPersonInformationException.class, () -> {
             this.adminService.disableAdminAccount( null);
         });
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+
     }
 
 
