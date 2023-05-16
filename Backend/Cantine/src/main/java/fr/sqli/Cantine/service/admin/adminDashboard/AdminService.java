@@ -61,6 +61,7 @@ public class AdminService implements IAdminDashboardService {
 
             adminEntity.setStatus(0);
             adminEntity.setDisableDate(LocalDate.now());
+            this.adminDao.save(adminEntity);
         }
     @Override
     public AdminDtout getAdminById(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
