@@ -5,46 +5,51 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import  jakarta.persistence.*;
-/*@Entity
-@Table(name = "confirmationtoken")
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "confirmationToken")
+
 public class ConfirmationToken {
 
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(unique=true, nullable=false)
-    private Integer tokenid;
+    private Integer id;
 
     @Column(name = "confirmationtoken")
     private  String confirmationToken;
 
-
-
-
-    @Column(name = "uuiduser")
-    private  Integer useruuid ;
-    @Column(name = "createddate")
+    @Column(name = "uuid")
+    private  Integer uuid ;
+    @Column(name = "createdDate")
     @Temporal(TemporalType.TIMESTAMP )
     private Date createdDate;
 
-    @OneToOne(targetEntity = UserEntity.class ,  fetch = FetchType.EAGER)
-    @JoinColumn( nullable = false , name = "user_id")
+    @OneToOne(targetEntity = AdminEntity.class ,  fetch = FetchType.EAGER)
+    @JoinColumn( nullable = false , name = "admin_id")
 
-    private  UserEntity user ;
+    private  AdminEntity admin ;
 
-    public ConfirmationToken(UserEntity user) {
-        this.user = user;
+    public  ConfirmationToken(){
+
+    }
+
+    public ConfirmationToken(AdminEntity admin) {
+        this.admin = admin;
         createdDate = new Date();
         confirmationToken = UUID.randomUUID().toString();
-        useruuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
-    }
-    public  ConfirmationToken(){}
-    public Integer getTokenid() {
-        return tokenid;
+        uuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
     }
 
-    public void setTokenid(Integer tokenid) {
-        this.tokenid = tokenid;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getConfirmationToken() {
@@ -55,6 +60,14 @@ public class ConfirmationToken {
         this.confirmationToken = confirmationToken;
     }
 
+    public Integer getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Integer uuid) {
+        this.uuid = uuid;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -63,22 +76,12 @@ public class ConfirmationToken {
         this.createdDate = createdDate;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public AdminEntity getAdmin() {
+        return admin;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-
-    public Integer getUseruuid() {
-        return useruuid;
-    }
-
-    public void setUseruuid(Integer useruuid) {
-        this.useruuid = useruuid;
+    public void setAdmin(AdminEntity admin) {
+        this.admin = admin;
     }
 }
 
-*/
