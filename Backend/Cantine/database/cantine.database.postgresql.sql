@@ -169,3 +169,11 @@ CREATE TABLE IF NOT EXISTS order_has_menu (
     FOREIGN KEY (order_idorder) REFERENCES "order" (id) ON DELETE CASCADE,
     FOREIGN KEY (menu_idmenu) REFERENCES menu (id) ON DELETE RESTRICT
 );
+
+CREATE TABLE confirmationToken (
+     id SERIAL PRIMARY KEY,
+     confirmationToken VARCHAR(255) NOT NULL,
+     uuid   INT NOT NULL,
+     createdDate TIMESTAMP NOT NULL,
+     admin_id INTEGER NOT NULL REFERENCES admin(id)
+);

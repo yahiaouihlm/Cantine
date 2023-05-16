@@ -98,6 +98,8 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         Assertions.assertEquals(admin.getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(admin.getLastname(), this.formData.getFirst("lastname"));
         Assertions.assertEquals(admin.getEmail(), this.formData.getFirst("email"));
+        Assertions.assertNotNull(admin.getDisableDate());
+        Assertions.assertEquals(admin.getStatus()  , 1 ,  "admin is  disabled By default");
         Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
 
         var imageName =  admin.getImage().getImagename();

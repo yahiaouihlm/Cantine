@@ -142,7 +142,8 @@ public class AdminService implements IAdminDashboardService {
         //check  if  admin  is  already  existing by  email
         this.existingAdmin(adminEntity.getEmail());
 
-        adminEntity.setStatus(0);
+        adminEntity.setStatus(1);
+        adminEntity.setDisableDate(LocalDate.now());  // any  account  should  be  disabled  by  default in creation
 
         // passorwd  encoding
 
