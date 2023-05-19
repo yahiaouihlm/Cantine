@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.admin.adminDashboard;
 
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationToken;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -39,6 +40,8 @@ public class UpdateAdminInfoTests {
     private ImageService imageService;
 
     @Mock
+    private IConfirmationToken iConfirmationToken;
+    @Mock
     private IFunctionDao functionDao;
     @Mock
     private MockEnvironment environment;
@@ -70,7 +73,7 @@ public class UpdateAdminInfoTests {
                 "images/png",                    // type MIME
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
+        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),  this.iConfirmationToken);
 
     }
 

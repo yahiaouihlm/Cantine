@@ -2,6 +2,7 @@ package fr.sqli.Cantine.service.admin.adminDashboard;
 
 
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationToken;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -32,7 +33,7 @@ public class GetAdminTest {
     private IAdminDao adminDao;
     @Mock
     private ImageService imageService;
-
+   private IConfirmationToken iConfirmationToken;
     @Mock
     private IFunctionDao functionDao;
     @Mock
@@ -42,7 +43,7 @@ public class GetAdminTest {
 
     @BeforeEach
     void  setUp (){
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder());
+        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(), this.iConfirmationToken);
 
     }
 
