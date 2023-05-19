@@ -166,6 +166,17 @@ public class AdminService implements IAdminDashboardService {
          return this.adminDao.save(adminEntity);
     }
 
+    public void sendToken(String email) throws AdminNotFound, MessagingException {
+        var adminEntity = this.adminDao.findByEmail(email).orElseThrow(
+                ()-> new AdminNotFound("ADMIN NOT FOUND")
+        );
+        var token = UUID.randomUUID().toString();
+        adminEntity.setToken(token);
+        this.adminDao.save(adminEntity);
+        var  subject = "RESET PASSWORD";
+        var  message = "http://localhost:4200/reset-password/"+token;
+        this.emailService.sendEmail(email,subject,message);
+    }
     @Override
     public void existingAdmin(String  adminEmail ) throws ExistingAdminException {
           if  (this.adminDao.findByEmail(adminEmail).isPresent()){
