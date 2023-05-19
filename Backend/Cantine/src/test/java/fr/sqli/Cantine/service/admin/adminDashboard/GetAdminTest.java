@@ -43,7 +43,7 @@ public class GetAdminTest {
 
     @BeforeEach
     void  setUp (){
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(), this.iConfirmationToken);
+        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(), this.iConfirmationToken,  null);
 
     }
 
