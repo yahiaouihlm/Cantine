@@ -72,7 +72,8 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       function_id INT NOT NULL,
       image_idimage INT NOT NULL,
       status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
-       disable_date DATE DEFAULT NULL,
+      disable_date DATE DEFAULT NULL,
+      validation INT  DEFAULT  1 ,   /* 0 = Invalidated  1 = validated */
       unique(email),
       FOREIGN KEY (function_id) REFERENCES "function" (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
       FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
