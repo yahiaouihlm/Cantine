@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.entity;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class ConfirmationToken {
     private  Integer uuid ;
     @Column(name = "createdDate")
     @Temporal(TemporalType.TIMESTAMP )
-    private Date createdDate;
+    private LocalDate createdDate;
 
     @OneToOne(targetEntity = AdminEntity.class ,  fetch = FetchType.EAGER)
     @JoinColumn( nullable = false , name = "admin_id")
@@ -39,7 +40,7 @@ public class ConfirmationToken {
 
     public ConfirmationToken(AdminEntity admin) {
         this.admin = admin;
-        createdDate = new Date();
+        createdDate = LocalDate.now();
         confirmationToken = UUID.randomUUID().toString();
         uuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
     }
