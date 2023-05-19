@@ -2,10 +2,12 @@ package fr.sqli.Cantine.service.admin.adminDashboard;
 
 
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationToken;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.entity.AdminEntity;
+import fr.sqli.Cantine.entity.ConfirmationToken;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
@@ -14,6 +16,7 @@ import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.mailer.EmailSenderService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +39,18 @@ public class AdminService implements IAdminDashboardService {
     private ImageService imageService;
     private IFunctionDao functionDao;
     private IAdminDao adminDao;
+    private IConfirmationToken confirmationTokenDao;
+    private EmailSenderService emailSenderService;
     private Environment environment;
         @Autowired
         public AdminService(IAdminDao adminDao , IFunctionDao functionDao, ImageService imageService
                 , Environment environment
-                , BCryptPasswordEncoder bCryptPasswordEncoder){
+                , BCryptPasswordEncoder bCryptPasswordEncoder
+                , IConfirmationToken confirmationTokenDao
+                , EmailSenderService emailSenderService
+                            ){
+            this.emailSenderService = emailSenderService;
+            this.confirmationTokenDao = confirmationTokenDao;
             this.imageService = imageService;
             this.adminDao = adminDao;
             this.functionDao = functionDao;
@@ -166,17 +176,28 @@ public class AdminService implements IAdminDashboardService {
          return this.adminDao.save(adminEntity);
     }
 
-    public void sendToken(String email) throws AdminNotFound, MessagingException {
+    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException {
         var adminEntity = this.adminDao.findByEmail(email).orElseThrow(
                 ()-> new AdminNotFound("ADMIN NOT FOUND")
         );
-        var token = UUID.randomUUID().toString();
-        adminEntity.setToken(token);
-        this.adminDao.save(adminEntity);
-        var  subject = "RESET PASSWORD";
-        var  message = "http://localhost:4200/reset-password/"+token;
-        this.emailService.sendEmail(email,subject,message);
+        if (adminEntity.getStatus() == 1){
+            throw  new InvalidPersonInformationException("YOUR ACCOUNT IS ALREADY ENABLED");
+        }
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(adminEntity);
+        this.confirmationTokenDao.save(confirmationToken);
+        String text = "To confirm your account, please click here : "
+                     + "http://localhost:8080/api/v1/admin/confirm-account?token=" + confirmationToken.getConfirmationToken();
+
+       /* TODO make the validation  Account  by  the super admin  */
     }
+
+
+
+
+
+
+
     @Override
     public void existingAdmin(String  adminEmail ) throws ExistingAdminException {
           if  (this.adminDao.findByEmail(adminEmail).isPresent()){

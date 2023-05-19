@@ -22,8 +22,8 @@ public interface IAdminDashboardService {
      void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
      AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 
-
-      void existingAdmin(String  adminEmail ) throws ExistingAdminException;
+    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException;
+    void existingAdmin(String  adminEmail ) throws ExistingAdminException;
 
     static   void  checkIDValidity(Integer idAdmin) throws InvalidPersonInformationException{
         if (idAdmin == null   || idAdmin < 0) {
