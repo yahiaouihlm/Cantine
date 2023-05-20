@@ -52,6 +52,9 @@ public class AdminEntity {
     private LocalDate disableDate ;
 
 
+    @Column(name = "validation" , nullable=true )
+    private  Integer validation ;
+
 
     @ManyToOne(cascade =  CascadeType.MERGE)
     @JoinColumn(name="function_id", nullable=false)
@@ -168,4 +171,12 @@ public class AdminEntity {
     public void setDisableDate(LocalDate disableDate) {
         this.disableDate = disableDate;
     }
+
+    public Integer getValidation() {
+        return validation;
+    }
+
+   public void setValidation(Integer validation) {
+            this.validation = validation;
+        }
 }

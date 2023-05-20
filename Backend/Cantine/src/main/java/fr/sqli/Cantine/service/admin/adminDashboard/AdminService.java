@@ -173,6 +173,7 @@ public class AdminService implements IAdminDashboardService {
             adminEntity.setImage(imageEntity);
         }
         adminEntity.setRegistrationDate(LocalDate.now());
+
          return this.adminDao.save(adminEntity);
     }
 
