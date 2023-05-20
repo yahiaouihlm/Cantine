@@ -173,7 +173,6 @@ public class AdminService implements IAdminDashboardService {
             adminEntity.setImage(imageEntity);
         }
         adminEntity.setRegistrationDate(LocalDate.now());
-
          return this.adminDao.save(adminEntity);
     }
 
@@ -190,7 +189,7 @@ public class AdminService implements IAdminDashboardService {
         String text = "To confirm your account, please click here : "
                      + "http://localhost:8080/api/v1/admin/confirm-account?token=" + confirmationToken.getConfirmationToken();
 
-       /* TODO make the validation  Account  by  the super admin  */
+        this.emailSenderService.send(email, "Complete Registration!", text);
     }
 
 
