@@ -30,6 +30,12 @@ public class AdminController  implements IAdminDashboardController {
 
 
     @Override
+    @PostMapping(ADMIN_DASH_BOARD_VALIDATE_EMAIL_ENDPOINT)
+    public ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound {
+        this.adminService.sendToken(email);
+        return ResponseEntity.ok(TOKEN_SENDED_SUCCESSFULLY);
+    }
+    @Override
     @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
     public ResponseEntity<String> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException {
        this.adminService.disableAdminAccount(idAdmin);
