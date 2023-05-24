@@ -1,7 +1,7 @@
 package fr.sqli.Cantine.service.admin.adminDashboard;
 
 import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IConfirmationToken;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -40,7 +40,7 @@ public class UpdateAdminInfoTests {
     private ImageService imageService;
 
     @Mock
-    private IConfirmationToken iConfirmationToken;
+    private IConfirmationTokenDao iConfirmationToken;
     @Mock
     private IFunctionDao functionDao;
     @Mock

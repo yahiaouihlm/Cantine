@@ -2,7 +2,7 @@ package fr.sqli.Cantine.service.admin.adminDashboard;
 
 
 import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IConfirmationToken;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -33,7 +33,7 @@ public class GetAdminTest {
     private IAdminDao adminDao;
     @Mock
     private ImageService imageService;
-   private IConfirmationToken iConfirmationToken;
+   private IConfirmationTokenDao iConfirmationToken;
     @Mock
     private IFunctionDao functionDao;
     @Mock
