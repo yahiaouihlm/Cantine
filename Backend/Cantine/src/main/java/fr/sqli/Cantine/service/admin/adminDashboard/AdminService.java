@@ -31,6 +31,7 @@ import java.time.LocalDate;
 @Service
 public class AdminService implements IAdminDashboardService {
     private static final Logger LOG = LogManager.getLogger();
+    final String  SERVER_ADDRESS ;
     final  String DEFAULT_ADMIN_IMAGE_NAME;
     final  String EMAIL_ADMIN_DOMAIN ;
     final  String ADMIN_IMAGE_PATH ;  //  path  to  admin image  directory
@@ -59,6 +60,10 @@ public class AdminService implements IAdminDashboardService {
             this.EMAIL_ADMIN_DOMAIN = environment.getProperty("sqli.cantine.admin.email.domain"); //  email  domain  for  admin
             this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
             this.EMAIL_ADMIN_REGEX  = "^[a-zA-Z0-9._-]+@"+EMAIL_ADMIN_DOMAIN+"$" ;
+            var  protocol = environment.getProperty("sqli.cantine.server.protocol");
+            var  host = environment.getProperty("sqli.cantine.server.ip.address");
+            var  port = environment.getProperty("sali.cantine.server.port");
+            this.SERVER_ADDRESS = protocol+host+":"+port;
         }
         @Override
       public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
@@ -187,7 +192,7 @@ public class AdminService implements IAdminDashboardService {
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);
         String text = "To confirm your account, please click here : "
-                     + "http://localhost:8080/api/v1/admin/confirm-account?token=" + confirmationToken.getConfirmationToken();
+                     + this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getConfirmationToken();
 
         this.emailSenderService.send(email, "Complete Registration!", text);
     }
