@@ -30,4 +30,13 @@ public interface IAdminDashboardService {
             throw new InvalidPersonInformationException("INVALID ID");
         }
     }
+
+
+     static  void validationArgument(  String ... arg ) throws InvalidPersonInformationException {
+        for  (String  s : arg) {
+            if (s == null ||   s.isEmpty()  || s.length() <= 0  ){
+                throw new InvalidPersonInformationException("INVALID ARGUMENT");
+            }
+        }
+     }
 }

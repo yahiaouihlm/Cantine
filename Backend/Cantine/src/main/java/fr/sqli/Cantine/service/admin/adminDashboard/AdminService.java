@@ -17,6 +17,7 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
+import lombok.var;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,14 @@ public class AdminService implements IAdminDashboardService {
             var  port = environment.getProperty("sali.cantine.server.port");
             this.SERVER_ADDRESS = protocol+host+":"+port;
         }
+
+
+
+
+
+
+
+
         @Override
       public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
 
@@ -198,6 +207,9 @@ public class AdminService implements IAdminDashboardService {
     }
 
 
+     public  void  tokenValidation( String   token  ) throws InvalidPersonInformationException {
+            IAdminDashboardService.validationArgument(token);
+        }
 
 
 
