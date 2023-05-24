@@ -7,7 +7,7 @@ import java.util.UUID;
 import  jakarta.persistence.*;
 
 @Entity
-@Table(name = "confirmationtoken")
+@Table(name = "confirmation-token")
 public class ConfirmationTokenEntity {
 
 
@@ -16,12 +16,12 @@ public class ConfirmationTokenEntity {
     @Column(unique=true, nullable=false)
     private Integer id;
 
-    @Column(name = "confirmationtoken")
+    @Column(name = "token")
     private  String confirmationToken;
 
     @Column(name = "uuid")
     private  Integer uuid ;
-    @Column(name = "createdDate")
+    @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP )
     private Date createdDate;
 

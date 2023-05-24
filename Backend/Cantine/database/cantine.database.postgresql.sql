@@ -171,10 +171,10 @@ CREATE TABLE IF NOT EXISTS order_has_menu (
     FOREIGN KEY (menu_idmenu) REFERENCES menu (id) ON DELETE RESTRICT
 );
 
-CREATE TABLE confirmationToken (
+CREATE TABLE "confirmation-token" (
      id SERIAL PRIMARY KEY,
-     confirmationToken VARCHAR(255) NOT NULL,
+     token VARCHAR(255) NOT NULL,
      uuid   INT NOT NULL,
-     createdDate TIMESTAMP NOT NULL,
+     creation_date TIMESTAMP NOT NULL,
      admin_id INTEGER NOT NULL REFERENCES admin(id)
 );
