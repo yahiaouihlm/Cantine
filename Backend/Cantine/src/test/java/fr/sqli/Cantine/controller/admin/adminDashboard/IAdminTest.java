@@ -12,6 +12,7 @@ public interface IAdminTest {
 
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
 
+    String ADMIN_SEND_TOKEN_URL =ADMIN_DASH_BOARD_BASIC_URL +  "/sendToken";
     String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/disableAdmin";
     String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
     String ADMIN_GET_ADMIN =ADMIN_DASH_BOARD_BASIC_URL  +  "/getAdmin";
