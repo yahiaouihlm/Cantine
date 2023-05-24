@@ -7,7 +7,7 @@ import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.entity.ConfirmationToken;
+import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
@@ -184,7 +184,7 @@ public class AdminService implements IAdminDashboardService {
             throw  new InvalidPersonInformationException("YOUR ACCOUNT IS ALREADY ENABLED");
         }
 
-        ConfirmationToken confirmationToken = new ConfirmationToken(adminEntity);
+        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);
         String text = "To confirm your account, please click here : "
                      + "http://localhost:8080/api/v1/admin/confirm-account?token=" + confirmationToken.getConfirmationToken();

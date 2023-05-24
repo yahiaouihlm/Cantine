@@ -5,13 +5,10 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import  jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "confirmationToken")
-
-public class ConfirmationToken {
+@Table(name = "confirmationtoken")
+public class ConfirmationTokenEntity {
 
 
     @Id
@@ -33,11 +30,12 @@ public class ConfirmationToken {
 
     private  AdminEntity admin ;
 
-    public  ConfirmationToken(){
+
+    public ConfirmationTokenEntity(){
 
     }
 
-    public ConfirmationToken(AdminEntity admin) {
+    public ConfirmationTokenEntity(AdminEntity admin) {
         this.admin = admin;
         createdDate = new Date();
         confirmationToken = UUID.randomUUID().toString();
