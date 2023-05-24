@@ -53,7 +53,32 @@ public class SendTokenTest extends AbstractContainerConfig implements IAdminTest
         this.initDb();
     }
 
-    //ADMIN_SEND_TOKEN
+    @Test
+    void  sendTokenWithWrongEmail () throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders
+                .post(ADMIN_SEND_TOKEN_URL + paramReq + "wrongEmai"));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers
+                        .content()
+                        .json(super.exceptionMessage(exceptionsMap.get("AdminNotFound"))));
+
+    }
+
+
+    @Test
+    void  sendTokenWithNullEmail () throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders
+                .post(ADMIN_SEND_TOKEN_URL + paramReq + null ));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers
+                        .content()
+                        .json(super.exceptionMessage(exceptionsMap.get("AdminNotFound"))));
+
+    }
 
     @Test
     void  sendTokenWithOutEmail () throws Exception {
