@@ -2,7 +2,7 @@ package fr.sqli.Cantine.service.admin.adminDashboard;
 
 
 import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IConfirmationToken;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
@@ -39,14 +39,14 @@ public class AdminService implements IAdminDashboardService {
     private ImageService imageService;
     private IFunctionDao functionDao;
     private IAdminDao adminDao;
-    private IConfirmationToken confirmationTokenDao;
+    private IConfirmationTokenDao confirmationTokenDao;
     private EmailSenderService emailSenderService;
     private Environment environment;
         @Autowired
         public AdminService(IAdminDao adminDao , IFunctionDao functionDao, ImageService imageService
                 , Environment environment
                 , BCryptPasswordEncoder bCryptPasswordEncoder
-                , IConfirmationToken confirmationTokenDao
+                , IConfirmationTokenDao confirmationTokenDao
                 , EmailSenderService emailSenderService
                             ){
             this.emailSenderService = emailSenderService;
