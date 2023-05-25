@@ -17,7 +17,6 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
-import lombok.var;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +165,7 @@ public class AdminService implements IAdminDashboardService {
         //check  if  admin  is  already  existing by  email
         this.existingAdmin(adminEntity.getEmail());
 
-        adminEntity.setStatus(1);
+        adminEntity.setStatus(0);
         adminEntity.setDisableDate(LocalDate.now());  // any  account  should  be  disabled  by  default in creation
 
         // passorwd  encoding
@@ -201,7 +200,7 @@ public class AdminService implements IAdminDashboardService {
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);
         String text = "To confirm your account, please click here : "
-                     + this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getConfirmationToken();
+                     + this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
 
         this.emailSenderService.send(email, "Complete Registration!", text);
     }

@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface IConfirmationTokenDao extends JpaRepository<ConfirmationTokenEntity, Integer> {
 
-    public Optional<ConfirmationTokenEntity> findByToken(String token);
+    public Optional<ConfirmationTokenEntity>findByToken(String token);
 }

@@ -17,7 +17,7 @@ public class ConfirmationTokenEntity {
     private Integer id;
 
     @Column(name = "token")
-    private  String confirmationToken;
+    private  String token;
 
     @Column(name = "uuid")
     private  Integer uuid ;
@@ -38,7 +38,7 @@ public class ConfirmationTokenEntity {
     public ConfirmationTokenEntity(AdminEntity admin) {
         this.admin = admin;
         createdDate = new Date();
-        confirmationToken = UUID.randomUUID().toString();
+        token = UUID.randomUUID().toString();
         uuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
     }
 
@@ -50,12 +50,12 @@ public class ConfirmationTokenEntity {
         this.id = id;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public String getToken() {
+        return token;
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Integer getUuid() {
