@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.FunctionEntity;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,8 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     private IFunctionDao functionDao;
     @Autowired
     private IAdminDao adminDao;
-
+    @Autowired
+    private IConfirmationTokenDao iConfirmationTokenDao;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -51,6 +53,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
     }
 
     void  cleanDtaBase() {
+        this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
     }
@@ -99,7 +102,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
         Assertions.assertEquals(admin.getLastname(), this.formData.getFirst("lastname"));
         Assertions.assertEquals(admin.getEmail(), this.formData.getFirst("email"));
         Assertions.assertNotNull(admin.getDisableDate());
-        Assertions.assertEquals(admin.getStatus()  , 1 ,  "admin is  disabled By default");
+        Assertions.assertEquals(admin.getStatus()  , 0 ,  "admin is  disabled By default");
         Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
 
         var imageName =  admin.getImage().getImagename();

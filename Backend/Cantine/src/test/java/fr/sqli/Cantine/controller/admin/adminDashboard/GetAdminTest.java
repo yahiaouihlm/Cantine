@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -25,6 +26,8 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
     @Autowired
     private IFunctionDao functionDao;
 
+    @Autowired
+    private IConfirmationTokenDao iConfirmationTokenDao;
   @Autowired
   private IAdminDao adminDao;
     @Autowired
@@ -37,6 +40,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
 
 
     void cleanUpDb(){
+        this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
     }

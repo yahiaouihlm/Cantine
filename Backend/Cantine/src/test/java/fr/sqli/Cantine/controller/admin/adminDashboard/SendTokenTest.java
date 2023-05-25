@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,8 @@ public class SendTokenTest extends AbstractContainerConfig implements IAdminTest
     }
 
 
+
+
     @Test
     void  sendTokenWithValidEmail () throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders
@@ -64,7 +67,14 @@ public class SendTokenTest extends AbstractContainerConfig implements IAdminTest
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers
                         .content()
-                        .string(TOKEN_SENDED_SUCCESSFULLY));
+                        .string(TOKEN_SENDED_SUCCESSFULLY)
+                          );
+         var  token = this.iConfirmationTokenDao.findAll().get(0);
+         var admin =  token.getAdmin();
+         var  adminFromDb = this.adminDao.findById(admin.getId());
+         Assertions.assertTrue(adminFromDb.isPresent());
+        Assertions.assertTrue(adminFromDb.get().getStatus()== 0); // 0 =  the  account is  not  validated
+        Assertions.assertTrue(adminFromDb.get().getValidation() == 0);  // 0 =  the  account is  not  validated by the  sueper  admin
     }
 
     @Test

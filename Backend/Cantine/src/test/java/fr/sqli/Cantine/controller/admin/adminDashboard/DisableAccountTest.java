@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -32,13 +33,16 @@ public class DisableAccountTest  extends AbstractContainerConfig implements IAdm
     private IFunctionDao iFunctionDao;
 
     @Autowired
+    private IConfirmationTokenDao iConfirmationTokenDao;
+    @Autowired
     private Environment environment;
 
     @Autowired
     private MockMvc mockMvc;
     private AdminEntity adminEntity;
     void  cleanDB() {
-      this.adminDao.deleteAll();
+        this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
+        this.adminDao.deleteAll();
     }
 
     void initDB () {

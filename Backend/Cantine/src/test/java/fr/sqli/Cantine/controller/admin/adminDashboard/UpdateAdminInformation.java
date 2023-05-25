@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
@@ -38,6 +39,8 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     private IAdminDao adminDao;
 
     @Autowired
+    private IConfirmationTokenDao iConfirmationTokenDao;
+    @Autowired
     private MockMvc mockMvc;
 
     private MockMultipartFile imageData;
@@ -60,6 +63,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         this.adminDao.save(admin);
     }
     void  cleanDtaBase() {
+        this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
     }
