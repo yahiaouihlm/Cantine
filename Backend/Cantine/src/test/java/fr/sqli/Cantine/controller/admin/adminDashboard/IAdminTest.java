@@ -74,6 +74,7 @@ public interface IAdminTest {
             adminEntity.setPhone("0631990180");
             adminEntity.setBirthdate(LocalDate.now());
             adminEntity.setPassword("password");
+            adminEntity.setValidation(0);
             adminEntity.setRegistrationDate(LocalDate.now());
             ImageEntity imageEntity = new ImageEntity();
                imageEntity.setImagename(IMAGE_NAME);
