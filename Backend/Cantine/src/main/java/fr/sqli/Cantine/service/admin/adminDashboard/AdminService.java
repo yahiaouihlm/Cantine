@@ -17,6 +17,7 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
+import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 @Service
@@ -167,7 +170,7 @@ public class AdminService implements IAdminDashboardService {
 
         adminEntity.setStatus(0);
         adminEntity.setDisableDate(LocalDate.now());  // any  account  should  be  disabled  by  default in creation
-
+        adminEntity.setValidation(0);
         // passorwd  encoding
 
         adminEntity.setPassword(this.bCryptPasswordEncoder.encode(adminEntity.getPassword()));
@@ -199,8 +202,37 @@ public class AdminService implements IAdminDashboardService {
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);
-        String text = "To confirm your account, please click here : "
+
+        var url = this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
+
+
+/*        String text = "To confirm your account, please click here : "
                      + this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
+
+        */
+
+
+        String text  =  """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                </head>
+                <body>
+                    <h1>Confirmation d'inscription</h1>
+                      <p> Bonjour `{USERNAME} {USERFULLNAME}`</p>
+                    <P>
+                        Merci de cliquer sur le lien ci-dessous pour confirmer votre adresse Email et activer votre compte.
+                        <a href ="{URL}">Confirmer mon adresse Email</a>
+                    </P>
+                      <p> Nous  vous  Remercions  Votre  Compréhention </p>
+                        <p> Cordialement </p>
+                                
+                      <img src="/images/logo-aston.png" alt="logo" width="100" height="100"> </img>
+                </body>
+                </html>
+           """;
+
 
         this.emailSenderService.send(email, "Complete Registration!", text);
     }
