@@ -18,6 +18,7 @@ import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
 import io.micrometer.core.instrument.util.IOUtils;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,8 +193,14 @@ public class AdminService implements IAdminDashboardService {
          return this.adminDao.save(adminEntity);
     }
 
-    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException {
-        var adminEntity = this.adminDao.findByEmail(email).orElseThrow(
+    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException {
+
+            if (email == null ||  email.trim().isEmpty() ) {
+            AdminService.LOG.error("email  is  not  valid");
+            throw  new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
+        }
+
+        var adminEntity = this.adminDao.findByEmail(email.trim()).orElseThrow(
                 ()-> new AdminNotFound("ADMIN NOT FOUND")
         );
         if (adminEntity.getStatus() == 1){
@@ -228,7 +235,7 @@ public class AdminService implements IAdminDashboardService {
                       <p> Nous  vous  Remercions  Votre  Compréhention </p>
                         <p> Cordialement </p>
                                 
-                      <img src="/images/logo-aston.png" alt="logo" width="100" height="100"> </img>
+                      <img src="images/logos/logo-aston.png" alt="logo" width="100" height="100"> </img>
                 </body>
                 </html>
            """;

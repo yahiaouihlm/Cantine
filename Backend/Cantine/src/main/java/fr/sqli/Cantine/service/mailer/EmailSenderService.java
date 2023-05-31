@@ -1,7 +1,10 @@
 package fr.sqli.Cantine.service.mailer;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -19,17 +22,28 @@ public class EmailSenderService {
 
 
     @Async
-    public void sendEmail (SimpleMailMessage message){
+    public void sendEmail (MimeMessage message){
         javaMailSender.send(message);
     }
 
 
-    public  void  send (String to , String subject , String text){
+    /*public  void  send (String to , String subject , String text){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
         this.sendEmail(message);
+    }*/
+
+
+      public  void  send (String to , String subject , String text) throws MessagingException {
+       // SimpleMailMessage message = new SimpleMailMessage();
+         MimeMessage message = this.javaMailSender.createMimeMessage();
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        message.setSubject(subject);
+        message.setContent(text, "text/html");
+        this.sendEmail(message);
     }
+
 
 }

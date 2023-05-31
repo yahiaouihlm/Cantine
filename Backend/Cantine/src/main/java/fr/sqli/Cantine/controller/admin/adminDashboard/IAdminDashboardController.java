@@ -8,6 +8,7 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +38,7 @@ public interface IAdminDashboardController {
    String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
 
 
-    ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound;
+    ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException;
 
    ResponseEntity<String> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException;
    ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException;ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException;

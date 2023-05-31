@@ -9,6 +9,7 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public interface IAdminDashboardService {
      void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
      AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 
-    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException;
+    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException;
     void existingAdmin(String  adminEmail ) throws ExistingAdminException;
 
     static   void  checkIDValidity(Integer idAdmin) throws InvalidPersonInformationException{

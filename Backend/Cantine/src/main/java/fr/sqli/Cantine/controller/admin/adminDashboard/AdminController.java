@@ -9,6 +9,7 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AdminController  implements IAdminDashboardController {
 
     @Override
     @PostMapping(ADMIN_DASH_BOARD_VALIDATE_EMAIL_ENDPOINT)
-    public ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound {
+    public ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException {
          this.adminService.sendToken(email);
         return ResponseEntity.ok(TOKEN_SENDED_SUCCESSFULLY);
     }
