@@ -206,6 +206,11 @@ public class AdminService implements IAdminDashboardService {
         if (adminEntity.getStatus() == 1){
             throw  new InvalidPersonInformationException("YOUR ACCOUNT IS ALREADY ENABLED");
         }
+        // if  there is    token  in database  delete  it mapped with    this  admin
+        var confirmationTokenEntity = this.confirmationTokenDao.findByAdmin(adminEntity);
+        if (confirmationTokenEntity.isPresent()){
+            this.confirmationTokenDao.delete(confirmationTokenEntity.get());
+        }
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);
@@ -213,10 +218,6 @@ public class AdminService implements IAdminDashboardService {
         var url = this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
 
 
-/*        String text = "To confirm your account, please click here : "
-                     + this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
-
-        */
 
 
         String text  =  """
