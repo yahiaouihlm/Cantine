@@ -6,6 +6,7 @@ import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 public interface IAdminDashboardService {
 
 
+     void checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException;
 
      void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
 

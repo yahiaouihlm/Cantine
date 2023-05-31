@@ -12,6 +12,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
@@ -71,13 +72,28 @@ public class AdminService implements IAdminDashboardService {
         }
 
 
+    @Override
+    public void checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException {
+        if  (token == null  || token.trim().isEmpty())
+             throw   new InvalidTokenException("INVALID TOKEN");
 
+         var  confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(
+                ()-> new InvalidTokenException("INVALID TOKEN") ); //  token  not  found
 
+         var  adminEntity = confirmationTokenEntity.getAdmin();
+            if (adminEntity == null)
+                throw  new InvalidTokenException("INVALID TOKEN"); //  admin  not  found
 
+        var  expiredTime  = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+        long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+        if (expiredTime > fiveMinutesInMillis){
+            this.iConfirmationToken.delete(tokenDB);
+            throw  new ExpiredCode("Token Has Been Expired ");
+        }
 
+        }
 
-
-        @Override
+    @Override
       public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
 
             IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
