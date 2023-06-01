@@ -20,9 +20,14 @@ public class SuperAdminService {
 
 
     public FunctionEntity  addFunction (FunctionDtoIn functionDtoIn) throws InvalidPersonInformationException {
-        FunctionEntity functionEntity = new FunctionEntity();
-        functionEntity.setName(functionDtoIn.getName());
-        return  this.iFunctionDao.save(functionEntity);
+        var  functionName  =  functionDtoIn.getName();
+        var  functionEntity = this.iFunctionDao.findByName(functionName);
+        if  (functionEntity.isEmpty()) {
+            throw  new  InvalidPersonInformationException("FUNCTION NAME ALREADY EXISTS");
+        }
+        FunctionEntity newfunctionEntity = new FunctionEntity();
+        newfunctionEntity.setName(functionDtoIn.getName());
+        return  this.iFunctionDao.save(newfunctionEntity);
     }
 
 

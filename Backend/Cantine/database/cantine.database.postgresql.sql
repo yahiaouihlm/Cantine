@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS image(
 
 CREATE TABLE IF NOT EXISTS  class (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL,
+    unique(name)
 
 );
 
@@ -29,7 +30,8 @@ CREATE TABLE IF NOT EXISTS  class (
 
 CREATE TABLE IF NOT EXISTS "function" (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(300) NOT NULL
+    name VARCHAR(300) NOT NULL,
+    unique(name)
     );
 
 -- -----------------------------------------------------
