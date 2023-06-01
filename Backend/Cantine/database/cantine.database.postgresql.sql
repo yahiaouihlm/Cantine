@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "function" (
 -- Table `cantiniere`.`Student`
 -- -----------------------------------------------------
 
-CREATE TABLE  IF NOT EXISTS  studient (
+CREATE TABLE  IF NOT EXISTS  student (
     id SERIAL PRIMARY KEY,
     firstname VARCHAR(100) NOT NULL,
     lastname VARCHAR(100) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE  IF NOT EXISTS  studient (
     email VARCHAR(300) NOT NULL,
     password VARCHAR(2000) NOT NULL,
     Wallet DECIMAL(5,2) NOT NULL DEFAULT 0,
-    town VARCHAR(400) NOT NULL,
+    town VARCHAR(1000) NOT NULL,
     phone VARCHAR(50) ,
     class_id INT NOT NULL,
     image_idimage INT NOT NULL,
