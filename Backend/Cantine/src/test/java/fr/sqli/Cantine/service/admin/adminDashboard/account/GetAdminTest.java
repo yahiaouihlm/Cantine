@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.service.admin.adminDashboard;
+package fr.sqli.Cantine.service.admin.adminDashboard.account;
 
 
 import fr.sqli.Cantine.dao.IAdminDao;
