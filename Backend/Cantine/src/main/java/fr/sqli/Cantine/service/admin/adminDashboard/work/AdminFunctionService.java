@@ -29,6 +29,11 @@ public class AdminFunctionService  implements  IAdminFunctionService{
     }
 
 
+    public  void  addStudentClass  (String  Name ) {
+
+    }
+
+
 
 
 }
