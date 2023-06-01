@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @Service
-public class AdminService implements IAdminDashboardService {
+public class AdminService implements IAdminService {
     private static final Logger LOG = LogManager.getLogger();
     final String  SERVER_ADDRESS ;
     final  String DEFAULT_ADMIN_IMAGE_NAME;
@@ -103,7 +103,7 @@ public class AdminService implements IAdminDashboardService {
     @Override
       public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
 
-            IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
+            IAdminService.checkIDValidity(idAdmin); //  check  id  validity
 
             var  adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
                     ()-> new AdminNotFound("ADMIN NOT FOUND")
@@ -115,7 +115,7 @@ public class AdminService implements IAdminDashboardService {
         }
     @Override
     public AdminDtout getAdminById(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {
-        IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
+        IAdminService.checkIDValidity(idAdmin); //  check  id  validity
 
         var  adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
                 ()-> new AdminNotFound("ADMIN NOT FOUND")
@@ -129,7 +129,7 @@ public class AdminService implements IAdminDashboardService {
          if (adminDtoIn.getEmail() !=null  || adminDtoIn.getPassword() !=null)
             throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
          var  idAdmin = adminDtoIn.getId();
-         IAdminDashboardService.checkIDValidity(idAdmin); //  check  id  validity
+         IAdminService.checkIDValidity(idAdmin); //  check  id  validity
 
         adminDtoIn.checkInformationValidityExceptEmailAndPassword(); //  check  information  validity
 
@@ -270,7 +270,7 @@ public class AdminService implements IAdminDashboardService {
 
 
      public  void  tokenValidation( String   token  ) throws InvalidPersonInformationException {
-            IAdminDashboardService.validationArgument(token);
+            IAdminService.validationArgument(token);
         }
 
 

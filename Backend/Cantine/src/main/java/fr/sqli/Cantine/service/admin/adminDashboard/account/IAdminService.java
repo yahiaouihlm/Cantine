@@ -14,7 +14,7 @@ import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 
-public interface IAdminDashboardService {
+public interface IAdminService {
 
 
      String  checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException;

@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static fr.sqli.Cantine.controller.admin.adminDashboard.account.IAdminDashboardController.ADMIN_DASH_BOARD_BASIC_URL;
+import static fr.sqli.Cantine.controller.admin.adminDashboard.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)
-public class AdminController  implements IAdminDashboardController {
+public class AdminController  implements IAdminController {
 
     private AdminService adminService;
 

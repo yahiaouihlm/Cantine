@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
-public interface IAdminDashboardController {
+public interface IAdminController {
 
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin/adminDashboard";
 
