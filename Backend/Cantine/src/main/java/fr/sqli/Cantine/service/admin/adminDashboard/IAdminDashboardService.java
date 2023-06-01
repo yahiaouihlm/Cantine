@@ -17,7 +17,7 @@ import java.io.IOException;
 public interface IAdminDashboardService {
 
 
-     void checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException;
+     String  checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException;
 
      void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
 

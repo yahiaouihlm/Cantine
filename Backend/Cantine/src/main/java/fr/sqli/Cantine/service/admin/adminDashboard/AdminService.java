@@ -73,7 +73,7 @@ public class AdminService implements IAdminDashboardService {
 
 
     @Override
-    public void checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException {
+    public String  checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException {
         if  (token == null  || token.trim().isEmpty())
              throw   new InvalidTokenException("INVALID TOKEN");
 
@@ -86,12 +86,22 @@ public class AdminService implements IAdminDashboardService {
 
         var  expiredTime  = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
         long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+
+         //  expired  token  ///
         if (expiredTime > fiveMinutesInMillis){
-            this.iConfirmationToken.delete(tokenDB);
-            throw  new ExpiredCode("Token Has Been Expired ");
-        }
+            this.confirmationTokenDao.delete(confirmationTokenEntity);
 
         }
+        var  admin =  this.adminDao.findById(adminEntity.getId()) ;
+        if  (admin.isEmpty())
+            throw  new AdminNotFound("ADMIN NOT FOUND");
+
+         admin.get().setStatus(1);
+            this.adminDao.save(admin.get());
+
+            return   "ok";
+        }
+
 
     @Override
       public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {

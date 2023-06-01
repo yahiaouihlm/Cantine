@@ -16,11 +16,11 @@ CREATE TABLE IF NOT EXISTS image(
 -- -----------------------------------------------------
 
 
-CREATE TABLE IF NOT EXISTS  class_id {
+CREATE TABLE IF NOT EXISTS  class (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL
 
-    }
+);
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`function`
@@ -44,16 +44,17 @@ CREATE TABLE  IF NOT EXISTS  studient (
     registration_date DATE NOT NULL,
     email VARCHAR(300) NOT NULL,
     password VARCHAR(2000) NOT NULL,
+    Wallet DECIMAL(5,2) NOT NULL DEFAULT 0,
     town VARCHAR(400) NOT NULL,
     phone VARCHAR(50) ,
     class_id INT NOT NULL,
     image_idimage INT NOT NULL,
-    status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+    status INT  NOT NULL DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
     Disable_date DATE,
     unique(email),
 
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY (class_id) REFERENCES class_id (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (class_id) REFERENCES class (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     )
 -- -----------------------------------------------------
 -- Table `cantiniere`.`adminService`
@@ -71,7 +72,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       phone VARCHAR(50) NOT NULL,
       function_id INT NOT NULL,
       image_idimage INT NOT NULL,
-      status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+      status INT  NOT NULL  DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
       disable_date DATE DEFAULT NULL,
       validation INT NOT NULL  DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
       unique(email),
@@ -103,7 +104,7 @@ CREATE table  if NOT EXIST "order" (
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
-     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */pour fai
+     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
      qr_code VARCHAR(100) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
