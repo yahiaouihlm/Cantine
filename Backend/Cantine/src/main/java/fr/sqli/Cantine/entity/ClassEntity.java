@@ -15,7 +15,7 @@ public class ClassEntity {
     @Column(unique=true, nullable=false)
     private Integer id;
 
-    @Column(name = "name",  nullable=false, length=99)
+    @Column(name = "name", unique = true,    nullable=false, length=99)
     private  String name  ;
 
 
