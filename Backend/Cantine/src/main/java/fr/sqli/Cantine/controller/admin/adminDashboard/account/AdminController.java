@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard;
+package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static fr.sqli.Cantine.controller.admin.adminDashboard.IAdminDashboardController.ADMIN_DASH_BOARD_BASIC_URL;
+import static fr.sqli.Cantine.controller.admin.adminDashboard.account.IAdminDashboardController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)

@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminFunctionService  implements  IAdminFunctionService{
+public class AdminWorksService implements  IAdminFunctionService{
 
     private IAdminDao adminDao;
     private IFunctionDao functionDao;
@@ -27,17 +27,22 @@ public class AdminFunctionService  implements  IAdminFunctionService{
     private IClassDao classDao;
 
     @Autowired
-    public AdminFunctionService(IAdminDao adminDao,
-                                IFunctionDao functionDao, ImageService imageService, Environment environment,
-                                BCryptPasswordEncoder bCryptPasswordEncoder, IConfirmationTokenDao confirmationTokenDao,
-                                EmailSenderService emailSenderService,
-                                IClassDao classDao) {
+    public AdminWorksService(IAdminDao adminDao,
+                             IFunctionDao functionDao, ImageService imageService, Environment environment,
+                             BCryptPasswordEncoder bCryptPasswordEncoder, IConfirmationTokenDao confirmationTokenDao,
+                             EmailSenderService emailSenderService,
+                             IClassDao classDao) {
     }
 
 
     public  void  addStudentClass  (StudentClassDtoIn  studentClassDtoIn) throws InvalidStudentClassException {
          studentClassDtoIn.checkNameValidity();
-
+         var  classEntity =   this.classDao.findByName(studentClassDtoIn.getName());
+         if  (classEntity.isEmpty()) {
+                throw  new  InvalidStudentClassException("CLASS  ALREADY  EXIST");
+         }
+         classEntity.get().setName(studentClassDtoIn.getName());
+            this.classDao.save(classEntity.get());
     }
 
 

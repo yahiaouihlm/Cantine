@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard;
+package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
