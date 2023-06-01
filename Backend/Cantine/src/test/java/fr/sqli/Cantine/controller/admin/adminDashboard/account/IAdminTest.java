@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard;
+package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;

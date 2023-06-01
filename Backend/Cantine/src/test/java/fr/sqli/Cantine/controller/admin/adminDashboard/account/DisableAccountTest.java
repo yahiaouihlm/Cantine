@@ -1,6 +1,7 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard;
+package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
+import fr.sqli.Cantine.controller.admin.adminDashboard.AdminController;
 import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,7 +27,7 @@ public class DisableAccountTest  extends AbstractContainerConfig implements IAdm
     private IAdminDao adminDao;
 
     @Autowired
-    private  AdminController adminController;
+    private AdminController adminController;
 
     @Autowired
     private IFunctionDao iFunctionDao;

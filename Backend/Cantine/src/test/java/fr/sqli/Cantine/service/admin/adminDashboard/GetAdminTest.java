@@ -7,6 +7,7 @@ import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
+import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.ImageService;
