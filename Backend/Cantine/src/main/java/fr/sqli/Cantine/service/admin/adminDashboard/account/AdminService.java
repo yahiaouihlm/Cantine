@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.service.admin.adminDashboard;
+package fr.sqli.Cantine.service.admin.adminDashboard.account;
 
 
 import fr.sqli.Cantine.dao.IAdminDao;
@@ -18,7 +18,6 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
-import io.micrometer.core.instrument.util.IOUtils;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,8 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 @Service
