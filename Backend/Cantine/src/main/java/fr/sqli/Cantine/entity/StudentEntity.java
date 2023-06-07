@@ -1,12 +1,18 @@
 package fr.sqli.Cantine.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "student")
+@Table(name = "student", uniqueConstraints={
+        @UniqueConstraint(columnNames={"email"})
+}
+)
+
 public class StudentEntity  implements Serializable {
 
     @Id
@@ -32,6 +38,9 @@ public class StudentEntity  implements Serializable {
     @Column(name = "town" , nullable=false , length = 1000)
     private String town;
 
+    @Column(name = "wallet" , nullable=false )
+    @Check(constraints = "wallet >= 0")
+    private BigDecimal wallet;
     @Column(name = "phone" , nullable=true , length = 99)
     private String phone ;
 
@@ -51,6 +60,10 @@ public class StudentEntity  implements Serializable {
     @JoinColumn(name="class_id", nullable=false)
     private StudentClassEntity studentClass;
 
+
+    @Column(name=  "status" , nullable=false)
+    @Check(constraints = "status IN (0,1)")
+    private Integer status ;
 
 
     public Integer getId() {
@@ -147,5 +160,20 @@ public class StudentEntity  implements Serializable {
 
     public void setStudentClass(StudentClassEntity studentClass) {
         this.studentClass = studentClass;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public BigDecimal getWallet() {
+        return wallet;
+    }
+    public void setWallet(BigDecimal wallet) {
+        this.wallet = wallet;
     }
 }

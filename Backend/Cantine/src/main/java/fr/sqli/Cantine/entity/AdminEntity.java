@@ -2,11 +2,16 @@ package fr.sqli.Cantine.entity;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "admin")
+@Table(name = "admin", uniqueConstraints={
+        @UniqueConstraint(columnNames={"email"})
+}
+)
+
 public class AdminEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -38,6 +43,7 @@ public class AdminEntity {
     private String phone ;
 
     @Column(name=  "status" , nullable=false)
+    @Check(constraints = "status IN (0,1)")
     private Integer status ;
 
 
