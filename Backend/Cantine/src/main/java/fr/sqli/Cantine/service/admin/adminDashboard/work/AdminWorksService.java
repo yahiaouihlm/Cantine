@@ -1,7 +1,7 @@
 package fr.sqli.Cantine.service.admin.adminDashboard.work;
 
 import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IClassDao;
+
 import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
@@ -24,28 +24,19 @@ public class AdminWorksService implements  IAdminFunctionService{
     private IConfirmationTokenDao confirmationTokenDao;
     private EmailSenderService emailSenderService;
 
-    private IClassDao classDao;
+
 
     @Autowired
     public AdminWorksService(IAdminDao adminDao,
                              IFunctionDao functionDao, ImageService imageService, Environment environment,
                              BCryptPasswordEncoder bCryptPasswordEncoder, IConfirmationTokenDao confirmationTokenDao,
-                             EmailSenderService emailSenderService,
-                             IClassDao classDao) {
+                             EmailSenderService emailSenderService
+                             ) {
     }
 
 
-    public  void  addStudentClass  (StudentClassDtoIn  studentClassDtoIn) throws InvalidStudentClassException {
-         studentClassDtoIn.checkNameValidity();
-         var  classEntity =   this.classDao.findByName(studentClassDtoIn.getName());
-         if  (classEntity.isEmpty()) {
-                throw  new  InvalidStudentClassException("CLASS  ALREADY  EXIST");
-         }
-         classEntity.get().setName(studentClassDtoIn.getName());
-            this.classDao.save(classEntity.get());
+    @Override
+    public void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException {
+
     }
-
-
-
-
 }

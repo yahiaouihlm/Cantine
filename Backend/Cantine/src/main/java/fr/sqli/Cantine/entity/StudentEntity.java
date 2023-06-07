@@ -46,9 +46,11 @@ public class StudentEntity  implements Serializable {
     @JoinColumn(name="image_idimage", nullable=false)
     private ImageEntity image;
 
+
     @ManyToOne(cascade =  CascadeType.MERGE)
-    @JoinColumn(name="function_id", nullable=false)
-    private ClassEntity studientClass;
+    @JoinColumn(name="class_id", nullable=false)
+    private StudentClassEntity studentClass;
+
 
 
     public Integer getId() {
@@ -139,11 +141,4 @@ public class StudentEntity  implements Serializable {
         this.image = image;
     }
 
-    public ClassEntity getStudientClass() {
-        return studientClass;
-    }
-
-    public void setStudientClass(ClassEntity studientClass) {
-        this.studientClass = studientClass;
-    }
 }
