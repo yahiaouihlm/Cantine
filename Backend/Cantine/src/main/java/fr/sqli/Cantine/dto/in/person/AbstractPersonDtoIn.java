@@ -1,5 +1,6 @@
 package fr.sqli.Cantine.dto.in.person;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -113,6 +114,15 @@ public  abstract  class AbstractPersonDtoIn {
         if (!this.phone.matches(regex))
             throw new InvalidPersonInformationException("INVALID PHONE FORMAT");
 
+    }
+
+
+    @JsonIgnore
+    protected   String  camelCase(String  str){
+        if (str == null || str.isEmpty()) {
+            return new String();
+        }
+        return  str.substring(0,1).toUpperCase()+str.substring(1).toLowerCase();
     }
 
 

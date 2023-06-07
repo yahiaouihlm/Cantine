@@ -16,15 +16,15 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
         super.ValidatePersonInformationWithOutPhone();
         super.phoneValidator();
         AdminEntity admin = new AdminEntity();
-          admin.setFirstname(CamelCase(this.getFirstname().trim()));
-          admin.setLastname(CamelCase(this.getLastname().trim()));
+          admin.setFirstname(super.camelCase(this.getFirstname().trim()));
+          admin.setLastname(super.camelCase(this.getLastname().trim()));
           admin.setEmail(this.getEmail().replaceAll("\\s+","").toLowerCase());
           admin.setPassword(this.getPassword());
           admin.setBirthdate(this.getBirthdate());
           admin.setTown(this.getTown().trim());
           admin.setAddress(this.getAddress().trim());
           admin.setPhone(this.getPhone().trim());
-             return admin;
+          return admin;
 
     }
 
@@ -37,13 +37,6 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
     }
 
-    @JsonIgnore
-    private  String  CamelCase(String  str){
-        if (str == null || str.isEmpty()) {
-            return new String();
-        }
-        return  str.substring(0,1).toUpperCase()+str.substring(1).toLowerCase();
-    }
 
    @JsonIgnore
    public  void  functionValidator() throws InvalidPersonInformationException {
