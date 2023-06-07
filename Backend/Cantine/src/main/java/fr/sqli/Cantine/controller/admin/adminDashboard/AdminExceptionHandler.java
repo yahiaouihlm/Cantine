@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AdminExceptionHandler {
 
 
+    @ExceptionHandler(StudentClassNotFound.class)
+    public ResponseEntity<ExceptionDtout> handleAdminNotFound(StudentClassNotFound e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
+    }
+
     @ExceptionHandler(ExistingStudentClass.class)
     public ResponseEntity<ExceptionDtout> handleAdminNotFound(ExistingStudentClass e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));

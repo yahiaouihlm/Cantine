@@ -30,6 +30,12 @@ public class StudentClassDtoIn {
              throw new InvalidStudentClassException("INVALID STUDENT CLASS NAME");
          }
       }
+      @JsonIgnore
+      public  void checkIdValidity () throws InvalidStudentClassException {
+          if (this.id == null || this.id <0) {
+              throw new InvalidStudentClassException("INVALID STUDENT CLASS ID");
+          }
+      }
 
      public String getName() {
           return name;
@@ -38,4 +44,9 @@ public class StudentClassDtoIn {
      public void setName(String name) {
           this.name = name;
      }
+
+
+        public Integer getId() {
+            return id;
+        }
 }

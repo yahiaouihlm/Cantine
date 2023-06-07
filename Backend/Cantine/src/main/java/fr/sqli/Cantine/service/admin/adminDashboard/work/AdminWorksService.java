@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingStudentClass;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFound;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,20 @@ public class AdminWorksService implements  IAdminFunctionService{
 
         }
         this.studentClassDao.save(studentClassEntity);
+    }
+
+
+
+    @Override
+    public void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFound {
+        studentClassDtoIn.checkIdValidity();
+        StudentClassEntity studentClassEntity = studentClassDtoIn.toStudentClassEntity();
+
+        var  studentClass = this.studentClassDao.findById(studentClassDtoIn.getId());
+        if  (studentClass.isEmpty()) {
+            throw new StudentClassNotFound("STUDENT CLASS NOT FOUND");
+        }
+        studentClass.get().setName((studentClassEntity.getName()));
+        this.studentClassDao.save(studentClass.get());
     }
 }
