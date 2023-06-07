@@ -17,7 +17,7 @@ public class StudentClassDtoIn {
      public StudentClassEntity toStudentClassEntity () throws InvalidStudentClassException {
           this.checkNameValidity();
           StudentClassEntity studentClassEntity = new StudentClassEntity();
-          studentClassEntity.setName(this.name);
+          studentClassEntity.setName(this.name.trim());
 
           return  studentClassEntity;
      }

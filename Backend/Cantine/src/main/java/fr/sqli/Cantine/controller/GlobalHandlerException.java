@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dto.out.ExceptionDtout;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -16,6 +17,11 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalHandlerException {
 
 
+    //  can  not   read  json  format  exception
+    @ExceptionHandler  (HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionDtout> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout("INVALID JSON FORMAT"));
+    }
        //  Exception  For   Email    Handling
     @ExceptionHandler(value = MailAuthenticationException.class)
     public  ResponseEntity<ExceptionDtout> handleMailAuthenticationException(MailAuthenticationException e){

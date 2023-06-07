@@ -1,11 +1,9 @@
 package fr.sqli.Cantine.service.admin.adminDashboard.work;
 
-import fr.sqli.Cantine.dao.IAdminDao;
+import fr.sqli.Cantine.dao.*;
 
-import fr.sqli.Cantine.dao.IConfirmationTokenDao;
-import fr.sqli.Cantine.dao.IFunctionDao;
-import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
+import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
@@ -27,18 +25,20 @@ public class AdminWorksService implements  IAdminFunctionService{
 
     private IStudentDao studentDao;
 
+    private IStudentClassDao studentClassDao;
 
     @Autowired
-    public AdminWorksService(IAdminDao adminDao,
-                             IFunctionDao functionDao, ImageService imageService, Environment environment,
-                             BCryptPasswordEncoder bCryptPasswordEncoder, IConfirmationTokenDao confirmationTokenDao,
-                             EmailSenderService emailSenderService,
-                              IStudentDao studentDao) {
+    public AdminWorksService( IStudentClassDao iStudentClassDao) {
+        this.studentClassDao = iStudentClassDao;
     }
 
 
     @Override
     public void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException {
+        StudentClassEntity studentClassEntity = studentClassDtoIn.toStudentClassEntity();
+        if  () {
 
+        }
+        this.studentClassDao.save(studentClassEntity);
     }
 }
