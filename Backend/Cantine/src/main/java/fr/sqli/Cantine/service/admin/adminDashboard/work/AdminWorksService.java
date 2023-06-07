@@ -4,6 +4,7 @@ import fr.sqli.Cantine.dao.IAdminDao;
 
 import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
+import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.images.ImageService;
@@ -24,14 +25,15 @@ public class AdminWorksService implements  IAdminFunctionService{
     private IConfirmationTokenDao confirmationTokenDao;
     private EmailSenderService emailSenderService;
 
+    private IStudentDao studentDao;
 
 
     @Autowired
     public AdminWorksService(IAdminDao adminDao,
                              IFunctionDao functionDao, ImageService imageService, Environment environment,
                              BCryptPasswordEncoder bCryptPasswordEncoder, IConfirmationTokenDao confirmationTokenDao,
-                             EmailSenderService emailSenderService
-                             ) {
+                             EmailSenderService emailSenderService,
+                              IStudentDao studentDao) {
     }
 
 

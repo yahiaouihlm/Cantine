@@ -141,4 +141,11 @@ public class StudentEntity  implements Serializable {
         this.image = image;
     }
 
+    public StudentClassEntity getStudentClass() {
+        return studentClass;
+    }
+
+    public void setStudentClass(StudentClassEntity studentClass) {
+        this.studentClass = studentClass;
+    }
 }

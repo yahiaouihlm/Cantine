@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.dto.in.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 
 public class StudentClassDtoIn {
@@ -9,6 +10,17 @@ public class StudentClassDtoIn {
 
      private  String  name ;
 
+
+
+     @JsonIgnore
+
+     public StudentClassEntity toStudentClassEntity () throws InvalidStudentClassException {
+          this.checkNameValidity();
+          StudentClassEntity studentClassEntity = new StudentClassEntity();
+          studentClassEntity.setName(this.name);
+
+          return  studentClassEntity;
+     }
 
 
 
