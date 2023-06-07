@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS image(
 -- -----------------------------------------------------
 
 
-CREATE TABLE IF NOT EXISTS  class (
+CREATE TABLE IF NOT EXISTS  "studentclass" (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     unique(name)
@@ -56,7 +56,7 @@ CREATE TABLE  IF NOT EXISTS  student (
     unique(email),
 
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY (class_id) REFERENCES class (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+    FOREIGN KEY (class_id) REFERENCES "studentclass"  (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     )
 -- -----------------------------------------------------
 -- Table `cantiniere`.`adminService`
