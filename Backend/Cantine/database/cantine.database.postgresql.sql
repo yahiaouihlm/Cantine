@@ -54,7 +54,8 @@ CREATE TABLE  IF NOT EXISTS  student (
     status INT  NOT NULL DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
     Disable_date DATE,
     unique(email),
-
+    check (status IN (0,1)),
+    check (Wallet >= 0),
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (class_id) REFERENCES "studentclass"  (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     )
@@ -78,6 +79,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       disable_date DATE DEFAULT NULL,
       validation INT NOT NULL  DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
       unique(email),
+      check (status IN (0,1)),
       FOREIGN KEY (function_id) REFERENCES "function" (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
       FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
     )
