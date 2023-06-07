@@ -4,6 +4,7 @@ import fr.sqli.Cantine.dao.*;
 
 import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.Cantine.entity.StudentClassEntity;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingStudentClass;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
@@ -34,9 +35,10 @@ public class AdminWorksService implements  IAdminFunctionService{
 
 
     @Override
-    public void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException {
+    public void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClass {
         StudentClassEntity studentClassEntity = studentClassDtoIn.toStudentClassEntity();
-        if  () {
+        if  (this.studentClassDao.findByName(studentClassEntity.getName()).isPresent()) {
+            throw new ExistingStudentClass("STUDENT CLASS ALREADY EXIST");
 
         }
         this.studentClassDao.save(studentClassEntity);
