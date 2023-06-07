@@ -9,16 +9,25 @@ import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 public class StudentService implements IStudentService {
-  private IStudentDao studentDao;
+    final  String DEFAULT_STUDENT_IMAGE;
+    final  String  IMAGES_STUDENT_PATH ;
+    private IStudentDao studentDao;
   private IStudentClassDao iStudentClassDao;
+  private Environment environment;
 
-  public  StudentService  (IStudentDao studentDao,  IStudentClassDao iStudentClassDao) {
+  public  StudentService  (IStudentDao studentDao,  IStudentClassDao iStudentClassDao , Environment environment) {
       this.iStudentClassDao = iStudentClassDao;
-    this.studentDao = studentDao;
+      this.studentDao = studentDao;
+      this.environment = environment;
+        this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
+        this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
   }
 
         @Override
@@ -32,7 +41,11 @@ public class StudentService implements IStudentService {
                 throw new StudentClassNotFoundException("INVALID STUDENT CLASS");
             }
 
-            studentEntity.setS
+            studentEntity.setStatus(0);
+            studentEntity.setWallet(new BigDecimal(0));
+            studentEntity.setStudentClass(studentClassEntity.get());
+            studentEntity.setRegistrationDate(java.time.LocalDate.now());
+
 
         }
 
