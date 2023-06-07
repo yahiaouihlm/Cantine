@@ -37,7 +37,7 @@ public class AdminEntity {
     @Column(name = "phone" , nullable=false , length = 99)
     private String phone ;
 
-    @Column(name=  "status" , nullable=false , length = 99)
+    @Column(name=  "status" , nullable=false)
     private Integer status ;
 
 

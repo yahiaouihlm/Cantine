@@ -8,7 +8,7 @@ import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFound;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,13 +22,18 @@ public class StudentService implements IStudentService {
   }
 
         @Override
-        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFound {
+        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException {
             StudentEntity studentEntity = studentDtoIn.toStudentEntity();
+
             var   studentClass   =  studentDtoIn.getStudentClass();
+
             var  studentClassEntity   =  this.iStudentClassDao.findByName(studentClass);
             if (studentClassEntity.isEmpty()) {
-                throw new StudentClassNotFound("INVALID STUDENT CLASS");
+                throw new StudentClassNotFoundException("INVALID STUDENT CLASS");
             }
+
+            studentEntity.setS
+
         }
 
 

@@ -2,9 +2,9 @@ package fr.sqli.Cantine.controller.admin.adminDashboard.works;
 
 
 import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingStudentClass;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFound;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.Cantine.service.admin.adminDashboard.work.AdminWorksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class AdminWorksController  implements  IAdminWorksController {
 
     @Override
     @PostMapping(ADD_STUDENT_CLASS_ENDPOINT)
-    public ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClass {
+    public ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException {
         this.adminWorksService.addStudentClass(studentClassDtoIn);
         return ResponseEntity.ok(STUDENT_CLASS_ADDED_SUCCESSFULLY);
     }
@@ -32,7 +32,7 @@ public class AdminWorksController  implements  IAdminWorksController {
     @Override
 
     @PutMapping(UPDATE_STUDENT_CLASS_ENDPOINT)
-    public ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFound {
+    public ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException {
         this.adminWorksService.updateStudentClass(studentClassDtoIn);
         return ResponseEntity.ok(STUDENT_CLASS_UPDATED_SUCCESSFULLY);
     }

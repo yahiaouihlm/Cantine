@@ -3,7 +3,6 @@ package fr.sqli.Cantine.controller.admin.adminDashboard;
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,13 +12,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AdminExceptionHandler {
 
 
-    @ExceptionHandler(StudentClassNotFound.class)
-    public ResponseEntity<ExceptionDtout> handleAdminNotFound(StudentClassNotFound e) {
+    @ExceptionHandler(StudentClassNotFoundException.class)
+    public ResponseEntity<ExceptionDtout> handleAdminNotFound(StudentClassNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
     }
 
-    @ExceptionHandler(ExistingStudentClass.class)
-    public ResponseEntity<ExceptionDtout> handleAdminNotFound(ExistingStudentClass e) {
+    @ExceptionHandler(ExistingStudentClassException.class)
+    public ResponseEntity<ExceptionDtout> handleAdminNotFound(ExistingStudentClassException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
     @ExceptionHandler(InvalidStudentClassException.class)
