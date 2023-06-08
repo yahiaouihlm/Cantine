@@ -10,15 +10,12 @@ import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.student.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
-@RequestMapping(StudentController.ADMIN_DASH_BOARD_BASIC_URL)
+@RequestMapping(StudentController.STUDENT_BASIC_URL)
 public class StudentController implements IStudentController {
 
    private StudentService studentService;
@@ -26,6 +23,8 @@ public class StudentController implements IStudentController {
    public  StudentController( StudentService studentService) {
         this.studentService = studentService;
    }
+
+
 
 
  @Override

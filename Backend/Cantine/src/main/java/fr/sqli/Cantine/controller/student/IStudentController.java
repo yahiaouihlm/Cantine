@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 
 public interface IStudentController {
-    String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/student/";
+    String STUDENT_BASIC_URL = "/cantine/student";
 
 
 
-    String  STUDENT_SIGN_UP_ENDPOINT =  ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
+    String  STUDENT_SIGN_UP_ENDPOINT =  "/signUp";
 
 
     String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
