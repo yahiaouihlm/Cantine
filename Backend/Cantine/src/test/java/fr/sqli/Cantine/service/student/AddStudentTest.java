@@ -24,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -49,7 +50,7 @@ class AddStudentTest {
      void  setUp  () throws IOException {
          this.studentClassEntity = new StudentClassEntity();
          this.studentClassEntity.setId(1);
-         this.studentClassEntity.setName("SQLI JAVA ");
+         this.studentClassEntity.setName("SQLI JAVA");
          this.environment = new MockEnvironment();
          this.environment.setProperty("sqli.cantine.default.persons.admin.imagename","defaultAdminImageName");
          this.environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
@@ -73,6 +74,62 @@ class AddStudentTest {
          this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService);
 
      }
+
+
+    /****************************  TESTS FOR email  ************************************/
+
+
+
+    @Test
+    void addAdminWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
+        this.studentDtoIn.setEmail("a".repeat(91));
+
+        this.studentClassEntity.setName(this.studentDtoIn.getStudentClass());
+
+        Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(  Optional.of(this.studentClassEntity));
+
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+
+
+        Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+    @Test
+    void addAdminWithTooLongEmailTest() throws IOException {
+        this.studentDtoIn.setEmail("a".repeat(1001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+    @Test
+    void addAdminWithEmptyEmailTest() throws IOException {
+        this.studentDtoIn.setEmail("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithNullEmailTest() throws IOException {
+        this.studentDtoIn.setEmail(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
