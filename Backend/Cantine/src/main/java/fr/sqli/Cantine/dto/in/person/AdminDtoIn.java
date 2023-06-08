@@ -9,11 +9,15 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
     private String function;
 
-
+    private  String address;
 
     @JsonIgnore
     public AdminEntity toAdminEntityWithOutFunction() throws InvalidPersonInformationException {
+
         super.ValidatePersonInformationWithOutPhone();
+        checkAddressValidity();
+
+
         super.phoneValidator();
         AdminEntity admin = new AdminEntity();
           admin.setFirstname(super.camelCase(this.getFirstname().trim()));
@@ -28,6 +32,18 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
     }
 
+    @JsonIgnore
+    public    void  checkAddressValidity () throws InvalidPersonInformationException {
+        //  check  Address  validity  because  it  is  not  checked  in  ValidatePersonInformationWithOutPhone  (is  not  shared  between  Admin  and  Student)
+        if (this.address == null || this.address.isEmpty() || this.address.isBlank())
+            throw new InvalidPersonInformationException("ADDRESS IS  REQUIRED");
+
+        if  (this.address.trim().length() <10 )
+            throw new InvalidPersonInformationException("ADDRESS  MUST BE AT LEAST 10 CHARACTERS");
+
+        if  (this.address.length() > 3000 )
+            throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 3000 CHARACTERS");
+    }
 
     @JsonIgnore
     public   void   checkInformationValidityExceptEmailAndPassword() throws InvalidPersonInformationException {
@@ -51,5 +67,12 @@ public class AdminDtoIn  extends  AbstractPersonDtoIn{
 
     public void setFunction(String function) {
         this.function = function;
+    }
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

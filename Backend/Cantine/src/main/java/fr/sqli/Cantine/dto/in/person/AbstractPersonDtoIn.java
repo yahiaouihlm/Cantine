@@ -19,7 +19,7 @@ public  abstract  class AbstractPersonDtoIn {
     private  String birthdateAsString;
     private LocalDate birthdate;
     private  String town;
-    private  String address;
+
     private  String phone;
     private MultipartFile image;
 
@@ -61,8 +61,7 @@ public  abstract  class AbstractPersonDtoIn {
       if (this.town == null || this.town.isEmpty() || this.town.isBlank())
           throw new InvalidPersonInformationException("TOWN IS  REQUIRED");
 
-      if (this.address == null || this.address.isEmpty() || this.address.isBlank())
-          throw new InvalidPersonInformationException("ADDRESS IS  REQUIRED");
+
 
       if  (this.firstname.trim().length() < 3)
           throw new InvalidPersonInformationException("FIRSTNAME MUST BE AT LEAST 3 CHARACTERS");
@@ -82,15 +81,11 @@ public  abstract  class AbstractPersonDtoIn {
       if  (this.town.length() >1000 )
           throw new InvalidPersonInformationException("TOWN MUST BE LESS THAN 1000 CHARACTERS");
 
-      if  (this.address.trim().length() <10 )
-          throw new InvalidPersonInformationException("ADDRESS  MUST BE AT LEAST 10 CHARACTERS");
-
-      if  (this.address.length() > 3000 )
-          throw new InvalidPersonInformationException("ADDRESS MUST BE LESS THAN 3000 CHARACTERS");
 
       birthdateValidator ();
 
   }
+
 
     private   void birthdateValidator () throws InvalidPersonInformationException {
         if (this.birthdateAsString == null || this.birthdateAsString.isEmpty() || this.birthdateAsString.isBlank())
@@ -190,13 +185,7 @@ public  abstract  class AbstractPersonDtoIn {
         this.town = town;
     }
 
-    public String getAddress() {
-        return address;
-    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public String getPhone() {
         return phone;

@@ -132,7 +132,7 @@ public class AdminService implements IAdminService {
          IAdminService.checkIDValidity(idAdmin); //  check  id  validity
 
         adminDtoIn.checkInformationValidityExceptEmailAndPassword(); //  check  information  validity
-
+        adminDtoIn.checkAddressValidity(); //  check  address  validity
         var  functionAdmin =  adminDtoIn.getFunction();
 
         var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
