@@ -76,6 +76,40 @@ class AddStudentTest {
 
 
 
+    /****************************  TESTS FOR LASTNAME  ************************************/
+
+    @Test
+    void addStudentWithTooLongLastNameTest() throws IOException {
+        this.studentDtoIn.setLastname("a".repeat(91));
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addStudentWithTooShortLastNameTest() throws IOException {
+        this.studentDtoIn.setLastname("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addStudentWithEmptyLastNameTest() throws IOException {
+        this.studentDtoIn.setLastname("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addStudentWithNullLastNameTest() throws IOException {
+        this.studentDtoIn.setLastname(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.studentService.signUpStudent(this.studentDtoIn)) ;
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
 
     /****************************  TESTS FOR NAME  ************************************/
     @Test
