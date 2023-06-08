@@ -59,7 +59,8 @@ public interface IAdminTest {
             Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
             Map.entry("InvalidId", "INVALID ID"),
             Map.entry("AdminNotFound", "ADMIN NOT FOUND"),
-            Map.entry("MissingPram", "MISSING PARAMETER")
+            Map.entry("MissingPram", "MISSING PARAMETER"),
+            Map.entry("InvalidEmail", "YOUR EMAIL IS NOT VALID")
     );
 
      static  AdminEntity createAdminWith(String email, FunctionEntity functionEntity){
