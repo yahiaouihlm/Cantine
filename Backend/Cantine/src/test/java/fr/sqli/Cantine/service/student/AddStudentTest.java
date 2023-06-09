@@ -76,6 +76,42 @@ class AddStudentTest {
      }
 
 
+
+
+    /****************************  TESTS FOR PASSWORD  ************************************/
+
+    @Test
+    void addAdminWithTooLongPasswordTest() throws IOException {
+        this.studentDtoIn.setPassword("a".repeat(21));
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addAdminWithTooShortPasswordTest() throws IOException {
+        this.studentDtoIn.setPassword("a".repeat(5));
+        assertThrows(InvalidPersonInformationException.class,  () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithEmptyPasswordTest() throws IOException {
+        this.studentDtoIn.setPassword("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithNullPasswordTest() throws IOException {
+        this.studentDtoIn.setPassword(null);
+        assertThrows(InvalidPersonInformationException.class,() -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
     /****************************  TESTS FOR BirthdayAsString  ************************************/
 
     @Test
