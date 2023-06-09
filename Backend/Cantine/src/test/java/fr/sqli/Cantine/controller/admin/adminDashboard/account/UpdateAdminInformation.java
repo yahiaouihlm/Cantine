@@ -177,7 +177,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionNotFound"))));
 
 
@@ -195,7 +195,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionNotFound"))));
 
 
