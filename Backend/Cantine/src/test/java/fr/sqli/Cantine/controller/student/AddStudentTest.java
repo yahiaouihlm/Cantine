@@ -6,13 +6,18 @@ import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -80,9 +85,87 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
 
+    /***************************************** TESTS   FIRSTNAME  ************************************************/
+
+    @Test
+    void  addStudentWithTooLongFirstname() throws Exception {
+        this.formData.set("firstname",  "a".repeat(91));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongFirstName"))));
+
+
+    }
 
 
 
+    @Test
+    void  addStudentWithTooShortFirstname() throws Exception {
+        this.formData.set("firstname",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortFirstName"))));
+
+
+    }
+
+    @Test
+    void  addStudentWithEmptyFirstname() throws Exception {
+        this.formData.set("firstname",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+    @Test
+    void  addStudentWithNullFirstname() throws Exception {
+        this.formData.set("firstname",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
+    @Test
+    void  addStudentWithOutFirstname() throws Exception {
+        this.formData.remove("firstname");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+
+
+    }
 
 
 
