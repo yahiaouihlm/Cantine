@@ -19,7 +19,7 @@ public interface IAdminService {
      void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
 
     AdminDtout getAdminById (Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
-     void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
+     void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException;
      AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException;
 
     public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException;
