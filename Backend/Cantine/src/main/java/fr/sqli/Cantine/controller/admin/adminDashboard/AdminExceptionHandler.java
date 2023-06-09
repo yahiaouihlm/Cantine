@@ -18,11 +18,11 @@ public class AdminExceptionHandler {
     }
 
     @ExceptionHandler(ExistingStudentClassException.class)
-    public ResponseEntity<ExceptionDtout> handleAdminNotFound(ExistingStudentClassException e) {
+    public ResponseEntity<ExceptionDtout> handleExistingStudentClass(ExistingStudentClassException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
     @ExceptionHandler(InvalidStudentClassException.class)
-    public ResponseEntity<ExceptionDtout> handleAdminNotFound(InvalidStudentClassException e) {
+    public ResponseEntity<ExceptionDtout> handleInvalidStudentClass(InvalidStudentClassException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
     }
     @ExceptionHandler(AdminNotFound.class)

@@ -39,7 +39,7 @@ public class StudentDtoIn  extends  AbstractPersonDtoIn{
     @JsonIgnore
     public  void  checkStudentClassValidity  () throws InvalidStudentClassException {
         if (this.studentClass == null || this.studentClass.trim().isEmpty()){
-            throw new InvalidStudentClassException("INVALID STUDENT CLASS NAME");
+            throw new InvalidStudentClassException("STUDENT CLASS IS  REQUIRED");
         }
     }
 

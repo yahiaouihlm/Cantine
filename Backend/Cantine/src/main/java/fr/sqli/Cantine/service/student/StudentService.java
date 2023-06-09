@@ -61,7 +61,7 @@ public class StudentService implements IStudentService {
 
             var  studentClassEntity   =  this.iStudentClassDao.findByName(studentClass);
             if (studentClassEntity.isEmpty()) {
-                throw new StudentClassNotFoundException("INVALID STUDENT CLASS");
+                throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
             }
 
             if (!studentEntity.getEmail().matches(this.EMAIL_STUDENT_REGEX ) ){
