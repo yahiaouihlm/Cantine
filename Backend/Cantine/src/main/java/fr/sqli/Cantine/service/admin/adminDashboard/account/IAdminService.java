@@ -3,10 +3,7 @@ package fr.sqli.Cantine.service.admin.adminDashboard.account;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -23,7 +20,7 @@ public interface IAdminService {
 
     AdminDtout getAdminById (Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
      void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound;
-     AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
+     AdminEntity signUp (AdminDtoIn  adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException;
 
     public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException;
     void existingAdmin(String  adminEmail ) throws ExistingAdminException;

@@ -3,6 +3,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
@@ -58,7 +59,7 @@ public class AdminController  implements IAdminController {
 
     @Override
     @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
-    public ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException {
+    public ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException, AdminFunctionNotFoundException {
         this.adminService.signUp(adminDtoIn);
         return ResponseEntity.ok(ADMIN_ADDED_SUCCESSFULLY);
     }

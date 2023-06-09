@@ -9,10 +9,7 @@ import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
@@ -171,15 +168,15 @@ public class AdminService implements IAdminService {
         }
 
     @Override
-    public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+    public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException {
         AdminEntity adminEntity = adminDtoIn.toAdminEntityWithOutFunction();
 
         //check  function  validity
         var  functionAdmin =  adminDtoIn.getFunction();
         var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
         if  (functionAdminEntity.isEmpty()){
-            AdminService.LOG.error("function  is  not  valid");
-            throw  new InvalidPersonInformationException("YOUR FUNCTIONALITY IS NOT VALID");
+            AdminService.LOG.error("function  is  not  found");
+            throw  new AdminFunctionNotFoundException("YOUR FUNCTIONALITY IS NOT FOUND");
         }
 
         adminEntity.setFunction(functionAdminEntity.get());
