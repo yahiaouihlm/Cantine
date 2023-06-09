@@ -52,7 +52,7 @@ public interface IAdminTest {
             Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
             Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
             Map.entry("FunctionRequire", "FUNCTION IS  REQUIRED"),
-            Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT VALID"),
+            Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT FOUND"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS"),
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
