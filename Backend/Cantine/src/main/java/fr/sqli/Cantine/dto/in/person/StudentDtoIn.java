@@ -17,7 +17,7 @@ public class StudentDtoIn  extends  AbstractPersonDtoIn{
     public StudentEntity toStudentEntity() throws InvalidStudentClassException, InvalidPersonInformationException {
         super.ValidatePersonInformationWithOutPhone();
         StudentEntity student = new StudentEntity();
-        if  ( super.getPhone() != null ) {
+        if  ( super.getPhone() != null  && !super.getPhone().trim().isEmpty()) {
             super.phoneValidator();
             student.setPhone(super.getPhone().trim());
         }

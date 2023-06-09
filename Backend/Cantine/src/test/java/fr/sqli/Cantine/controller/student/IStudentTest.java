@@ -22,7 +22,8 @@ public interface IStudentTest {
             Map.entry("InvalidBirthdateFormat", "INVALID BIRTHDATE FORMAT"),
             Map.entry("TownRequire", "TOWN IS  REQUIRED"),
             Map.entry("ShortTown", "TOWN  MUST BE AT LEAST 2 CHARACTERS"),
-            Map.entry("LongTown", "TOWN MUST BE LESS THAN 1000 CHARACTERS")
+            Map.entry("LongTown", "TOWN MUST BE LESS THAN 1000 CHARACTERS"),
+            Map.entry("InvalidPhoneFormat", "INVALID PHONE FORMAT")
 
             );
 }
