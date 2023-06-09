@@ -105,7 +105,6 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
 
-
     @Test
     void  addStudentWithTooShortPassword() throws Exception {
         this.formData.set("password",  "  ab ");
