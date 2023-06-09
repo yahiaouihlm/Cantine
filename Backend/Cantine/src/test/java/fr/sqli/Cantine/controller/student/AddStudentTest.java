@@ -85,6 +85,94 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
 
+
+    /***************************************** TESTS   PASSWORD  ************************************************/
+
+    @Test
+    void  addStudentWithTooLongPassword() throws Exception {
+        this.formData.set("password",  "a".repeat(91));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongPassword"))));
+
+
+    }
+
+
+
+    @Test
+    void  addStudentWithTooShortPassword() throws Exception {
+        this.formData.set("password",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortPassword"))));
+
+
+    }
+
+    @Test
+    void  addStudentWithEmptyPassword() throws Exception {
+        this.formData.set("password",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PasswordRequire"))));
+
+
+    }
+    @Test
+    void  addStudentWithNullPassword() throws Exception {
+        this.formData.set("password",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PasswordRequire"))));
+
+
+    }
+    @Test
+    void  addStudentWithOutPassword() throws Exception {
+        this.formData.remove("password");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PasswordRequire"))));
+
+
+    }
+
+
+
+
+
+
     /***************************************** TESTS  EMAIL  ************************************************/
 
     @Test

@@ -27,7 +27,10 @@ public interface IStudentTest {
             Map.entry("EmailRequire", "EMAIL IS  REQUIRED"),
             Map.entry("ShortEmail", "EMAIL MUST BE AT LEAST 5 CHARACTERS"),
             Map.entry("LongEmail", "EMAIL MUST BE LESS THAN 1000 CHARACTERS"),
-            Map.entry("InvalidEmailFormat", "YOUR EMAIL IS NOT VALID")
+            Map.entry("InvalidEmailFormat", "YOUR EMAIL IS NOT VALID"),
+            Map.entry("PasswordRequire", "PASSWORD IS  REQUIRED"),
+            Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
+            Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS")
 
             );
 }
