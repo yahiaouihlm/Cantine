@@ -76,6 +76,48 @@ class AddStudentTest {
      }
 
 
+    /****************************  TESTS FOR BirthdayAsString  ************************************/
+
+    @Test
+    void addAdminWithInvalidBirthdateAsStringFormatTest() throws IOException {
+        this.studentDtoIn.setBirthdateAsString("18/07/2000");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addAdminWithTooLongBirthdateAsStringTest() throws IOException {
+        this.studentDtoIn.setBirthdateAsString("a".repeat(2001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addAdminWithTooShortBirthdateAsStringTest() throws IOException {
+        this.studentDtoIn.setBirthdateAsString("ab");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithEmptyBirthdateAsStringTest() throws IOException {
+        this.studentDtoIn.setBirthdateAsString("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithNullBirthdateAsStringTest() throws IOException {
+        this.studentDtoIn.setBirthdateAsString(null);
+        assertThrows(InvalidPersonInformationException.class,() -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
 
     /****************************  TESTS FOR Town  ************************************/
     @Test
