@@ -76,9 +76,41 @@ class AddStudentTest {
      }
 
 
+
+    /****************************  TESTS FOR Town  ************************************/
+    @Test
+    void addAdminWithTooLongTownTest() throws IOException {
+        this.studentDtoIn.setTown("a".repeat(2001));
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addAdminWithTooShortTownTest() throws IOException {
+        this.studentDtoIn.setTown("nm");
+        assertThrows(InvalidPersonInformationException.class, () ->  this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithEmptyTownTest() throws IOException {
+        this.studentDtoIn.setTown("   ");
+        assertThrows(InvalidPersonInformationException.class, () ->  this.studentService.signUpStudent(this.studentDtoIn)   );
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+    @Test
+    void addAdminWithNullTownTest() throws IOException {
+        this.studentDtoIn.setTown(null);
+        assertThrows(InvalidPersonInformationException.class,()->this.studentService.signUpStudent(this.studentDtoIn) );
+        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
     /****************************  TESTS FOR email  ************************************/
-
-
 
     @Test
     void addAdminWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
