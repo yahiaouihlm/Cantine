@@ -6,6 +6,8 @@ import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.ImageService;
 import org.apache.logging.log4j.LogManager;
@@ -75,13 +77,64 @@ class AddStudentTest {
 
      }
 
+    /****************************  TESTS FOR STUDENT CLASS  ************************************/
+    @Test
+    void addStudentInformationEmptyStudentClass()  {
+
+        this.studentDtoIn.setStudentClass("");
+        assertThrows(InvalidStudentClassException.class, ()-> this.studentService.signUpStudent(this.studentDtoIn));
+
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void addStudentInformationWithInvalidStudentClass() throws InvalidPersonInformationException {
+
+        this.studentDtoIn.setStudentClass("invalidFunction");
+        Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.empty());
+        assertThrows(StudentClassNotFoundException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+        Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+    @Test
+    void addStudentInformationNullStudentClass(){
+
+        this.studentDtoIn.setStudentClass(null);
+
+        assertThrows(InvalidStudentClassException.class, () ->this.studentService.signUpStudent(this.studentDtoIn));
+
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+    /****************************  TESTS FOR Phone  ************************************/
+    @Test
+    void addStudentWithTooLongPhoneTest() throws IOException {
+        this.studentDtoIn.setPhone("a".repeat(21));
+        assertThrows(InvalidPersonInformationException.class, () ->this.studentService.signUpStudent(this.studentDtoIn));
+    }
+
+    @Test
+    void addStudentWithTooShortPhoneTest() throws IOException {
+        this.studentDtoIn.setPhone("a".repeat(5));
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+    }
+    @Test
+    void addStudentWithEmptyPhoneTest() throws IOException {
+        this.studentDtoIn.setPhone("   ");
+        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+    }
+
+
+
 
 
 
     /****************************  TESTS FOR PASSWORD  ************************************/
 
     @Test
-    void addAdminWithTooLongPasswordTest() throws IOException {
+    void addStudentWithTooLongPasswordTest() throws IOException {
         this.studentDtoIn.setPassword("a".repeat(21));
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -89,21 +142,21 @@ class AddStudentTest {
     }
 
     @Test
-    void addAdminWithTooShortPasswordTest() throws IOException {
+    void addStudentWithTooShortPasswordTest() throws IOException {
         this.studentDtoIn.setPassword("a".repeat(5));
         assertThrows(InvalidPersonInformationException.class,  () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithEmptyPasswordTest() throws IOException {
+    void addStudentWithEmptyPasswordTest() throws IOException {
         this.studentDtoIn.setPassword("   ");
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithNullPasswordTest() throws IOException {
+    void addStudentWithNullPasswordTest() throws IOException {
         this.studentDtoIn.setPassword(null);
         assertThrows(InvalidPersonInformationException.class,() -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -115,7 +168,7 @@ class AddStudentTest {
     /****************************  TESTS FOR BirthdayAsString  ************************************/
 
     @Test
-    void addAdminWithInvalidBirthdateAsStringFormatTest() throws IOException {
+    void addStudentWithInvalidBirthdateAsStringFormatTest() throws IOException {
         this.studentDtoIn.setBirthdateAsString("18/07/2000");
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -123,7 +176,7 @@ class AddStudentTest {
     }
 
     @Test
-    void addAdminWithTooLongBirthdateAsStringTest() throws IOException {
+    void addStudentWithTooLongBirthdateAsStringTest() throws IOException {
         this.studentDtoIn.setBirthdateAsString("a".repeat(2001));
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -131,21 +184,21 @@ class AddStudentTest {
     }
 
     @Test
-    void addAdminWithTooShortBirthdateAsStringTest() throws IOException {
+    void addStudentWithTooShortBirthdateAsStringTest() throws IOException {
         this.studentDtoIn.setBirthdateAsString("ab");
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithEmptyBirthdateAsStringTest() throws IOException {
+    void addStudentWithEmptyBirthdateAsStringTest() throws IOException {
         this.studentDtoIn.setBirthdateAsString("   ");
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithNullBirthdateAsStringTest() throws IOException {
+    void addStudentWithNullBirthdateAsStringTest() throws IOException {
         this.studentDtoIn.setBirthdateAsString(null);
         assertThrows(InvalidPersonInformationException.class,() -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -157,7 +210,7 @@ class AddStudentTest {
 
     /****************************  TESTS FOR Town  ************************************/
     @Test
-    void addAdminWithTooLongTownTest() throws IOException {
+    void addStudentWithTooLongTownTest() throws IOException {
         this.studentDtoIn.setTown("a".repeat(2001));
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -165,21 +218,21 @@ class AddStudentTest {
     }
 
     @Test
-    void addAdminWithTooShortTownTest() throws IOException {
+    void addStudentWithTooShortTownTest() throws IOException {
         this.studentDtoIn.setTown("nm");
         assertThrows(InvalidPersonInformationException.class, () ->  this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithEmptyTownTest() throws IOException {
+    void addStudentWithEmptyTownTest() throws IOException {
         this.studentDtoIn.setTown("   ");
         assertThrows(InvalidPersonInformationException.class, () ->  this.studentService.signUpStudent(this.studentDtoIn)   );
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithNullTownTest() throws IOException {
+    void addStudentWithNullTownTest() throws IOException {
         this.studentDtoIn.setTown(null);
         assertThrows(InvalidPersonInformationException.class,()->this.studentService.signUpStudent(this.studentDtoIn) );
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -191,7 +244,7 @@ class AddStudentTest {
     /****************************  TESTS FOR email  ************************************/
 
     @Test
-    void addAdminWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
+    void addStudentWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
         this.studentDtoIn.setEmail("a".repeat(91));
 
         this.studentClassEntity.setName(this.studentDtoIn.getStudentClass());
@@ -207,7 +260,7 @@ class AddStudentTest {
 
 
     @Test
-    void addAdminWithTooLongEmailTest() throws IOException {
+    void addStudentWithTooLongEmailTest() throws IOException {
         this.studentDtoIn.setEmail("a".repeat(1001));
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -223,7 +276,7 @@ class AddStudentTest {
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithNullEmailTest() throws IOException {
+    void addStudentWithNullEmailTest() throws IOException {
         this.studentDtoIn.setEmail(null);
         assertThrows(InvalidPersonInformationException.class,()->this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
