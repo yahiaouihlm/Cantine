@@ -8,6 +8,7 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.student.StudentService;
+import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,11 @@ public class StudentController implements IStudentController {
 
  @Override
  @PostMapping(STUDENT_SIGN_UP_ENDPOINT)
- public ResponseEntity<String> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException {
-        this.studentService.signUpStudent(studentDtoIn);
+ public ResponseEntity<String> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
+         InvalidStudentClassException, InvalidFormatImageException, InvalidImageException,
+         StudentClassNotFoundException, ImagePathException, IOException, ExistingStudentException {
+
+       this.studentService.signUpStudent(studentDtoIn);
         return ResponseEntity.ok(STUDENT_SIGNED_UP_SUCCESSFULLY);
  }
 }

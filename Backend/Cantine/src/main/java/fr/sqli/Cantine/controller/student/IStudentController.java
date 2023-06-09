@@ -7,6 +7,7 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -20,5 +21,5 @@ public interface IStudentController {
 
 
     String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
-    ResponseEntity<String> signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException;
+    ResponseEntity<String> signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, ExistingStudentException;
 }

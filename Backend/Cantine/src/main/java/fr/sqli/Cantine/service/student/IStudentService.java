@@ -7,12 +7,14 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 
 import java.io.IOException;
 
 public interface IStudentService {
 
 
-     void   signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
+     void   signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException;
+     public void existingStudent(String  adminEmail ) throws ExistingStudentException;
 
 }

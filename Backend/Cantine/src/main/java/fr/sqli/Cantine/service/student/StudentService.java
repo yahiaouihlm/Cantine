@@ -7,7 +7,6 @@ import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
@@ -15,6 +14,7 @@ import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.env.Environment;
@@ -54,7 +54,7 @@ public class StudentService implements IStudentService {
   }
 
         @Override
-        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException {
             StudentEntity studentEntity = studentDtoIn.toStudentEntity();
 
             var   studentClass   =  studentDtoIn.getStudentClass();
@@ -64,15 +64,17 @@ public class StudentService implements IStudentService {
                 throw new StudentClassNotFoundException("INVALID STUDENT CLASS");
             }
 
-            studentEntity.setStatus(0);
-            studentEntity.setWallet(new BigDecimal(0));
-            studentEntity.setStudentClass(studentClassEntity.get());
-            studentEntity.setRegistrationDate(java.time.LocalDate.now());
-
             if (!studentEntity.getEmail().matches(this.EMAIL_STUDENT_REGEX ) ){
                 StudentService.LOG.error("email  is  not  valid");
                 throw  new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
             }
+
+            this.existingStudent(studentEntity.getEmail());
+
+            studentEntity.setStatus(0);
+            studentEntity.setWallet(new BigDecimal(0));
+            studentEntity.setStudentClass(studentClassEntity.get());
+            studentEntity.setRegistrationDate(java.time.LocalDate.now());
 
 
             studentEntity.setPassword(this.bCryptPasswordEncoder.encode(studentEntity.getPassword()));
@@ -94,6 +96,12 @@ public class StudentService implements IStudentService {
 
         }
 
-
+    @Override
+    public void existingStudent(String  adminEmail ) throws ExistingStudentException {
+        if  (this.studentDao.findByEmail(adminEmail).isPresent()){
+             StudentService.LOG.error("this student is already exists");
+            throw  new ExistingStudentException("THIS STUDENT IS ALREADY EXISTS");
+        }
+    }
 
 }
