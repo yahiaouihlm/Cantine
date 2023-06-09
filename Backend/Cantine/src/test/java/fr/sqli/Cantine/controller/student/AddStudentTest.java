@@ -84,6 +84,129 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         initFormData();
     }
 
+
+
+
+    /***************************************** TESTS   BirthdateAsString  ************************************************/
+
+    @Test
+    void  addStudentWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
+        this.formData.set("birthdateAsString",  "2000/07/18");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+    @Test
+    void  addStudentWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
+        this.formData.set("birthdateAsString",  "18/07/2000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+
+    @Test
+    void  addStudentWithEmptyInvalidBirthdateAsStringFormat2() throws Exception {
+        this.formData.set("birthdateAsString",  "18-07-2000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+
+
+
+    @Test
+    void  addStudentWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
+        this.formData.set("birthdateAsString",  "kzjrnozr,kfjfkrfkrf");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidBirthdateFormat"))));
+
+
+    }
+
+
+    @Test
+    void  addStudentWithEmptyBirthdateAsString() throws Exception {
+        this.formData.set("birthdateAsString",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("BirthdateRequire"))));
+
+
+    }
+    @Test
+    void  addStudentWithNullBirthdateAsString() throws Exception {
+        this.formData.set("birthdateAsString",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("BirthdateRequire"))));
+
+
+    }
+    @Test
+    void  addStudentWithOutBirthdayAsString() throws Exception {
+        this.formData.remove("birthdateAsString");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("BirthdateRequire"))));
+
+
+    }
+
+
+
+
+
+
+
     /***************************************** TESTS   LASTNAME  ************************************************/
 
     @Test
