@@ -5,11 +5,13 @@ import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.Cantine.entity.StudentClassEntity;
+import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.ImageService;
+import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,9 +79,20 @@ class AddStudentTest {
 
      }
 
+
+     @Test
+     void addStudentWithExistingEmailTest() throws IOException {
+         Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
+         Mockito.when(this.studentDao.findByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
+         assertThrows(ExistingStudentException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+            Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
+         Mockito.verify(this.studentDao, Mockito.times(1)).findByEmail(this.studentDtoIn.getEmail());
+         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+     }
     /****************************  TESTS FOR STUDENT CLASS  ************************************/
+
     @Test
-    void addStudentInformationEmptyStudentClass()  {
+    void addStudentInformationEmptyStudentClas()  {
 
         this.studentDtoIn.setStudentClass("");
         assertThrows(InvalidStudentClassException.class, ()-> this.studentService.signUpStudent(this.studentDtoIn));
