@@ -30,7 +30,9 @@ public interface IStudentTest {
             Map.entry("InvalidEmailFormat", "YOUR EMAIL IS NOT VALID"),
             Map.entry("PasswordRequire", "PASSWORD IS  REQUIRED"),
             Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
-            Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS")
-
+            Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
+               Map.entry("InvalidStudentClass", "INVALID STUDENT CLASS NAME"),
+            Map.entry("StudentClassRequire", "STUDENT CLASS IS  REQUIRED"),
+            Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND")
             );
 }
