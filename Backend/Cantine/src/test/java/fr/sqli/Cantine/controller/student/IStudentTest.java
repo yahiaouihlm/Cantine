@@ -19,7 +19,10 @@ public interface IStudentTest {
             Map.entry("ShortLastName", "LASTNAME MUST BE AT LEAST 3 CHARACTERS"),
             Map.entry("LongLastName", "LASTNAME MUST BE LESS THAN 90 CHARACTERS"),
             Map.entry("BirthdateRequire", "BIRTHDATE IS  REQUIRED"),
-            Map.entry("InvalidBirthdateFormat", "INVALID BIRTHDATE FORMAT")
+            Map.entry("InvalidBirthdateFormat", "INVALID BIRTHDATE FORMAT"),
+            Map.entry("TownRequire", "TOWN IS  REQUIRED"),
+            Map.entry("ShortTown", "TOWN  MUST BE AT LEAST 2 CHARACTERS"),
+            Map.entry("LongTown", "TOWN MUST BE LESS THAN 1000 CHARACTERS")
 
             );
 }
