@@ -144,7 +144,7 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingStudent"))));
 
     }

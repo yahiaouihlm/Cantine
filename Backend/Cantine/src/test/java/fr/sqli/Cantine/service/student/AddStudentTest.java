@@ -136,9 +136,10 @@ class AddStudentTest {
         assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
     }
     @Test
-    void addStudentWithEmptyPhoneTest() throws IOException {
-        this.studentDtoIn.setPhone("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+    void addStudentWithInvalidPhoneTest() throws IOException {
+        this.studentDtoIn.setPhone(" good phone");
+        assertThrows(InvalidPersonInformationException.class,
+                () -> this.studentService.signUpStudent(this.studentDtoIn));
     }
 
 
