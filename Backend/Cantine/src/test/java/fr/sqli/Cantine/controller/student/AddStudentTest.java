@@ -46,8 +46,9 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     private MultiValueMap <String, String> formData;
 
+    private   StudentClassEntity studentClassEntity;
     void  initDatabase() {
-        StudentClassEntity studentClassEntity = new StudentClassEntity();
+        this.studentClassEntity = new StudentClassEntity();
         studentClassEntity.setName("JAVA SQLI");
         this.studentClassDao.save(studentClassEntity);
     }
@@ -84,6 +85,7 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         initFormData();
     }
 
+
     @Test
     void addStudentWithOutImageAndPhone  () throws Exception {
         this.formData.remove("phone");
@@ -100,6 +102,26 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
         Assertions.assertEquals(student.get().getEmail(), this.formData.getFirst("email"));
     }
+
+    @Test
+    void addStudentWithExistingEmail() throws Exception {
+
+        // create student with same email
+        var student =  IStudentTest.createStudentClassEntity("halim.yahiaoui@social.aston-ecole.com" ,this.studentClassEntity);
+        this.studentDao.save(student);
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingStudent"))));
+
+    }
+
+
     @Test
     void addStudentWithInvalidClass() throws Exception {
         this.formData.set("studentClass",  "wrongFunction");

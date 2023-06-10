@@ -1,7 +1,11 @@
 package fr.sqli.Cantine.controller.student;
 
+import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.StudentClassEntity;
+import fr.sqli.Cantine.entity.StudentEntity;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Map;
 
 public interface IStudentTest {
@@ -37,11 +41,27 @@ public interface IStudentTest {
             Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
                Map.entry("InvalidStudentClass", "INVALID STUDENT CLASS NAME"),
             Map.entry("StudentClassRequire", "STUDENT CLASS IS  REQUIRED"),
-            Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND")
+            Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND"),
+            Map.entry("ExistingStudent", "THIS STUDENT IS ALREADY EXISTS")
             );
 
 
-      static StudentClassEntity  createStudentClassEntity(String email ,  StudentClassEntity studentClassEntity){
-           StudentClassEntity
+      static StudentEntity createStudentClassEntity(String email , StudentClassEntity studentClassEntity){
+          StudentEntity student  = new StudentEntity();
+          student.setEmail(email);
+            student.setFirstname("firstName");
+            student.setLastname("lastName");
+            student.setBirthdate(LocalDate.now());
+            student.setTown("town");
+            student.setPhone("0606060606");
+            student.setPassword("password");
+          ImageEntity imageEntity = new ImageEntity();
+            imageEntity.setImagename( IMAGE_NAME);
+            student.setImage(imageEntity);
+            student.setRegistrationDate(LocalDate.now());
+            student.setStatus(0);
+            student.setWallet(new BigDecimal(0));
+            student.setStudentClass(studentClassEntity);
+            return student;
      }
 }
