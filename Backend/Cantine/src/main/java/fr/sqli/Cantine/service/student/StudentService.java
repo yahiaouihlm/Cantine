@@ -40,44 +40,44 @@ public class StudentService implements IStudentService {
   private ImageService imageService;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public  StudentService  (IStudentDao studentDao,  IStudentClassDao iStudentClassDao , Environment environment
-              ,  BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService) {
-      this.iStudentClassDao = iStudentClassDao;
-      this.studentDao = studentDao;
-      this.environment = environment;
+    public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
+            , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService) {
+        this.iStudentClassDao = iStudentClassDao;
+        this.studentDao = studentDao;
+        this.environment = environment;
         this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
         this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
-         this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
-         this.EMAIL_STUDENT_REGEX = "^[a-zA-Z0-9._-]+@"+EMAIL_STUDENT_DOMAIN+"$" ;
-     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
+        this.EMAIL_STUDENT_REGEX = "^[a-zA-Z0-9._-]+@" + EMAIL_STUDENT_DOMAIN + "$";
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.imageService = imageService;
 
-  }
+    }
 
 
-  @Override
-  public  void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+    @Override
+    public void updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
-       studentDtoIn.checkStudentClassValidity();
+        studentDtoIn.checkStudentClassValidity();
 
-      var   studentClass   =  studentDtoIn.getStudentClass();
+        var studentClass = studentDtoIn.getStudentClass();
 
-      var  studentClassEntity   =  this.iStudentClassDao.findByName(studentClass);
+        var studentClassEntity = this.iStudentClassDao.findByName(studentClass);
 
-      if (studentClassEntity.isEmpty()) {
-          StudentService.LOG.error("student class  is  not  found");
-          throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
-      }
+        if (studentClassEntity.isEmpty()) {
+            StudentService.LOG.error("student class  is  not  found");
+            throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
+        }
 
 
-      if  (studentDtoIn.getId()== null || studentDtoIn.getId() < 0){
-          StudentService.LOG.error("id  is  null or  0");
-          throw  new InvalidPersonInformationException(" INVALID STUDENT ID");
-      }
+        if (studentDtoIn.getId() == null || studentDtoIn.getId() < 0) {
+            StudentService.LOG.error("id  is  null or  0");
+            throw new InvalidPersonInformationException(" INVALID STUDENT ID");
+        }
 
-      var  studentEntity = this.studentDao.findById(studentDtoIn.getId());
+        var studentEntity = this.studentDao.findById(studentDtoIn.getId());
 
-        if  (studentEntity.isEmpty()){
+        if (studentEntity.isEmpty()) {
             StudentService.LOG.error("student  is  not  found");
             throw new StudentNotFoundException("STUDENT NOT FOUND");
         }
@@ -90,10 +90,10 @@ public class StudentService implements IStudentService {
         studentUpdated.setTown(studentDtoIn.getTown());
 
 
-        if  (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
+        if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();
-            var  oldImageName =  studentUpdated.getImage().getImagename();
-            var  imageName =  this.imageService.updateImage(oldImageName , image, this.IMAGES_STUDENT_PATH );
+            var oldImageName = studentUpdated.getImage().getImagename();
+            var imageName = this.imageService.updateImage(oldImageName, image, this.IMAGES_STUDENT_PATH);
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
             studentUpdated.setImage(imageEntity);
@@ -101,57 +101,56 @@ public class StudentService implements IStudentService {
 
         this.studentDao.save(studentUpdated);
 
-  }
-
-        @Override
-        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
-                 InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException {
-            StudentEntity studentEntity = studentDtoIn.toStudentEntity();
-
-            var   studentClass   =  studentDtoIn.getStudentClass();
-
-            var  studentClassEntity   =  this.iStudentClassDao.findByName(studentClass);
-            if (studentClassEntity.isEmpty()) {
-                throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
-            }
-
-            if (!studentEntity.getEmail().matches(this.EMAIL_STUDENT_REGEX ) ){
-                StudentService.LOG.error("email  is  not  valid");
-                throw  new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
-            }
-
-            this.existingStudent(studentEntity.getEmail());
-
-            studentEntity.setStatus(0);
-            studentEntity.setWallet(new BigDecimal(0));
-            studentEntity.setStudentClass(studentClassEntity.get());
-            studentEntity.setRegistrationDate(java.time.LocalDate.now());
-
-
-            studentEntity.setPassword(this.bCryptPasswordEncoder.encode(studentEntity.getPassword()));
-
-            if  (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
-                MultipartFile image = studentDtoIn.getImage();
-                var  imageName =  this.imageService.uploadImage(image, this.IMAGES_STUDENT_PATH );
-                ImageEntity imageEntity = new ImageEntity();
-                imageEntity.setImagename(imageName);
-                studentEntity.setImage(imageEntity);
-            }
-            else{
-                ImageEntity imageEntity = new ImageEntity();
-                imageEntity.setImagename(this.DEFAULT_STUDENT_IMAGE);
-                studentEntity.setImage(imageEntity);
-            }
-
-               this.studentDao.save(studentEntity);
-
-        }
+    }
 
     @Override
-    public void existingStudent(String  adminEmail ) throws ExistingStudentException {
-        if  (this.studentDao.findByEmail(adminEmail).isPresent()){
-             StudentService.LOG.error("this student is already exists");
-            throw  new ExistingStudentException("THIS STUDENT IS ALREADY EXISTS");
+    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
+            InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException {
+        StudentEntity studentEntity = studentDtoIn.toStudentEntity();
+
+        var studentClass = studentDtoIn.getStudentClass();
+
+        var studentClassEntity = this.iStudentClassDao.findByName(studentClass);
+        if (studentClassEntity.isEmpty()) {
+            throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
+        }
+
+        if (!studentEntity.getEmail().matches(this.EMAIL_STUDENT_REGEX)) {
+            StudentService.LOG.error("email  is  not  valid");
+            throw new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
+        }
+
+        this.existingStudent(studentEntity.getEmail());
+
+        studentEntity.setStatus(0);
+        studentEntity.setWallet(new BigDecimal(0));
+        studentEntity.setStudentClass(studentClassEntity.get());
+        studentEntity.setRegistrationDate(java.time.LocalDate.now());
+
+
+        studentEntity.setPassword(this.bCryptPasswordEncoder.encode(studentEntity.getPassword()));
+
+        if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
+            MultipartFile image = studentDtoIn.getImage();
+            var imageName = this.imageService.uploadImage(image, this.IMAGES_STUDENT_PATH);
+            ImageEntity imageEntity = new ImageEntity();
+            imageEntity.setImagename(imageName);
+            studentEntity.setImage(imageEntity);
+        } else {
+            ImageEntity imageEntity = new ImageEntity();
+            imageEntity.setImagename(this.DEFAULT_STUDENT_IMAGE);
+            studentEntity.setImage(imageEntity);
+        }
+
+        this.studentDao.save(studentEntity);
+
+    }
+
+    @Override
+    public void existingStudent(String adminEmail) throws ExistingStudentException {
+        if (this.studentDao.findByEmail(adminEmail).isPresent()) {
+            StudentService.LOG.error("this student is already exists");
+            throw new ExistingStudentException("THIS STUDENT IS ALREADY EXISTS");
         }
     }
 
