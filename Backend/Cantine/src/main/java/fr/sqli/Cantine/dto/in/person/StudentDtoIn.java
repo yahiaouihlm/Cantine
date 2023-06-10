@@ -36,9 +36,16 @@ public class StudentDtoIn  extends  AbstractPersonDtoIn{
     }
 
 
+
+
     @JsonIgnore
-    public  void  checkStudentClassValidity  () throws InvalidStudentClassException {
-        if (this.studentClass == null || this.studentClass.trim().isEmpty()){
+    public  void  checkStudentClassValidity  () throws InvalidStudentClassException, InvalidPersonInformationException {
+        super.validateInformationWithOutEmailAndPassword();
+        if  ( super.getPhone() != null  && !super.getPhone().trim().isEmpty()) {
+            super.phoneValidator();
+            super.setPhone(super.getPhone().trim());
+        }
+            if (this.studentClass == null || this.studentClass.trim().isEmpty()){
             throw new InvalidStudentClassException("STUDENT CLASS IS  REQUIRED");
         }
     }

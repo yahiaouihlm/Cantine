@@ -15,6 +15,7 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
+import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.env.Environment;
@@ -55,18 +56,51 @@ public class StudentService implements IStudentService {
 
 
   @Override
-  public  void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
-      /*if  (studentDtoIn.getId()== null || studentDtoIn.getId() < 0){
+  public  void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+       studentDtoIn.checkStudentClassValidity();
+
+      var   studentClass   =  studentDtoIn.getStudentClass();
+
+      var  studentClassEntity   =  this.iStudentClassDao.findByName(studentClass);
+
+      if (studentClassEntity.isEmpty()) {
+          StudentService.LOG.error("student class  is  not  found");
+          throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
+      }
+
+
+      if  (studentDtoIn.getId()== null || studentDtoIn.getId() < 0){
           StudentService.LOG.error("id  is  null or  0");
           throw  new InvalidPersonInformationException(" INVALID STUDENT ID");
       }
 
       var  studentEntity = this.studentDao.findById(studentDtoIn.getId());
+
         if  (studentEntity.isEmpty()){
             StudentService.LOG.error("student  is  not  found");
-            throw new  StudentN("STUDENT NOT FOUND");
-        }*/
-     return ;
+            throw new StudentNotFoundException("STUDENT NOT FOUND");
+        }
+
+        var studentUpdated = studentEntity.get();
+        studentUpdated.setFirstname(studentDtoIn.getFirstname());
+        studentUpdated.setLastname(studentDtoIn.getLastname());
+        studentUpdated.setBirthdate(studentDtoIn.getBirthdate());
+        studentUpdated.setStudentClass(studentClassEntity.get());
+        studentUpdated.setTown(studentDtoIn.getTown());
+
+
+        if  (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
+            MultipartFile image = studentDtoIn.getImage();
+            var  oldImageName =  studentUpdated.getImage().getImagename();
+            var  imageName =  this.imageService.updateImage(oldImageName , image, this.IMAGES_STUDENT_PATH );
+            ImageEntity imageEntity = new ImageEntity();
+            imageEntity.setImagename(imageName);
+            studentUpdated.setImage(imageEntity);
+        }
+
+        this.studentDao.save(studentUpdated);
+
   }
 
         @Override
