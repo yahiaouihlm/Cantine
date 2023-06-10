@@ -80,6 +80,8 @@ class AddStudentTest {
      }
 
 
+
+
      @Test
      void addStudentWithExistingEmailTest() throws IOException {
          Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));

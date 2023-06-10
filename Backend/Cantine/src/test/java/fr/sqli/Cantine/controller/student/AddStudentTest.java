@@ -5,6 +5,7 @@ import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.StudentClassEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,9 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         this.studentClassDao.save(studentClassEntity);
     }
     void  cleanDatabase() {
+        this.studentDao.deleteAll();
         this.studentClassDao.deleteAll();
         this.iConfirmationTokenDao.deleteAll();
-        this.studentClassDao.deleteAll();
     }
 
     void initFormData() throws IOException {
@@ -83,6 +84,22 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         initFormData();
     }
 
+    @Test
+    void addStudentWithOutImageAndPhone  () throws Exception {
+        this.formData.remove("phone");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(STUDENT_SIGNED_UP_SUCCESSFULLY));
+
+        var student = this.studentDao.findByEmail(this.formData.getFirst("email"));
+        Assertions.assertTrue(student.isPresent());
+        Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
+        Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
+        Assertions.assertEquals(student.get().getEmail(), this.formData.getFirst("email"));
+    }
     @Test
     void addStudentWithInvalidClass() throws Exception {
         this.formData.set("studentClass",  "wrongFunction");

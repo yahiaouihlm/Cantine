@@ -1,5 +1,7 @@
 package fr.sqli.Cantine.controller.student;
 
+import fr.sqli.Cantine.entity.StudentClassEntity;
+
 import java.util.Map;
 
 public interface IStudentTest {
@@ -9,6 +11,8 @@ public interface IStudentTest {
     String  STUDENT_SIGN_UP = STUDENT_BASIC_URL +  "/signUp";
     String  IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
+
+    String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
 
 
     Map<String, String> exceptionsMap = Map.ofEntries(
@@ -35,4 +39,9 @@ public interface IStudentTest {
             Map.entry("StudentClassRequire", "STUDENT CLASS IS  REQUIRED"),
             Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND")
             );
+
+
+      static StudentClassEntity  createStudentClassEntity(String email ,  StudentClassEntity studentClassEntity){
+           StudentClassEntity
+     }
 }
