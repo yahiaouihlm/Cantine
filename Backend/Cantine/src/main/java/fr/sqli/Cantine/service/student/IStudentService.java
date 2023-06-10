@@ -13,8 +13,8 @@ import java.io.IOException;
 
 public interface IStudentService {
 
-
-     void   signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException;
+     public  void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException;
+          void   signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException;
      public void existingStudent(String  adminEmail ) throws ExistingStudentException;
 
 }

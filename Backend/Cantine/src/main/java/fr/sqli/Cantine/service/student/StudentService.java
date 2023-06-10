@@ -53,8 +53,25 @@ public class StudentService implements IStudentService {
 
   }
 
+
+  @Override
+  public  void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
+      /*if  (studentDtoIn.getId()== null || studentDtoIn.getId() < 0){
+          StudentService.LOG.error("id  is  null or  0");
+          throw  new InvalidPersonInformationException(" INVALID STUDENT ID");
+      }
+
+      var  studentEntity = this.studentDao.findById(studentDtoIn.getId());
+        if  (studentEntity.isEmpty()){
+            StudentService.LOG.error("student  is  not  found");
+            throw new  StudentN("STUDENT NOT FOUND");
+        }*/
+     return ;
+  }
+
         @Override
-        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException {
+        public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
+                 InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException {
             StudentEntity studentEntity = studentDtoIn.toStudentEntity();
 
             var   studentClass   =  studentDtoIn.getStudentClass();
