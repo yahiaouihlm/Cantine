@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -85,6 +86,33 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         initFormData();
     }
 
+    @Test
+    void assStudentWithImageAndPhone() throws Exception {
+
+         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(STUDENT_SIGNED_UP_SUCCESSFULLY));
+
+        var student = this.studentDao.findByEmail(this.formData.getFirst("email"));
+        Assertions.assertTrue(student.isPresent());
+        Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
+        Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
+        Assertions.assertEquals(student.get().getEmail(), this.formData.getFirst("email"));
+        Assertions.assertNotNull(student.get().getImage());
+
+        String  path  =  this.env.getProperty("sqli.cantine.image.student.path");
+
+        path = path + "/" + student.get().getImage().getImagename();
+        Assertions.assertTrue(
+                new File(path).delete()
+        );
+
+
+    }
 
     @Test
     void addStudentWithOutImageAndPhone  () throws Exception {
