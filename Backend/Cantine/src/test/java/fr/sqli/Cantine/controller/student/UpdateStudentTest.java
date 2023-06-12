@@ -93,6 +93,91 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
 
+    /***************************************** TESTS   LASTNAME  ************************************************/
+
+    @Test
+    void  updateStudentWithTooLongLastname() throws Exception {
+        this.formData.set("lastname",  "a".repeat(91));
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongLastName"))));
+
+
+    }
+
+
+
+    @Test
+    void  updateStudentWithTooShortLastname() throws Exception {
+        this.formData.set("lastname",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortLastName"))));
+
+
+    }
+
+    @Test
+    void  updateStudentWithEmptyLastname() throws Exception {
+        this.formData.set("lastname",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LastNameRequire"))));
+
+
+    }
+    @Test
+    void  updateStudentWithNullLastname() throws Exception {
+        this.formData.set("lastname",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LastNameRequire"))));
+
+
+    }
+    @Test
+    void  updateStudentWithOutLastname() throws Exception {
+        this.formData.remove("lastname");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LastNameRequire"))));
+
+
+    }
+
+
+
+
 
     /***************************************** TESTS   FIRSTNAME  ************************************************/
 
@@ -117,7 +202,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     void updateStudentWithTooShortFirstname() throws Exception {
         this.formData.set("firstname", "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -133,7 +218,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     void updateStudentWithEmptyFirstname() throws Exception {
         this.formData.set("firstname", "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
