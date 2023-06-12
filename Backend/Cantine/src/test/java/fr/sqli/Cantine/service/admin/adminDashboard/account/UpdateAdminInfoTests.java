@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IFunctionDao;
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.images.ImageService;
@@ -78,7 +79,12 @@ public class UpdateAdminInfoTests {
 
     }
 
+
+
+
+
     /****************************  TESTS FOR FUNCTIONS  ************************************/
+
 
     @Test
     void updateAdminInformationEmptyFunction(){
@@ -105,7 +111,7 @@ public class UpdateAdminInfoTests {
 
         this.adminDtoIn.setFunction("invalidFunction");
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.empty());
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(AdminFunctionNotFoundException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }

@@ -8,6 +8,7 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.Cantine.service.images.ImageService;
+import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,6 +77,16 @@ public class UpdateStudentInfoTest {
 
 
 
+
+    @Test
+    void  updateStudentWithStudentNotFound() {
+        Mockito.when(this.studentDao.findById(this.studentDtoIn.getId())).thenReturn(Optional.empty());
+        Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
+        assertThrows(StudentNotFoundException.class, ()-> this.studentService.updateStudentInformation(this.studentDtoIn));
+
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.studentDtoIn.getId());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
 
 
 
