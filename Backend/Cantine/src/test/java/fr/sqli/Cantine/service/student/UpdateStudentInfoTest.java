@@ -79,7 +79,7 @@ public class UpdateStudentInfoTest {
 
 
 
-/*
+
 
     @Test
     void  updateStudentInformationEmptyStudentClas()  {
@@ -110,7 +110,7 @@ public class UpdateStudentInfoTest {
 
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
-*/
+
 
 
 
