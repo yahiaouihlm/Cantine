@@ -94,6 +94,75 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
 
+
+    /***************************************** TESTS   PHONES   ************************************************/
+    @Test
+    void  updateStudentWithInvalidPhoneFormat3() throws Exception {
+        this.formData.set("phone", " +33076289514 ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+    }
+
+    @Test
+    void  updateStudentWithInvalidPhoneFormat2() throws Exception {
+        this.formData.set("phone",  " 06319907853654 ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+
+
+    }
+
+    @Test
+    void  updateStudentWithInvalidPhoneFormat() throws Exception {
+        this.formData.set("phone",  " oksfki ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+
+
+    }
+    @Test
+    void  updateStudentWithEmptyPhone() throws Exception {
+        this.formData.set("phone",  "  . ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+
+
+    }
+
+
+
+
+
+
+
     /***************************************** TESTS   TOWN   ************************************************/
 
     @Test
@@ -175,6 +244,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
+
 
 
 
