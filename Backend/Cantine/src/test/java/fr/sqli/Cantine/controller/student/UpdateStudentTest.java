@@ -7,6 +7,7 @@ import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 
 @SpringBootTest
@@ -93,9 +96,44 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
         initFormData();
     }
 
+    @BeforeAll
+    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+        String source = IMAGE_TEST_DIRECTORY_PATH + IMAGE_FOR_TEST_NAME;
+        String destination = STUDENT_IMAGE_PATH + IMAGE_FOR_TEST_NAME;
+        File sourceFile = new File(source);
+        File destFile = new File(destination);
+        Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
 
 
 
+    @Test
+    void  updateStudentWithImage() throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(STUDENT_INFO_UPDATED_SUCCESSFULLY));
+
+        var student = this.studentDao.findById(this.studentEntity.getId());
+        Assertions.assertTrue( student.isPresent()) ;
+        Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
+        Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
+        Assertions.assertEquals(student.get().getTown(), this.formData.getFirst("town"));
+
+        String  path  =  this.env.getProperty("sqli.cantine.image.student.path");
+
+        path = path + "/" + student.get().getImage().getImagename();
+
+        Assertions.assertTrue(
+                new File(path).delete()
+        );
+
+
+    }
     @Test
     void  updateStudentWithOutImage() throws Exception {
 
@@ -112,6 +150,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
         Assertions.assertEquals(student.get().getTown(), this.formData.getFirst("town"));
+        Assertions.assertNotNull(student.get().getImage());
 
 
     }

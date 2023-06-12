@@ -20,6 +20,9 @@ public interface IStudentTest {
     String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
+    String IMAGE_TEST_DIRECTORY_PATH = "imagesTests/";
+    String IMAGE_FOR_TEST_NAME = "ImageForTest.jpg";
+    String STUDENT_IMAGE_PATH = "images/persons/students/";
 
     Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("FirstNameRequire", "FIRSTNAME IS  REQUIRED"),

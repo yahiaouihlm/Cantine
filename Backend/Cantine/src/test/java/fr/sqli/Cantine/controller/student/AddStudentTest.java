@@ -113,6 +113,7 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     }
+    zhefjozhefjznerofknzoklb ///  Image  par defaut  losque il est  u
 
     @Test
     void addStudentWithOutImageAndPhone  () throws Exception {
