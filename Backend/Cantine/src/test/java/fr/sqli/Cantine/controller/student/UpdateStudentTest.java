@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,13 +68,13 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
         this.formData.add("id", this.studentEntity.getId().toString());
-        this.formData.add("firstname", "Halim");
-        this.formData.add("lastname", "Yahiaoui");
+        this.formData.add("firstname", "Birus");
+        this.formData.add("lastname", "samaa");
         /*        this.formData.add("email", "halim.yahiaoui@social.aston-ecole.com");*/
         /*      this.formData.add("password", "test33");*/
-        this.formData.add("birthdateAsString", "2000-07-18");
+        this.formData.add("birthdateAsString", "1999-07-18");
         this.formData.add("town", "paris");
-        this.formData.add("phone", "0631990189");
+        this.formData.add("phone", "0631990100");
         this.formData.add("studentClass", "JAVA SQLI");
 
         this.imageData = new MockMultipartFile(
@@ -96,6 +97,27 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     @Test
+    void  updateStudentWithOutImage() throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(STUDENT_INFO_UPDATED_SUCCESSFULLY));
+
+        var student = this.studentDao.findById(this.studentEntity.getId());
+        Assertions.assertTrue( student.isPresent()) ;
+        Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
+        Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
+        Assertions.assertEquals(student.get().getTown(), this.formData.getFirst("town"));
+
+
+    }
+
+
+    @Test
     void updateStudentWithNotFoundID() throws Exception {
         var  idStudent = this.studentEntity.getId() + 11;
          this.formData.set("id", String.valueOf(idStudent));
@@ -110,9 +132,6 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
                  .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentNotFound"))));
 
     }
-
-
-
 
 
     /***************************************** TESTS   CLASS   ************************************************/
@@ -194,8 +213,6 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
 
 
 

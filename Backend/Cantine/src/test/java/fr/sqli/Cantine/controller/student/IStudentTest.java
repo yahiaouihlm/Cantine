@@ -18,6 +18,7 @@ public interface IStudentTest {
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
 
     String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
+    String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
 
     Map<String, String> exceptionsMap = Map.ofEntries(
