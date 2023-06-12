@@ -95,6 +95,102 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+    /***************************************** TESTS   CLASS   ************************************************/
+    @Test
+    void updateStudentWithInvalidClass() throws Exception {
+        this.formData.set("studentClass",  "wrongFunction");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassNotFound"))));
+
+
+    }
+    @Test
+    void  updateStudentWithWrongClass() throws Exception {
+        this.formData.set("studentClass",  "  ab ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassNotFound"))));
+
+
+    }
+
+    @Test
+    void  updateStudentWithEmptyClass() throws Exception {
+        this.formData.set("studentClass",  "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassRequire"))));
+
+
+    }
+    @Test
+    void  updateStudentWithNullClass() throws Exception {
+        this.formData.set("studentClass",  null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassRequire"))));
+
+
+    }
+
+
+    @Test
+    void  updateStudentWithOutClass() throws Exception {
+        this.formData.remove("studentClass");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassRequire"))));
+
+
+    }
+
+
+
+
+
+
     /***************************************** TESTS   PHONES   ************************************************/
     @Test
     void  updateStudentWithInvalidPhoneFormat3() throws Exception {
@@ -156,8 +252,6 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
 
 
 
