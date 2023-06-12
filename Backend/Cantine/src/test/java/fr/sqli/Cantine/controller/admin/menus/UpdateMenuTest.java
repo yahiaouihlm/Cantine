@@ -1,6 +1,6 @@
 package fr.sqli.Cantine.controller.admin.menus;
 
-import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
+import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -19,13 +19,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;

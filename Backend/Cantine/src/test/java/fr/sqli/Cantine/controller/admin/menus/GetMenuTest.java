@@ -1,11 +1,10 @@
 package fr.sqli.Cantine.controller.admin.menus;
 
-import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
+import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.entity.MenuEntity;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

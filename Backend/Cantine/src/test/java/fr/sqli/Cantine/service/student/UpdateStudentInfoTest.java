@@ -4,6 +4,7 @@ import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.Cantine.entity.StudentClassEntity;
+import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
@@ -74,7 +75,6 @@ public class UpdateStudentInfoTest {
         this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService);
 
     }
-
 
 
 

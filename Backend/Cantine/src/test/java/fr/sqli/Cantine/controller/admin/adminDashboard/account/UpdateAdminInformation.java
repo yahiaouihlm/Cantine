@@ -1,6 +1,6 @@
 package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
-import fr.sqli.Cantine.controller.admin.AbstractContainerConfig;
+import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;

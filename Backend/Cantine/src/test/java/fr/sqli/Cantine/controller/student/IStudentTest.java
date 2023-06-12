@@ -13,6 +13,7 @@ public interface IStudentTest {
     String STUDENT_BASIC_URL = "/cantine/student";
 
     String  STUDENT_SIGN_UP = STUDENT_BASIC_URL +  "/signUp";
+    String UPDATE_STUDENT_INFO =STUDENT_BASIC_URL + "/update/studentInfo";
     String  IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
 
@@ -42,7 +43,9 @@ public interface IStudentTest {
                Map.entry("InvalidStudentClass", "INVALID STUDENT CLASS NAME"),
             Map.entry("StudentClassRequire", "STUDENT CLASS IS  REQUIRED"),
             Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND"),
-            Map.entry("ExistingStudent", "THIS STUDENT IS ALREADY EXISTS")
+            Map.entry("ExistingStudent", "THIS STUDENT IS ALREADY EXISTS"),
+            Map.entry("InvalidStudentId", "INVALID STUDENT ID"),
+            Map.entry("InvalidArgument", "ARGUMENT NOT VALID")
             );
 
 

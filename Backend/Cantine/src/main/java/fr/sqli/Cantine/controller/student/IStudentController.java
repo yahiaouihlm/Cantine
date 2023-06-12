@@ -20,7 +20,7 @@ public interface IStudentController {
 
     String  STUDENT_SIGN_UP_ENDPOINT =  "/signUp";
 
-   String STUDENT_INFO_UPDATE_ENDPOINT = "/update/studentInfo";
+   String UPDATE_STUDENT_INFO_ENDPOINT = "/update/studentInfo";
     String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
 
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";

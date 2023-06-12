@@ -61,7 +61,7 @@ public class StudentService implements IStudentService {
 
         if (studentDtoIn.getId() == null || studentDtoIn.getId() < 0) {
             StudentService.LOG.error("id  is  null or  0");
-            throw new InvalidPersonInformationException(" INVALID STUDENT ID");
+            throw new InvalidPersonInformationException("INVALID STUDENT ID");
         }
 
         studentDtoIn.checkStudentClassValidity();
