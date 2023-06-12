@@ -95,12 +95,21 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
 
+    @Test
+    void updateStudentWithNotFoundID() throws Exception {
+        var  idStudent = this.studentEntity.getId() + 11;
+         this.formData.set("id", String.valueOf(idStudent));
+
+         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
+                 .file(this.imageData)
+                 .params(this.formData)
+                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
+         result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentNotFound"))));
 
-
-
-
+    }
 
 
 

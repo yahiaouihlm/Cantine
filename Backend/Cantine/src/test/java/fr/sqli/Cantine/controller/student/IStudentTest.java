@@ -45,7 +45,8 @@ public interface IStudentTest {
             Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND"),
             Map.entry("ExistingStudent", "THIS STUDENT IS ALREADY EXISTS"),
             Map.entry("InvalidStudentId", "INVALID STUDENT ID"),
-            Map.entry("InvalidArgument", "ARGUMENT NOT VALID")
+            Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
+            Map.entry("StudentNotFound", "STUDENT NOT FOUND")
             );
 
 
