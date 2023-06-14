@@ -94,11 +94,18 @@ public class StudentService implements IStudentService {
 
         if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();
-            var oldImageName = studentUpdated.getImage().getImagename();
-            var imageName = this.imageService.updateImage(oldImageName, image, this.IMAGES_STUDENT_PATH);
+              String imageName ;
+            if (studentUpdated.getImage().getImagename().equals(this.DEFAULT_STUDENT_IMAGE)) {
+                imageName   =  this.imageService.uploadImage(image , this.IMAGES_STUDENT_PATH);
+            }
+         else  {
+                var oldImageName = studentUpdated.getImage().getImagename();
+                 imageName = this.imageService.updateImage(oldImageName, image, this.IMAGES_STUDENT_PATH);
+            }
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
             studentUpdated.setImage(imageEntity);
+
         }
 
         this.studentDao.save(studentUpdated);
