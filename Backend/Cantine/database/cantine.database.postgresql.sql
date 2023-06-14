@@ -58,7 +58,7 @@ CREATE TABLE  IF NOT EXISTS  student (
     check (Wallet >= 0),
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (class_id) REFERENCES "studentclass"  (id) ON DELETE NO ACTION ON UPDATE NO ACTION
-    )
+    );
 -- -----------------------------------------------------
 -- Table `cantiniere`.`adminService`
 -- -----------------------------------------------------

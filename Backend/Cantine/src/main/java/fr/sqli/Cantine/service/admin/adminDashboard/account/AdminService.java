@@ -153,14 +153,21 @@ public class AdminService implements IAdminService {
         adminEntity.setAddress(adminDtoIn.getAddress());
 
 
-
-        if  (adminDtoIn.getImage() != null && !adminDtoIn.getImage().isEmpty()) {
+        if (adminDtoIn.getImage() != null && !adminDtoIn.getImage().isEmpty()) {
             MultipartFile image = adminDtoIn.getImage();
-            var oldImageName =  adminEntity.getImage().getImagename();
-            var  imageName =  this.imageService.updateImage(oldImageName,  image, ADMIN_IMAGE_PATH );
+            String imageName;
+            // check  if the image  to  delete  is  the  default image  or  not
+            if (adminEntity.getImage().getImagename().equals(DEFAULT_ADMIN_IMAGE_NAME)) {
+                imageName = this.imageService.uploadImage(image, ADMIN_IMAGE_PATH);
+                AdminService.LOG.info("image  is  uploaded");
+            } else {
+                var oldImageName = adminEntity.getImage().getImagename();
+                imageName = this.imageService.updateImage(oldImageName, image, ADMIN_IMAGE_PATH);
+            }
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
             adminEntity.setImage(imageEntity);
+
         }
 
         this.adminDao.save(adminEntity);
@@ -168,7 +175,8 @@ public class AdminService implements IAdminService {
         }
 
     @Override
-    public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException {
+    public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException,
+            InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException {
         AdminEntity adminEntity = adminDtoIn.toAdminEntityWithOutFunction();
 
         //check  function  validity
