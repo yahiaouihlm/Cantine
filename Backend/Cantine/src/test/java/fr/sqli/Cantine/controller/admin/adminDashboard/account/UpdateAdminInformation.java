@@ -4,8 +4,10 @@ import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IAdminDao;
 import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IFunctionDao;
+import fr.sqli.Cantine.dao.IImageDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
+import fr.sqli.Cantine.entity.ImageEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -32,7 +35,7 @@ import java.nio.file.Files;
 @AutoConfigureMockMvc
 public class UpdateAdminInformation  extends AbstractContainerConfig implements  IAdminTest {
     private String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
-    private  final  String  paramReq = "?"+"idAdmin"+"=";
+    private  final  String paramReq = "?"+"idAdmin"+"=";
     @Autowired
     private IFunctionDao functionDao;
     @Autowired
@@ -43,10 +46,16 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private IImageDao   imageDao;
+    @Autowired
+    private Environment environment;
+
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
     private FunctionEntity savedFunction;
     private AdminEntity savedAdmin;
+
     @BeforeAll
     static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
         String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
@@ -60,12 +69,13 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         function.setName("Manager");
         this.savedFunction = this.functionDao.save(function);
         var admin  =  IAdminTest.createAdminWith("halim.yahiaoui@social.aston-ecole.com",  this.savedFunction);
-        this.adminDao.save(admin);
+        this.savedAdmin =   this.adminDao.save(admin);
     }
     void  cleanDtaBase() {
         this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
+        this.imageDao.deleteAll();
     }
     void initFormData() throws IOException {
         this.formData =new LinkedMultiValueMap<>();
@@ -130,6 +140,54 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
     /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************/
+
+    @Test
+    void updateAdminWithDefaultImage() throws Exception {
+       cleanDtaBase();
+
+       // make  a  new  admin  with  a default  image
+       var defaultImageAdmin  =  this.environment.getProperty("sqli.cantine.default.persons.admin.imagename");
+       var defaultImg = new ImageEntity();
+         defaultImg.setImagename(defaultImageAdmin);
+         this.savedAdmin.setImage(defaultImg);
+
+            this.adminDao.save(this.savedAdmin);
+
+        this.formData.set("firstname", "Halim-Updated");
+        this.formData.set("lastname", "Yahiaoui-Updated");
+        this.formData.set("birthdateAsString", "2000-07-18");
+        this.formData.set("town", "chicago");
+        this.formData.set("address", "North Bergen New Jersey USA");
+        this.formData.set("phone", "0631800190");
+
+
+
+        var  idMealToUpdate =  this.adminDao.findAll().get(0).getId();
+        this.formData.set("id" , String.valueOf(idMealToUpdate) );
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, ADMIN_UPDATE_INFO )
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.content().string(ADMIN_INFO_UPDATED_SUCCESSFULLY));
+
+
+        var adminUpdated = this.adminDao.findById(idMealToUpdate).get();
+        Assertions.assertEquals(this.formData.get("firstname").get(0), adminUpdated.getFirstname());
+        Assertions.assertEquals(this.formData.get("lastname").get(0), adminUpdated.getLastname());
+        Assertions.assertEquals(this.formData.get("town").get(0), adminUpdated.getTown());
+        Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.getAddress());
+        Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.getPhone());
+
+
+        Assertions.assertTrue(
+                new File(ADMIN_IMAGE_PATH + adminUpdated.getImage().getImagename()).delete()
+        );
+
+    }
 
     @Test
     void updateAdminInfoWithOutImage() throws Exception {
