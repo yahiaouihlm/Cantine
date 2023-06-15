@@ -5,6 +5,7 @@ package fr.sqli.Cantine.service.student;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
@@ -110,6 +111,21 @@ public class StudentService implements IStudentService {
 
         this.studentDao.save(studentUpdated);
 
+    }
+
+    public StudentDtout getStudentByID (Integer  id) throws InvalidPersonInformationException, StudentNotFoundException {
+        if (id == null || id < 0) {
+            StudentService.LOG.error("id  is  null or  0");
+            throw new InvalidPersonInformationException("INVALID STUDENT ID");
+        }
+
+        var  studentEntity = this.studentDao.findById(id);
+        if (studentEntity.isEmpty()) {
+            StudentService.LOG.error("student  is  not  found");
+            throw new StudentNotFoundException("STUDENT NOT FOUND");
+        }
+
+        return  new StudentDtout(studentEntity.get());
     }
 
 

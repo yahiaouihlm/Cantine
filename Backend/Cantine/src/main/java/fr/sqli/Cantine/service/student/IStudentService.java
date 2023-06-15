@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.student;
 
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
@@ -14,8 +15,10 @@ import java.io.IOException;
 
 public interface IStudentService {
 
-     public  void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
-          void   signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException;
-     public void existingStudent(String  adminEmail ) throws ExistingStudentException;
+       void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
+
+        StudentDtout getStudentByID (Integer  id) throws InvalidPersonInformationException, StudentNotFoundException ;
+       void   signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException;
+      void existingStudent(String  adminEmail ) throws ExistingStudentException;
 
 }
