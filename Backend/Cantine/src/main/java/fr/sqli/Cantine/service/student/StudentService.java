@@ -112,6 +112,7 @@ public class StudentService implements IStudentService {
 
     }
 
+
     @Override
     public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
             InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException {
