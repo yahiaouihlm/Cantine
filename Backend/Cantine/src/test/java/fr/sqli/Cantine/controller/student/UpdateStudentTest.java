@@ -31,7 +31,7 @@ import java.nio.file.Files;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UpdateStudentTest   extends AbstractContainerConfig implements IStudentTest {
+public class UpdateStudentTest extends AbstractContainerConfig implements IStudentTest {
 
     @Autowired
     private IStudentClassDao studentClassDao;
@@ -45,8 +45,6 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
     private MockMultipartFile imageData;
     @Autowired
-    private IStudentClassDao iStudentClassDao;
-    @Autowired
     private MockMvc mockMvc;
 
     private StudentEntity studentEntity;
@@ -59,7 +57,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
         studentClassEntity.setName("JAVA SQLI");
         this.studentClassDao.save(studentClassEntity);
         this.studentEntity = IStudentTest.createStudentClassEntity("student", this.studentClassEntity);
-        this.studentEntity =  this.studentDao.save(this.studentEntity);
+        this.studentEntity = this.studentDao.save(this.studentEntity);
     }
 
     void cleanDataBase() {
@@ -97,7 +95,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @BeforeAll
-    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+    static void copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
         String source = IMAGE_TEST_DIRECTORY_PATH + IMAGE_FOR_TEST_NAME;
         String destination = STUDENT_IMAGE_PATH + IMAGE_FOR_TEST_NAME;
         File sourceFile = new File(source);
@@ -106,9 +104,8 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
 
-
     @Test
-    void  updateStudentWithImage() throws Exception {
+    void updateStudentWithImage() throws Exception {
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .params(this.formData)
@@ -119,12 +116,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
                 .andExpect(MockMvcResultMatchers.content().string(STUDENT_INFO_UPDATED_SUCCESSFULLY));
 
         var student = this.studentDao.findById(this.studentEntity.getId());
-        Assertions.assertTrue( student.isPresent()) ;
+        Assertions.assertTrue(student.isPresent());
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
         Assertions.assertEquals(student.get().getTown(), this.formData.getFirst("town"));
 
-        String  path  =  this.env.getProperty("sqli.cantine.image.student.path");
+        String path = this.env.getProperty("sqli.cantine.image.student.path");
 
         path = path + "/" + student.get().getImage().getImagename();
 
@@ -134,8 +131,9 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
+
     @Test
-    void  updateStudentWithOutImage() throws Exception {
+    void updateStudentWithOutImage() throws Exception {
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .params(this.formData)
@@ -146,7 +144,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
                 .andExpect(MockMvcResultMatchers.content().string(STUDENT_INFO_UPDATED_SUCCESSFULLY));
 
         var student = this.studentDao.findById(this.studentEntity.getId());
-        Assertions.assertTrue( student.isPresent()) ;
+        Assertions.assertTrue(student.isPresent());
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
         Assertions.assertEquals(student.get().getTown(), this.formData.getFirst("town"));
@@ -158,17 +156,17 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
     @Test
     void updateStudentWithNotFoundID() throws Exception {
-        var  idStudent = this.studentEntity.getId() + 11;
-         this.formData.set("id", String.valueOf(idStudent));
+        var idStudent = this.studentEntity.getId() + 11;
+        this.formData.set("id", String.valueOf(idStudent));
 
-         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
-                 .file(this.imageData)
-                 .params(this.formData)
-                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-         result.andExpect(MockMvcResultMatchers.status().isNotFound())
-                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentNotFound"))));
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentNotFound"))));
 
     }
 
@@ -176,24 +174,9 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     /***************************************** TESTS   CLASS   ************************************************/
     @Test
     void updateStudentWithInvalidClass() throws Exception {
-        this.formData.set("studentClass",  "wrongFunction");
+        this.formData.set("studentClass", "wrongFunction");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
-                .file(this.imageData)
-                .params(this.formData)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
-
-
-        result.andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassNotFound"))));
-
-
-    }
-    @Test
-    void  updateStudentWithWrongClass() throws Exception {
-        this.formData.set("studentClass",  "  ab ");
-
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -206,10 +189,26 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithEmptyClass() throws Exception {
-        this.formData.set("studentClass",  "  ");
+    void updateStudentWithWrongClass() throws Exception {
+        this.formData.set("studentClass", "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassNotFound"))));
+
+
+    }
+
+    @Test
+    void updateStudentWithEmptyClass() throws Exception {
+        this.formData.set("studentClass", "  ");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -220,11 +219,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-    @Test
-    void  updateStudentWithNullClass() throws Exception {
-        this.formData.set("studentClass",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+    @Test
+    void updateStudentWithNullClass() throws Exception {
+        this.formData.set("studentClass", null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -238,10 +238,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     @Test
-    void  updateStudentWithOutClass() throws Exception {
+    void updateStudentWithOutClass() throws Exception {
         this.formData.remove("studentClass");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -252,13 +252,11 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
 
 
     /***************************************** TESTS   PHONES   ************************************************/
     @Test
-    void  updateStudentWithInvalidPhoneFormat3() throws Exception {
+    void updateStudentWithInvalidPhoneFormat3() throws Exception {
         this.formData.set("phone", " +33076289514 ");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
@@ -272,10 +270,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithInvalidPhoneFormat2() throws Exception {
-        this.formData.set("phone",  " 06319907853654 ");
+    void updateStudentWithInvalidPhoneFormat2() throws Exception {
+        this.formData.set("phone", " 06319907853654 ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -288,10 +286,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithInvalidPhoneFormat() throws Exception {
-        this.formData.set("phone",  " oksfki ");
+    void updateStudentWithInvalidPhoneFormat() throws Exception {
+        this.formData.set("phone", " oksfki ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -302,11 +300,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
+
     @Test
-    void  updateStudentWithEmptyPhone() throws Exception {
-        this.formData.set("phone",  "  . ");
+    void updateStudentWithEmptyPhone() throws Exception {
+        this.formData.set("phone", "  . ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -317,18 +316,15 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
-
 
 
     /***************************************** TESTS   TOWN   ************************************************/
 
     @Test
-    void  updateStudentWithTooLongTown() throws Exception {
-        this.formData.set("town",  "a".repeat(1001));
+    void updateStudentWithTooLongTown() throws Exception {
+        this.formData.set("town", "a".repeat(1001));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -341,12 +337,11 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
 
-
     @Test
-    void  updateStudentWithTooShortTown() throws Exception {
-        this.formData.set("town",  "  ab ");
+    void updateStudentWithTooShortTown() throws Exception {
+        this.formData.set("town", "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -360,9 +355,9 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
     @Test
     void updateStudentWithEmptyTown() throws Exception {
-        this.formData.set("town",  "  ");
+        this.formData.set("town", "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -373,11 +368,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-    @Test
-    void  updateStudentWithNullTown() throws Exception {
-        this.formData.set("town",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+    @Test
+    void updateStudentWithNullTown() throws Exception {
+        this.formData.set("town", null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -388,11 +384,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
+
     @Test
-    void  updateStudentWithOutTown() throws Exception {
+    void updateStudentWithOutTown() throws Exception {
         this.formData.remove("town");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -403,22 +400,15 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
-
-
-
-
-
 
 
     /***************************************** TESTS   BirthdateAsString  ************************************************/
 
     @Test
-    void  updateStudentWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
-        this.formData.set("birthdateAsString",  "2000/07/18");
+    void updateStudentWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
+        this.formData.set("birthdateAsString", "2000/07/18");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -429,11 +419,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-    @Test
-    void  updateStudentWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
-        this.formData.set("birthdateAsString",  "18/07/2000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+    @Test
+    void updateStudentWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
+        this.formData.set("birthdateAsString", "18/07/2000");
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -447,9 +438,9 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
     @Test
     void updateStudentWithEmptyInvalidBirthdateAsStringFormat2() throws Exception {
-        this.formData.set("birthdateAsString",  "18-07-2000");
+        this.formData.set("birthdateAsString", "18-07-2000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -462,10 +453,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
-        this.formData.set("birthdateAsString",  "kzjrnozr,kfjfkrfkrf");
+    void updateStudentWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
+        this.formData.set("birthdateAsString", "kzjrnozr,kfjfkrfkrf");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -479,10 +470,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     @Test
-    void  updateStudentWithEmptyBirthdateAsString() throws Exception {
-        this.formData.set("birthdateAsString",  "  ");
+    void updateStudentWithEmptyBirthdateAsString() throws Exception {
+        this.formData.set("birthdateAsString", "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -493,11 +484,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-    @Test
-    void  updateStudentWithNullBirthdateAsString() throws Exception {
-        this.formData.set("birthdateAsString",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+    @Test
+    void updateStudentWithNullBirthdateAsString() throws Exception {
+        this.formData.set("birthdateAsString", null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -508,11 +500,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
+
     @Test
-    void  updateStudentWithOutBirthdayAsString() throws Exception {
+    void updateStudentWithOutBirthdayAsString() throws Exception {
         this.formData.remove("birthdateAsString");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -523,20 +516,15 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
-
-
-
 
 
     /***************************************** TESTS   LASTNAME  ************************************************/
 
     @Test
-    void  updateStudentWithTooLongLastname() throws Exception {
-        this.formData.set("lastname",  "a".repeat(91));
+    void updateStudentWithTooLongLastname() throws Exception {
+        this.formData.set("lastname", "a".repeat(91));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -549,12 +537,11 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
 
-
     @Test
-    void  updateStudentWithTooShortLastname() throws Exception {
-        this.formData.set("lastname",  "  ab ");
+    void updateStudentWithTooShortLastname() throws Exception {
+        this.formData.set("lastname", "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -567,10 +554,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithEmptyLastname() throws Exception {
-        this.formData.set("lastname",  "  ");
+    void updateStudentWithEmptyLastname() throws Exception {
+        this.formData.set("lastname", "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -581,11 +568,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-    @Test
-    void  updateStudentWithNullLastname() throws Exception {
-        this.formData.set("lastname",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+    @Test
+    void updateStudentWithNullLastname() throws Exception {
+        this.formData.set("lastname", null);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -596,11 +584,12 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
+
     @Test
-    void  updateStudentWithOutLastname() throws Exception {
+    void updateStudentWithOutLastname() throws Exception {
         this.formData.remove("lastname");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   UPDATE_STUDENT_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -611,9 +600,6 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
 
 
     }
-
-
-
 
 
     /***************************************** TESTS   FIRSTNAME  ************************************************/
@@ -700,12 +686,10 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
 
-
-
     /***************************************** TESTS   ID  ************************************************/
 
     @Test
-    void  updateStudentWithInvalidId() throws Exception {
+    void updateStudentWithInvalidId() throws Exception {
         this.formData.set("id", "knaezfk");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
@@ -719,7 +703,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithWrongId() throws Exception {
+    void updateStudentWithWrongId() throws Exception {
         this.formData.set("id", "1.2");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
@@ -733,7 +717,7 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
     }
 
     @Test
-    void  updateStudentWithWrongId2() throws Exception {
+    void updateStudentWithWrongId2() throws Exception {
         this.formData.set("id", "-1.2");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
@@ -745,8 +729,9 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
 
     }
+
     @Test
-    void  updateStudentWithEmptyId() throws Exception {
+    void updateStudentWithEmptyId() throws Exception {
         this.formData.set("id", "");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
@@ -758,8 +743,9 @@ public class UpdateStudentTest   extends AbstractContainerConfig implements IStu
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidStudentId"))));
 
     }
+
     @Test
-    void  updateStudentWithNullId() throws Exception {
+    void updateStudentWithNullId() throws Exception {
         this.formData.set("id", null);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO)
