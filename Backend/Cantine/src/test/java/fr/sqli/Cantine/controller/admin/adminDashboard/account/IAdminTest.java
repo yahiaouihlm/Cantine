@@ -23,7 +23,7 @@ public interface IAdminTest {
     String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
     String TOKEN_SENDED_SUCCESSFULLY =  "TOKEN SENDED SUCCESSFULLY";
     String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
-    String  IMAGE_MEAL_FOR_TEST_NAME = "ImageForTest.jpg";
+    String IMAGE_ADMIN_FOR_TEST_NAME = "ImageForTest.jpg";
 
     //   exceptions messages
      Map<String, String> exceptionsMap = Map.ofEntries(

@@ -42,6 +42,7 @@ public class DisableAccountTest  extends AbstractContainerConfig implements IAdm
     void  cleanDB() {
         this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
+        this.iFunctionDao.deleteAll();
     }
 
     void initDB () {

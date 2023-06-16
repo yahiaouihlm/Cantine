@@ -8,10 +8,7 @@ import fr.sqli.Cantine.dao.IImageDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.FunctionEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,12 +55,22 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
     @BeforeAll
     static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
-        String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
-        String destination = ADMIN_IMAGE_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_ADMIN_FOR_TEST_NAME;
+        String destination = ADMIN_IMAGE_PATH + IMAGE_ADMIN_FOR_TEST_NAME;
         File sourceFile = new File(source);
         File destFile = new File(destination);
         Files.copy(sourceFile.toPath(), destFile.toPath());
     }
+
+    @AfterAll
+    static void deleteImageTestIFExists() throws IOException {
+        String location = ADMIN_IMAGE_PATH + IMAGE_ADMIN_FOR_TEST_NAME;
+        File destFile = new File(location);
+        if (destFile.exists())
+            Files.delete(destFile.toPath());
+    }
+
+
     void initDataBase() {
         FunctionEntity function = new FunctionEntity();
         function.setName("Manager");
@@ -75,7 +82,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
-        this.imageDao.deleteAll();
+
     }
     void initFormData() throws IOException {
         this.formData =new LinkedMultiValueMap<>();
