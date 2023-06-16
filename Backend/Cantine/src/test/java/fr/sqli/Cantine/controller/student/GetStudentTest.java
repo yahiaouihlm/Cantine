@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,28 @@ public class GetStudentTest  extends AbstractContainerConfig implements IStudent
         this.studentEntity2 = studentDao.save(this.studentEntity2);
     }
 
+    @Test
+    void  getStudentByIdTest () throws Exception {
+        var  idStudent = this.studentEntity1.getId();
 
-    /*****************************  TESTS FOR  ID ADMIN  ********************************/
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_STUDENT_BY_ID
+                        + paramReq + idStudent)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("id").value(CoreMatchers.is(idStudent)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("firstname").value(CoreMatchers.is(this.studentEntity1.getFirstname())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.studentEntity1.getLastname())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.studentEntity1.getEmail())));
+    }
+
+
+
+
+
+
+    /*****************************  TESTS FOR  ID Student  ********************************/
     @Test
     void getStudentByIDWithStudentNotFound() throws Exception {
         var idStudent = this.studentDao.findAll().stream().map(StudentEntity::getId)
