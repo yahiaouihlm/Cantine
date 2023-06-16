@@ -2,7 +2,6 @@ package fr.sqli.Cantine.entity;
 
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,34 +9,31 @@ import java.math.BigDecimal;
 @Entity
 @Table(name="taxe")
 
-public class TaxeEntity implements Serializable {
+public class TaxEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(unique=true, nullable=false)
-    private Integer idtaxe;
+    private Integer id;
 
     @Column(nullable=false, precision=3, scale=2)
-    private BigDecimal taxe;
+    private BigDecimal tax;
 
-    public TaxeEntity() {
+
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getIdtaxe() {
-        return this.idtaxe;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setIdtaxe(Integer idtaxe) {
-        this.idtaxe = idtaxe;
+    public BigDecimal getTax() {
+        return tax;
     }
 
-    public BigDecimal getTaxe() {
-        return this.taxe;
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
     }
-
-    public void setTaxe(BigDecimal taxe) {
-        this.taxe = taxe;
-    }
-
 }
