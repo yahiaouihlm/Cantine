@@ -15,7 +15,7 @@ public interface IAdminTest {
     String ADMIN_SEND_TOKEN_URL =  ADMIN_DASH_BOARD_BASIC_URL + "/sendToken";
     String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/disableAdmin";
     String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL +  "/signUp";
-    String ADMIN_GET_ADMIN =ADMIN_DASH_BOARD_BASIC_URL  +  "/getAdmin";
+    String GET_ADMIN_BY_ID =ADMIN_DASH_BOARD_BASIC_URL  +  "/getAdmin";
     String  ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL +  "/updateAdmin/info";
     String  IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;

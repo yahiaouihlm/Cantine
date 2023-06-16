@@ -63,8 +63,8 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
    void  getAdminByIdTest () throws Exception {
         var  idAdmin = this.adminEntity1.getId();
 
-       var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
-                       + paramReq + String.valueOf(idAdmin) )
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
+                       + paramReq + idAdmin)
                .contentType(MediaType.APPLICATION_JSON)
                .accept(MediaType.APPLICATION_JSON));
 
@@ -81,8 +81,8 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
     var idAdmin = this.adminDao.findAll().stream().map(AdminEntity::getId)
             .max(Integer::compareTo).get() + 1;
 
-    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
-                    + paramReq + String.valueOf(idAdmin) )
+    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
+                    + paramReq + idAdmin)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
 
@@ -94,7 +94,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
   @Test
   void getAdminByIDWithDoubleIdAdmin () throws Exception {
 
-    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                     + paramReq + "1.5" )
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
@@ -106,7 +106,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
   @Test
   void getAdminByIDWithNegativeIdAdmin () throws Exception {
 
-    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                     + paramReq + "-5" )
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
@@ -118,7 +118,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
   @Test
   void getAdminByIDWithInvalidIdAdmin () throws Exception {
 
-    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                     + paramReq + "jjedh5" )
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
@@ -129,7 +129,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
   @Test
   void  getAdminByIDWithNullIdAdmin () throws Exception {
 
-    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                     + paramReq + null )
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
@@ -140,7 +140,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
 
   @Test
   void getAdminByIDWithEmptyIdAdmin() throws Exception {
-    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+    var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                     + paramReq +"" )
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
@@ -151,7 +151,7 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
   }
     @Test
     void getAdminByIDWithOutIdAdmin () throws Exception {
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_GET_ADMIN
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                 + paramReq )
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
