@@ -60,6 +60,7 @@ public class OrderService implements IOrderService {
 
 
      /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
+    /* TODO   order could    contain  Empty  meal  or  menu  */
     @Override
     public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException {
         orderDtoIn.checkOrderIDsValidity();
