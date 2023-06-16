@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +35,7 @@ public class OrderService implements IOrderService {
     private static final Logger LOG = LogManager.getLogger();
 
     final  String  ORDER_QR_CODE_PATH ;
+    final  String ORDER_QR_CODE_IMAGE_FORMAT ;
     private IOrderDao orderDao;
 
     private ITaxDao taxDao;
@@ -51,6 +54,7 @@ public class OrderService implements IOrderService {
         this.taxDao = taxDao;
         this.env = env ;
         this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
+        this.ORDER_QR_CODE_IMAGE_FORMAT = env.getProperty("sqli.canine.order.qrcode.image.format");
 
     }
 
@@ -119,12 +123,16 @@ public class OrderService implements IOrderService {
 
         //  create the  QrCode  and  save  the  order  in  the  database
         String  token =   UUID.randomUUID().toString();
+        orderEntity.setQRCode(token);
 
 
         String  qrCodeData = "Hello world";
-        var  filePath =
-        QrCodeGenerator.generateQrCode(qrCodeData, this.ORDER_QR_CODE_PATH);
+        var  filePath =this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
+        QrCodeGenerator.generateQrCode(qrCodeData,filePath );
 
-
+        orderEntity.setPrice(totalPrice);
+        orderEntity.setCreationDate(LocalDate.now());
+        orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(),LocalDateTime.now().getMinute(),LocalDateTime.now().getSecond()));
+        this.orderDao.save(orderEntity);
     }
 }
