@@ -8,7 +8,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
@@ -84,7 +84,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test  removeMeal method with  valid iformation")
-    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealAdminException, MealNotFoundAdminException {
+    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealAdminException, MealNotFoundException {
 
         this.mealEntity.setMenus(List.of()); //  empty list of  menu
 

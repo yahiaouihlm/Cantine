@@ -7,7 +7,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
@@ -74,7 +74,7 @@ public class UpdateMenuTest {
 
 
      @Test
-     void updateMenuTest () throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, MenuNotFoundException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
+     void updateMenuTest () throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, MenuNotFoundException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
          this.menuEntity = new MenuEntity();
          this.menuEntity.setLabel("Test label");
          this.menuEntity.setDescription("Test description");
@@ -314,7 +314,7 @@ public class UpdateMenuTest {
     /************************************ Menu ID************************************/
 
     @Test
-    void  UpdateMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+    void  UpdateMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu,-1));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }

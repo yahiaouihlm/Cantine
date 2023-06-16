@@ -6,7 +6,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.MealService;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
@@ -76,7 +76,7 @@ class GetMenuTest {
 
 
     @Test
-    void getMenuByIdWithValidateId() throws InvalidMenuInformationException, MealNotFoundAdminException {
+    void getMenuByIdWithValidateId() throws InvalidMenuInformationException, MealNotFoundException {
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
         var  result  =  this.menuService.getMenuById(1);
         Assertions.assertTrue(result instanceof MenuDtout);
@@ -87,19 +87,19 @@ class GetMenuTest {
     }
 
     @Test
-    void getMenuByIdWithMenuNotFoundTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+    void getMenuByIdWithMenuNotFoundTest() throws InvalidMenuInformationException, MealNotFoundException {
         Mockito.when(iMenuDao.findById(Mockito.anyInt())).thenReturn(Optional.empty());
-        Assertions.assertThrows(MealNotFoundAdminException.class, () -> menuService.getMenuById(1));
+        Assertions.assertThrows(MealNotFoundException.class, () -> menuService.getMenuById(1));
         Mockito.verify(iMenuDao, Mockito.times(1)).findById(Mockito.anyInt());
 
     }
     @Test
-    void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+    void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(-1));
         Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
     }
     @Test
-    void getMenuByIdWithNullIdTest() throws InvalidMenuInformationException, MealNotFoundAdminException {
+    void getMenuByIdWithNullIdTest() throws InvalidMenuInformationException, MealNotFoundException {
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuById(null));
         Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
     }

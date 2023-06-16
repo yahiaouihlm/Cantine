@@ -5,7 +5,7 @@ import fr.sqli.Cantine.dto.out.food.MealDtout;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ class GetMealsTest {
 
 
     @BeforeEach
-    void setUp() throws MealNotFoundAdminException, InvalidMealInformationException {
+    void setUp() throws MealNotFoundException, InvalidMealInformationException {
         this.environment = new MockEnvironment();
         this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
         this.iMealService = new MealService(environment, iMealDao, imageService);
@@ -111,7 +111,7 @@ class GetMealsTest {
     /******************************************* getMealByid methode *****************************************************/
     @Test
     @DisplayName("Test  getMealByID with valid ID  return a Meal Instanced By Mockito ")
-    void geMealWithValidId() throws MealNotFoundAdminException, InvalidMealInformationException {
+    void geMealWithValidId() throws MealNotFoundException, InvalidMealInformationException {
         final Integer idMeal = 1;
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
@@ -136,7 +136,7 @@ class GetMealsTest {
         Mockito.when(this.iMealDao.findById(idMeal)).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(MealNotFoundAdminException.class, () -> {
+        Assertions.assertThrows(MealNotFoundException.class, () -> {
             this.iMealService.getMealByID(idMeal);
         });
 
