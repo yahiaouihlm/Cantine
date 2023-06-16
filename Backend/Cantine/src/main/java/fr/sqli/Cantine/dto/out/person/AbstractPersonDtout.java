@@ -8,7 +8,7 @@ public abstract  class AbstractPersonDtout {
     private  String firstname;
     private  String lastname;
     private  String email;
-    private  String password;
+
     private  String birthdateAsString;
     private LocalDate birthdate;
     private  String town;
@@ -49,13 +49,7 @@ public abstract  class AbstractPersonDtout {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getBirthdateAsString() {
         return birthdateAsString;

@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.student;
 
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
@@ -27,7 +28,16 @@ public class StudentController implements IStudentController {
    }
 
 
-   @Override
+    @Override
+    @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
+    public ResponseEntity<StudentDtout> getStudentById(@RequestParam("idStudent") Integer id) throws StudentNotFoundException, InvalidPersonInformationException {
+      var student =  this.studentService.getStudentByID(id);
+         return ResponseEntity
+                 .ok()
+                 .body(student);
+    }
+
+    @Override
    @PutMapping(UPDATE_STUDENT_INFO_ENDPOINT)
    public ResponseEntity<String> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, InvalidStudentClassException, InvalidFormatImageException, StudentNotFoundException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException {
          this.studentService.updateStudentInformation(studentDtoIn);
