@@ -92,6 +92,10 @@ public class StudentService implements IStudentService {
         studentUpdated.setStudentClass(studentClassEntity.get());
         studentUpdated.setTown(studentDtoIn.getTown());
 
+        if  ( studentDtoIn.getPhone() != null  &&  !studentDtoIn.getPhone().trim().isEmpty()) {
+             studentUpdated.setPhone(studentDtoIn.getPhone());
+        }
+
 
         if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();

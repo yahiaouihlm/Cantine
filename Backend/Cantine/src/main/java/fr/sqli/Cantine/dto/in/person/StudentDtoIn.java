@@ -41,7 +41,7 @@ public class StudentDtoIn  extends  AbstractPersonDtoIn{
     @JsonIgnore
     public  void  checkStudentClassValidity  () throws InvalidStudentClassException, InvalidPersonInformationException {
         super.validateInformationWithOutEmailAndPassword();
-        if  ( super.getPhone() != null  && !super.getPhone().trim().isEmpty()) {
+        if  ( super.getPhone() != null  &&  !super.getPhone().trim().isEmpty()) {
             super.phoneValidator();
             super.setPhone(super.getPhone().trim());
         }
