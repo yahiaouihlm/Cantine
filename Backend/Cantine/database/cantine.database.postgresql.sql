@@ -86,7 +86,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
 
 
 
- CREATE table  if NOT EXIST payment (
+ CREATE table  if NOT EXISTS payment (
     id SERIAL PRIMARY KEY,
     student_id INT NOT NULL,
     admin_id INT NOT NULL,
@@ -101,16 +101,16 @@ CREATE  TABLE IF NOT EXISTS "admin" (
 -- Table `cantiniere`.`order`
 -- -----------------------------------------------------
 
-CREATE table  if NOT EXIST "order" (
+CREATE table  if NOT EXISTS "order" (
      id SERIAL PRIMARY KEY,
      student_id INT NOT NULL,
-     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
      status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
-     qr_code VARCHAR(100) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
+     qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
+    check (status IN (0,1)),
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
