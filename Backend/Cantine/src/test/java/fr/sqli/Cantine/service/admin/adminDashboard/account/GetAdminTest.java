@@ -64,7 +64,7 @@ public class GetAdminTest {
         adminEntity.setBirthdate(LocalDate.now());
         adminEntity.setAddress("address");
         adminEntity.setTown("town");
-        adminEntity.setPhone("phone");
+        adminEntity.setPhone("0631990180");
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(IMAGE_TESTS_PATH);
         adminEntity.setImage(imageEntity);
@@ -85,11 +85,13 @@ public class GetAdminTest {
 
 
     }
+
+    @Test
     void  getAdminByIdWithNotFoundAdmin () throws InvalidPersonInformationException {
-        Integer idMenu = 1 ;
-        Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
+        Integer idAdmin = 1 ;
+        Mockito.when(this.adminDao.findById(idAdmin)).thenReturn(Optional.empty());
         Assertions.assertThrows(AdminNotFound.class, () -> {
-            this.adminService.getAdminById(idMenu)  ;
+            this.adminService.getAdminById(idAdmin)  ;
         });
 
 
@@ -98,16 +100,16 @@ public class GetAdminTest {
 
     @Test
     void getAdminByIdWithNegativeID (){
-        Integer idMenu = -1;
+        Integer idAdmin = -1;
         assertThrows(InvalidPersonInformationException.class, () -> {
-            this.adminService.getAdminById(idMenu) ;
+            this.adminService.getAdminById(idAdmin) ;
         });
     }
     @Test
     void getAdminByIdWithNullID (){
-        Integer idMenu = null;
+        Integer idAdmin = null;
          assertThrows(InvalidPersonInformationException.class, () -> {
-            this.adminService.getAdminById(idMenu);
+            this.adminService.getAdminById(idAdmin);
         });
     }
 
