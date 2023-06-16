@@ -7,10 +7,10 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.google.zxing.client.*;
+
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -14,6 +14,7 @@ import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +25,8 @@ import java.util.List;
 public class OrderService implements IOrderService {
 
     private static final Logger LOG = LogManager.getLogger();
+
+    final  String  ORDER_QR_CODE_PATH ;
     private IOrderDao orderDao;
 
     private ITaxDao taxDao;
@@ -31,10 +34,18 @@ public class OrderService implements IOrderService {
 
     private IMealDao mealDao;
 
+    private Environment env ;
     private IMenuDao menuDao;
     @Autowired
-    public OrderService(IOrderDao orderDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao , ITaxDao taxDao) {
+    public OrderService( Environment env ,IOrderDao orderDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao , ITaxDao taxDao) {
         this.orderDao = orderDao;
+        this.studentDao = studentDao;
+        this.mealDao = mealDao;
+        this.menuDao = menuDao;
+        this.taxDao = taxDao;
+        this.env = env ;
+        this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
+
     }
 
 
