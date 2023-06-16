@@ -1,5 +1,6 @@
 package fr.sqli.Cantine.controller.order;
 
+import com.google.zxing.WriterException;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping(IOrderController.ORDER_BASIC_URL)
 public class OrderController  implements IOrderController{
@@ -27,7 +30,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<String>  addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException {
+    public ResponseEntity<String>  addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException {
         this.orderService.addOrder(orderDtoIn);
         return ResponseEntity.ok(ORDER_ADDED_SUCCESSFULLY);
     }

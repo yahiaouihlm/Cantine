@@ -1,14 +1,18 @@
 package fr.sqli.Cantine.service.order;
 
+import com.google.zxing.WriterException;
 import fr.sqli.Cantine.dao.*;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.entity.OrderEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
+import fr.sqli.Cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -17,9 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService implements IOrderService {
@@ -49,8 +55,9 @@ public class OrderService implements IOrderService {
     }
 
 
+     /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException {
         orderDtoIn.checkOrderIDsValidity();
         var  student = this.studentDao.findById(orderDtoIn.getStudentId());
         var   totalPrice  =  BigDecimal.ZERO;
@@ -72,13 +79,15 @@ public class OrderService implements IOrderService {
             totalPrice = totalPrice.add(meal.get().getPrice());
         }
 
+        List<MenuEntity> menus = new ArrayList<>();
+
         for (var menuId : orderDtoIn.getMenusId()) {
             var menu = this.menuDao.findById(menuId);
             if(menu.isEmpty()){
                 OrderService.LOG.error("MENU WITH  ID  = "+ menuId  +" NOT FOUND");
                 throw new MenuNotFoundException("MENU WITH  ID  = "+ menuId  +" NOT FOUND");
             }
-              meals.addAll(menu.get().getMeals());
+              menus.add(menu.get());
               totalPrice = totalPrice.add(menu.get().getPrice());
         }
 
@@ -103,8 +112,18 @@ public class OrderService implements IOrderService {
             throw new InsufficientBalanceException("YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
         }
 
-        //  create the  QrCode  and  save  the  order  in  the  database
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setStudent(student.get());
+        orderEntity.setMeals(meals);
+        orderEntity.setMenus(menus);
 
+        //  create the  QrCode  and  save  the  order  in  the  database
+        String  token =   UUID.randomUUID().toString();
+
+
+        String  qrCodeData = "Hello world";
+        var  filePath =
+        QrCodeGenerator.generateQrCode(qrCodeData, this.ORDER_QR_CODE_PATH);
 
 
     }
