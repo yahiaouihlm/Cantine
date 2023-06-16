@@ -4,7 +4,7 @@ package fr.sqli.Cantine.controller.admin.menus;
 import fr.sqli.Cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.Cantine.dto.out.food.MenuDtout;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.MenuService;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
@@ -37,7 +37,7 @@ public class MenuController implements   IMenuController {
 
     @PutMapping (value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<String> update(Integer idMenu, MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException {
+    public ResponseEntity<String> update(Integer idMenu, MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException {
          this.menuService.updateMenu( menuDtoIn, idMenu);
         return ResponseEntity.ok(MENU_UPDATED_SUCCESSFULLY);
     }
@@ -53,7 +53,7 @@ public class MenuController implements   IMenuController {
 
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
     @Override
-    public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundAdminException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
+    public ResponseEntity<String>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
          this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(MENU_ADDED_SUCCESSFULLY);
     }
@@ -61,7 +61,7 @@ public class MenuController implements   IMenuController {
 
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     @Override
-    public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") Integer idMenu) throws InvalidMenuInformationException, MealNotFoundAdminException {
+    public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") Integer idMenu) throws InvalidMenuInformationException, MealNotFoundException {
            return  ResponseEntity.ok(this.menuService.getMenuById(idMenu));
     }
 
