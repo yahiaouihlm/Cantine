@@ -6,7 +6,7 @@ import fr.sqli.Cantine.dto.out.food.MealDtout;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
@@ -62,14 +62,14 @@ public interface IMealService {
      * @param idMeal    the id of the meal to update
      * @return MealEntity the meal updated in the database
      * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
-     * @throws MealNotFoundAdminException           if the meal is not found in the database
+     * @throws MealNotFoundException           if the meal is not found in the database
      * @throws InvalidFormatImageException            if the image type is not valid (if the image type is not jpg or png)
      * @throws InvalidImageException                if the image is not valid (if the image is null or empty)
      * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
      * @throws IOException                          if the image is not found or  the jvm cannot create the file
      */
 
-    MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException;
+    MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException;
 
 
     /**
@@ -78,12 +78,12 @@ public interface IMealService {
      * @param id as Integer the id of the meal to remove
      * @return MealEntity the meal removed from the database
      * @throws InvalidMealInformationException if the meal  id is not valid (if the id is null or less than 0)
-     * @throws MealNotFoundAdminException           if the meal is not found in the database
+     * @throws MealNotFoundException           if the meal is not found in the database
      * @throws RemoveMealAdminException             if the meal is present in a menu(s)
      * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
      */
 
-    MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException, RemoveMealAdminException, ImagePathException;
+    MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException;
 
     /**
      * this method is used to add a meal to  database and save the image in the (images/meals) directory
@@ -112,9 +112,9 @@ public interface IMealService {
      * @param id the meal id to search for
      * @return The meal found with the given id or throw an exception if the meal is not found
      * @throws InvalidMealInformationException if the meal id is null or less than 0
-     * @throws MealNotFoundAdminException           if the meal is not found
+     * @throws MealNotFoundException           if the meal is not found
      */
-    MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException;
+    MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundException;
 
 
     /**
@@ -122,9 +122,9 @@ public interface IMealService {
      * @param id the meal id to search for
      * @return The meal found with the given id or throw an exception if the meal is not found
      * @throws InvalidMealInformationException if the meal id is null or less than 0
-     * @throws MealNotFoundAdminException          if the meal is not found
+     * @throws MealNotFoundException          if the meal is not found
      */
-    MealEntity  getMealEntityByID (Integer id) throws InvalidMealInformationException, MealNotFoundAdminException;
+    MealEntity  getMealEntityByID (Integer id) throws InvalidMealInformationException, MealNotFoundException;
 
 
 }

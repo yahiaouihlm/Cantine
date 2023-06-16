@@ -9,7 +9,7 @@ import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
@@ -54,7 +54,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity updateMenu(MenuDtoIn menuDtoIn, Integer idMenu) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException {
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn, Integer idMenu) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException {
 
         IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", idMenu);
         var menu = menuDtoIn.toMenuEntityWithoutImage();
@@ -122,7 +122,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
         IMenuService.ValidateMealID(menuDtoIn);
@@ -156,7 +156,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtout getMenuById(Integer menuID) throws MealNotFoundAdminException, InvalidMenuInformationException {
+    public MenuDtout getMenuById(Integer menuID) throws MealNotFoundException, InvalidMenuInformationException {
         IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuID);
         var menu = this.menuDao.findById(menuID);
         if (menu.isPresent()) {
@@ -165,7 +165,7 @@ public class MenuService implements IMenuService {
 
 
         MenuService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", menuID);
-        throw new MealNotFoundAdminException("NO MENU WAS FOUND WITH THIS ID ");
+        throw new MealNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
     }
 
     @Override

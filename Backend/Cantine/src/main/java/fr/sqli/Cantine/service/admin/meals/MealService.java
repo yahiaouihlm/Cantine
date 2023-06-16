@@ -7,7 +7,7 @@ import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundAdminException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.images.IImageService;
@@ -45,14 +45,14 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
         var overemotional = this.mealDao.findById(idMeal);
         if (overemotional.isEmpty()) {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", idMeal);
-            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID");
+            throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
         }
         var meal = overemotional.get(); // change the  meal  with  the  new  values
         meal.setPrice(mealEntity.getPrice());
@@ -82,13 +82,13 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException, RemoveMealAdminException, ImagePathException {
+    public MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException {
         IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
 
         var overemotional = this.mealDao.findById(id);
         if (overemotional.isEmpty()) {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE removeMeal METHOD ", id);
-            throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID");
+            throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
         }
         var meal = overemotional.get();
         if (meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
@@ -127,12 +127,12 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException {
+    public MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundException {
         return new MealDtout(getMealEntityByID(id), this.MEALS_IMAGES_URL);
     }
 
     @Override
-    public MealEntity getMealEntityByID(Integer id) throws InvalidMealInformationException, MealNotFoundAdminException {
+    public MealEntity getMealEntityByID(Integer id) throws InvalidMealInformationException, MealNotFoundException {
         IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
 
         var meal = this.mealDao.findById(id);
@@ -142,7 +142,7 @@ public class MealService implements IMealService {
         }
 
         MealService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", id);
-        throw new MealNotFoundAdminException("NO MEAL WAS FOUND WITH THIS ID");
+        throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
     }
 
 
