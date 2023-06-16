@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS taxe (
+CREATE TABLE IF NOT EXISTS tax (
     id  SERIAL PRIMARY KEY,
-    taxe DECIMAL(5,2) NOT NULL,
+    tax DECIMAL(5,2) NOT NULL
 );
 
 -- -----------------------------------------------------

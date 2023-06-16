@@ -2,11 +2,12 @@ package fr.sqli.Cantine.entity;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-/*@Entity
+@Entity
 @Table(name="taxe")
 
 public class TaxeEntity implements Serializable {
@@ -39,4 +40,4 @@ public class TaxeEntity implements Serializable {
         this.taxe = taxe;
     }
 
-}*/
+}
