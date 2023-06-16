@@ -68,18 +68,18 @@ public class MealEntity implements Serializable {
     private ImageEntity image;
 
     //bi-directional many-to-many association to CommandeEntity
-  /*  @ManyToMany
+   @ManyToMany
     @JoinTable(
-            name="plat_has_commande"
+            name="order_has_meal"
             , joinColumns={
-            @JoinColumn(name="plat_idplat", nullable=false)
+            @JoinColumn(name="meal_idmeal", nullable=false)
     }
             , inverseJoinColumns={
-            @JoinColumn(name="commande_idcommande", nullable=false)
+            @JoinColumn(name="order_idorder", nullable=false)
     }
     )
-    private List<OrderEntity> commandes;
-
+    private List<OrderEntity> orders;
+ /*
     //bi-directional many-to-one association to QuantiteEntity
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/

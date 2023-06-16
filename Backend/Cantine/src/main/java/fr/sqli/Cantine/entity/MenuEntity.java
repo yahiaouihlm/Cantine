@@ -34,17 +34,17 @@ public class MenuEntity implements Serializable {
     private Integer status;
 
     //bi-directional many-to-many association to CommandeEntity
-    /*@ManyToMany
+    @ManyToMany
     @JoinTable(
-            name="commande_has_menu"
+            name="order_has_menu"
             , joinColumns={
             @JoinColumn(name="menu_idmenu", nullable=false)
     }
             , inverseJoinColumns={
-            @JoinColumn(name="commande_idcommande", nullable=false)
+            @JoinColumn(name="order_idorder", nullable=false)
     }
     )
-    private List<OrderEntity> commandes;*/
+    private List<OrderEntity> orders;
 
     //bi-directional many-to-one association to ImageEntity
     @ManyToOne(cascade = CascadeType.ALL)
