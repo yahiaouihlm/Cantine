@@ -6,13 +6,14 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationExce
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
 
-public interface IOrder {
+public interface IOrderService {
 
 
 
 
-    public  void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException;
+    public  void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException;
 }
