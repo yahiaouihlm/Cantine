@@ -20,7 +20,7 @@ public interface IOrderController {
     String ORDER_BASIC_URL = "cantine/student/order";
 
 
-    String ADD_ORDER_URL = "/addOrder";
+    String ADD_ORDER_URL = "/add";
 
    String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
     @PostMapping(IOrderController.ADD_ORDER_URL)

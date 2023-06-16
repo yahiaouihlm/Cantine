@@ -27,7 +27,7 @@ public class StudentController implements IStudentController {
         this.studentService = studentService;
    }
 
-
+ /* TODO  :    change  get Student  Image  URl  */
     @Override
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
     public ResponseEntity<StudentDtout> getStudentById(@RequestParam("idStudent") Integer id) throws StudentNotFoundException, InvalidPersonInformationException {
