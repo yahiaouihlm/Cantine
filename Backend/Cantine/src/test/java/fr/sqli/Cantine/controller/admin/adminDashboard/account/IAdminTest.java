@@ -20,8 +20,7 @@ public interface IAdminTest {
     String  IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
     String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
-
-
+    String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
     String TOKEN_SENDED_SUCCESSFULLY =  "TOKEN SENDED SUCCESSFULLY";
     String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
     String  IMAGE_MEAL_FOR_TEST_NAME = "ImageForTest.jpg";

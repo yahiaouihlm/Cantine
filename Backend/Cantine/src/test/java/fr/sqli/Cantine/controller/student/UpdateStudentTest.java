@@ -2,14 +2,14 @@ package fr.sqli.Cantine.controller.student;
 
 import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IConfirmationTokenDao;
+import fr.sqli.Cantine.dao.IImageDao;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
+import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import fr.sqli.Cantine.service.images.ImageService;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,6 +43,8 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     @Autowired
     private IConfirmationTokenDao iConfirmationTokenDao;
 
+    @Autowired
+    private IImageDao iImageDao;
     private MockMultipartFile imageData;
     @Autowired
     private MockMvc mockMvc;
@@ -64,6 +66,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
         this.studentDao.deleteAll();
         this.studentClassDao.deleteAll();
         this.iConfirmationTokenDao.deleteAll();
+
     }
 
     void initFormData() throws IOException {
@@ -95,12 +98,69 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     }
 
     @BeforeAll
-    static void copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+    static void copyImageTestFromTestDirectoryToImageStudentDirectory() throws IOException {
         String source = IMAGE_TEST_DIRECTORY_PATH + IMAGE_FOR_TEST_NAME;
         String destination = STUDENT_IMAGE_PATH + IMAGE_FOR_TEST_NAME;
         File sourceFile = new File(source);
         File destFile = new File(destination);
         Files.copy(sourceFile.toPath(), destFile.toPath());
+    }
+
+    @AfterAll
+    static void deleteImageTestIFExists() throws IOException {
+        String location = STUDENT_IMAGE_PATH + IMAGE_FOR_TEST_NAME;
+        File destFile = new File(location);
+        if (destFile.exists())
+            Files.delete(destFile.toPath());
+    }
+
+
+
+    @Test
+    void updateAdminWithDefaultImage() throws Exception {
+         cleanDataBase();
+
+        // make  a  new  admin  with  a default  image
+        var defaultImageAdmin  =  this.env.getProperty("sqli.cantine.default.persons.student.imagename");
+        var defaultImg = new ImageEntity();
+        defaultImg.setImagename(defaultImageAdmin);
+        this.studentEntity.setImage(defaultImg);
+
+        this.studentDao.save(this.studentEntity);
+
+        this.formData.set("firstname", "Halim-Updated");
+        this.formData.set("lastname", "Yahiaoui-Updated");
+        this.formData.set("birthdateAsString", "2000-07-18");
+        this.formData.set("town", "chicago");
+        this.formData.set("address", "North Bergen New Jersey USA");
+        this.formData.set("phone", "0631800190");
+
+
+
+        var  idMealToUpdate =  this.studentDao.findAll().get(0).getId();
+        this.formData.set("id" , String.valueOf(idMealToUpdate) );
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_STUDENT_INFO )
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.content().string(STUDENT_INFO_UPDATED_SUCCESSFULLY));
+
+
+        var studentUpdated = this.studentDao.findById(idMealToUpdate).get();
+        Assertions.assertEquals(this.formData.get("firstname").get(0), studentUpdated.getFirstname());
+        Assertions.assertEquals(this.formData.get("lastname").get(0), studentUpdated.getLastname());
+        Assertions.assertEquals(this.formData.get("town").get(0), studentUpdated.getTown());
+        Assertions.assertEquals(this.formData.get("phone").get(0), studentUpdated.getPhone());
+
+
+        Assertions.assertTrue(
+                new File(STUDENT_IMAGE_PATH + studentUpdated.getImage().getImagename()).delete()
+        );
+
     }
 
 

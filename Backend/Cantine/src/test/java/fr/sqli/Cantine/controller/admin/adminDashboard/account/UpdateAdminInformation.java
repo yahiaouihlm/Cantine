@@ -34,7 +34,7 @@ import java.nio.file.Files;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UpdateAdminInformation  extends AbstractContainerConfig implements  IAdminTest {
-    private String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
+
     private  final  String paramReq = "?"+"idAdmin"+"=";
     @Autowired
     private IFunctionDao functionDao;
