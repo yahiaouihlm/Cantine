@@ -32,7 +32,7 @@ public class OrderEntity implements Serializable {
     @Column(nullable = false )
     private BigDecimal price;
     @Column(nullable = false)
-    @Check(constraints = "statut IN (0,1)")
+    @Check(constraints = "status IN (0,1)")
     private Integer status;
 
 
