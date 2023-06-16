@@ -27,8 +27,6 @@ public class OrderEntity implements Serializable {
     @Column(name = "creation_time", nullable=false)
     private Time creationTime;
 
-    @Column(name = "uuid", nullable=false)
-    private String uuid;
 
     @Column(name = "qr_code", nullable=false, length = 1000)
     private  String QRCode;
@@ -85,13 +83,6 @@ public class OrderEntity implements Serializable {
         this.creationTime = creationTime;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     public String getQRCode() {
         return QRCode;
