@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Meal} from "../sharedmodule/models/meal";
+import {Menu} from "../sharedmodule/models/menu";
 
 @Injectable()
 export class CoreCantineService {
@@ -12,6 +13,10 @@ export class CoreCantineService {
 
    getAllMeals () {
     return this.httpClient.get<Meal[]>(this.GET_ALL_MEALS_ENDPOINT)
+  }
+
+  getAllMenus (){
+      return this.httpClient.get<Menu[]>(this.GET_ALL_MENUS_ENDPOINT)
   }
 
 }
