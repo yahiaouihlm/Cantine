@@ -12,6 +12,7 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
+import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.Cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
@@ -60,11 +61,11 @@ public class OrderService implements IOrderService {
 
 
      /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
-    /* TODO   order could    contain  Empty  meal  or  menu  */
-    /* TODO   if the  order was  suc  we have  to  remove it's  value  from  the  student wallet  */
-    /* TODO   register the  history  of  transaction */
+    /* TODO change  QRcode Data */
+    /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException
+    {
         orderDtoIn.checkOrderIDsValidity();
         var  student = this.studentDao.findById(orderDtoIn.getStudentId());
         var   totalPrice  =  BigDecimal.ZERO;
@@ -75,6 +76,10 @@ public class OrderService implements IOrderService {
             throw new StudentNotFoundException("STUDENT NOT FOUND");
 
         List<MealEntity> meals = new ArrayList<>();
+        if (orderDtoIn.getMealsId().size() == 0  &&   orderDtoIn.getMenusId().size() ==0 ) {
+           OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
+           throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
+        }
 
         for (var mealId : orderDtoIn.getMealsId()) {
             var meal = this.mealDao.findById(mealId);
@@ -138,5 +143,19 @@ public class OrderService implements IOrderService {
         orderEntity.setCreationDate(LocalDate.now());
         orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(),LocalDateTime.now().getMinute(),LocalDateTime.now().getSecond()));
         this.orderDao.save(orderEntity);
+
+        //  update Student  Waller
+         var  newStudentWallet  =  student.get().getWallet().subtract(totalPrice) ;
+         student.get().setWallet(newStudentWallet);
+         this.studentDao.save(student.get());
+
+         if  ((newStudentWallet.compareTo(new BigDecimal(10 )))<= 0 ){
+             /* SEND THE NOTIFICATION  */
+        }
+
+
+
     }
+
+
 }
