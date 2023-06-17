@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static fr.sqli.Cantine.controller.api.IApi.BASIC_MEALS_API;
+import static fr.sqli.Cantine.controller.api.IApi.BASIC_API_URL;
 
 @RestController
-@RequestMapping(BASIC_MEALS_API)
+@RequestMapping(BASIC_API_URL)
 public class ApiController   implements   IApi {
 
     private MealService mealService ;
