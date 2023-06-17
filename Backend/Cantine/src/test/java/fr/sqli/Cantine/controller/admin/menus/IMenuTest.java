@@ -20,6 +20,7 @@ import java.util.Map;
 
 public interface IMenuTest {
     final  String BASE_MENU_URL  =  "/cantine/api/admin/menus";
+    String  BASIC_MENU_URL_API =  "/cantine/api/menus";
     final  String DIRECTORY_IMAGE_MENU = "images/menus/";
     final  String  UPDATE_MENU_URL = BASE_MENU_URL + "/update";
     final String ADD_MENU_URL = BASE_MENU_URL + "/add";
@@ -27,7 +28,7 @@ public interface IMenuTest {
 
     final String GET_ONE_MENU_URL = BASE_MENU_URL + "/get";
 
-    final  String  GET_ALL_MENUS_URL = BASE_MENU_URL + "/getAll";
+    final  String  GET_ALL_MENUS_URL = BASIC_MENU_URL_API + "/getAll";
 
 
     /********************** Image **************************/
