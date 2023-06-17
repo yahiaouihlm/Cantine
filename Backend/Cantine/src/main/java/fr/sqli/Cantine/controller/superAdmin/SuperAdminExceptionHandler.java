@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class SuperAdminExceptionHandler {
 
     @ExceptionHandler(TaxNotFoundException.class)
-    public ResponseEntity<ExceptionDtout> handleHttpMessageNotReadableException(TaxNotFoundException e) {
+    public ResponseEntity<ExceptionDtout> handleTaxNotFound(TaxNotFoundException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 
     @ExceptionHandler(InvalidTaxException.class)
-    public ResponseEntity<ExceptionDtout> handleHttpMessageNotReadableException(InvalidTaxException e) {
+    public ResponseEntity<ExceptionDtout> handleInvalidTax(InvalidTaxException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 
     @ExceptionHandler(ExistingTax.class)
-    public ResponseEntity<ExceptionDtout> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public ResponseEntity<ExceptionDtout> handleExistingTax(ExistingTax e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 }
