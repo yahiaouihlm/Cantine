@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CoreCantineService} from "../core-cantine.service";
+import {Meal} from "../../sharedmodule/models/meal";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-meals',
-  template: `
-    <p>
-      meals works!
-    </p>
-  `,
-  styles: [
-  ]
+  templateUrl:"meals.componenet.html",
+  styles: [],
+  providers: [CoreCantineService]
 })
-export class MealsComponent {
+export class MealsComponent  implements  OnInit{
 
+  meals$ : Observable <Meal[]> = of([]) ;
+  constructor( private  coreCantineService :CoreCantineService) {}
+
+  ngOnInit(): void {
+    this.meals$ = this.coreCantineService.getAllMeals();
+  }
 }

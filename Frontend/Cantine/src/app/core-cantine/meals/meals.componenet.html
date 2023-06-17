@@ -1,10 +1,36 @@
-<div  class="principal">
+
     <div class = "image-header" >
         <img src="assets/images/mainImage.jpg" width="100%" height="500vh">
     </div>
 
-    <div class="container-fluid">
-        <h1 class="center"> Nos  Menus  </h1>
-    </div>
+    <div class="center" style="width: 50%; transform: translateX(50%);  ">
 
-</div>
+
+
+        <h1 class="center"> Nos  Plats   </h1>
+
+           <div  class="container-fluid red" >
+             <div class="row">
+                 <div *ngFor="let meal of meals$ |async " class="col m4 s12" >
+                      <div class="card horizontal">
+                          <div class="center">
+                              <img  [src]="meal.image" height="40%" width="40%"   />
+                          </div>
+
+                             <div class="card-stacked">
+                                 <div class="card-content">
+                                     <p> plat :   {{meal.label}}</p>
+                                     <p> catégorie :  {{meal.category}}</p>
+                                     <p> description  : {{meal.description}}</p>
+                                 </div>
+                             </div>
+                            <div>
+                                <button class="btn"> Ajouter Le Plat </button>
+                            </div>
+                      </div>
+                 </div>
+             </div>
+           </div>
+
+
+
