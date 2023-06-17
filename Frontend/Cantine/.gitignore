@@ -1,6 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 #for tests 
 
+#Angular cache
+.angular
 
 assets
 # Compiled output
