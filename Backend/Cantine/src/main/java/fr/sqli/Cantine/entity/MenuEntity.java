@@ -34,16 +34,13 @@ public class MenuEntity implements Serializable {
     private Integer status;
 
     //bi-directional many-to-many association to CommandeEntity
-    @ManyToMany
+    @ManyToMany(fetch =  FetchType.LAZY)
     @JoinTable(
-            name="st_order_has_menu"
-            , joinColumns={
-            @JoinColumn(name="menu_idmenu", nullable=false)
-    }
-            , inverseJoinColumns={
-            @JoinColumn(name="order_idorder", nullable=false)
-    }
+            name="st_order_has_menu",
+            joinColumns={@JoinColumn(name="menu_idmenu", nullable=false)},
+            inverseJoinColumns={@JoinColumn(name="order_idorder", nullable=false)}
     )
+
     private List<OrderEntity> orders;
 
     //bi-directional many-to-one association to ImageEntity
@@ -59,6 +56,7 @@ public class MenuEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "menu_idmenu", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "meal_idmeal", nullable = false)}
     )
+
     private List<MealEntity> meals;
     //bi-directional many-to-one association to QuantiteEntity
    /* @OneToMany(mappedBy="menu")
@@ -141,6 +139,14 @@ public class MenuEntity implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
     }
 }
 

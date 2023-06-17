@@ -46,7 +46,13 @@ public class OrderEntity implements Serializable {
     private StudentEntity student;
 
     // bi-directional many-to-many association to MenuEntity
-    @ManyToMany(mappedBy = "orders")
+
+    @ManyToMany
+    @JoinTable(
+            name="st_order_has_menu",
+            joinColumns={@JoinColumn(name="order_idorder", nullable=false)},
+            inverseJoinColumns={@JoinColumn(name="menu_idmenu", nullable=false)}
+    )
     private List<MenuEntity> menus;
 
     // bi-directional many-to-many association to QuantiteEntity
@@ -55,7 +61,16 @@ public class OrderEntity implements Serializable {
 
 
     //bi-directional many-to-many association to PlatEntity
-    @ManyToMany(mappedBy="orders")
+    @ManyToMany
+    @JoinTable(
+            name="st_order_has_meal"
+            , joinColumns={
+            @JoinColumn(name="order_idorder", nullable=false)
+    }
+            , inverseJoinColumns={
+            @JoinColumn(name="meal_idmeal", nullable=false)
+    }
+    )
     private List<MealEntity> meals;
 
 

@@ -68,7 +68,7 @@ public class MealEntity implements Serializable {
     private ImageEntity image;
 
     //bi-directional many-to-many association to CommandeEntity
-   @ManyToMany
+   @ManyToMany( fetch =  FetchType.LAZY)
     @JoinTable(
             name="st_order_has_meal"
             , joinColumns={
@@ -168,6 +168,14 @@ public class MealEntity implements Serializable {
 
     public void setMenus(List<MenuEntity> menus) {
         this.menus = menus;
+    }
+
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
     }
 
     /* public List<OrderEntity> getCommandes() {
