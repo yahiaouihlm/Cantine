@@ -9,7 +9,7 @@ import  jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 
 @Entity
-@Table(name = "order", uniqueConstraints={
+@Table(name = "st_order", uniqueConstraints={
         @UniqueConstraint(columnNames={"qr_code"})
 })
 public class OrderEntity implements Serializable {

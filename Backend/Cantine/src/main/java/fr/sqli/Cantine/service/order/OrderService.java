@@ -61,6 +61,8 @@ public class OrderService implements IOrderService {
 
      /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
     /* TODO   order could    contain  Empty  meal  or  menu  */
+    /* TODO   if the  order was  suc  we have  to  remove it's  value  from  the  student wallet  */
+    /* TODO   register the  history  of  transaction */
     @Override
     public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException {
         orderDtoIn.checkOrderIDsValidity();
@@ -121,6 +123,7 @@ public class OrderService implements IOrderService {
         orderEntity.setStudent(student.get());
         orderEntity.setMeals(meals);
         orderEntity.setMenus(menus);
+        orderEntity.setStatus(1);
 
         //  create the  QrCode  and  save  the  order  in  the  database
         String  token =   UUID.randomUUID().toString();
@@ -129,7 +132,7 @@ public class OrderService implements IOrderService {
 
         String  qrCodeData = "Hello world";
         var  filePath =this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
-        QrCodeGenerator.generateQrCode(qrCodeData,filePath );
+       QrCodeGenerator.generateQrCode(qrCodeData,filePath );
 
         orderEntity.setPrice(totalPrice);
         orderEntity.setCreationDate(LocalDate.now());
