@@ -41,10 +41,10 @@ class GetMealTest extends AbstractContainerConfig implements   IMealTest {
         this.mealDao.deleteAll();
     }
 
-    @AfterEach //  clean database after each test
+    /*@AfterEach //  clean database after each test
     public void tearDown() {
         this.mealDao.deleteAll();
-    }
+    }*/
 
     @Test
     @Rollback(true)

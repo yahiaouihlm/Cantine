@@ -5,15 +5,17 @@ import java.util.Map;
 public interface IMealTest {
 
     //  Meal Tests messages  Errors and Success
-    final String BASE_MEAL_URL = "/cantine/api/admin/meals";
-    final String GET_ALL_MEALS_URL = BASE_MEAL_URL + "/getAll";
+    String BASIC_MEAL_URL = "/cantine/api/admin/meals";
+    String  BASIC_MEAL_URL_API =  "/cantine/api/meals";
 
-    final  String GET_ONE_MEAL_URL = BASE_MEAL_URL + "/get";
-    final String ADD_MEAL_URL = BASE_MEAL_URL + "/add";
+        String GET_ALL_MEALS_URL = BASIC_MEAL_URL_API + "/getAll";
 
-    final String DELETE_MEAL_URL = BASE_MEAL_URL + "/delete";
+    final  String GET_ONE_MEAL_URL = BASIC_MEAL_URL + "/get";
+    final String ADD_MEAL_URL = BASIC_MEAL_URL + "/add";
 
-    final String UPDATE_MEAL_URL = BASE_MEAL_URL + "/update";
+    final String DELETE_MEAL_URL = BASIC_MEAL_URL + "/delete";
+
+    final String UPDATE_MEAL_URL = BASIC_MEAL_URL + "/update";
 
     String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
 
