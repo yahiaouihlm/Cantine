@@ -101,7 +101,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
 -- Table `cantiniere`.`order`
 -- -----------------------------------------------------
 
-CREATE table  if NOT EXISTS "order" (
+CREATE table  if NOT EXISTS  st_order(
      id SERIAL PRIMARY KEY,
      student_id INT NOT NULL,
      creation_date DATE NOT NULL,
