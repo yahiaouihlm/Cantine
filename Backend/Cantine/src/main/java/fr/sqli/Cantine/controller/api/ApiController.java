@@ -7,6 +7,7 @@ import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.menus.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import static fr.sqli.Cantine.controller.api.IApi.BASIC_API_URL;
 
 @RestController
 @RequestMapping(BASIC_API_URL)
+@CrossOrigin(origins = "http://localhost:4200")
 public class ApiController   implements   IApi {
 
     private MealService mealService ;
