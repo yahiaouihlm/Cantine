@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.superAdmin;
 
 
 import fr.sqli.Cantine.dto.in.superAdmin.FunctionDtoIn;
+import fr.sqli.Cantine.dto.in.superAdmin.TaxDtoIn;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.superAdmin.SuperAdminService;
 import fr.sqli.Cantine.service.superAdmin.exception.ExistingTax;
@@ -31,8 +32,8 @@ public class SuperAdminController {
 
 
     @PostMapping("/addTax")
-    public ResponseEntity<String> addTax (@RequestParam("taxValue") BigDecimal taxValue) throws InvalidTaxException, ExistingTax {
-        this.superAdminService.addTax(taxValue);
+    public ResponseEntity<String> addTax (@RequestBody TaxDtoIn taxDtoIn) throws InvalidTaxException, ExistingTax {
+        this.superAdminService.addTax(taxDtoIn);
         return ResponseEntity.ok("tax added successfully");
     }
 
