@@ -66,11 +66,6 @@ public class MenuController implements   IMenuController {
     }
 
 
-    @GetMapping(value = ENDPOINT_GET_ALL_MENUS_URL)
-    @Override
-    public ResponseEntity<List<MenuDtout>> getAllMenus() {
-        return ResponseEntity.ok(this.menuService.getAllMenus());
-    }
 
 
 }

@@ -24,7 +24,7 @@ public interface IMenuController {
     String  ENDPOINT_UPDATE_MENU_URL = "/update";
     String ENDPOINT_ADD_MENU_URL = "/add";
     String ENDPOINT_DELETE_MENU_URL = "/delete";
-    String ENDPOINT_GET_ALL_MENUS_URL = "/getAll";
+
 
     String ENDPOINT_GET_ONE_MENU_URL = "/get";
 
@@ -45,5 +45,5 @@ public interface IMenuController {
     public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException;
 
     public ResponseEntity<MenuDtout> getMenuById(Integer idMenu) throws InvalidMenuInformationException, MealNotFoundException;
-    public ResponseEntity<List<MenuDtout>> getAllMenus();
+
 }
