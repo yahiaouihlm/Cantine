@@ -25,7 +25,7 @@ const routes: Routes = [
       {path: '', redirectTo:'cantine/home', pathMatch:'full'},
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
-      {path: 'menu', component: MenuComponent},
+      {path: 'menus', component: MenuComponent},
 
     ]
   },
