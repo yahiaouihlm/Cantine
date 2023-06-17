@@ -21,10 +21,9 @@ public interface IMealController {
     String MEALS_BASIC_URL_ADMIN = "/cantine/api/admin/meals";
     String ENDPOINT_ADD_MEAL_URL = "/add";
     String ENDPOINT_DELETE_MEAL_URL = "/delete";
-
+    String ENDPOINT_GET_ONE_MEAL_URL = "/get" ;
     String ENDPOINT_UPDATE_MEAL_URL = "/update";
-    String ENDPOINT_GET_ONE_MEAL_URL = "/get";
-    String ENDPOINT_GET_ALL_MEALS_URL = "/getAll";
+
 
 
 
@@ -52,6 +51,5 @@ public interface IMealController {
     public ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException ;
 
 
-    public ResponseEntity<List<MealDtout>> getAllMeals() ;
 
 }

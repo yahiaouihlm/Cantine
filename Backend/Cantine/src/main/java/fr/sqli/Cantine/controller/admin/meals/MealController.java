@@ -67,11 +67,6 @@ public class MealController implements IMealController {
         return ResponseEntity.ok(meal);
     }
 
-    @GetMapping(value = ENDPOINT_GET_ALL_MEALS_URL)
-    @Override
-    public ResponseEntity<List<MealDtout>> getAllMeals() {
-        var meals = this.mealService.getAllMeals();
-        return ResponseEntity.ok(meals);
-    }
+
 
 }
