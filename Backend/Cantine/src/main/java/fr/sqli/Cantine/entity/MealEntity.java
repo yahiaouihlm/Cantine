@@ -70,7 +70,7 @@ public class MealEntity implements Serializable {
     //bi-directional many-to-many association to CommandeEntity
    @ManyToMany
     @JoinTable(
-            name="order_has_meal"
+            name="st_order_has_meal"
             , joinColumns={
             @JoinColumn(name="meal_idmeal", nullable=false)
     }

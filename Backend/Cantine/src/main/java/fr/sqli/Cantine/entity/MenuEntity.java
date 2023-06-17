@@ -36,7 +36,7 @@ public class MenuEntity implements Serializable {
     //bi-directional many-to-many association to CommandeEntity
     @ManyToMany
     @JoinTable(
-            name="order_has_menu"
+            name="st_order_has_menu"
             , joinColumns={
             @JoinColumn(name="menu_idmenu", nullable=false)
     }

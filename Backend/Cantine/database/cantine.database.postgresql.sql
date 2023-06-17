@@ -160,19 +160,19 @@ CREATE TABLE IF NOT EXISTS menu_has_meal (
     );
 
 
-CREATE TABLE IF NOT EXISTS order_has_meal (
+CREATE TABLE IF NOT EXISTS st_order_has_meal (
     order_idorder INT NOT NULL,
     meal_idmeal INT NOT NULL,
     PRIMARY KEY (order_idorder, meal_idmeal),
-    FOREIGN KEY (order_idorder) REFERENCES "order" (id) ON DELETE CASCADE,
+    FOREIGN KEY (order_idorder) REFERENCES st_order (id) ON DELETE CASCADE,
     FOREIGN KEY (meal_idmeal) REFERENCES meal (id) ON DELETE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS order_has_menu (
+CREATE TABLE IF NOT EXISTS st_order_has_menu (
     order_idorder INT NOT NULL,
     menu_idmenu INT NOT NULL,
     PRIMARY KEY (order_idorder, menu_idmenu),
-    FOREIGN KEY (order_idorder) REFERENCES "order" (id) ON DELETE CASCADE,
+    FOREIGN KEY (order_idorder) REFERENCES st_order (id) ON DELETE CASCADE,
     FOREIGN KEY (menu_idmenu) REFERENCES menu (id) ON DELETE RESTRICT
 );
 
