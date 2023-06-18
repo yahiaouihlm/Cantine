@@ -3,6 +3,7 @@ import {AbstractControl, FormControl, FormGroup, PatternValidator, Validators} f
 import {MatDialog} from "@angular/material/dialog";
 import {ValidatorDialogComponent} from "../validator-dialog/validator-dialog.component";
 import {MealServiceService} from "../meal-service.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-new-meal',
@@ -24,7 +25,7 @@ export class NewMealComponent {
         status: new FormControl('', [Validators.required])
     });
 
-    constructor(private mealServiceService: MealServiceService, private matDialog: MatDialog) {
+    constructor(private mealServiceService: MealServiceService, private matDialog: MatDialog , private  router : Router) {
     }
 
      onSubmit() {
@@ -52,8 +53,8 @@ export class NewMealComponent {
     }
 
 
-    goto(): void {
-        console.log('goto');
+    goback(): void {
+        this.router.navigate(['/admin/meals']);
     }
 
     confirmAndSendNewMeal(): void {
