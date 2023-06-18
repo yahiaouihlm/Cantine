@@ -4,11 +4,13 @@ package fr.sqli.Cantine.service.order;
 import fr.sqli.Cantine.dao.*;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.Cantine.entity.MenuEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -79,6 +81,47 @@ public class AddOrderTest {
     }
 
     /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID *****************************/
+    @Test
+    void  addOrderWithMenuNotFoundAndOtherFoundMenu() {
+
+        this.orderDtoIn.setMealsId(null); // avoid  to  check  meals  id validation
+        var  menuIdFound =  1 ;
+        var  menuIdNotFound =  2 ;
+
+        //  make  only  the  information    that we  need  for  the  test  ( Our  Meal Mock  )
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.setId(menuIdFound);
+        menuEntity.setPrice(BigDecimal.valueOf(10));
+
+        this.orderDtoIn.setMenusId(List.of( menuIdFound , menuIdNotFound));
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
+        Mockito.when(this.menuDao.findById(menuIdNotFound)).thenReturn(Optional.empty());
+
+
+        Assertions.assertThrows(MenuNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdNotFound);
+        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void  addOrderWithMenuNotFoundTest () {
+        var  menuId =  1 ;
+        this.orderDtoIn.setMealsId(null); // avoid  to  check  meals  id validation
+        this.orderDtoIn.setMenusId(List.of(menuId));
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+
+        Mockito.when(this.menuDao.findById(menuId)).thenReturn(Optional.empty());
+        Assertions.assertThrows(MenuNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(menuId);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+    }
 
 
 
