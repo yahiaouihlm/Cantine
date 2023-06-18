@@ -30,7 +30,9 @@ export class NewMealComponent {
 
      onSubmit() {
 
-        this.submitted = true;
+         this.sendTest();
+
+        /*this.submitted = true;
         if (this.newMeal.invalid) {
             return;
         }
@@ -39,7 +41,7 @@ export class NewMealComponent {
         }
 
         this.confirmAndSendNewMeal();
-
+*/
     }
 
     onChange = ($event: Event) => {
@@ -95,5 +97,17 @@ export class NewMealComponent {
 
 
 
-
+   sendTest(): void {
+        const formData = new FormData();
+        formData.append('label', "fritest");
+        formData.append('description', "des pOMMES  de terRe");
+        formData.append('category', " foo De");
+        formData.append('price', "1");
+        formData.append('quantity', "1");
+        formData.append('image', this.image);
+        formData.append('status', "1");
+        this.mealServiceService.addMeal(formData).subscribe((result) => {
+            console.log(result);
+        });
+   }
 }

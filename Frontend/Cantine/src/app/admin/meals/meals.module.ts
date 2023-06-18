@@ -10,6 +10,7 @@ import { AllMealsComponent } from './all-meals/all-meals.component';
 import { MainMealsComponent } from './main-meals/main-meals.component';
 import {MealServiceService} from "./meal-service.service";
 import { UpdateMealComponent } from './update-meal/update-meal.component';
+import { ExceptionDialogComponent } from './dialogs/exception-dialog/exception-dialog.component';
 
 
 
@@ -34,7 +35,8 @@ const routes: Routes = [
       ValidatorDialogComponent,
       AllMealsComponent,
       MainMealsComponent,
-      UpdateMealComponent
+      UpdateMealComponent,
+      ExceptionDialogComponent
 
   ],
     imports: [

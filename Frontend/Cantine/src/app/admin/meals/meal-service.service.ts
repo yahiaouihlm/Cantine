@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpStatusCode} from "@angular/common/http";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {catchError, throwError} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {Router} from "@angular/router";
+import {ValidatorDialogComponent} from "./dialogs/validator-dialog/validator-dialog.component";
+import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
 
 @Injectable()
 export class MealServiceService {
@@ -13,7 +17,7 @@ export class MealServiceService {
 
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   private  GET_MEAL_BY_ID_URL = this.BASIC_ENDPOINT  + '/get';
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
   addMeal(meal: FormData ) { //  we have  to  add  a  token  after
     return this.httpClient.post <string>(this.ADD_MEAL_URL, meal).pipe(
          catchError( (error) => this.handleError(error))
@@ -29,20 +33,46 @@ export class MealServiceService {
 
     private handleError(error: HttpErrorResponse) {
          if  (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable){
-             console.log("error  400  or  406")
+             this.openDialog("Veuillez  vérifier  les  données  saisies  !", error.status);
          }else if (error.status == HttpStatusCode.Conflict) {
-             console.log(" The  Meal  Already  Exists  !");
+             console.log("je suis dans le  conflict  error  handler");
+                this.openDialog(error.message, error.status);
          }
          else if  (error.status == HttpStatusCode.InternalServerError){
-             console.log("error  500")
+              this.openDialog("Une  erreur  interne  est  survenue  !", error.status);
          }
         else if  (error.status == HttpStatusCode.NotFound){
-             console.log("error  404")
+                this.openDialog("Ce  plat  n'existe  pas  !", error.status);
          }
         else {
-                console.log(error)
+            this.openDialog("Une  erreur  est  survenue  !", error.status);
          }
         return throwError(() => new Error('Something bad happened; please try again later.'));
 
     }
+
+
+
+
+   private openDialog(message: string , httpError :  HttpStatusCode ): void {
+       const result = this.matDialog.open(ExceptionDialogComponent, {
+           data: {message: message},
+           width: '40%',
+       });
+
+         result.afterClosed().subscribe((confirmed: boolean) => {
+             if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError== HttpStatusCode.Conflict || httpError== HttpStatusCode.NotFound){
+
+                 //this.router.navigate(['/admin/meals'] , { queryParams: { reload: 'true' } });
+             }
+             else {
+                 /* TODO  remove THE  Token  */
+                 //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
+             }
+
+         });
+
+   }
+
+
 }
