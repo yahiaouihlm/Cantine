@@ -22,7 +22,7 @@ public class OrderHandlerException {
 
 
     @ExceptionHandler(InsufficientBalanceException.class)
-    public ResponseEntity<ExceptionDtout> handleInsufficientBalance(HttpMessageNotReadableException e) {
+    public ResponseEntity<ExceptionDtout> handleInsufficientBalance(InsufficientBalanceException e) {
         return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(new ExceptionDtout(e.getMessage()));
     }
 

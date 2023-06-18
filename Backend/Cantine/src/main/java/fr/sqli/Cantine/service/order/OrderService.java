@@ -64,8 +64,7 @@ public class OrderService implements IOrderService {
     /* TODO change  QRcode Data */
     /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException
-    {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException {
         orderDtoIn.checkOrderIDsValidity();
         var  student = this.studentDao.findById(orderDtoIn.getStudentId());
         var   totalPrice  =  BigDecimal.ZERO;
@@ -135,14 +134,21 @@ public class OrderService implements IOrderService {
         orderEntity.setQRCode(token);
 
 
-        String  qrCodeData = "Hello world";
-        var  filePath =this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
-       QrCodeGenerator.generateQrCode(qrCodeData,filePath );
 
         orderEntity.setPrice(totalPrice);
         orderEntity.setCreationDate(LocalDate.now());
         orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(),LocalDateTime.now().getMinute(),LocalDateTime.now().getSecond()));
-        this.orderDao.save(orderEntity);
+        var order  =  this.orderDao.save(orderEntity);
+
+        String  qrCodeData = "Student  : " +student.get().getFirstname() + " " +student.get().getLastname()+
+                "\n"+" Student Email : " +student.get().getEmail() +
+                "\n" + " Order Id :" + order.getId() +
+                "\n" +" Order Price : " + order.getPrice() + "£" +
+                "\n"  +" Created At  " + order.getCreationDate() + " " + order.getCreationTime() ;
+
+        var  filePath =this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
+        QrCodeGenerator.generateQrCode(qrCodeData,filePath );
+
 
         //  update Student  Waller
          var  newStudentWallet  =  student.get().getWallet().subtract(totalPrice) ;
