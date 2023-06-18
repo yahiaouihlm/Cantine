@@ -5,10 +5,11 @@ import {RouterModule, Routes} from "@angular/router";
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
-import {ValidatorDialogComponent} from "./validator-dialog/validator-dialog.component";
+import {ValidatorDialogComponent} from "./dialogs/validator-dialog/validator-dialog.component";
 import { AllMealsComponent } from './all-meals/all-meals.component';
 import { MainMealsComponent } from './main-meals/main-meals.component';
 import {MealServiceService} from "./meal-service.service";
+import { UpdateMealComponent } from './update-meal/update-meal.component';
 
 
 
@@ -32,7 +33,8 @@ const routes: Routes = [
     NewMealComponent,
       ValidatorDialogComponent,
       AllMealsComponent,
-      MainMealsComponent
+      MainMealsComponent,
+      UpdateMealComponent
 
   ],
     imports: [

@@ -12,12 +12,20 @@ export class MealServiceService {
 
 
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
+  private  GET_MEAL_BY_ID_URL = this.BASIC_ENDPOINT  + '/get';
   constructor(private httpClient: HttpClient) { }
   addMeal(meal: FormData ) { //  we have  to  add  a  token  after
     return this.httpClient.post <string>(this.ADD_MEAL_URL, meal).pipe(
          catchError( (error) => this.handleError(error))
     );
   }
+
+/*
+  getMealById(id: number) {
+       return this.httpClient.get(this.GET_MEAL_BY_ID_URL + '/' + id).pipe(
+           catchError( (error) => this.handleError(error))
+  }
+*/
 
     private handleError(error: HttpErrorResponse) {
          if  (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable){

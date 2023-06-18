@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, PatternValidator, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {ValidatorDialogComponent} from "../validator-dialog/validator-dialog.component";
+import {ValidatorDialogComponent} from "../dialogs/validator-dialog/validator-dialog.component";
 import {MealServiceService} from "../meal-service.service";
 import {Router} from "@angular/router";
 
