@@ -24,6 +24,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping(value  = MENUS_BASIC_URL_ADMIN)
+@CrossOrigin(origins = "http://localhost:4200")
 public class MenuController implements   IMenuController {
 
     private final MenuService menuService;

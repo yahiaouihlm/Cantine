@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping(value = MEALS_BASIC_URL_ADMIN)
-
+@CrossOrigin(origins = "http://localhost:4200")
 public class MealController implements IMealController {
 
 
