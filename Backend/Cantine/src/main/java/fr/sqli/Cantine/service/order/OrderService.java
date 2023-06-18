@@ -74,34 +74,39 @@ public class OrderService implements IOrderService {
         if(student.isEmpty())
             throw new StudentNotFoundException("STUDENT NOT FOUND");
 
-        List<MealEntity> meals = new ArrayList<>();
-        if (orderDtoIn.getMealsId().size() == 0  &&   orderDtoIn.getMenusId().size() ==0 ) {
-           OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
-           throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
+
+        if (orderDtoIn.getMealsId() !=  null && orderDtoIn.getMenusId() !=  null && orderDtoIn.getMealsId().size() == 0  &&   orderDtoIn.getMenusId().size() ==0 ) {
+            OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
+            throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
         }
 
-        for (var mealId : orderDtoIn.getMealsId()) {
-            var meal = this.mealDao.findById(mealId);
-            if(meal.isEmpty()){
-                OrderService.LOG.error("MEAL WITH  ID  = "+ mealId  +" NOT FOUND");
-                throw new MealNotFoundException("MEAL WITH  ID  = "+ mealId  +" NOT FOUND");
+
+        List<MealEntity> meals = new ArrayList<>();
+
+        if (orderDtoIn.getMealsId() !=  null ) {
+            for (var mealId : orderDtoIn.getMealsId()) {
+                var meal = this.mealDao.findById(mealId);
+                if (meal.isEmpty()) {
+                    OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " NOT FOUND");
+                    throw new MealNotFoundException("MEAL WITH  ID  = " + mealId + " NOT FOUND");
+                }
+                meals.add(meal.get());
+                totalPrice = totalPrice.add(meal.get().getPrice());
             }
-            meals.add(meal.get());
-            totalPrice = totalPrice.add(meal.get().getPrice());
         }
 
         List<MenuEntity> menus = new ArrayList<>();
-
-        for (var menuId : orderDtoIn.getMenusId()) {
-            var menu = this.menuDao.findById(menuId);
-            if(menu.isEmpty()){
-                OrderService.LOG.error("MENU WITH  ID  = "+ menuId  +" NOT FOUND");
-                throw new MenuNotFoundException("MENU WITH  ID  = "+ menuId  +" NOT FOUND");
+        if (orderDtoIn.getMenusId() !=  null ) {
+            for (var menuId : orderDtoIn.getMenusId()) {
+                var menu = this.menuDao.findById(menuId);
+                if (menu.isEmpty()) {
+                    OrderService.LOG.error("MENU WITH  ID  = " + menuId + " NOT FOUND");
+                    throw new MenuNotFoundException("MENU WITH  ID  = " + menuId + " NOT FOUND");
+                }
+                menus.add(menu.get());
+                totalPrice = totalPrice.add(menu.get().getPrice());
             }
-              menus.add(menu.get());
-              totalPrice = totalPrice.add(menu.get().getPrice());
         }
-
         // Calculate  total  price  of  order
 
         var taxOpt = this.taxDao.findAll() ;
