@@ -3,9 +3,11 @@ package fr.sqli.Cantine.service.order;
 
 import fr.sqli.Cantine.dao.*;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
+import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
@@ -20,6 +22,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +78,67 @@ public class AddOrderTest {
         this.env = null;
     }
 
+    /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID *****************************/
+
+
+
+
+    /***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID *****************************/
+
+
+    @Test
+    void  addOrderWithMealNotFoundAndOtherFoundMeal() {
+        var  mealIdFound =  1 ;
+        var  mealIdNotFound =  2 ;
+
+        //  make  only  the  information    that we  need  for  the  test  ( Our  Meal Mock  )
+         MealEntity mealEntity = new MealEntity();
+            mealEntity.setId(mealIdFound);;
+            mealEntity.setPrice(new BigDecimal(10));
+
+        this.orderDtoIn.setMealsId(List.of(mealIdFound , mealIdNotFound));
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.mealDao.findById(mealIdNotFound)).thenReturn(Optional.empty());
+         Mockito.when(this.mealDao.findById(mealIdFound)).thenReturn(Optional.of(mealEntity));
+
+
+        Assertions.assertThrows(MealNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealIdNotFound);
+        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealIdFound);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void  addOrderWithMealNotFoundWithEmptyMenusIdTest () {
+        var  mealId =  1 ;
+         this.orderDtoIn.setMenusId(null);
+        this.orderDtoIn.setMealsId(List.of(mealId));
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.mealDao.findById(mealId)).thenReturn(Optional.empty());
+        Assertions.assertThrows(MealNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealId);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+    }
+
+
+    @Test
+    void  addOrderWithMealNotFoundTest () {
+        var  mealId =  1 ;
+        this.orderDtoIn.setMealsId(List.of(mealId));
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.mealDao.findById(mealId)).thenReturn(Optional.empty());
+        Assertions.assertThrows(MealNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealId);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+    }
 
 
     /***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID  AND MENUS ID  *****************************/
