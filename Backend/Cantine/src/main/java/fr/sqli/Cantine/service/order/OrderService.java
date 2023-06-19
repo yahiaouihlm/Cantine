@@ -90,6 +90,9 @@ public class OrderService implements IOrderService {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " NOT FOUND");
                     throw new MealNotFoundException("MEAL WITH  ID  = " + mealId + " NOT FOUND");
                 }
+                if  (meal.get().getStatus() ==  0) {
+
+                }
                 meals.add(meal.get());
                 totalPrice = totalPrice.add(meal.get().getPrice());
             }
