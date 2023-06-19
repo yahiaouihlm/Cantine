@@ -80,6 +80,25 @@ public class AddOrderTest {
         this.env = null;
     }
 
+
+
+
+
+    @Test
+    void addOrderWithEmptyMealsAndMenu () {
+        this.orderDtoIn.setMealsId(List.of());
+        this.orderDtoIn.setMenusId(List.of());
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Assertions.assertThrows(InvalidOrderException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.menuDao , Mockito.times(0)).findById(Mockito.any());
+        Mockito.verify(this.mealDao , Mockito.times(0)).findById(Mockito.any());
+    }
+
+
+
+
     /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID *****************************/
     @Test
     void  addOrderWithMenuNotFoundAndOtherFoundMenu() {
@@ -214,7 +233,6 @@ public class AddOrderTest {
 
 
     /***************************  TESTS  ORDERS  INFORMATION  ***********************/
-
 
     @Test
     void addOrderWithNegativeMenusIdWithNullMealIdTest()  {
