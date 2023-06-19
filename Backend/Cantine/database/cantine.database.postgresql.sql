@@ -176,15 +176,15 @@ CREATE TABLE IF NOT EXISTS st_order_has_menu (
     FOREIGN KEY (menu_idmenu) REFERENCES menu (id) ON DELETE RESTRICT
 );
 
-CREATE TABLE "confirmation-token" (
-     id SERIAL PRIMARY KEY,
-     token VARCHAR(255) NOT NULL,
-     uuid   INT NOT NULL,
-     creation_date TIMESTAMP NOT NULL,
-     admin_id INTEGER REFERENCES admin(id),
-    student_id INTEGER REFERENCES student(id),
-         CONSTRAINT one_id_null CHECK (
-                 (admin_id IS NULL AND student_id IS NOT NULL) OR
-                 (admin_id IS NOT NULL AND student_id IS NULL)
-             )
+CREATE TABLE "confirmation-token"(
+    id            SERIAL PRIMARY KEY,
+    token         VARCHAR(255) NOT NULL,
+    uuid          INT          NOT NULL,
+    creation_date TIMESTAMP    NOT NULL,
+    admin_id      INTEGER REFERENCES admin (id),
+    student_id    INTEGER REFERENCES student (id),
+    CONSTRAINT one_id_null CHECK (
+            (admin_id IS NULL AND student_id IS NOT NULL) OR
+            (admin_id IS NOT NULL AND student_id IS NULL)
+        )
 );

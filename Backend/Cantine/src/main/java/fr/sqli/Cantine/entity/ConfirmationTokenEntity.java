@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import  jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name = "confirmation-token")
@@ -26,9 +27,13 @@ public class ConfirmationTokenEntity {
     private Date createdDate;
 
     @OneToOne(targetEntity = AdminEntity.class ,  fetch = FetchType.EAGER)
-    @JoinColumn( nullable = false , name = "admin_id")
-
+    @JoinColumn( name = "admin_id")
     private  AdminEntity admin ;
+
+
+    @OneToOne(targetEntity = StudentEntity.class ,  fetch = FetchType.EAGER)
+    @JoinColumn( name = "student_id")
+    private  StudentEntity student ;
 
 
     public ConfirmationTokenEntity(){
@@ -37,6 +42,13 @@ public class ConfirmationTokenEntity {
 
     public ConfirmationTokenEntity(AdminEntity admin) {
         this.admin = admin;
+        createdDate = new Date();
+        token = UUID.randomUUID().toString();
+        uuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
+    }
+
+    public ConfirmationTokenEntity(StudentEntity student) {
+        this.student = student;
         createdDate = new Date();
         token = UUID.randomUUID().toString();
         uuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
@@ -80,6 +92,16 @@ public class ConfirmationTokenEntity {
 
     public void setAdmin(AdminEntity admin) {
         this.admin = admin;
+    }
+
+
+    public StudentEntity getStudent() {
+        return student;
+    }
+
+
+    public void setStudent(StudentEntity student) {
+        this.student = student;
     }
 }
 
