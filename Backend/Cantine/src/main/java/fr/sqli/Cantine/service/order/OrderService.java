@@ -118,8 +118,8 @@ public class OrderService implements IOrderService {
 
         var  tax = taxOpt.get(0).getTax();
 
-        totalPrice = totalPrice.add(totalPrice.multiply(tax));
-
+        totalPrice = totalPrice.add(tax);
+        System.out.println("TOTAL PRICE  = "+ totalPrice);
 
         // check  if  student  has  enough  money  to  pay  for  the  order
 
@@ -145,6 +145,13 @@ public class OrderService implements IOrderService {
         orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(),LocalDateTime.now().getMinute(),LocalDateTime.now().getSecond()));
         var order  =  this.orderDao.save(orderEntity);
 
+        //  update Student  Waller
+        var  newStudentWallet  =  student.get().getWallet().subtract(totalPrice) ;
+        student.get().setWallet(newStudentWallet);
+        this.studentDao.save(student.get());
+
+
+
         String  qrCodeData = "Student  : " +student.get().getFirstname() + " " +student.get().getLastname()+
                 "\n"+" Student Email : " +student.get().getEmail() +
                 "\n" + " Order Id :" + order.getId() +
@@ -155,10 +162,6 @@ public class OrderService implements IOrderService {
         QrCodeGenerator.generateQrCode(qrCodeData,filePath );
 
 
-        //  update Student  Waller
-         var  newStudentWallet  =  student.get().getWallet().subtract(totalPrice) ;
-         student.get().setWallet(newStudentWallet);
-         this.studentDao.save(student.get());
 
          if  ((newStudentWallet.compareTo(new BigDecimal(10 )))<= 0 ){
              /* SEND THE NOTIFICATION  */
