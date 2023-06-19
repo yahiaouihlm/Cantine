@@ -237,9 +237,7 @@ public class AdminService implements IAdminService {
         }
         // if  there is    token  in database  delete  it mapped with    this  admin
         var confirmationTokenEntity = this.confirmationTokenDao.findByAdmin(adminEntity);
-        if (confirmationTokenEntity.isPresent()){
-            this.confirmationTokenDao.delete(confirmationTokenEntity.get());
-        }
+        confirmationTokenEntity.ifPresent(tokenEntity -> this.confirmationTokenDao.delete(tokenEntity));
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);

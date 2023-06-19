@@ -92,9 +92,7 @@ public class StudentService implements IStudentService {
         }
 
         var  confirmationTokenEntity =  this.confirmationTokenDao.findByStudent(studentEntity);
-        if (confirmationTokenEntity.isPresent()) {
-            this.confirmationTokenDao.delete(confirmationTokenEntity.get());
-        }
+        confirmationTokenEntity.ifPresent(tokenEntity -> this.confirmationTokenDao.delete(tokenEntity));
 
 
         var  confirmationToken =  new ConfirmationTokenEntity(studentEntity);
@@ -102,14 +100,14 @@ public class StudentService implements IStudentService {
 
         var url = this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
 
-        var  header = "<h1> Bonjour  "+studentEntity.getFirstname()+" "+studentEntity.getLastname()+"</h1>,";
+        var  header = "<h2> Bonjour  "+studentEntity.getFirstname()+" "+studentEntity.getLastname()+",</h2>";
 
         var body = "<p> Merci de vous être inscrit sur notre Cantière . Afin de finaliser votre inscription, veuillez confirmer votre adresse e-mail en cliquant sur le lien ci-dessous"  +
                 "<button><a href=\""+url+"\">Confirmer mon compte</a></button></p>";
 
         var  footer = "<p> Cordialement </p>"
                    + "<p> L'équipe de la cantine </p>"
-                  + "<p> <img src=\"http://localhost:8080/cantine/download/images/logos/logo-aston.png\" alt=\"SQLI\" width=\"200\" height=\"100\"> </p>";
+                  + "<img src=http://localhost:8080/cantine/download/images/logos/logo-aston.png> ";
 
        var message = header + body + footer;
 
