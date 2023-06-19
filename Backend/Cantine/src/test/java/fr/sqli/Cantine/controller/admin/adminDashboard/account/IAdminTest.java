@@ -59,7 +59,8 @@ public interface IAdminTest {
             Map.entry("InvalidId", "INVALID ID"),
             Map.entry("AdminNotFound", "ADMIN NOT FOUND"),
             Map.entry("MissingPram", "MISSING PARAMETER"),
-            Map.entry("InvalidEmail", "YOUR EMAIL IS NOT VALID")
+            Map.entry("InvalidEmail", "YOUR EMAIL IS NOT VALID"),
+            Map.entry("EnableAccount", "YOUR ACCOUNT IS ALREADY ENABLED")
     );
 
      static  AdminEntity createAdminWith(String email, FunctionEntity functionEntity){
