@@ -75,7 +75,7 @@ class AddStudentTest {
                  "images/png",                    // type MIME
                  new FileInputStream(IMAGE_TESTS_PATH)));
          ;  // contenu du fichier
-         this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService);
+         this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService, null );
 
      }
 
