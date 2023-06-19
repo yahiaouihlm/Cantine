@@ -15,6 +15,7 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.mailer.EmailSenderService;
+import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -221,7 +222,7 @@ public class AdminService implements IAdminService {
          return this.adminDao.save(adminEntity);
     }
 
-    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException {
+    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException {
 
             if (email == null ||  email.trim().isEmpty() ) {
             AdminService.LOG.error("email  is  not  valid");
@@ -232,7 +233,7 @@ public class AdminService implements IAdminService {
                 ()-> new AdminNotFound("ADMIN NOT FOUND")
         );
         if (adminEntity.getStatus() == 1){
-            throw  new InvalidPersonInformationException("YOUR ACCOUNT IS ALREADY ENABLED");
+            throw  new AccountAlreadyActivatedException("YOUR ACCOUNT IS ALREADY ENABLED");
         }
         // if  there is    token  in database  delete  it mapped with    this  admin
         var confirmationTokenEntity = this.confirmationTokenDao.findByAdmin(adminEntity);

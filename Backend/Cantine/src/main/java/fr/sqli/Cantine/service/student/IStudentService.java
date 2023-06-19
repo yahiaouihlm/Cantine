@@ -8,12 +8,18 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 
 public interface IStudentService {
+
+
+
+    void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException;
 
        void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 

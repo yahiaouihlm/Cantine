@@ -9,8 +9,10 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.student.StudentService;
+import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,14 @@ public class StudentController implements IStudentController {
    }
 
  /* TODO  :    change  get Student  Image  URl  */
+
+
+    @Override
+    public ResponseEntity<String> sendTokenStudent(@RequestParam("email") String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException {
+        this.studentService.sendTokenStudent(email);
+        return ResponseEntity.ok(TOKEN_SENT_SUCCESSFULLY);
+    }
+
     @Override
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
     public ResponseEntity<StudentDtout> getStudentById(@RequestParam("idStudent") Integer id) throws StudentNotFoundException, InvalidPersonInformationException {

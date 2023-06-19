@@ -8,9 +8,12 @@ import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFo
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
 
@@ -19,14 +22,23 @@ public interface IStudentController {
 
 
 
+    String  SEND_TOKEN_ENDPOINT = "/sendToken";
     String  STUDENT_SIGN_UP_ENDPOINT =  "/signUp";
 
     String  GET_STUDENT_BY_ID_ENDPOINT = "/getStudent";
 
    String UPDATE_STUDENT_INFO_ENDPOINT = "/update/studentInfo";
+
+
+
+   String  TOKEN_SENT_SUCCESSFULLY = "TOKEN SENT SUCCESSFULLY" ;
     String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
 
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
+
+
+    @PostMapping(SEND_TOKEN_ENDPOINT)
+    ResponseEntity<String> sendTokenStudent(String email ) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException;
 
     ResponseEntity<StudentDtout> getStudentById(Integer id) throws StudentNotFoundException, InvalidPersonInformationException;
 

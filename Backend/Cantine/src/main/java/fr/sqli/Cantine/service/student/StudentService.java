@@ -2,10 +2,12 @@ package fr.sqli.Cantine.service.student;
 
 
 
+import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.Cantine.dto.out.person.StudentDtout;
+import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
@@ -15,8 +17,11 @@ import fr.sqli.Cantine.service.images.ImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.Cantine.service.mailer.EmailSenderService;
+import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.env.Environment;
@@ -30,6 +35,7 @@ import java.math.BigDecimal;
 @Service
 public class StudentService implements IStudentService {
     private static final Logger LOG = LogManager.getLogger();
+    final String  SERVER_ADDRESS ;
     final  String DEFAULT_STUDENT_IMAGE;
     final  String  IMAGES_STUDENT_PATH ;
     final  String EMAIL_STUDENT_DOMAIN ;
@@ -38,21 +44,76 @@ public class StudentService implements IStudentService {
   private IStudentClassDao iStudentClassDao;
   private Environment environment;
 
+   private EmailSenderService emailSenderService;
   private ImageService imageService;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
+  private IConfirmationTokenDao confirmationTokenDao;
 
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
-            , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService) {
+            , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService ,  IConfirmationTokenDao confirmationTokenDao ,  EmailSenderService emailSenderService) {
         this.iStudentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
+        this.emailSenderService = emailSenderService;
         this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
         this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
         this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
         this.EMAIL_STUDENT_REGEX = "^[a-zA-Z0-9._-]+@" + EMAIL_STUDENT_DOMAIN + "$";
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.imageService = imageService;
+        this.confirmationTokenDao = confirmationTokenDao;
+        var  protocol = environment.getProperty("sqli.cantine.server.protocol");
+        var  host = environment.getProperty("sqli.cantine.server.ip.address");
+        var  port = environment.getProperty("sali.cantine.server.port");
+        this.SERVER_ADDRESS = protocol+host+":"+port;
 
+    }
+
+
+    /* TODO  ;  make  the  Tests */
+    @Override
+    public void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException {
+        if (email == null || email.isEmpty()) {
+            StudentService.LOG.error("email  is  null or  empty");
+            throw new InvalidPersonInformationException("INVALID EMAIL");
+        }
+
+
+        var studentEntity = this.studentDao.findByEmail(email.trim()).orElseThrow(
+                () -> {
+                    StudentService.LOG.error("student  is  not  found with  email  : {}", email) ;
+                    return new StudentNotFoundException("STUDENT NOT FOUND");
+                }
+        );
+
+        if (studentEntity.getStatus() == 1) {
+            StudentService.LOG.error("student  is  already  confirmed");
+            throw new AccountAlreadyActivatedException("STUDENT IS ALREADY CONFIRMED");
+        }
+
+        var  confirmationTokenEntity =  this.confirmationTokenDao.findByStudent(studentEntity);
+        if (confirmationTokenEntity.isPresent()) {
+            this.confirmationTokenDao.delete(confirmationTokenEntity.get());
+        }
+
+
+        var  confirmationToken =  new ConfirmationTokenEntity(studentEntity);
+        this.confirmationTokenDao.save(confirmationToken);
+
+        var url = this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
+
+        var  header = "<h1> Bonjour  "+studentEntity.getFirstname()+" "+studentEntity.getLastname()+"</h1>,";
+
+        var body = "<p> Merci de vous être inscrit sur notre Cantière . Afin de finaliser votre inscription, veuillez confirmer votre adresse e-mail en cliquant sur le lien ci-dessous"  +
+                "<button><a href=\""+url+"\">Confirmer mon compte</a></button></p>";
+
+        var  footer = "<p> Cordialement </p>"
+                   + "<p> L'équipe de la cantine </p>"
+                  + "<p> <img src=\"http://localhost:8080/cantine/download/images/logos/logo-aston.png\" alt=\"SQLI\" width=\"200\" height=\"100\"> </p>";
+
+       var message = header + body + footer;
+
+        this.emailSenderService.send(email, "Confirmation de votre compte", message);
     }
 
 

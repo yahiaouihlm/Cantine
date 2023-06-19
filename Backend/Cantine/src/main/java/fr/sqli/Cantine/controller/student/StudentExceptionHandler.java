@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.student;
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
+import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,12 @@ public class StudentExceptionHandler  {
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleStudentNotFound(StudentNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
+    }
+
+
+    @ExceptionHandler(AccountAlreadyActivatedException.class)
+    public ResponseEntity<ExceptionDtout> handleAccountAlreadyActivated(AccountAlreadyActivatedException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 
     @ExceptionHandler(ExistingStudentException.class)

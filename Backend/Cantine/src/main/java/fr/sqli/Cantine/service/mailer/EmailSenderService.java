@@ -22,7 +22,7 @@ public class EmailSenderService {
 
 
     @Async
-    public void sendEmail (MimeMessage message){
+    protected void sendEmail (MimeMessage message){
         javaMailSender.send(message);
     }
 
