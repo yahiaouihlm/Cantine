@@ -181,5 +181,10 @@ CREATE TABLE "confirmation-token" (
      token VARCHAR(255) NOT NULL,
      uuid   INT NOT NULL,
      creation_date TIMESTAMP NOT NULL,
-     admin_id INTEGER NOT NULL REFERENCES admin(id)
+     admin_id INTEGER REFERENCES admin(id),
+    student_id INTEGER REFERENCES student(id),
+         CONSTRAINT one_id_null CHECK (
+                 (admin_id IS NULL AND student_id IS NOT NULL) OR
+                 (admin_id IS NOT NULL AND student_id IS NULL)
+             )
 );
