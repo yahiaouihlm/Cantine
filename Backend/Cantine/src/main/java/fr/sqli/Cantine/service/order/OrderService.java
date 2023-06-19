@@ -13,6 +13,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
 import fr.sqli.Cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
@@ -64,7 +65,7 @@ public class OrderService implements IOrderService {
     /* TODO change  QRcode Data */
     /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException {
         orderDtoIn.checkOrderIDsValidity();
         var  student = this.studentDao.findById(orderDtoIn.getStudentId());
         var   totalPrice  =  BigDecimal.ZERO;
@@ -91,7 +92,8 @@ public class OrderService implements IOrderService {
                     throw new MealNotFoundException("MEAL WITH  ID  = " + mealId + " NOT FOUND");
                 }
                 if  (meal.get().getStatus() ==  0) {
-
+                    OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " IS NOT AVAILABLE");
+                    throw new UnavailableFoodException("MEAL  : " + meal.get().getLabel()+ " IS NOT AVAILABLE");
                 }
                 meals.add(meal.get());
                 totalPrice = totalPrice.add(meal.get().getPrice());
@@ -105,6 +107,10 @@ public class OrderService implements IOrderService {
                 if (menu.isEmpty()) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " NOT FOUND");
                     throw new MenuNotFoundException("MENU WITH  ID  = " + menuId + " NOT FOUND");
+                }
+                if (menu.get().getStatus() == 0) {
+                    OrderService.LOG.error("MENU WITH  ID  = " + menuId + " IS NOT AVAILABLE");
+                    throw new UnavailableFoodException("MENU  : " + menu.get().getLabel()+ " IS NOT AVAILABLE");
                 }
                 menus.add(menu.get());
                 totalPrice = totalPrice.add(menu.get().getPrice());
