@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.order;
 
 
+import com.google.zxing.WriterException;
 import fr.sqli.Cantine.dao.*;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
@@ -12,13 +13,12 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationExce
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -81,11 +82,108 @@ public class AddOrderTest {
         this.orderDtoIn = null;
         this.env = null;
     }
+ /*   @Test
+    @Disabled
+    void addOrderWithTheSomePrice () throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidOrderException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException {
+        // Init
+        MealEntity  meal1 = new MealEntity();
+        meal1.setId(1);
+        meal1.setPrice(BigDecimal.valueOf(8));
+
+        MealEntity  meal2 = new MealEntity();
+        meal2.setId(2);
+        meal2.setPrice(BigDecimal.valueOf(10));
+
+
+        MenuEntity  menu1 = new MenuEntity();
+        menu1.setId(1);
+        menu1.setPrice(BigDecimal.valueOf(14));
+
+        MenuEntity  menu2 = new MenuEntity();
+        menu2.setId(2);
+        menu2.setPrice(BigDecimal.valueOf(15));
+
+        TaxEntity taxEntity = new TaxEntity();
+        taxEntity.setTax(BigDecimal.valueOf(1));
+
+        var  somePrice = BigDecimal.valueOf(14).add(BigDecimal.valueOf(10)).add(BigDecimal.valueOf(8)).add(BigDecimal.valueOf(15)).add(BigDecimal.valueOf(1));
+
+        this.orderDtoIn.setMealsId(List.of(1 , 2));
+        this.orderDtoIn.setMenusId(List.of(1 , 2));
+
+        this.studentEntity.setWallet(somePrice);
+        // when
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.mealDao.findById(1)).thenReturn(Optional.of(meal1));
+        Mockito.when(this.mealDao.findById(2)).thenReturn(Optional.of(meal2));
+        Mockito.when(this.menuDao.findById(1)).thenReturn(Optional.of(menu1));
+        Mockito.when(this.menuDao.findById(2)).thenReturn(Optional.of(menu2));
+        Mockito.when(this.taxDao.findAll()).thenReturn(List.of(taxEntity));
+
+        this.orderService.addOrder(this.orderDtoIn);  //  we  make  the  test  here
+        // then
+        Assertions.assertEquals(this.studentEntity.getWallet() , BigDecimal.valueOf(0));
+
+
+
+
+
+    }
+
+*/
+
+
+
+    /************************ TEST ADD ORDER  WITH   Student  Balance ************************/
+
 
 
 
     @Test
-    void  addOrderWitTwoTax*InDataBase() {
+    void  addOrderWithInsufficientStudentBalance () {
+        //  Init
+        // we  make One  Test with  One  Menu  iN  The  Order
+        var menuIdFound = 1;
+        this.orderDtoIn.setMenusId(List.of(menuIdFound));
+        this.orderDtoIn.setMealsId(null);
+
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.setId(menuIdFound);
+        menuEntity.setPrice(BigDecimal.valueOf(10));
+        menuEntity.setStatus(1);
+
+        this.studentEntity.setWallet(BigDecimal.valueOf(5));
+
+        TaxEntity taxEntity = new TaxEntity();
+        taxEntity.setTax(BigDecimal.valueOf(1));
+
+
+        // when
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
+        Mockito.when(this.taxDao.findAll()).thenReturn(List.of(taxEntity));
+
+        // then
+
+        Assertions.assertThrows(InsufficientBalanceException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.menuDao , Mockito.times(1)).findById(1);
+        Mockito.verify(this.taxDao , Mockito.times(1)).findAll();
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+
+
+    }
+
+
+
+
+    /*************************** TESTS  TAX     ************************/
+
+
+    @Test
+    void  addOrderWitTwoTaxInDataBase() {
         // we  make One  Test with  One  Menu  iN  The  Order
         var  menuIdFound =  1 ;
         this.orderDtoIn.setMenusId(List.of(menuIdFound));
@@ -95,6 +193,7 @@ public class AddOrderTest {
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setId(menuIdFound);
         menuEntity.setPrice(BigDecimal.valueOf(10));
+        menuEntity.setStatus(1);
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
@@ -102,7 +201,8 @@ public class AddOrderTest {
 
         Assertions.assertThrows(TaxNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
         Mockito.verify(this.studentDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(1);
+        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.taxDao , Mockito.times(1)).findAll();
         Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
 
 
@@ -121,6 +221,7 @@ public class AddOrderTest {
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setId(menuIdFound);
         menuEntity.setPrice(BigDecimal.valueOf(10));
+        menuEntity.setStatus(1);
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
@@ -133,6 +234,49 @@ public class AddOrderTest {
 
 
     }
+    /***************************  TESTS  ORDERS  WITH   Unavailable  MENUS ID AND  MEALS  *****************************/
+    @Test
+    void  addOrderWithUnavailableMenu() {
+        this.orderDtoIn.setMealsId(null);
+        var  menuIdFound =  1 ;
+        this.orderDtoIn.setMenusId(List.of(menuIdFound));
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.setId(menuIdFound);
+        menuEntity.setPrice(BigDecimal.valueOf(10));
+        menuEntity.setStatus(0);
+
+        //  When
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
+
+
+        Assertions.assertThrows(UnavailableFoodException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void  addOrderWithUnavailableMeal() {
+          var  mealIdFound =  1 ;
+        this.orderDtoIn.setMenusId(null);
+        this.orderDtoIn.setMealsId(List.of(mealIdFound));
+        MealEntity mealEntity = new MealEntity();
+        mealEntity.setId(mealIdFound);
+        mealEntity.setPrice(BigDecimal.valueOf(10));
+        mealEntity.setStatus(0);
+
+        //  When
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.mealDao.findById(mealIdFound)).thenReturn(Optional.of(mealEntity));
+
+
+        Assertions.assertThrows(UnavailableFoodException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealIdFound);
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    }
+
 
 
     /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID AND  MEALS  *****************************/
@@ -165,6 +309,7 @@ public class AddOrderTest {
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setId(menuIdFound);
         menuEntity.setPrice(BigDecimal.valueOf(10));
+        menuEntity.setStatus(1);
 
         this.orderDtoIn.setMenusId(List.of( menuIdFound , menuIdNotFound));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
@@ -211,7 +356,7 @@ public class AddOrderTest {
          MealEntity mealEntity = new MealEntity();
             mealEntity.setId(mealIdFound);;
             mealEntity.setPrice(new BigDecimal(10));
-
+            mealEntity.setStatus(1);
         this.orderDtoIn.setMealsId(List.of(mealIdFound , mealIdNotFound));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.mealDao.findById(mealIdNotFound)).thenReturn(Optional.empty());
