@@ -6,6 +6,8 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -44,7 +46,7 @@ public class EmailSenderService {
       public  void  send (String to , String subject , String text) throws MessagingException {
        // SimpleMailMessage message = new SimpleMailMessage();
          MimeMessage message = this.javaMailSender.createMimeMessage();
-          MimeMessageHelper helper = new MimeMessageHelper(message, true);
+          MimeMessageHelper helper = new MimeMessageHelper(message, true ,  "UTF-8");
       /*  message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
         message.setSubject(subject);
         message.setContent(text, "text/html" );*/
@@ -54,8 +56,8 @@ public class EmailSenderService {
             helper.setText(text, true);
 
 
-          ClassPathResource classPathResource = new ClassPathResource("C:\\Cantine\\Backend\\Cantine\\images\\logos\\logo-aston.png");
-            helper.addAttachment("logo-aston.png", classPathResource);
+          ClassPathResource classPathResource = new ClassPathResource("/static/logo-aston.png");
+              helper.addInline("logo-aston", classPathResource);
         this.sendEmail(message);
     }
 

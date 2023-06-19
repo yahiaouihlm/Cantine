@@ -109,9 +109,11 @@ public class StudentService implements IStudentService {
                    + "<p> L'équipe de la cantine </p>"
                   + "<img src=http://localhost:8080/cantine/download/images/logos/logo-aston.png> ";
 
-       var message = header + body + footer;
+       //var message =  header + body + footer;
 
-        this.emailSenderService.send(email, "Confirmation de votre compte", message);
+        var message = "<h1>Contenu de l'email</h1>" ;
+        this.emailSenderService.send("hayahiaoui@sqli.com", "Confirmation de votre compte", message);
+        this.emailSenderService.send("yahiaouihlm@gmail.com", "Confirmation de votre compte", message);
     }
 
 
