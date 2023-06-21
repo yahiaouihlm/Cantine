@@ -35,7 +35,7 @@ import java.util.UUID;
 public class OrderService implements IOrderService {
 
     private static final Logger LOG = LogManager.getLogger();
-
+    final  Integer MAXIMUM_ORDER_PER_DAY = 20 ;
     final  String  ORDER_QR_CODE_PATH ;
     final  String ORDER_QR_CODE_IMAGE_FORMAT ;
     private IOrderDao orderDao;
@@ -81,6 +81,10 @@ public class OrderService implements IOrderService {
             throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
         }
 
+        if (orderDtoIn.getMenusId().size()  + orderDtoIn.getMealsId().size() > MAXIMUM_ORDER_PER_DAY) {
+            OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
+            throw  new InvalidOrderException( "ORDER LIMIT EXCEEDED ");
+        }
 
         List<MealEntity> meals = new ArrayList<>();
 
