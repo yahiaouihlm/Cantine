@@ -1,10 +1,12 @@
 package fr.sqli.Cantine.controller.order;
 
 
+import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
+import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,16 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddOrderTest {
+public class AddOrderTest   extends AbstractContainerConfig implements   IOrderTest{
     @Autowired
     private Environment env;
     @Autowired
@@ -36,10 +43,11 @@ public class AddOrderTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private Map <String, String>  formData;
+    private OrderDtoIn orderDtoIn;
     private MealEntity mealEntity;
     private MenuEntity menuEntity;
     private StudentEntity studentEntity;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 
     void  createMeal  ()   {
@@ -108,15 +116,15 @@ public class AddOrderTest {
         this.mealDao.deleteAll();
         this.menuDao.deleteAll();
         this.studentDao.deleteAll();
+        this.studentClassDao.deleteAll();
+
     }
 
     void  initFormData() {
-
-        this.formData = Map.of(
-                "studentId", this.studentEntity.getId().toString(),
-                "mealsId", List.of(this.mealEntity.getId()).toString(),
-                "menusId", List.of(this.menuEntity.getId()).toString()
-        );
+        this.orderDtoIn =  new OrderDtoIn();
+        this.orderDtoIn.setStudentId(this.studentEntity.getId());
+        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId()));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId()));
 
     }
 
@@ -132,6 +140,116 @@ public class AddOrderTest {
 
 
 
+
+
+
+    /**********************************  TESTS  STUDENT  ID ********************************/
+
+
+    @Test
+    void addOrderWithNotFoundStudentId () throws Exception {
+         this.orderDtoIn.setStudentId(this.studentEntity.getId() + 5 );   //    be sure  that  we  get  a  student  Does  not  exist
+
+        var   requestdata = this.objectMapper.writeValueAsString(orderDtoIn);
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("studentNotFound"))));
+
+    }
+
+
+
+    @Test
+    void addOrderWithNegativeStudentId () throws Exception {
+        this.orderDtoIn.setStudentId(-3);   //    be sure  that  we  get  a  student  Does  not  exist
+
+        var   requestdata = this.objectMapper.writeValueAsString(orderDtoIn);
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("StudentIsRequired"))));
+
+    }
+
+
+
+    @Test
+    void addOrderWithInvalidStudentId () throws Exception {
+        String  jsonRequest = """
+             {
+                "studentId": zenzklenfkz,
+                "mealsId": [90, 85, 95, 88, 92],
+                "menusId": [1, 2, 3, 4, 5]
+        }""" ;
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InvalidJsonFormat"))));
+
+    }
+
+
+
+
+
+    @Test
+    void addOrderWithNullStudentId () throws Exception {
+        this.orderDtoIn.setStudentId(null);
+        var   requestdata = this.objectMapper.writeValueAsString(orderDtoIn);
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("StudentIsRequired"))));
+
+    }
+
+
+
+    @Test
+       void addOrderWithOutStudentId () throws Exception {
+        // make    directly  the  request  without  studentId
+     String  jsonRequest = """
+             {
+                "mealsId": [90, 85, 95, 88, 92],
+                "menusId": [1, 2, 3, 4, 5]
+        }""" ;
+          var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                  ).contentType(MediaType.APPLICATION_JSON)
+                  .content(jsonRequest));
+
+            result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+            result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("StudentIsRequired"))));
+
+       }
+
+
+
+    @Test
+    void addOrderWithWrongJsonRequest() throws Exception {
+        // make    directly  the  request  without  studentId
+        String  jsonRequest = """
+             {
+             zsfzef
+                "mealsId": [90, 85, 95, 88
+        }""" ;
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InvalidJsonFormat"))));
+
+    }
 
 
 
