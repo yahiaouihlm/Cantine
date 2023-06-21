@@ -87,17 +87,17 @@ public class OrderService implements IOrderService {
             OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
             throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
         }
-       if  (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMenusId().size() > MAXIMUM_ORDER_PER_DAY){
+       if  (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMealsId().size() > MAXIMUM_ORDER_PER_DAY){
            OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-           throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED ");
+           throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED");
        }
        if (orderDtoIn.getMenusId()!=  null   && orderDtoIn.getMenusId().size() > MAXIMUM_ORDER_PER_DAY) {
             OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED ");
+            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED");
         }
         if (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMenusId()!=  null   && (orderDtoIn.getMenusId().size() + orderDtoIn.getMealsId().size()) > MAXIMUM_ORDER_PER_DAY) {
             OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED ");
+            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED");
         }
 
 

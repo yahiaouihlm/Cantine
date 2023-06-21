@@ -19,9 +19,12 @@ public class OrderHandlerException {
 
     @ExceptionHandler(OrderLimitExceededException.class)
     public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(OrderLimitExceededException e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ExceptionDtout(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
     }
 
+
+
+    //  one meal or  menu is not available
 
     @ExceptionHandler(UnavailableFoodException.class)
     public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(UnavailableFoodException e) {
