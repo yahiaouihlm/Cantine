@@ -165,8 +165,8 @@ public class OrderService implements IOrderService {
         orderEntity.setStatus(1);
 
         //  create the  QrCode  and  save  the  order  in  the  database
-        String  token =   UUID.randomUUID().toString();
-        orderEntity.setQRCode(token);
+        String  token = "qrcode" +  UUID.randomUUID();
+        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT );
 
 
 

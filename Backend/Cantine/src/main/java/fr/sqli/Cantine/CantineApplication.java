@@ -52,7 +52,7 @@ public class CantineApplication {
 		         			new File("images/menus"),
 	                		new File("images/persons/admin"),
 						    new File("images/persons/students"),
-						    new File("images/orders/qrcode")
+						    new File("images/orders")
 					       ).forEach( (file) -> {
 				   if  (!file.exists() || !file.isDirectory()){
 					   CantineApplication.LOG.fatal(" \u001B[31m FATAL ERROR APPLICATION EXITED BECAUSE {} DOES NOT EXISTS \u001B[0m",file.getName());
