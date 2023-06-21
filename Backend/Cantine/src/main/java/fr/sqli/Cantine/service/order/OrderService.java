@@ -13,6 +13,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.Cantine.service.order.exception.OrderLimitExceededException;
 import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
 import fr.sqli.Cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
@@ -61,11 +62,17 @@ public class OrderService implements IOrderService {
     }
 
 
+    /* TODO  FRO  ALL  THE  METHODS  WE  HAVE TO  CHECK  THE  VALIDITY  OF  parameters  */
+
      /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
     /* TODO change  QRcode Data */
     /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException {
+         if  (orderDtoIn ==  null)
+             throw  new InvalidOrderException("INVALID ORDER");
+
+
         orderDtoIn.checkOrderIDsValidity();
         var  student = this.studentDao.findById(orderDtoIn.getStudentId());
         var   totalPrice  =  BigDecimal.ZERO;
@@ -80,11 +87,21 @@ public class OrderService implements IOrderService {
             OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
             throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
         }
-
-        if (orderDtoIn.getMenusId().size()  + orderDtoIn.getMealsId().size() > MAXIMUM_ORDER_PER_DAY) {
+       if  (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMenusId().size() > MAXIMUM_ORDER_PER_DAY){
+           OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
+           throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED ");
+       }
+       if (orderDtoIn.getMenusId()!=  null   && orderDtoIn.getMenusId().size() > MAXIMUM_ORDER_PER_DAY) {
             OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-            throw  new InvalidOrderException( "ORDER LIMIT EXCEEDED ");
+            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED ");
         }
+        if (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMenusId()!=  null   && (orderDtoIn.getMenusId().size() + orderDtoIn.getMealsId().size()) > MAXIMUM_ORDER_PER_DAY) {
+            OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
+            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED ");
+        }
+
+
+
 
         List<MealEntity> meals = new ArrayList<>();
 

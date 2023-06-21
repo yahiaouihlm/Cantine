@@ -9,6 +9,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.Cantine.service.order.exception.OrderLimitExceededException;
 import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
@@ -26,5 +27,5 @@ public interface IOrderController {
 
    String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
     @PostMapping(IOrderController.ADD_ORDER_URL)
-    ResponseEntity <String>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException;
+    ResponseEntity <String>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException;
 }
