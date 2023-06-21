@@ -4,6 +4,7 @@ package fr.sqli.Cantine.controller.order;
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.Cantine.service.order.exception.OrderLimitExceededException;
 import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class OrderHandlerException {
 
+
+
+
+    @ExceptionHandler(OrderLimitExceededException.class)
+    public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(OrderLimitExceededException e) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ExceptionDtout(e.getMessage()));
+    }
 
 
     @ExceptionHandler(UnavailableFoodException.class)
