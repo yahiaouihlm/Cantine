@@ -141,6 +141,23 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     }
 
 
+    @Test
+    void  addOrderWithEnoughStudentWallet () throws Exception {
+        this.studentEntity.setWallet(BigDecimal.valueOf(1));
+        this.studentDao.save(this.studentEntity);
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+        result.andExpect(MockMvcResultMatchers.status().isPaymentRequired());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InsufficientBalance"))));
+    }
+
+
+
+
 
     /**********************************  TESTS Order With Tax  ********************************/
 
@@ -154,7 +171,7 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
                 ).contentType(MediaType.APPLICATION_JSON)
                 .content(requestdata));
         result.andExpect(MockMvcResultMatchers.status().isInternalServerError());
-        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage("TAX NOT FOUND")));
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("TaxNotFound"))));
     }
 
     @Test
@@ -169,7 +186,7 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
                  ).contentType(MediaType.APPLICATION_JSON)
                  .content(requestdata));
          result.andExpect(MockMvcResultMatchers.status().isInternalServerError());
-            result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage("TAX NOT FOUND")));
+            result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("TaxNotFound"))));
      }
 
 

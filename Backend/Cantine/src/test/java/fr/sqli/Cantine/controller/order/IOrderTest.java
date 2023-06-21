@@ -27,6 +27,7 @@ public interface IOrderTest {
             Map.entry("OrderLimit",  "ORDER LIMIT EXCEEDED"),
             Map.entry("MealNotFound",  "MEAL NOT FOUND"),
             Map.entry("MenuNotFound",  "MENU NOT FOUND") ,
+            Map.entry("TaxNotFound",  "TAX NOT FOUND"),
             Map.entry("InsufficientBalance",  "YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER")
     );
 
