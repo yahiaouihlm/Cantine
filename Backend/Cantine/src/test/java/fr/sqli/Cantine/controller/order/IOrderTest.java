@@ -20,7 +20,10 @@ public interface IOrderTest {
     Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("StudentIsRequired",  "STUDENT ID IS  REQUIRED"),
             Map.entry("InvalidJsonFormat",  "INVALID JSON FORMAT"),
-            Map.entry("studentNotFound",  "STUDENT NOT FOUND")
+            Map.entry("studentNotFound",  "STUDENT NOT FOUND"),
+            Map.entry("MealsOrMenusAreRequired",  "MEALS OR MENUS ARE REQUIRED"),
+            Map.entry("InvalidMealId",  "INVALID MEAL ID"),
+            Map.entry("InvalidMenuId",  "INVALID MENU ID")
     );
 
 

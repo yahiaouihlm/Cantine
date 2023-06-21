@@ -136,7 +136,55 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
         initFormData();
     }
 
+    /**********************************  TESTS  MEALS  AND  MENUS   IDs ********************************/
 
+    @Test
+    void addOrderWithNegativeMenuId () throws Exception {
+        this.orderDtoIn.setMenusId(List.of(1 ,  -3  ));   //    be sure  that  we  get  a  student  Does  not  exist
+        this.orderDtoIn.setMealsId(null);
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InvalidMenuId"))));
+
+    }
+
+    @Test
+    void addOrderWithNegativeMealId () throws Exception {
+        this.orderDtoIn.setMealsId(List.of(1 ,  -3  ));   //    be sure  that  we  get  a  student  Does  not  exist
+        this.orderDtoIn.setMenusId(null);
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InvalidMealId"))));
+
+    }
+
+    @Test
+    void addOrderWithOutMenuAndMealId () throws Exception {
+        this.orderDtoIn.setMealsId(null);   //    be sure  that  we  get  a  student  Does  not  exist
+        this.orderDtoIn.setMenusId(null);
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("MealsOrMenusAreRequired"))));
+
+    }
 
 
 
