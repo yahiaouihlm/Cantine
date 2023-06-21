@@ -110,7 +110,7 @@ public class OrderService implements IOrderService {
                 var meal = this.mealDao.findById(mealId);
                 if (meal.isEmpty()) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " NOT FOUND");
-                    throw new MealNotFoundException("MEAL WITH  ID  = " + mealId + " NOT FOUND");
+                    throw new MealNotFoundException("MEAL WITH  ID : " +mealId+ " NOT FOUND");
                 }
                 if  (meal.get().getStatus() ==  0) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " IS NOT AVAILABLE");
@@ -127,11 +127,11 @@ public class OrderService implements IOrderService {
                 var menu = this.menuDao.findById(menuId);
                 if (menu.isEmpty()) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " NOT FOUND");
-                    throw new MenuNotFoundException("MENU WITH  ID  = " + menuId + " NOT FOUND");
+                    throw new MenuNotFoundException("MENU WITH  ID: "  + menuId + " NOT FOUND");
                 }
                 if (menu.get().getStatus() == 0) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MENU  : " + menu.get().getLabel()+ " IS NOT AVAILABLE");
+                    throw new UnavailableFoodException("MENU WITH   : " + menu.get().getLabel()+ " IS NOT AVAILABLE");
                 }
                 menus.add(menu.get());
                 totalPrice = totalPrice.add(menu.get().getPrice());
