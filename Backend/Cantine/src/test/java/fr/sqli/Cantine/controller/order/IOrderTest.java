@@ -23,7 +23,8 @@ public interface IOrderTest {
             Map.entry("studentNotFound",  "STUDENT NOT FOUND"),
             Map.entry("MealsOrMenusAreRequired",  "MEALS OR MENUS ARE REQUIRED"),
             Map.entry("InvalidMealId",  "INVALID MEAL ID"),
-            Map.entry("InvalidMenuId",  "INVALID MENU ID")
+            Map.entry("InvalidMenuId",  "INVALID MENU ID"),
+            Map.entry("OrderLimit",  "ORDER LIMIT EXCEEDED")
     );
 
 

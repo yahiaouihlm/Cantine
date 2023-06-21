@@ -140,9 +140,57 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
 
 
 
+    /**********************************  TESTS Order Limits  ********************************/
+
+    @Test
+
+    void  addOrderWitExceedMenuAndMealOrderLimitTest() throws Exception {
+        this.orderDtoIn.setMealsId(List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 ));
+        this.orderDtoIn.setMenusId(List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10  ));
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("OrderLimit"))));
+    }
+
+    @Test
+
+    void  addOrderWitExceedMenuOrderLimitTest() throws Exception {
+        this.orderDtoIn.setMealsId(null);
+        this.orderDtoIn.setMenusId(List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 , 21 ));
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("OrderLimit"))));
+    }
 
 
 
+    @Test
+
+    void  addOrderWitExceedMealOrderLimitTest() throws Exception {
+        this.orderDtoIn.setMenusId(null);
+        this.orderDtoIn.setMealsId(List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 , 21 ));
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("OrderLimit"))));
+    }
 
 
 
