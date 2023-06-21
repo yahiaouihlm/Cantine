@@ -5,6 +5,8 @@ import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.*;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.*;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,6 +41,9 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     private ITaxDao  taxDao;
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private IOrderDao orderDao;
 
     private OrderDtoIn orderDtoIn;
     private MealEntity mealEntity;
@@ -116,6 +122,7 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     }
 
     void  cleanDB() {
+        this.orderDao.deleteAll();
         this.taxDao.deleteAll();
         this.mealDao.deleteAll();
         this.menuDao.deleteAll();
@@ -139,6 +146,40 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
         initDB();
         initFormData();
     }
+
+
+
+    @Test
+    void  addOrderTest () throws Exception {
+
+        var someprice =  this.mealEntity.getPrice().add(this.menuEntity.getPrice()).add(this.taxEntity.getTax());
+        var  studentWallet = this.studentEntity.getWallet();
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.content().string(ORDER_ADDED_SUCCESSFULLY));
+
+        var savedStudent =  this.studentDao.findById(this.studentEntity.getId()).get();
+       var  savedOrder =  this.orderDao.findByStudentId(savedStudent.getId()).get(0);
+
+        Assertions.assertTrue(someprice.compareTo(savedOrder.getPrice()) == 0 );
+
+        Assertions.assertTrue(studentWallet.subtract(someprice).compareTo(savedStudent.getWallet()) == 0 );
+        var  qrcodeImagePath  =  this.env.getProperty("sqli.canine.order.qrcode.path")+savedOrder.getQRCode() ;
+        File file = new File(qrcodeImagePath );
+
+
+        System.out.println(env.getProperty("sqli.canine.order.qrcode.path")+savedOrder.getQRCode());
+        Assertions.assertTrue(file.exists());
+       Assertions.assertTrue(file.delete());
+
+
+    }
+
+
 
 
     @Test
