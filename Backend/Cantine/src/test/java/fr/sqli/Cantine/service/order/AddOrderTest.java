@@ -15,6 +15,7 @@ import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationExce
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.Cantine.service.order.exception.OrderLimitExceededException;
 import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
@@ -51,8 +52,7 @@ public class AddOrderTest {
     private OrderDtoIn orderDtoIn;
 
     private StudentEntity  studentEntity;
-
-
+    final  Integer MAXIMUM_ORDER_PER_DAY = 20 ;
     @BeforeEach
     void  SetUp  () {
         this.env  = new MockEnvironment();
@@ -132,6 +132,54 @@ public class AddOrderTest {
 
 */
 
+    /************************ TEST ADD ORDER LIMIT  ************************/
+    @Test
+    void  addOrderWitExceedMenuAndMealOrderLimitTest() {
+        List<Integer> meals = List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11  );
+        List<Integer> menu =  List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 );
+        // we  make One  Test with  One  Menu  iN  The  Order
+        this.orderDtoIn.setMenusId(menu);
+        this.orderDtoIn.setMealsId(meals);
+
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Assertions.assertThrows(OrderLimitExceededException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+
+    }
+    @Test
+    void  addOrderWitExceedMenuOrderLimitTest() {
+        List<Integer> menu =  List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 , 21 );
+        // we  make One  Test with  One  Menu  iN  The  Order
+        this.orderDtoIn.setMenusId(menu);
+        this.orderDtoIn.setMealsId(null);
+
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Assertions.assertThrows(OrderLimitExceededException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+
+    }
+
+    @Test
+    void  addOrderWitExceedMealOrderLimitTest() {
+        List<Integer> meals =  List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 , 21 );
+        // we  make One  Test with  One  Menu  iN  The  Order
+        this.orderDtoIn.setMenusId(meals);
+        this.orderDtoIn.setMealsId(null);
+
+        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
+        Assertions.assertThrows(OrderLimitExceededException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+
+        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+
+
+    }
 
 
     /************************ TEST ADD ORDER  WITH   Student  Balance ************************/
@@ -487,6 +535,14 @@ public class AddOrderTest {
         Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
     }
 
+
+
+    @Test
+    void addOrderWithNullBody () {
+
+        Assertions.assertThrows(InvalidOrderException.class , () -> this.orderService.addOrder(null));
+        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    }
 
 
 
