@@ -2,10 +2,7 @@ package fr.sqli.Cantine.controller.order;
 
 
 import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.dao.IStudentClassDao;
-import fr.sqli.Cantine.dao.IStudentDao;
+import fr.sqli.Cantine.dao.*;
 import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,12 +35,15 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     @Autowired
     private IStudentClassDao studentClassDao;
     @Autowired
+    private ITaxDao  taxDao;
+    @Autowired
     private MockMvc mockMvc;
 
     private OrderDtoIn orderDtoIn;
     private MealEntity mealEntity;
     private MenuEntity menuEntity;
     private StudentEntity studentEntity;
+    private  TaxEntity  taxEntity;
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -102,6 +102,12 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
 
 
     void  initDB() {
+
+        TaxEntity  taxEntity = new TaxEntity();
+        taxEntity.setTax(BigDecimal.valueOf(2));
+        this.taxEntity = this.taxDao.save(taxEntity);
+
+
        createMeal();
        createMenu();
        createStudent();
@@ -110,6 +116,7 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     }
 
     void  cleanDB() {
+        this.taxDao.deleteAll();
         this.mealDao.deleteAll();
         this.menuDao.deleteAll();
         this.studentDao.deleteAll();
@@ -132,6 +139,41 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
         initDB();
         initFormData();
     }
+
+
+
+    /**********************************  TESTS Order With Tax  ********************************/
+
+    @Test
+    void  addOrderWithOutTaxInDB () throws Exception {
+        this.taxDao.deleteAll();
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+        result.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage("TAX NOT FOUND")));
+    }
+
+    @Test
+     void  addOrderWithTwoTaxInDB () throws Exception {
+         TaxEntity  taxEntity = new TaxEntity();
+            taxEntity.setTax(BigDecimal.valueOf(4));
+          this.taxDao.save(taxEntity);
+
+         var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+         var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                 ).contentType(MediaType.APPLICATION_JSON)
+                 .content(requestdata));
+         result.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+            result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage("TAX NOT FOUND")));
+     }
+
+
+
     /**********************************  TESTS Order With Meal  Or  Menu   Unavailable   ********************************/
 
 

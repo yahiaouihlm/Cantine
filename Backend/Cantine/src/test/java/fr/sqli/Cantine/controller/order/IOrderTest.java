@@ -26,7 +26,8 @@ public interface IOrderTest {
             Map.entry("InvalidMenuId",  "INVALID MENU ID"),
             Map.entry("OrderLimit",  "ORDER LIMIT EXCEEDED"),
             Map.entry("MealNotFound",  "MEAL NOT FOUND"),
-            Map.entry("MenuNotFound",  "MENU NOT FOUND")
+            Map.entry("MenuNotFound",  "MENU NOT FOUND") ,
+            Map.entry("InsufficientBalance",  "YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER")
     );
 
     Map<String, String> discontinuedexceptionsMap = Map.ofEntries(
