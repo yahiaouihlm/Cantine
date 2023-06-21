@@ -135,7 +135,78 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
         initDB();
         initFormData();
     }
+   /**********************************  TESTS Order With Meal  Or  Menu  Not  Found ********************************/
 
+
+   @Test
+
+   void  addOrderWitMenuNotAndExistingOneTest() throws Exception {
+       var  menuNotFound =  this.menuDao.findById(this.menuEntity.getId()).get().getId() + 4;
+       this.orderDtoIn.setMenusId(List.of(menuNotFound , this.menuEntity.getId()));
+       this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId()) );
+
+       var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+       var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+               ).contentType(MediaType.APPLICATION_JSON)
+               .content(requestdata));
+
+       result.andExpect(MockMvcResultMatchers.status().isNotFound());
+       result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("MenuFor") + menuNotFound + discontinuedexceptionsMap.get("NotFound"))));
+   }
+
+
+    @Test
+
+    void  addOrderWitMealNotFoundAndExistingOneTest() throws Exception {
+        var  mealNotFoundId =  this.mealDao.findById(this.mealEntity.getId()).get().getId() + 4;
+        this.orderDtoIn.setMealsId(List.of(mealNotFoundId ,  this.mealEntity.getId()));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId() ) );
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isNotFound());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("NealFor") + mealNotFoundId + discontinuedexceptionsMap.get("NotFound"))) ) ;
+    }
+
+   @Test
+
+   void  addOrderWitMenuNotFoundTest() throws Exception {
+       var  menuNotFound =  this.menuDao.findById(this.menuEntity.getId()).get().getId() + 4;
+       this.orderDtoIn.setMenusId(List.of(menuNotFound));
+       this.orderDtoIn.setMealsId(null );
+
+       var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+       var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+               ).contentType(MediaType.APPLICATION_JSON)
+               .content(requestdata));
+
+       result.andExpect(MockMvcResultMatchers.status().isNotFound());
+       result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("MenuFor") + menuNotFound + discontinuedexceptionsMap.get("NotFound"))));
+   }
+
+
+    @Test
+
+   void  addOrderWitMealNotFoundTest() throws Exception {
+       var  mealNotFoundId =  this.mealDao.findById(this.mealEntity.getId()).get().getId() + 4;
+       this.orderDtoIn.setMealsId(List.of(mealNotFoundId));
+       this.orderDtoIn.setMenusId(null );
+
+       var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+       var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+               ).contentType(MediaType.APPLICATION_JSON)
+               .content(requestdata));
+
+       result.andExpect(MockMvcResultMatchers.status().isNotFound());
+       result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("NealFor") + mealNotFoundId + discontinuedexceptionsMap.get("NotFound"))));
+   }
 
 
 
@@ -359,7 +430,18 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
 
     }
 
+    @Test
+    void addOrderWithNullRequest() throws Exception {
+        // make    directly  the  request  without  studentId
 
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                );
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InvalidJsonFormat"))));
+
+    }
 
 
     }

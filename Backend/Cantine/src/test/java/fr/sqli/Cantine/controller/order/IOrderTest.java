@@ -24,7 +24,16 @@ public interface IOrderTest {
             Map.entry("MealsOrMenusAreRequired",  "MEALS OR MENUS ARE REQUIRED"),
             Map.entry("InvalidMealId",  "INVALID MEAL ID"),
             Map.entry("InvalidMenuId",  "INVALID MENU ID"),
-            Map.entry("OrderLimit",  "ORDER LIMIT EXCEEDED")
+            Map.entry("OrderLimit",  "ORDER LIMIT EXCEEDED"),
+            Map.entry("MealNotFound",  "MEAL NOT FOUND"),
+            Map.entry("MenuNotFound",  "MENU NOT FOUND")
+    );
+
+    Map<String, String> discontinuedexceptionsMap = Map.ofEntries(
+            Map.entry("MenuFor",  "MENU WITH  ID: " ),
+            Map.entry("NealFor",  "MEAL WITH  ID : "),
+            Map.entry("NotFound",  " NOT FOUND")
+
     );
 
 
