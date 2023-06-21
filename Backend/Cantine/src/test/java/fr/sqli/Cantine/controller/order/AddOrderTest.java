@@ -10,7 +10,6 @@ import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.Cantine.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +22,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -135,12 +132,103 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
         initDB();
         initFormData();
     }
-   /**********************************  TESTS Order With Meal  Or  Menu  Not  Found ********************************/
+    /**********************************  TESTS Order With Meal  Or  Menu   Unavailable   ********************************/
 
 
+    @Test
+
+    void addOrderWitMenuUnavailableAndExistingOneTest() throws Exception {
+        this.menuEntity.setStatus(0);
+        var  savedMenu=  this.menuDao.save(this.menuEntity);
+        var  menuUnavailableId =  savedMenu.getId();
+        this.orderDtoIn.setMealsId(List.of());
+        this.orderDtoIn.setMenusId(List.of(menuUnavailableId,   2 )  );
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isServiceUnavailable());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("MenuForUnavailable") + savedMenu.getLabel() + discontinuedexceptionsMap.get("Unavailable"))));
+    }
+
+
+    @Test
+
+    void addOrderWitMealUnavailableAndOtherOneTest() throws Exception {
+        this.mealEntity.setStatus(0);
+        var  savedMeal =  this.mealDao.save(this.mealEntity);
+        var  mealUnavailableId =  savedMeal.getId();
+        this.orderDtoIn.setMealsId(List.of(mealUnavailableId , 2 ));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId()) );
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isServiceUnavailable());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("MealForUnavailable") + savedMeal.getLabel() + discontinuedexceptionsMap.get("Unavailable"))) ) ;
+    }
+
+
+
+
+
+
+
+
+    @Test
+    void  addOrderWitMenuUnavailableTest() throws Exception {
+        this.menuEntity.setStatus(0);
+        var  savedMenu=  this.menuDao.save(this.menuEntity);
+        var  menuUnavailableId =  savedMenu.getId();
+        this.orderDtoIn.setMealsId(null);
+        this.orderDtoIn.setMenusId(List.of(menuUnavailableId) );
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isServiceUnavailable());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("MenuForUnavailable") + savedMenu.getLabel() + discontinuedexceptionsMap.get("Unavailable"))));
+    }
+
+
+
+
+    @Test
+    void  addOrderWitMealUnavailableTest() throws Exception {
+         this.mealEntity.setStatus(0);
+        var  savedMeal =  this.mealDao.save(this.mealEntity);
+        var  mealUnavailableId =  savedMeal.getId();
+        this.orderDtoIn.setMealsId(List.of(mealUnavailableId));
+        this.orderDtoIn.setMenusId(null );
+
+        var   requestdata = this.objectMapper.writeValueAsString(this.orderDtoIn);
+
+        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+                ).contentType(MediaType.APPLICATION_JSON)
+                .content(requestdata));
+
+        result.andExpect(MockMvcResultMatchers.status().isServiceUnavailable());
+        result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(discontinuedexceptionsMap.get("MealForUnavailable") + savedMeal.getLabel() + discontinuedexceptionsMap.get("Unavailable"))));
+    }
+
+
+
+
+
+
+    /**********************************  TESTS Order With Meal  Or  Menu  Not  Found ********************************/
    @Test
 
-   void  addOrderWitMenuNotAndExistingOneTest() throws Exception {
+   void  addOrderWitMenuNotFoundAndExistingOneTest() throws Exception {
        var  menuNotFound =  this.menuDao.findById(this.menuEntity.getId()).get().getId() + 4;
        this.orderDtoIn.setMenusId(List.of(menuNotFound , this.menuEntity.getId()));
        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId()) );

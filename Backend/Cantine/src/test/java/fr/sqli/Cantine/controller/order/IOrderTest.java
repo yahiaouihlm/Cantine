@@ -32,7 +32,10 @@ public interface IOrderTest {
     Map<String, String> discontinuedexceptionsMap = Map.ofEntries(
             Map.entry("MenuFor",  "MENU WITH  ID: " ),
             Map.entry("NealFor",  "MEAL WITH  ID : "),
-            Map.entry("NotFound",  " NOT FOUND")
+            Map.entry("NotFound",  " NOT FOUND") ,
+            Map.entry("MealForUnavailable",  "MEAL  : ") ,
+            Map.entry("MenuForUnavailable",  "MENU  : "),
+            Map.entry("Unavailable",  " IS UNAVAILABLE")
 
     );
 

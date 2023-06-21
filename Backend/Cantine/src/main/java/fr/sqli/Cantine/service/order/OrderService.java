@@ -114,7 +114,7 @@ public class OrderService implements IOrderService {
                 }
                 if  (meal.get().getStatus() ==  0) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MEAL  : " + meal.get().getLabel()+ " IS NOT AVAILABLE");
+                    throw new UnavailableFoodException("MEAL  : " + meal.get().getLabel()+ " IS UNAVAILABLE");
                 }
                 meals.add(meal.get());
                 totalPrice = totalPrice.add(meal.get().getPrice());
@@ -131,7 +131,7 @@ public class OrderService implements IOrderService {
                 }
                 if (menu.get().getStatus() == 0) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MENU WITH   : " + menu.get().getLabel()+ " IS NOT AVAILABLE");
+                    throw new UnavailableFoodException("MENU  : " + menu.get().getLabel()+ " IS UNAVAILABLE" );
                 }
                 menus.add(menu.get());
                 totalPrice = totalPrice.add(menu.get().getPrice());
