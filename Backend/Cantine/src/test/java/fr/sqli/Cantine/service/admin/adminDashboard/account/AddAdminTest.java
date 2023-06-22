@@ -416,6 +416,15 @@ class AddAdminTest {
     }
 
 
+    @Test
+    void addAdminWithNullRequest() throws IOException {
+        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp( null ));
+        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
+
+
 
 
 

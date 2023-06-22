@@ -1038,4 +1038,17 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
 
     }
 
+    @Test
+    void  addAdminWithNullRequest() throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("EmailRequire"))));
+
+
+    }
+
 }

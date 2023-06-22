@@ -32,7 +32,7 @@ import java.nio.file.Files;
 @AutoConfigureMockMvc
 public class UpdateAdminInformation  extends AbstractContainerConfig implements  IAdminTest {
 
-    private  final  String paramReq = "?"+"idAdmin"+"=";
+
     @Autowired
     private IFunctionDao functionDao;
     @Autowired
@@ -990,7 +990,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     @Test
     void updateAdminInfoWithEmptyIdAdmin () throws Exception {
         this.formData.set("id" , "");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO + paramReq)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -1005,6 +1005,16 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
+    }
+
+    @Test
+    void updateAdminInfoNullReq () throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
+
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())

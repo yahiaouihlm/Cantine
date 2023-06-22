@@ -37,6 +37,10 @@ public class AdminWorksService implements  IAdminFunctionService{
 
     @Override
     public void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException {
+        if (studentClassDtoIn == null) {
+            throw new InvalidStudentClassException("STUDENT CLASS IS NULL");
+        }
+
         StudentClassEntity studentClassEntity = studentClassDtoIn.toStudentClassEntity();
         if  (this.studentClassDao.findByName(studentClassEntity.getName()).isPresent()) {
             throw new ExistingStudentClassException("STUDENT CLASS ALREADY EXIST");

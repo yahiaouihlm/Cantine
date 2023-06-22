@@ -405,6 +405,13 @@ public class UpdateAdminInfoTests {
 
 
 
+    @Test
+    void updateAdminInfoWithNullRequest (){
+        assertThrows(InvalidPersonInformationException.class, () -> {
+            this.adminService.updateAdminInfo(  null );
+        });
+    }
+
 
 
 

@@ -125,6 +125,9 @@ public class AdminService implements IAdminService {
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException,
             ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
+         if  (adminDtoIn == null)
+             throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST");
+
          if (adminDtoIn.getEmail() !=null  || adminDtoIn.getPassword() !=null)
             throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
          var  idAdmin = adminDtoIn.getId();
@@ -178,6 +181,9 @@ public class AdminService implements IAdminService {
 
     @Override
     public AdminEntity signUp(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException {
+        if  (adminDtoIn == null)
+            throw  new InvalidPersonInformationException("INVALID INFORMATION REQUEST");
+
         AdminEntity adminEntity = adminDtoIn.toAdminEntityWithOutFunction();
 
         //check  function  validity
