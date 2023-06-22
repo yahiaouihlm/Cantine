@@ -47,6 +47,11 @@ public class MealService implements IMealService {
     @Override
     public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
+        if (mealDtoIn == null) {
+            MealService.LOG.debug("THE MEAL DTO CAN NOT BE NULL IN THE updateMeal METHOD ");
+            throw new InvalidMealInformationException("THE MEAL DTO CAN NOT BE NULL");
+        }
+
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
         var overemotional = this.mealDao.findById(idMeal);
@@ -106,8 +111,12 @@ public class MealService implements IMealService {
 
     @Override
     public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+         if (mealDtoIn == null) {
+             MealService.LOG.error("THE MEAL CAN NOT BE NULL");
+             throw new InvalidMealInformationException("THE MEAL CAN NOT BE NULL");
+         }
 
-        MealEntity meal = mealDtoIn.toMealEntity();
+            MealEntity meal = mealDtoIn.toMealEntity();
 
         //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {

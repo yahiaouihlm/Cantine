@@ -86,9 +86,18 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
         File sourceFile = new File(source);
         File destFile = new File(destination);
-        Files.copy(sourceFile.toPath(), destFile.toPath());
+        if (!destFile.exists()) {
+            Files.copy(sourceFile.toPath(), destFile.toPath());
+        }
     }
-
+    @AfterAll
+    static   void  removeImageOfTestIFExist (){
+        String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        File destFile = new File(destination);
+        if (destFile.exists()) {
+            destFile.delete();
+        }
+    }
 
     @BeforeEach
     void  init () throws IOException {
@@ -939,6 +948,17 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(this.exceptionsMap.get("InvalidArgument"))));
+    }
+
+
+    @Test
+    void updateMealWithNullRequestData() throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MEAL_URL)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(this.exceptionsMap.get("InvalidID"))));
     }
 
 

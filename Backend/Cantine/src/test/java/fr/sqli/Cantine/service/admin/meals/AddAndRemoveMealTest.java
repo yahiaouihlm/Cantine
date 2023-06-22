@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.web.multipart.MultipartFile;
@@ -283,6 +284,18 @@ class AddAndRemoveMealTest {
         this.mealDtoIn = new MealDtoIn();
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(imageService, Mockito.times(0)).uploadImage(mealDtoIn.getImage(), "images/meals");
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with null  MealDtoIn")
+    void AddMealWithNullRequestData() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
+
+        Assertions.assertThrows(InvalidMealInformationException.class,
+                () -> mealService.addMeal(null));
 
         Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
         Mockito.verify(imageService, Mockito.times(0)).uploadImage(mealDtoIn.getImage(), "images/meals");

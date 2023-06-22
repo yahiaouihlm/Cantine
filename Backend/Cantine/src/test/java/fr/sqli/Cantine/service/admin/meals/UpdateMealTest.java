@@ -229,4 +229,16 @@ public class UpdateMealTest {
         Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
 
     }
+
+    @Test
+    @DisplayName("Update Meal With Null MealDtoIn ")
+    void updateMealTestWithNullMealDtoIn() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        Assertions.assertThrows(InvalidMealInformationException.class, () -> {
+            mealService.updateMeal(mealDtoIn, null);
+        });
+        Mockito.verify(mealDao, Mockito.times(0)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
+
+    }
 }
