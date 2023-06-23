@@ -160,7 +160,7 @@ public class OrderService implements IOrderService {
         orderEntity.setMeals(meals);
         orderEntity.setMenus(menus);
         orderEntity.setStatus(1);
-
+        orderEntity.setCancelled(false);
         //  create the  QrCode  and  save  the  order  in  the  database
         String  token = "qrcode" +  UUID.randomUUID();
         orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT );

@@ -37,7 +37,7 @@ public class OrderEntity implements Serializable {
     private Integer status;
 
 
-    @Column(name = "isCancelled", nullable = false)
+    @Column(name = "iscancelled", nullable = false)
     private  boolean   isCancelled ;
 
 
