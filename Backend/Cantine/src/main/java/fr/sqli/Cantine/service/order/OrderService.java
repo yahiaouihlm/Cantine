@@ -230,7 +230,8 @@ public class OrderService implements IOrderService {
 
         var message = "YOUR ORDER WITH ID : " + orderOpt.get().getId() + " HAS BEEN CANCELED";
 
-        this.orderDao.deleteById(orderId);
+        orderOpt.get().setCancelled(true);
+        this.orderDao.save(orderOpt.get());
 
 
 
