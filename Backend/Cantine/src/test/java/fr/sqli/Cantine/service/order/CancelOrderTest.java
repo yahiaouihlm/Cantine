@@ -39,6 +39,19 @@ public class CancelOrderTest {
         this.orderService = new OrderService(mockEnvironment , orderDao, studentDao , null , null , null );
 
     }
+    @Test
+    void  cancelOrderWithOrderNotFoundTest() {
+        var  orderId =  3;
+        Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.empty());
+        Assertions.assertThrows(OrderNotFoundException.class  ,  ()->{
+            orderService.cancelOrder(orderId);
+        });
+
+        Mockito.verify(orderDao ,  Mockito.times(1)).findById(orderId);
+
+        Mockito.verify(studentDao ,  Mockito.times(0)).save(Mockito.any(StudentEntity.class));
+        Mockito.verify(orderDao , Mockito.times(0)).deleteById(Mockito.anyInt());
+    }
 
 
 
