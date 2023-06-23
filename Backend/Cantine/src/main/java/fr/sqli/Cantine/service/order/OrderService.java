@@ -211,7 +211,7 @@ public class OrderService implements IOrderService {
             throw  new OrderNotFoundException("ORDER WITH NOT FOUND");
         }
 
-       if (orderOpt.get().getStatus() ==  1 ) {
+       if (orderOpt.get().getStatus() ==  0 ) {
            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
            throw  new UnableToCancelOrderException("ORDER CANNOT BE CANCELED");
        }
