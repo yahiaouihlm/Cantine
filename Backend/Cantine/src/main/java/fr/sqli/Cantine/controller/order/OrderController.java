@@ -8,17 +8,14 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
 import fr.sqli.Cantine.service.order.OrderService;
-import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
-import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
-import fr.sqli.Cantine.service.order.exception.OrderLimitExceededException;
-import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
+import fr.sqli.Cantine.service.order.exception.*;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -39,4 +36,12 @@ public class OrderController  implements IOrderController{
         this.orderService.addOrder(orderDtoIn);
         return ResponseEntity.ok(ORDER_ADDED_SUCCESSFULLY);
     }
+
+    @Override
+    public ResponseEntity<String> cancelOrder(@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException {
+        this.orderService.cancelOrder(orderId);
+        return ResponseEntity.ok( ORDER_CANCELLED_SUCCESSFULLY);
+    }
+
+
 }

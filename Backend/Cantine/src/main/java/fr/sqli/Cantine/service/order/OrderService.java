@@ -11,10 +11,7 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationExce
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
-import fr.sqli.Cantine.service.order.exception.InsufficientBalanceException;
-import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
-import fr.sqli.Cantine.service.order.exception.OrderLimitExceededException;
-import fr.sqli.Cantine.service.order.exception.UnavailableFoodException;
+import fr.sqli.Cantine.service.order.exception.*;
 import fr.sqli.Cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
@@ -201,5 +198,25 @@ public class OrderService implements IOrderService {
 
     }
 
+    public  void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException {
+        if  (orderId ==  null  || orderId < 0) {
+            OrderService.LOG.error("INVALID ORDER ID");
+            throw  new InvalidOrderException("INVALID ORDER ID");
+        }
 
+        var orderOpt = this.orderDao.findById(orderId);
+
+        if  (orderOpt.isEmpty()) {
+            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " NOT FOUND");
+            throw  new OrderNotFoundException("ORDER WITH NOT FOUND");
+        }
+
+       if (orderOpt.get().getStatus() ==  1 ) {
+           OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
+           throw  new UnableToCancelOrderException("ORDER CANNOT BE CANCELED");
+       }
+
+       this.orderDao.deleteById(orderId);
+
+    }
 }
