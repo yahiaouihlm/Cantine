@@ -37,7 +37,8 @@ public class OrderEntity implements Serializable {
     private Integer status;
 
 
-
+    @Column(name = "isCancelled", nullable = false)
+    private  boolean   isCancelled ;
 
 
     // bi-directional many-to-one association to UserEntity
@@ -121,6 +122,15 @@ public class OrderEntity implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
     }
 
     public StudentEntity getStudent() {
