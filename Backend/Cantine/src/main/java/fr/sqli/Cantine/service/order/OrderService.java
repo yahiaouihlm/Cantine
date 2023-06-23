@@ -211,10 +211,15 @@ public class OrderService implements IOrderService {
             throw  new OrderNotFoundException("ORDER WITH NOT FOUND");
         }
 
-       if (orderOpt.get().getStatus() ==  0 ) {
-           OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
-           throw  new UnableToCancelOrderException("ORDER CANNOT BE CANCELED");
+       if (orderOpt.get().getStatus() ==  1) {
+           OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY VALIDATED");
+           throw  new UnableToCancelOrderException("ORDER CANNOT BE VALIDATED");
        }
+
+        if (orderOpt.get().isCancelled()) {
+            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
+            throw  new UnableToCancelOrderException("ORDER CANNOT BE CANCELED");
+        }
 
        var  student =  this.studentDao.findById(orderOpt.get().getStudent().getId());
        if (student.isEmpty()) {  // it can not   be happened
