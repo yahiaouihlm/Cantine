@@ -217,7 +217,7 @@ public class OrderService implements IOrderService {
        }
 
        var  student =  this.studentDao.findById(orderOpt.get().getStudent().getId());
-       if (student.isEmpty()) {
+       if (student.isEmpty()) {  // it can not   be happened
            OrderService.LOG.error("STUDENT WITH  ID  = " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
            throw  new StudentNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
        }
