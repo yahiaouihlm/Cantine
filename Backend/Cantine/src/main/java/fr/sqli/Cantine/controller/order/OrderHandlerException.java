@@ -12,6 +12,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class OrderHandlerException {
 
 
+    @ExceptionHandler(UnableToCancelOrderException.class)
+    public ResponseEntity<ExceptionDtout> handleUnableToCancelOrder(UnableToCancelOrderException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
+    }
+
+
+
 
 
     @ExceptionHandler(OrderNotFoundException.class)
