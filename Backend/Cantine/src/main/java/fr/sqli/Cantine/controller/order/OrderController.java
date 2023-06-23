@@ -38,7 +38,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<String> cancelOrder(@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException {
+    public ResponseEntity<String> cancelOrder(@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, StudentNotFoundException {
         this.orderService.cancelOrder(orderId);
         return ResponseEntity.ok( ORDER_CANCELLED_SUCCESSFULLY);
     }

@@ -198,7 +198,7 @@ public class OrderService implements IOrderService {
 
     }
 
-    public  void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException {
+    public  void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException {
         if  (orderId ==  null  || orderId < 0) {
             OrderService.LOG.error("INVALID ORDER ID");
             throw  new InvalidOrderException("INVALID ORDER ID");
@@ -216,7 +216,24 @@ public class OrderService implements IOrderService {
            throw  new UnableToCancelOrderException("ORDER CANNOT BE CANCELED");
        }
 
-       this.orderDao.deleteById(orderId);
+       var  student =  this.studentDao.findById(orderOpt.get().getStudent().getId());
+       if (student.isEmpty()) {
+           OrderService.LOG.error("STUDENT WITH  ID  = " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
+           throw  new StudentNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
+       }
+
+       var  orderprice = orderOpt.get().getPrice(); //  get  the  price  of  the  order
+
+        student.get().setWallet(student.get().getWallet().add(orderprice)); //  get  the  student  wallet
+
+        this.studentDao.save(student.get());
+
+        var message = "YOUR ORDER WITH ID : " + orderOpt.get().getId() + " HAS BEEN CANCELED";
+
+        this.orderDao.deleteById(orderId);
+
+
+
 
     }
 }

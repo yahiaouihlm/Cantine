@@ -30,7 +30,7 @@ public interface IOrderController {
 
 
     @PostMapping(CANCEL_ORDER_URL)
-    ResponseEntity<String> cancelOrder( Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException;
+    ResponseEntity<String> cancelOrder( Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, StudentNotFoundException;
 
 
 }
