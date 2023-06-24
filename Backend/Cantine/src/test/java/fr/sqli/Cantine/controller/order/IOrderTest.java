@@ -1,5 +1,10 @@
 package fr.sqli.Cantine.controller.order;
 
+import fr.sqli.Cantine.entity.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public interface IOrderTest {
@@ -41,6 +46,55 @@ public interface IOrderTest {
 
     );
 
+    static  MealEntity  createMeal  ()   {
+        MealEntity  mealEntity = new MealEntity();
+             mealEntity.setLabel("meal");
+            mealEntity.setDescription("description");
+             mealEntity.setPrice(BigDecimal.valueOf(5.0));
+            mealEntity.setQuantity(10);
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename("image");
+             mealEntity.setImage(imageEntity);
+            mealEntity.setStatus(1);
+             mealEntity.setCategory("category");
+             mealEntity.setQuantity(10);
+            return mealEntity;
+    }
 
+    static   MenuEntity createMenu () {
+        MenuEntity menuEntity = new MenuEntity();
+            menuEntity.setLabel("menu");
+           menuEntity.setDescription("description");
+          menuEntity.setPrice(BigDecimal.valueOf(5.0));
+          menuEntity.setQuantity(10);
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename("image");
+        menuEntity.setCreatedDate(LocalDate.now());
+        menuEntity.setImage(imageEntity);
+        menuEntity.setStatus(1);
+        menuEntity.setMeals(List.of(.mealEntity));
+        menuEntity.setQuantity(10);
+
+        return menuEntity;
+    }
+
+    static StudentEntity  createStudent( String  email , StudentClassEntity studentClassEntityEntity ) {
+        StudentEntity studentEntity = new StudentEntity();
+        studentEntity.setStudentClass(studentClassEntityEntity);
+        studentEntity.setFirstname("firstname");
+        studentEntity.setLastname("lastname");
+        studentEntity.setEmail(email);
+        studentEntity.setWallet(BigDecimal.valueOf(500));
+        studentEntity.setStatus(1);
+        studentEntity.setTown("town");
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename("image");
+        studentEntity.setImage(imageEntity);
+        studentEntity.setBirthdate(LocalDate.now());
+        studentEntity.setRegistrationDate(LocalDate.now());
+        studentEntity.setPassword("password");
+        return  studentEntity;
+
+    }
 
 }

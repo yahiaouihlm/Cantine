@@ -54,33 +54,12 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
 
 
     void  createMeal  ()   {
-        this.mealEntity = new MealEntity();
-        this.mealEntity.setLabel("meal");
-        this.mealEntity.setDescription("description");
-        this.mealEntity.setPrice(BigDecimal.valueOf(5.0));
-        this.mealEntity.setQuantity(10);
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
-        this.mealEntity.setImage(imageEntity);
-        this.mealEntity.setStatus(1);
-        this.mealEntity.setCategory("category");
-        this.mealEntity.setQuantity(10);
+        this.mealEntity = IOrderTest.createMeal();
         this.mealEntity  =    this.mealDao.save(this.mealEntity);
     }
 
     void  createMenu () {
-        this.menuEntity = new MenuEntity();
-        this.menuEntity.setLabel("menu");
-        this.menuEntity.setDescription("description");
-        this.menuEntity.setPrice(BigDecimal.valueOf(5.0));
-        this.menuEntity.setQuantity(10);
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
-        this.menuEntity.setCreatedDate(LocalDate.now());
-        this.menuEntity.setImage(imageEntity);
-        this.menuEntity.setStatus(1);
-        this.menuEntity.setMeals(List.of(this.mealEntity));
-        this.menuEntity.setQuantity(10);
+        this.menuEntity = IOrderTest.createMenu();
         this.menuEntity  =    this.menuDao.save(this.menuEntity);
     }
 
@@ -89,20 +68,8 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
         studentClassEntity.setName("class");
         this.studentClassDao.save(studentClassEntity);
 
-        this.studentEntity = new StudentEntity();
-        this.studentEntity.setStudentClass(studentClassEntity);
-        this.studentEntity.setFirstname("firstname");
-        this.studentEntity.setLastname("lastname");
-        this.studentEntity.setEmail("yahiaouihlm@gmail.com");
-        this.studentEntity.setWallet(BigDecimal.valueOf(500));
-        this.studentEntity.setStatus(1);
-        this.studentEntity.setTown("town");
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
-        this.studentEntity.setImage(imageEntity);
-        this.studentEntity.setBirthdate(LocalDate.now());
-        this.studentEntity.setRegistrationDate(LocalDate.now());
-        this.studentEntity.setPassword("password");
+        this.studentEntity = IOrderTest.createStudent("yahiaoui@gmail.com",  studentClassEntity);
+
         this.studentEntity = this.studentDao.save(this.studentEntity);
     }
 
