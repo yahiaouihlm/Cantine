@@ -4,6 +4,8 @@ import {MealServiceService} from "../meal-service.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, of} from "rxjs";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {ValidatorDialogComponent} from "../dialogs/validator-dialog/validator-dialog.component";
 
 @Component({
   selector: 'app-update-meal',
@@ -26,7 +28,7 @@ export class UpdateMealComponent  implements OnInit{
         status: new FormControl('', [Validators.required])
     });
 
-  constructor( private mealServiceService : MealServiceService , private  router  :  Router , private route: ActivatedRoute, ) { }
+  constructor( private mealServiceService : MealServiceService , private  router  :  Router , private route: ActivatedRoute,private matDialog: MatDialog  ) { }
 
   ngOnInit(): void {
     const param = this.route.snapshot.paramMap.get('id');
@@ -41,6 +43,34 @@ export class UpdateMealComponent  implements OnInit{
     }
 
   }
+
+
+    onSubmit() {
+      if (this.updatedMeal.invalid) {
+          console.log(this.updatedMeal)
+          return;
+      }
+      if (this.updatedMeal.controls["price"].value > 50) {
+          alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
+      }
+
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: " Voulez-vous vraiment  Portez Les Modification  pour ce  plat ? "},
+            width: '40%',
+        });
+
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                console.log("ok")
+            } else {
+                return;
+            }
+        });
+
+
+    }
+
+
     matchFormsValue() {
         function  getStatusFromNumber ( pstatus : number ) : string {
             if (pstatus == 1) { return "available" } else { return "unavailable" }

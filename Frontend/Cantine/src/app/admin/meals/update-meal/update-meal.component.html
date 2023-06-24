@@ -145,9 +145,15 @@
                             </div>
                         </div>
 
+                        <div class="center" style="padding-top: 10px;">
+                            <p> Image du  Plat </p>
+                            <img  src="{{meal.image}}" alt="y'a pas de image ou  il  na pas pu  etre charger" width="300px" >
+                        </div>
+
+
                         <!---------------------- Image --------------------------->
                         <div class="form-group">
-                            <label for="image"> Choisissez une image pour le plat </label>
+                            <label for="image"> Choisissez une image pour modifier  celle  du plat </label>
 
                             <input class="input-group-prepend"
                                    [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
@@ -168,9 +174,9 @@
 
 
                         <div class="btns">
-                            <!--(click)="onSubmit()"-->
+                            <!---->
                             <div class="btn-save center">
-                                <button class="btn"> Valider </button>
+                                <button (click)="onSubmit()" class="btn"> Valider </button>
                             </div>
                             <!--(click)="goback()"-->
                             <span ><mat-icon>arrow_back</mat-icon></span>
