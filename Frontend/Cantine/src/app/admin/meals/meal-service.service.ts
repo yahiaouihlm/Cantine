@@ -7,7 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {ValidatorDialogComponent} from "./dialogs/validator-dialog/validator-dialog.component";
 import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
-
+import {ErrorResponse} from  "../../sharedmodule/models/ErrorResponse"
 @Injectable()
 export class MealServiceService {
  // private apiUrl = environment.apiUrl;
@@ -32,22 +32,29 @@ export class MealServiceService {
 */
 
     private handleError(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let  errorMessage = errorObject.exceptionMessage;
+
          if  (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable){
-             this.openDialog("Veuillez  vérifier  les  données  saisies  !", error.status);
+               errorMessage = "Veuillez  vérifier  les  données  saisies  !";
+             this.openDialog(errorMessage,  error.status);
+
          }else if (error.status == HttpStatusCode.Conflict) {
-             console.log("je suis dans le  conflict  error  handler");
-                this.openDialog(error.message, error.status);
+                this.openDialog(errorMessage, error.status);
          }
          else if  (error.status == HttpStatusCode.InternalServerError){
-              this.openDialog("Une  erreur  interne  est  survenue  !", error.status);
+             errorMessage =  "Une  erreur  interne  est  survenue  !"
+              this.openDialog(errorMessage, error.status);
          }
         else if  (error.status == HttpStatusCode.NotFound){
-                this.openDialog("Ce  plat  n'existe  pas  !", error.status);
+             errorMessage =  "Ce  plat  n'existe  pas  !"
+             this.openDialog(errorMessage, error.status);
          }
         else {
-            this.openDialog("Une  erreur  est  survenue  !", error.status);
+             errorMessage =  "Une  erreur  est  survenue  !"
+             this.openDialog(errorMessage, error.status);
          }
-        return throwError(() => new Error('Something bad happened; please try again later.'));
+        return throwError(() => new Error(errorMessage));
 
     }
 
@@ -62,8 +69,7 @@ export class MealServiceService {
 
          result.afterClosed().subscribe((confirmed: boolean) => {
              if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError== HttpStatusCode.Conflict || httpError== HttpStatusCode.NotFound){
-
-                 //this.router.navigate(['/admin/meals'] , { queryParams: { reload: 'true' } });
+                 this.router.navigate(['/admin/meals'] , { queryParams: { reload: 'true' } });
              }
              else {
                  /* TODO  remove THE  Token  */
