@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 //import {environment} from "../../../environments/environment";
-import {HttpClient, HttpErrorResponse, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {catchError, throwError} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
@@ -8,6 +8,7 @@ import {Router} from "@angular/router";
 import {ValidatorDialogComponent} from "./dialogs/validator-dialog/validator-dialog.component";
 import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
 import {ErrorResponse} from  "../../sharedmodule/models/ErrorResponse"
+import {Meal} from "../../sharedmodule/models/meal";
 @Injectable()
 export class MealServiceService {
  // private apiUrl = environment.apiUrl;
@@ -20,7 +21,8 @@ export class MealServiceService {
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
 
     getMealById(id: number) {
-        return this.httpClient.get(this.GET_MEAL_BY_ID_URL + '/' + id).pipe(
+        const params = new HttpParams().set('idMeal', id);
+        return this.httpClient.get <Meal>(this.GET_MEAL_BY_ID_URL , {params : params}).pipe(
             catchError( (error) => this.handleError(error))
         );
   }
