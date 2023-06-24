@@ -3,18 +3,19 @@ import {Meal} from "../../../sharedmodule/models/meal";
 import {MealServiceService} from "../meal-service.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, of} from "rxjs";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-update-meal',
   templateUrl: './update-meal.component.html',
-  styles: [],
+  styleUrls: ["../../../../assets/styles/new-meal.component.scss"],
   providers: [MealServiceService]
 })
 export class UpdateMealComponent  implements OnInit{
 
     meal : Meal = new Meal();
     submitted!  :  boolean ;
+    image! : File
     updatedMeal: FormGroup = new FormGroup({
         label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
         description: new FormControl('', [Validators.required, Validators.maxLength(1600), Validators.minLength(5)]),
@@ -33,14 +34,34 @@ export class UpdateMealComponent  implements OnInit{
         const id = +param;
         this.mealServiceService.getMealById(id).subscribe(data => {
             this.meal = data;
-            console.log(this.meal);
+            this.matchFormsValue()
+            console.log(this.meal.category)
         });
 
     }
 
   }
-
-
+    matchFormsValue() {
+        function  getStatusFromNumber ( pstatus : number ) : string {
+            if (pstatus == 1) { return "available" } else { return "unavailable" }
+        }
+        this.updatedMeal.patchValue({
+            label: this.meal.label,
+            description: this.meal.description,
+            price: this.meal.price,
+            quantity: this.meal.quantity,
+            category :  this.meal.category,
+            status :getStatusFromNumber (this.meal.status)
+        });
+    }
+    get f(): { [key: string]: AbstractControl } {
+        return this.updatedMeal.controls;
+    }
+    onChange = ($event: Event) => {
+        const target = $event.target as HTMLInputElement;
+        const file: File = (target.files as FileList)[0]
+        this.image = file;
+    }
 
 
 

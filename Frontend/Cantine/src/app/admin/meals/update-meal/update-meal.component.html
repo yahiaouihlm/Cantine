@@ -6,9 +6,9 @@
                     <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
                     <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
                 </div>
-                <h1 class="center"> Ajouter un Plat </h1>
+                <h1 class="center"> Modifier  Le  Plat </h1>
                 <div class="register-form ">
-                    <form [formGroup]="newMeal">
+                    <form [formGroup]="updatedMeal">
 
 
                         <!---------------------- label --------------------------->
@@ -168,10 +168,12 @@
 
 
                         <div class="btns">
+                            <!--(click)="onSubmit()"-->
                             <div class="btn-save center">
-                                <button (click)="onSubmit()" class="btn"> Enregistrer</button>
+                                <button class="btn"> Valider </button>
                             </div>
-                            <span (click)="goback()"><mat-icon>arrow_back</mat-icon></span>
+                            <!--(click)="goback()"-->
+                            <span ><mat-icon>arrow_back</mat-icon></span>
                         </div>
 
                     </form>
