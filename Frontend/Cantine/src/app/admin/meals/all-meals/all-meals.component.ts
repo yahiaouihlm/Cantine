@@ -23,4 +23,8 @@ export class AllMealsComponent implements OnInit{
         this.router.navigate(['/admin/meals/new']);
     }
 
+    updateMeal(id : number): void {
+        this.router.navigate(['/admin/meals/update', id]);
+    }
+
 }
