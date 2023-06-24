@@ -14,11 +14,12 @@ public interface IOrderTest {
     String ORDER_BASIC_URL = "/cantine/student/order";
 
 
-
+    String CANCEL_ORDER_URL = ORDER_BASIC_URL +  "/cancel";
     String  ADD_ORDER_URL =   ORDER_BASIC_URL +   "/add";
 
 
 
+    String  ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
     String  ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
 
 
@@ -33,7 +34,13 @@ public interface IOrderTest {
             Map.entry("MealNotFound",  "MEAL NOT FOUND"),
             Map.entry("MenuNotFound",  "MENU NOT FOUND") ,
             Map.entry("TaxNotFound",  "TAX NOT FOUND"),
-            Map.entry("InsufficientBalance",  "YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER")
+            Map.entry("InsufficientBalance",  "YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER"),
+            Map.entry("ArgumentNotValid",  "ARGUMENT NOT VALID"),
+            Map.entry("MissingArgument",  "MISSING PARAMETER"),
+            Map.entry("InvalidOrderId",  "INVALID ORDER ID"),
+            Map.entry("OrderNotFound",  "ORDER NOT FOUND"),
+            Map.entry("OrderAlreadyValidated",  "ORDER IS ALREADY VALIDATED"),
+            Map.entry("OrderAlreadyCanceled",  "ORDER IS ALREADY CANCELED")
     );
 
     Map<String, String> discontinuedexceptionsMap = Map.ofEntries(
