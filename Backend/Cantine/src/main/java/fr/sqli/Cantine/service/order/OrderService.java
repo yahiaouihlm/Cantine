@@ -208,17 +208,17 @@ public class OrderService implements IOrderService {
 
         if  (orderOpt.isEmpty()) {
             OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " NOT FOUND");
-            throw  new OrderNotFoundException("ORDER WITH NOT FOUND");
+            throw  new OrderNotFoundException("ORDER NOT FOUND");
         }
 
        if (orderOpt.get().getStatus() ==  1) {
            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY VALIDATED");
-           throw  new UnableToCancelOrderException("ORDER CANNOT BE VALIDATED");
+           throw  new UnableToCancelOrderException("ORDER IS ALREADY VALIDATED");
        }
 
         if (orderOpt.get().isCancelled()) {
             OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
-            throw  new UnableToCancelOrderException("ORDER CANNOT BE CANCELED");
+            throw  new UnableToCancelOrderException("ORDER IS ALREADY CANCELED");
         }
 
        var  student =  this.studentDao.findById(orderOpt.get().getStudent().getId());
