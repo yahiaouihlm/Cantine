@@ -59,7 +59,7 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     }
 
     void  createMenu () {
-        this.menuEntity = IOrderTest.createMenu();
+        this.menuEntity = IOrderTest.createMenu(this.mealEntity);
         this.menuEntity  =    this.menuDao.save(this.menuEntity);
     }
 

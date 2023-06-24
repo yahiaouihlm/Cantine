@@ -61,7 +61,7 @@ public interface IOrderTest {
             return mealEntity;
     }
 
-    static   MenuEntity createMenu () {
+    static   MenuEntity createMenu (MealEntity mealEntity) {
         MenuEntity menuEntity = new MenuEntity();
             menuEntity.setLabel("menu");
            menuEntity.setDescription("description");
@@ -72,15 +72,15 @@ public interface IOrderTest {
         menuEntity.setCreatedDate(LocalDate.now());
         menuEntity.setImage(imageEntity);
         menuEntity.setStatus(1);
-        menuEntity.setMeals(List.of(.mealEntity));
+        menuEntity.setMeals(List.of(mealEntity));
         menuEntity.setQuantity(10);
 
         return menuEntity;
     }
 
-    static StudentEntity  createStudent( String  email , StudentClassEntity studentClassEntityEntity ) {
+    static StudentEntity  createStudent( String  email , StudentClassEntity studentClassEntity ) {
         StudentEntity studentEntity = new StudentEntity();
-        studentEntity.setStudentClass(studentClassEntityEntity);
+        studentEntity.setStudentClass(studentClassEntity);
         studentEntity.setFirstname("firstname");
         studentEntity.setLastname("lastname");
         studentEntity.setEmail(email);
