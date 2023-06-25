@@ -18,7 +18,16 @@ export class MealServiceService {
 
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   private  GET_MEAL_BY_ID_URL = this.BASIC_ENDPOINT  + '/get';
+  private  UPDATE_MEAL_URL = this.BASIC_ENDPOINT + "/update" ;
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
+
+
+    editMeal(meal: FormData) {
+       return this.httpClient.put <string>(this.UPDATE_MEAL_URL, meal).pipe(
+            catchError( (error) => this.handleError(error))
+        );
+    }
+
 
     getMealById(id: number) {
         const params = new HttpParams().set('idMeal', id);
