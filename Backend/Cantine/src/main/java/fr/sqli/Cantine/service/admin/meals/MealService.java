@@ -45,18 +45,20 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
-        IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", idMeal);
+    public MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+
         if (mealDtoIn == null) {
             MealService.LOG.debug("THE MEAL DTO CAN NOT BE NULL IN THE updateMeal METHOD ");
             throw new InvalidMealInformationException("THE MEAL DTO CAN NOT BE NULL");
         }
 
+        IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", mealDtoIn.getId());
+
         MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
 
-        var overemotional = this.mealDao.findById(idMeal);
+        var overemotional = this.mealDao.findById(mealDtoIn.getId());
         if (overemotional.isEmpty()) {
-            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", idMeal);
+            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getId());
             throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
         }
         var meal = overemotional.get(); // change the  meal  with  the  new  values

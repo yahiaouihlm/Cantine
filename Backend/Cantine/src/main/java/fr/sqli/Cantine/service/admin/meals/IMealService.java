@@ -69,7 +69,7 @@ public interface IMealService {
      * @throws IOException                          if the image is not found or  the jvm cannot create the file
      */
 
-    MealEntity updateMeal(MealDtoIn mealDtoIn, Integer idMeal) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException;
+    MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException;
 
 
     /**

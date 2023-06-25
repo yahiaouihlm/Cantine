@@ -40,8 +40,7 @@ public class MealController implements IMealController {
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     @Override
     public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
-
-        this.mealService.updateMeal(mealDtoIn, mealDtoIn.getId()  );
+        this.mealService.updateMeal(mealDtoIn);
         return ResponseEntity.ok(MEAL_UPDATED_SUCCESSFULLY);
     }
 
