@@ -24,7 +24,7 @@ export class UpdateMealComponent  implements OnInit{
         category: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.minLength(3)]),
         price: new FormControl('', [Validators.required, Validators.min(0.01), Validators.max(999.99)]),
         quantity: new FormControl('', [Validators.required, Validators.min(0), Validators.max(2147483501), Validators.pattern("^[0-9]+$")]),
-        image: new FormControl('', [Validators.required]),
+        image: new FormControl(''),
         status: new FormControl('', [Validators.required])
     });
 
@@ -46,8 +46,8 @@ export class UpdateMealComponent  implements OnInit{
 
 
     onSubmit() {
+        this.submitted = true
       if (this.updatedMeal.invalid) {
-          console.log(this.updatedMeal)
           return;
       }
       if (this.updatedMeal.controls["price"].value > 50) {
@@ -92,6 +92,9 @@ export class UpdateMealComponent  implements OnInit{
         const file: File = (target.files as FileList)[0]
         this.image = file;
     }
+
+
+
 
 
 
