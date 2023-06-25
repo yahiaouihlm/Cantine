@@ -59,7 +59,6 @@ public interface IMealService {
      * if  there is no  new image to update  the old image will be kept
      *
      * @param mealDtoIn the  meal with the updated information
-     * @param idMeal    the id of the meal to update
      * @return MealEntity the meal updated in the database
      * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
      * @throws MealNotFoundException           if the meal is not found in the database
