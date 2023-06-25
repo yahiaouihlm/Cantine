@@ -95,7 +95,27 @@ export class UpdateMealComponent  implements OnInit{
 
 
 
+  editMeal()  :  void {
+      const formData = new FormData();
+      formData.append('id', this.meal.id.toString());
+      formData.append('label', this.updatedMeal.controls['label'].value);
+      formData.append('description', this.updatedMeal.controls['description'].value);
+      formData.append('category', this.updatedMeal.controls['category'].value);
+      formData.append('price', this.updatedMeal.controls['price'].value);
+      formData.append('quantity', this.updatedMeal.controls['quantity'].value);
 
+      if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
+          formData.append('image', this.image);
+
+      if  (this.updatedMeal.controls['status'].value == "available") {
+          formData.append('status', "1");
+      } else {
+          formData.append('status', "0");
+      }
+
+      this.mealServiceService.editMeal(formData).subscribe((data) => {});
+
+  }
 
 
 }
