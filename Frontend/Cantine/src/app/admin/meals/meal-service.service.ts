@@ -9,6 +9,7 @@ import {ValidatorDialogComponent} from "./dialogs/validator-dialog/validator-dia
 import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
 import {ErrorResponse} from  "../../sharedmodule/models/ErrorResponse"
 import {Meal} from "../../sharedmodule/models/meal";
+import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 @Injectable()
 export class MealServiceService {
  // private apiUrl = environment.apiUrl;
@@ -23,7 +24,7 @@ export class MealServiceService {
 
 
     editMeal(meal: FormData) {
-       return this.httpClient.put <string>(this.UPDATE_MEAL_URL, meal).pipe(
+       return this.httpClient.put <NormalResponse>(this.UPDATE_MEAL_URL, meal).pipe(
             catchError( (error) => this.handleError(error))
         );
     }
@@ -38,7 +39,7 @@ export class MealServiceService {
 
 
     addMeal(meal: FormData ) { //  we have  to  add  a  token  after
-    return this.httpClient.post <string>(this.ADD_MEAL_URL, meal).pipe(
+    return this.httpClient.post <NormalResponse>(this.ADD_MEAL_URL, meal).pipe(
          catchError( (error) => this.handleError(error))
     );
   }
@@ -67,6 +68,7 @@ export class MealServiceService {
          }
         else {
              errorMessage =  "Une  erreur  est  survenue  !"
+             console.log(error.status)
              this.openDialog(errorMessage, error.status);
          }
         return throwError(() => new Error(errorMessage));

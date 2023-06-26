@@ -90,8 +90,13 @@ export class NewMealComponent {
         } else {
             formData.append('status', "0");
         }
-        this.mealServiceService.addMeal(formData).subscribe((result) => {
-            console.log(result);
+        this.mealServiceService.addMeal(formData).subscribe((data) => {
+             if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY") {
+
+             }
+             else  {
+                 alert("Une erreur est survenue lors de l'ajout du plat Veuillez réessayer ultérieurement") ;
+             }
         });
     }
 

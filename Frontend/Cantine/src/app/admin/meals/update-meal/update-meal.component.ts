@@ -61,7 +61,7 @@ export class UpdateMealComponent  implements OnInit{
 
         result.afterClosed().subscribe((result) => {
             if (result != undefined && result == true) {
-                console.log("ok")
+                this.editMeal();
             } else {
                 return;
             }
@@ -113,7 +113,16 @@ export class UpdateMealComponent  implements OnInit{
           formData.append('status', "0");
       }
 
-      this.mealServiceService.editMeal(formData).subscribe((data) => {});
+      this.mealServiceService.editMeal(formData).subscribe((data) => {
+          if  (data.message  == "MEAL UPDATED SUCCESSFULLY") {
+
+
+          }
+          else   {
+              alert("Une erreur est survenue lors de l'ajout du plat Veuillez réessayer ultérieurement") ;
+          }
+
+      });
 
   }
 
