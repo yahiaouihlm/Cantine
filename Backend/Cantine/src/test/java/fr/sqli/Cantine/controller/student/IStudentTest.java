@@ -56,7 +56,7 @@ public interface IStudentTest {
             );
 
 
-      static StudentEntity createStudentClassEntity(String email , StudentClassEntity studentClassEntity){
+      static StudentEntity createStudentEntity(String email , StudentClassEntity studentClassEntity){
           StudentEntity student  = new StudentEntity();
           student.setEmail(email);
             student.setFirstname("firstName");

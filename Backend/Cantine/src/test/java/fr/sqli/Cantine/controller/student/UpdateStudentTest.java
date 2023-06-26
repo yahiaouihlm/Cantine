@@ -8,7 +8,6 @@ import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
-import fr.sqli.Cantine.service.images.ImageService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -58,7 +57,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
         this.studentClassEntity = new StudentClassEntity();
         studentClassEntity.setName("JAVA SQLI");
         this.studentClassDao.save(studentClassEntity);
-        this.studentEntity = IStudentTest.createStudentClassEntity("student", this.studentClassEntity);
+        this.studentEntity = IStudentTest.createStudentEntity("student", this.studentClassEntity);
         this.studentEntity = this.studentDao.save(this.studentEntity);
     }
 

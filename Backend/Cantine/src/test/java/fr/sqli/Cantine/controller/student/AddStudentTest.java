@@ -136,7 +136,7 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     void addStudentWithExistingEmail() throws Exception {
 
         // create student with same email
-        var student =  IStudentTest.createStudentClassEntity("halim.yahiaoui@social.aston-ecole.com" ,this.studentClassEntity);
+        var student =  IStudentTest.createStudentEntity("halim.yahiaoui@social.aston-ecole.com" ,this.studentClassEntity);
         this.studentDao.save(student);
 
 

@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dto.in.food.MealDtoIn;
 import fr.sqli.Cantine.entity.ImageEntity;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.entity.OrderEntity;
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
@@ -103,7 +104,21 @@ class AddAndRemoveMealTest {
         Mockito.verify(imageService, Mockito.times(1)).deleteImage(null, "images/meals");
 
     }
+    @Test
+    @DisplayName("Test  removeMeal method with positive id and meal not in  association with Order ")
+    void removeMealTestWithMealInAssociationWithOneOrderTest() throws  ImagePathException {
 
+           this.mealEntity.setOrders(List.of(new OrderEntity())); //  add a order to  meal
+
+        Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(this.mealEntity)); // the meal is found
+
+        Assertions.assertThrows(RemoveMealAdminException.class,
+                () -> mealService.removeMeal(1)); // the meal is in association with menu
+
+        Mockito.verify(mealDao, Mockito.times(1)).findById(1);
+        Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
+        Mockito.verify(imageService, Mockito.times(0)).deleteImage(Mockito.any(String.class), Mockito.any(String.class));
+    }
 
     @Test
     @DisplayName("Test  removeMeal method with positive id and meal not in  association with menu ")
@@ -132,7 +147,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test the removeMeal method with NULL id")
-    void removeMealTestWithNullIdtest() throws ImagePathException {
+    void removeMealTestWithNullIdTest() throws ImagePathException {
         Assertions.assertThrows(InvalidMealInformationException.class,
                 () -> mealService.removeMeal(null));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);

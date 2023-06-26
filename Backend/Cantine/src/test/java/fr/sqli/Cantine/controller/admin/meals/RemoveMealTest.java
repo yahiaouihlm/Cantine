@@ -1,11 +1,9 @@
 package fr.sqli.Cantine.controller.admin.meals;
 
 import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.controller.student.IStudentTest;
+import fr.sqli.Cantine.dao.*;
+import fr.sqli.Cantine.entity.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -37,10 +37,18 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
     @Autowired
     private IMenuDao menuDao;
-
-    private List<MealEntity> meals;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private IStudentClassDao studentClassDao;
+    @Autowired
+    private IStudentDao studentDao;
+
+    @Autowired
+    private IOrderDao orderDao;
+    private List<MealEntity> meals;
+
+
 
 
 
@@ -129,6 +137,32 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         result.andExpect(status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(expectedExceptionMessage)));
     }
+
+    @Test
+    void removeMealInAssociationWithOrder() throws Exception {
+
+        StudentClassEntity studentClassEntity = new StudentClassEntity();
+        studentClassEntity.setName("class1");
+        studentClassEntity =  this.studentClassDao.save(studentClassEntity);
+       var student   =    IStudentTest.createStudentEntity("yahiaoui@gmail.com" , studentClassEntity);
+       student = this.studentDao.save(student);
+        var  idMealToRemove = this.mealDao.findAll().get(0);
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setStudent(student);
+        orderEntity.setQRCode("qrcode");
+        orderEntity.setPrice(new BigDecimal("2.3"));
+        orderEntity.setCreationDate(LocalDate.now());
+        orderEntity.setMeals(List.of(idMealToRemove));
+        orderEntity.setStatus(1);
+       orderEntity.setCreationTime(new Time(System.currentTimeMillis()));
+       this.orderDao.save(orderEntity);
+
+        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId()));
+
+        result.andExpect(status().isConflict());
+
+    }
+
 
 
     @Test

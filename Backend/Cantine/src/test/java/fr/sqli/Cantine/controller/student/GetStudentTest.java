@@ -3,7 +3,6 @@ package fr.sqli.Cantine.controller.student;
 import fr.sqli.Cantine.controller.AbstractContainerConfig;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.entity.AdminEntity;
 import fr.sqli.Cantine.entity.StudentClassEntity;
 import fr.sqli.Cantine.entity.StudentEntity;
 import org.hamcrest.CoreMatchers;
@@ -51,8 +50,8 @@ public class GetStudentTest  extends AbstractContainerConfig implements IStudent
         studentClassEntity.setName("SQLI JAVA");
         this.studentClassDao.save(studentClassEntity);
 
-        this.studentEntity1 = IStudentTest.createStudentClassEntity("halim@social.aston-ecole.com" ,studentClassEntity);
-        this.studentEntity2 = IStudentTest.createStudentClassEntity("yahiaoui@social.aston-ecole.com",studentClassEntity )  ;
+        this.studentEntity1 = IStudentTest.createStudentEntity("halim@social.aston-ecole.com" ,studentClassEntity);
+        this.studentEntity2 = IStudentTest.createStudentEntity("yahiaoui@social.aston-ecole.com",studentClassEntity )  ;
         this.studentEntity1 = studentDao.save(this.studentEntity1);
         this.studentEntity2 = studentDao.save(this.studentEntity2);
     }
