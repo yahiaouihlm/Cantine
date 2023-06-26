@@ -43,9 +43,9 @@ public class MealController implements IMealController {
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_UPDATED_SUCCESSFULLY));
     }
 
-    @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
+
     @Override
-    public ResponseEntity<String> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
+    public ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
         this.mealService.removeMeal(idMeal);
         return ResponseEntity.ok(MEAL_DELETED_SUCCESSFULLY);
     }
@@ -58,7 +58,7 @@ public class MealController implements IMealController {
     }
 
 
-    @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
+
     @Override
     public ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException {
         var meal = this.mealService.getMealByID(idMeal);
