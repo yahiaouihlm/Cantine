@@ -68,8 +68,8 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
 
     void cleanUp() {
-        this.orderDao.deleteAll();
         this.studentDao.deleteAll();
+        this.orderDao.deleteAll();
         this.studentClassDao.deleteAll();
         this.menuDao.deleteAll();
         this.mealDao.deleteAll(); // clean  data  after  each  test
