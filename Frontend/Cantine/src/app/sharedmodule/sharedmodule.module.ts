@@ -17,12 +17,14 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatButton, MatButtonModule} from "@angular/material/button";
 import {Meal} from "./models/meal";
+import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successful-dialog.component';
 
 
 
 @NgModule({
   declarations: [
       MainFooterComponent,
+      SuccessfulDialogComponent,
   ],
   imports: [
     MatSidenavModule,

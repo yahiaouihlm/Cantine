@@ -1,12 +1,12 @@
 package fr.sqli.Cantine.dto.out;
 
-public class Response  {
+public class ResponseDtout {
 
     private   String   message    ;
 
 
 
-    public Response( String message) {
+    public ResponseDtout(String message) {
         this.message = message;
     }
 

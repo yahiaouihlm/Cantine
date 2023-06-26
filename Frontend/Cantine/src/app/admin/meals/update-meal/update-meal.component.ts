@@ -130,13 +130,3 @@ export class UpdateMealComponent  implements OnInit{
 
 
 }
-
-
-
-const result = this.matDialog.open(ValidatorDialogComponent, {
-    data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
-    width: '40%',
-});
-result.afterClosed().subscribe((result) => {
-    this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
-});
