@@ -51,7 +51,7 @@ public class MealExceptionsHandler {
      */
     @ExceptionHandler(value = MealNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleMealNotFoundAdminException(MealNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage().toUpperCase()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
     }
 
 
