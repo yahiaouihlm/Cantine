@@ -23,6 +23,14 @@ export class MealServiceService {
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
 
 
+   deleteMeal(id: number) {
+         const params = new HttpParams().set('idMeal', id);
+         return this.httpClient.delete <NormalResponse>(this.BASIC_ENDPOINT , {params : params}).pipe(
+              catchError( (error) => this.handleError(error))
+         );
+
+   }
+
     editMeal(meal: FormData) {
        return this.httpClient.put <NormalResponse>(this.UPDATE_MEAL_URL, meal).pipe(
             catchError( (error) => this.handleError(error))

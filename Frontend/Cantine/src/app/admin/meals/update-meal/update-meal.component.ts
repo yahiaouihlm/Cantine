@@ -16,6 +16,14 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 })
 export class UpdateMealComponent  implements OnInit{
 
+    private MEAL_UPDATED_SUCCESSFULLY = "Le plat a été modifié avec succès !";
+    private  ERROR_OCCURRED_WHILE_UPDATING_MEAL = "Une erreur est survenue lors de la modification du plat !";
+    private WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL = "Voulez-vous vraiment Modifier  ce plat ?";
+
+    private  WOULD_YOU_LIKE_TO_DELETE_THIS_MEAL = "Voulez-vous vraiment supprimer ce plat ?";
+    private  ATTENTION_MEAL_PRICE= "Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !";
+
+
     meal : Meal = new Meal();
     submitted!  :  boolean ;
     image! : File
@@ -47,16 +55,18 @@ export class UpdateMealComponent  implements OnInit{
 
 
     onSubmit() {
+
+
         this.submitted = true
-      if (this.updatedMeal.invalid) {
-          return;
-      }
-      if (this.updatedMeal.controls["price"].value > 50) {
-          alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
-      }
+        if (this.updatedMeal.invalid) {
+            return;
+        }
+        if (this.updatedMeal.controls["price"].value > 50) {
+            alert(this.ATTENTION_MEAL_PRICE)
+        }
 
         const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: {message: " Voulez-vous vraiment  Portez Les Modification  pour ce  plat ? "},
+            data: {message: this.WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL},
             width: '40%',
         });
 
@@ -72,27 +82,6 @@ export class UpdateMealComponent  implements OnInit{
     }
 
 
-    matchFormsValue() {
-        function  getStatusFromNumber ( pstatus : number ) : string {
-            if (pstatus == 1) { return "available" } else { return "unavailable" }
-        }
-        this.updatedMeal.patchValue({
-            label: this.meal.label,
-            description: this.meal.description,
-            price: this.meal.price,
-            quantity: this.meal.quantity,
-            category :  this.meal.category,
-            status :getStatusFromNumber (this.meal.status)
-        });
-    }
-    get f(): { [key: string]: AbstractControl } {
-        return this.updatedMeal.controls;
-    }
-    onChange = ($event: Event) => {
-        const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
-    }
 
 
 
@@ -118,7 +107,7 @@ export class UpdateMealComponent  implements OnInit{
           if  (data.message  == "MEAL UPDATED SUCCESSFULLY") {
 
               const result = this.matDialog.open(SuccessfulDialogComponent, {
-                  data: {message: " Le plat a été modifié avec succès ! "},
+                  data: {message: this.MEAL_UPDATED_SUCCESSFULLY},
                   width: '40%',
               });
               result.afterClosed().subscribe((result) => {
@@ -127,7 +116,7 @@ export class UpdateMealComponent  implements OnInit{
 
           }
           else   {
-              alert("Une erreur est survenue lors de l'ajout du plat Veuillez réessayer ultérieurement") ;
+              alert(this.ERROR_OCCURRED_WHILE_UPDATING_MEAL) ;
               /*TODO    Remove  Token   */
           }
 
@@ -135,6 +124,48 @@ export class UpdateMealComponent  implements OnInit{
 
   }
 
+
+    delete() : void  {
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL},
+            width: '40%',
+        });
+
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                console.log( "delete  meal  with  id  : ")
+            } else {
+                return;
+            }
+        });
+    }
+
+    matchFormsValue() {
+        function  getStatusFromNumber ( pstatus : number ) : string {
+            if (pstatus == 1) { return "available" } else { return "unavailable" }
+        }
+        this.updatedMeal.patchValue({
+            label: this.meal.label,
+            description: this.meal.description,
+            price: this.meal.price,
+            quantity: this.meal.quantity,
+            category :  this.meal.category,
+            status :getStatusFromNumber (this.meal.status)
+        });
+    }
+    get f(): { [key: string]: AbstractControl } {
+        return this.updatedMeal.controls;
+    }
+    onChange = ($event: Event) => {
+        const target = $event.target as HTMLInputElement;
+        const file: File = (target.files as FileList)[0]
+        this.image = file;
+    }
+
+
+    goback() : void {
+        this.router.navigate(['/admin/meals'] ) ;
+    }
 
 
 

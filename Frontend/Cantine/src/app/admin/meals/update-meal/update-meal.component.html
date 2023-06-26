@@ -179,7 +179,12 @@
                                 <button (click)="onSubmit()" class="btn"> Valider </button>
                             </div>
                             <!--(click)="goback()"-->
-                            <span ><mat-icon>arrow_back</mat-icon></span>
+                            <span (click)="goback()"><mat-icon>arrow_back</mat-icon></span>
+
+                            <div class="btn-save right">
+                                <button (click)="delete()" class="btn"> supprimer </button>
+                            </div>
+
                         </div>
 
                     </form>
