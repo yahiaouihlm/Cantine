@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {Meal} from "../../../sharedmodule/models/meal";
 import {MealServiceService} from "../meal-service.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Observable, of} from "rxjs";
+
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
+import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
   selector: 'app-update-meal',
@@ -116,10 +117,18 @@ export class UpdateMealComponent  implements OnInit{
       this.mealServiceService.editMeal(formData).subscribe((data) => {
           if  (data.message  == "MEAL UPDATED SUCCESSFULLY") {
 
+              const result = this.matDialog.open(SuccessfulDialogComponent, {
+                  data: {message: " Le plat a été modifié avec succès ! "},
+                  width: '40%',
+              });
+              result.afterClosed().subscribe((result) => {
+                  this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+              });
 
           }
           else   {
               alert("Une erreur est survenue lors de l'ajout du plat Veuillez réessayer ultérieurement") ;
+              /*TODO    Remove  Token   */
           }
 
       });

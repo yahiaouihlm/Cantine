@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {MealServiceService} from "../meal-service.service";
 import {Router} from "@angular/router";
+import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
     selector: 'app-new-meal',
@@ -12,7 +13,10 @@ import {Router} from "@angular/router";
     providers: [MealServiceService]
 })
 export class NewMealComponent {
-
+    private MEAL_ADDED_SUCCESSFULLY = "Le plat a été ajouté avec succès !"
+    private  ERROR_OCCURRED_WHILE_ADDING_MEAL = "Une erreur est survenue lors de l'ajout du plat !"
+    private WOULD_YOU_LIKE_TO_SAVE_THIS_MEAL = "Voulez-vous vraiment sauvegarder ce plat ?"
+    private  ATTENTION_MEAL_PRICE= "Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !"
     submitted = false;
     image!: File
     newMeal: FormGroup = new FormGroup({
@@ -30,18 +34,17 @@ export class NewMealComponent {
 
      onSubmit() {
 
-         this.sendTest();
 
-        /*this.submitted = true;
+        this.submitted = true;
         if (this.newMeal.invalid) {
             return;
         }
         if (this.newMeal.controls["price"].value > 50) {
-            alert("Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !")
+            alert(this.ATTENTION_MEAL_PRICE)
         }
 
         this.confirmAndSendNewMeal();
-*/
+
     }
 
     onChange = ($event: Event) => {
@@ -61,14 +64,13 @@ export class NewMealComponent {
 
     confirmAndSendNewMeal(): void {
         const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
+            data: {message: this.WOULD_YOU_LIKE_TO_SAVE_THIS_MEAL},
             width: '40%',
         });
 
         result.afterClosed().subscribe((result) => {
             if (result != undefined && result == true) {
                 this.sendNewMeal();
-                console.log("ok")
             } else {
                 return;
             }
@@ -92,8 +94,8 @@ export class NewMealComponent {
         }
         this.mealServiceService.addMeal(formData).subscribe((data) => {
              if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY") {
-                 const result = this.matDialog.open(ValidatorDialogComponent, {
-                     data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
+                 const result = this.matDialog.open(SuccessfulDialogComponent, {
+                     data: {message: this.MEAL_ADDED_SUCCESSFULLY },
                      width: '40%',
                  });
                     result.afterClosed().subscribe((result) => {
@@ -101,24 +103,11 @@ export class NewMealComponent {
                     });
              }
              else  {
-                 alert("Une erreur est survenue lors de l'ajout du plat Veuillez réessayer ultérieurement") ;
+                 alert(this.ERROR_OCCURRED_WHILE_ADDING_MEAL) ;
+                 /*TODO    Remove  Token   */
              }
         });
     }
 
 
-
-   sendTest(): void {
-        const formData = new FormData();
-        formData.append('label', "fritest");
-        formData.append('description', "des pOMMES  de terRe");
-        formData.append('category', " foo De");
-        formData.append('price', "1");
-        formData.append('quantity', "1");
-        formData.append('image', this.image);
-        formData.append('status', "1");
-        this.mealServiceService.addMeal(formData).subscribe((result) => {
-            console.log(result);
-        });
-   }
 }
