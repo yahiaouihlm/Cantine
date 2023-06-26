@@ -184,11 +184,37 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
     }
 
-    //  Test UPDATE Meal With  Not Found Meal
+
+    @Test
+    void  updateMealToExistingMeal() throws Exception {
+        var  existingMeal = this.mealDao.findAll().get(0);
+        var  MealToUpdate = this.mealDao.findAll().get(1);
+        this.formData.set("id", String.valueOf(MealToUpdate.getId()));
+        this.formData.set("label", existingMeal.getLabel());
+        this.formData.set("category", existingMeal.getCategory());
+        this.formData.set("description", existingMeal.getDescription());
+
+        var  exeptionMessage =" LE PLAT :  " + existingMeal.getLabel() + " AVEC  " + existingMeal.getCategory()+ " ET " + existingMeal.getDescription() + " EST DEJA PRESENT DANS LA BASE DE DONNEES ";
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exeptionMessage)));
+
+    }
+
+
     @Test
     void updateMealTestWithNotFoundMeal() throws Exception {
         var idMeal = Integer.MAX_VALUE - 100;
         this.formData.set("id", String.valueOf(idMeal));
+        var  exeptionMessage = " LE PLAT :  " +this.formData.getFirst("label")+ " N'EXISTE PAS DANS LA BASE DE DONNEES ";
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MEAL_URL)
                 .file(this.imageData)
@@ -197,7 +223,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("mealNotFound"))));
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exeptionMessage)));
 
 
     }

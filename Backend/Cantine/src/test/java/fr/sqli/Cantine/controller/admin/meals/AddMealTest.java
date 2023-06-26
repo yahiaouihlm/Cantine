@@ -124,8 +124,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -147,11 +148,12 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("category", "   M e a l TEST c  ate gor y ".toLowerCase());
         this.formData.set("label", "ME                  AlTES t".toLowerCase());
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
 
-        // 3  Test  With  Trying  to  add The Same Meal again
+                // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -172,8 +174,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "MEALTEST DESCRIPTION");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -195,8 +198,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim()+ " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -217,9 +221,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
         this.formData.set("category", "   M e a l Test c  ate gor y ");
 
-
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + Objects.requireNonNull(this.formData.getFirst("category")).trim()
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -241,8 +245,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("description", "   MealTest description   ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
-                + " AND A DESCRIPTION = " + Objects.requireNonNull(this.formData.getFirst("description")).trim() + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + Objects.requireNonNull(this.formData.getFirst("description")).trim()
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -267,8 +272,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", "MealTes t");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim()+ " AND A CATEGORY = " + this.formData.getFirst("category")
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -292,8 +298,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.set("label", " M eal T e s t ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + this.formData.getFirst("category")
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -318,8 +325,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         this.formData.add("label", " M e a  l T e s t ");
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AND A CATEGORY = " + this.formData.getFirst("category")
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -341,8 +349,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
 
 
-        var errorMessage = "THE MEAL WITH AN LABEL = " + this.formData.getFirst("label") + " AND A CATEGORY = " + this.formData.getFirst("category")
-                + " AND A DESCRIPTION = " + this.formData.getFirst("description") + " IS ALREADY PRESENT IN THE DATABASE ";
+        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
+                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
+                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
