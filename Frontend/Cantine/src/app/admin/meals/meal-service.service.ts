@@ -5,8 +5,8 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
 import {catchError, throwError} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
-import {ValidatorDialogComponent} from "./dialogs/validator-dialog/validator-dialog.component";
-import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
+import {ValidatorDialogComponent} from "../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
+import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
 import {ErrorResponse} from  "../../sharedmodule/models/ErrorResponse"
 import {Meal} from "../../sharedmodule/models/meal";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, PatternValidator, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {ValidatorDialogComponent} from "../dialogs/validator-dialog/validator-dialog.component";
+import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {MealServiceService} from "../meal-service.service";
 import {Router} from "@angular/router";
 
@@ -92,7 +92,13 @@ export class NewMealComponent {
         }
         this.mealServiceService.addMeal(formData).subscribe((data) => {
              if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY") {
-
+                 const result = this.matDialog.open(ValidatorDialogComponent, {
+                     data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
+                     width: '40%',
+                 });
+                    result.afterClosed().subscribe((result) => {
+                        this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+                    });
              }
              else  {
                  alert("Une erreur est survenue lors de l'ajout du plat Veuillez réessayer ultérieurement") ;

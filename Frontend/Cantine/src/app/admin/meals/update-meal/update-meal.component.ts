@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Observable, of} from "rxjs";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {ValidatorDialogComponent} from "../dialogs/validator-dialog/validator-dialog.component";
+import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 
 @Component({
   selector: 'app-update-meal',
@@ -127,4 +127,16 @@ export class UpdateMealComponent  implements OnInit{
   }
 
 
+
+
 }
+
+
+
+const result = this.matDialog.open(ValidatorDialogComponent, {
+    data: {message: " Voulez-vous vraiment sauvegarder ce plat ? "},
+    width: '40%',
+});
+result.afterClosed().subscribe((result) => {
+    this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+});
