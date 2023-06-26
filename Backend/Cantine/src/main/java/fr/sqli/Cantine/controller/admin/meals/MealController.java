@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.meals;
 
 
 import fr.sqli.Cantine.dto.in.food.MealDtoIn;
+import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.dto.out.food.MealDtout;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
@@ -17,10 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 import static fr.sqli.Cantine.controller.admin.meals.IMealController.MEALS_BASIC_URL_ADMIN;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 
 @RestController
@@ -37,11 +36,11 @@ public class MealController implements IMealController {
     }
 
 
-    @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
+
     @Override
-    public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+    public ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         this.mealService.updateMeal(mealDtoIn);
-        return ResponseEntity.ok().body(MEAL_UPDATED_SUCCESSFULLY);
+        return ResponseEntity.ok().body(new ResponseDtout(MEAL_UPDATED_SUCCESSFULLY));
     }
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
@@ -51,11 +50,11 @@ public class MealController implements IMealController {
         return ResponseEntity.ok(MEAL_DELETED_SUCCESSFULLY);
     }
 
-    @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
+
     @Override
-    public ResponseEntity<String> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+    public ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         this.mealService.addMeal(newMeal);
-        return ResponseEntity.ok(MEAL_ADDED_SUCCESSFULLY);
+        return ResponseEntity.ok().body(new ResponseDtout(MEAL_ADDED_SUCCESSFULLY));
     }
 
 

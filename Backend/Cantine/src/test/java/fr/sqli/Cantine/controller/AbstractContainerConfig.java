@@ -7,6 +7,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 public class AbstractContainerConfig {
 
     private final  String exceptionMessage = "exceptionMessage";
+    private   final   String  responseMessage = "message";
 
     static   final PostgreSQLContainer postgreSQLContainer ;
     static {
@@ -33,4 +34,18 @@ public class AbstractContainerConfig {
         return jsonObject.toString();
 
     }
+
+
+    protected  String  responseMessage(String responseMessage) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        if (responseMessage==null) {
+            jsonObject.put(this.responseMessage, "Response message is null in Method AbstractContainerConfig.responseMessage");
+        } else {
+            jsonObject.put(this.responseMessage, responseMessage);
+        }
+        return jsonObject.toString();
+
+    }
+
+
 }

@@ -121,7 +121,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(MEAL_UPDATED_SUCCESSFULLY));
+                .andExpect(MockMvcResultMatchers.content().json( super.responseMessage(MEAL_UPDATED_SUCCESSFULLY)));
 
         // add other tests  to  check if the meal is updated in database
 
@@ -150,7 +150,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(MEAL_UPDATED_SUCCESSFULLY));
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(MEAL_UPDATED_SUCCESSFULLY)));
 
         // add other tests  to  check if the meal is updated in database
 
