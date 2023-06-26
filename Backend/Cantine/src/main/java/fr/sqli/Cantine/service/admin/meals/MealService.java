@@ -127,7 +127,7 @@ public class MealService implements IMealService {
 
         //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
-            throw new ExistingMealException("THE MEAL WITH AN LABEL = " + meal.getLabel() + " AND A CATEGORY = " + meal.getCategory() + " AND A DESCRIPTION = " + meal.getDescription() + " IS ALREADY PRESENT IN THE DATABASE ");
+            throw new ExistingMealException(" LE PLAT :  " + meal.getLabel() + " AVEC  " + meal.getCategory()+ " ET " + meal.getDescription() + " EST DEJA PRESENT DANS LA BASE DE DONNEES");
         }
         MultipartFile image = mealDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
