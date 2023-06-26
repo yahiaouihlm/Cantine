@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
-
+@CrossOrigin(origins = "http://localhost:4200")
 public interface IMealController {
      /*------------------ ENDPOINTS ------------------*/
     String MEALS_BASIC_URL_ADMIN = "/cantine/api/admin/meals";
