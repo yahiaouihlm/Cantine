@@ -20,6 +20,7 @@ export class MealServiceService {
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   private  GET_MEAL_BY_ID_URL = this.BASIC_ENDPOINT  + '/get';
   private  UPDATE_MEAL_URL = this.BASIC_ENDPOINT + "/update" ;
+  private  DELETE_MEAL_URL = this.BASIC_ENDPOINT + "/delete" ;
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
 
 
@@ -32,7 +33,7 @@ export class MealServiceService {
    }
 
     editMeal(meal: FormData) {
-       return this.httpClient.put <NormalResponse>(this.UPDATE_MEAL_URL, meal).pipe(
+       return this.httpClient.put <NormalResponse>(this.DELETE_MEAL_URL, meal).pipe(
             catchError( (error) => this.handleError(error))
         );
     }

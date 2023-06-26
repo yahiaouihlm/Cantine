@@ -17,6 +17,7 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 export class UpdateMealComponent  implements OnInit{
 
     private MEAL_UPDATED_SUCCESSFULLY = "Le plat a été modifié avec succès !";
+    private  MEAL_DELETED_SUCCESSFULLY = "Le plat a été supprimé avec succès !";
     private  ERROR_OCCURRED_WHILE_UPDATING_MEAL = "Une erreur est survenue lors de la modification du plat !";
     private WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL = "Voulez-vous vraiment Modifier  ce plat ?";
 
@@ -55,7 +56,7 @@ export class UpdateMealComponent  implements OnInit{
 
 
     onSubmit() {
-
+        console.log("onSubmit")
 
         this.submitted = true
         if (this.updatedMeal.invalid) {
@@ -127,7 +128,7 @@ export class UpdateMealComponent  implements OnInit{
 
     delete() : void  {
         const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: {message: this.WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL},
+            data: {message: this.WOULD_YOU_LIKE_TO_DELETE_THIS_MEAL},
             width: '40%',
         });
 
@@ -138,7 +139,38 @@ export class UpdateMealComponent  implements OnInit{
                 return;
             }
         });
+
+
+
     }
+
+
+
+    removeMealSendReq() : void {
+        this.mealServiceService.deleteMeal(this.meal.id).subscribe((data) => {
+            if  (data.message  == this.MEAL_DELETED_SUCCESSFULLY) {
+
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: this.MEAL_UPDATED_SUCCESSFULLY},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+                });
+
+            }
+            else   {
+                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MEAL) ;
+                /*TODO    Remove  Token   */
+            }
+
+        }   );
+
+
+    }
+
+
+
 
     matchFormsValue() {
         function  getStatusFromNumber ( pstatus : number ) : string {
