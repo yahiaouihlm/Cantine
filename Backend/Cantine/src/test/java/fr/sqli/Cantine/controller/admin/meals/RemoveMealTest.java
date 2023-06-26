@@ -68,6 +68,9 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
 
     void cleanUp() {
+        this.orderDao.deleteAll();
+        this.studentDao.deleteAll();
+        this.studentClassDao.deleteAll();
         this.menuDao.deleteAll();
         this.mealDao.deleteAll(); // clean  data  after  each  test
     }
@@ -104,7 +107,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
 
         result.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(MEAL_DELETED_SUCCESSFULLY));
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(MEAL_DELETED_SUCCESSFULLY)));
 
         Assertions.assertEquals(1, this.mealDao.findAll().size());
         var  image =  mealToRemove.getImage().getImagename();
