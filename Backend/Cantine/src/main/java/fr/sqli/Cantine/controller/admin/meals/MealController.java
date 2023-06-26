@@ -41,7 +41,7 @@ public class MealController implements IMealController {
     @Override
     public ResponseEntity<String> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         this.mealService.updateMeal(mealDtoIn);
-        return ResponseEntity.ok(MEAL_UPDATED_SUCCESSFULLY);
+        return ResponseEntity.ok().body(MEAL_UPDATED_SUCCESSFULLY);
     }
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
