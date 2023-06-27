@@ -26,14 +26,14 @@ export class MealServiceService {
 
    deleteMeal(id: number) {
          const params = new HttpParams().set('idMeal', id);
-         return this.httpClient.delete <NormalResponse>(this.BASIC_ENDPOINT , {params : params}).pipe(
+         return this.httpClient.delete <NormalResponse>(this.DELETE_MEAL_URL , {params : params}).pipe(
               catchError( (error) => this.handleError(error))
          );
 
    }
 
     editMeal(meal: FormData) {
-       return this.httpClient.put <NormalResponse>(this.DELETE_MEAL_URL, meal).pipe(
+       return this.httpClient.put <NormalResponse>(this.UPDATE_MEAL_URL, meal).pipe(
             catchError( (error) => this.handleError(error))
         );
     }

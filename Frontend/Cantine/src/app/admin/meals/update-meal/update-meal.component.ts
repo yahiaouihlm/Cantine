@@ -126,7 +126,7 @@ export class UpdateMealComponent  implements OnInit{
   }
 
 
-    delete() : void  {
+    delete(): void {
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_DELETE_THIS_MEAL},
             width: '40%',
@@ -134,12 +134,11 @@ export class UpdateMealComponent  implements OnInit{
 
         result.afterClosed().subscribe((result) => {
             if (result != undefined && result == true) {
-                console.log( "delete  meal  with  id  : ")
+                this.removeMealSendReq();
             } else {
                 return;
             }
         });
-
 
 
     }
@@ -147,7 +146,7 @@ export class UpdateMealComponent  implements OnInit{
 
 
     removeMealSendReq() : void {
-        this.mealServiceService.deleteMeal(this.meal.id).subscribe((data) => {
+        this.mealServiceService.deleteMeal(100).subscribe((data) => {
             if  (data.message  == this.MEAL_DELETED_SUCCESSFULLY) {
 
                 const result = this.matDialog.open(SuccessfulDialogComponent, {

@@ -17,6 +17,7 @@ import { ExceptionDialogComponent } from '../../sharedmodule/dialogs/exception-d
 
 
 
+
 const routes: Routes = [
 
   {path: '',
@@ -37,7 +38,8 @@ const routes: Routes = [
       AllMealsComponent,
       MainMealsComponent,
       UpdateMealComponent,
-      ExceptionDialogComponent
+      ExceptionDialogComponent,
+
 
   ],
     imports: [

@@ -27,4 +27,8 @@ export class AllMealsComponent implements OnInit{
         this.router.navigate(['/admin/meals/update', id]);
     }
 
+    mealAvailableToString(mealAvailable : number): string {
+        return mealAvailable === 1 ? 'Available' : 'Unavailable';
+    }
+
 }

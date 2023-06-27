@@ -18,6 +18,8 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatButton, MatButtonModule} from "@angular/material/button";
 import {Meal} from "./models/meal";
 import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successful-dialog.component';
+import {EuroSymbolPipe} from "./CustomPipes/euro-symbol-pipe";
+import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
 
 
 
@@ -25,6 +27,8 @@ import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successfu
   declarations: [
       MainFooterComponent,
       SuccessfulDialogComponent,
+        EuroSymbolPipe,
+        FoodAvailablePipe,
   ],
   imports: [
     MatSidenavModule,
@@ -40,6 +44,7 @@ import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successfu
     MatFormFieldModule,
     MatOptionModule,
     MatSelectModule,
+
 
   ],
   exports : [
@@ -58,6 +63,8 @@ import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successfu
     MatDialogContent,
     MatDialogActions,
     MatDialogModule,
+    EuroSymbolPipe,
+    FoodAvailablePipe
   ]
 
 })

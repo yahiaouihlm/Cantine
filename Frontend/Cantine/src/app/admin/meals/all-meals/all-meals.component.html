@@ -1,31 +1,47 @@
+<div class="center" style="margin: 20px">
+    <button class="btn" (click)="gotoNewMeal()">Ajouter un Plat</button>
+</div>
 
-         <div class="center" style="margin: 20px"> <button  class="btn" (click)="gotoNewMeal()" >Ajouter  un  Plat</button>  </div>
 
+<div class="container">
+    <div class="row">
+        <div *ngFor="let meal of meals$ | async " class="col m4 s12">
+            <div>
+                <div class="card horizontal ">
+                    <div class="center"  class="{{ mealAvailableToString(meal.status) | foodAvailable }}">
+                        <img [src]="meal.image" height="190px" width="40%"/>
 
-
-    <div  class="container" >
-        <div class="row">
-            <div *ngFor="let meal of meals$ |async " class="col m4 s12"  >
-                <div class="card horizontal " >
-                    <div class="center">
-                        <img  [src]="meal.image" height="190px" width="40%"   />
-
-                                    <div class="card-stacked">
-                                        <div class="card-content">
-                                            <p> plat :   {{meal.label}}</p>
-                                            <p> catégorie :  {{meal.category}}</p>
-                                            <p> description  : {{meal.description}}</p>
-                                            <p> prix  : {{meal.price}} £ </p>
-                                            <p><span *ngIf="meal.status == 1 ">  Disponible  </span><span *ngIf="meal.status == 0 ">  Pas  Disponible  </span></p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn" (click)="updateMeal(meal.id)"> Modifier Le  Plat </button>
-                                    </div>
-                                </div>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p> plat :   {{meal.label}}</p>
+                                <p> catégorie :  {{meal.category}}</p>
+                                <p> description : {{meal.description}}</p>
+                                <p> prix : {{meal.price | euroSymbol }}  </p>
+                                 <p><span *ngIf="meal.status == 1">  Disponible  </span><span *ngIf="meal.status == 0 ">  Pas  Disponible  </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn" (click)="updateMeal(meal.id)"> Modifier Le Plat</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<style>
+    .mealCardUnavailable {
+        border: solid 3px #e0586d;
+    }
+    .mealCardUnavailable:hover {
+        opacity: 0.65;
+        transition: all ease-in-out 0.4s;
+    }
+    .mealCardAvailable {
+        border: solid 3px green;
+    }
+</style>
 
 
