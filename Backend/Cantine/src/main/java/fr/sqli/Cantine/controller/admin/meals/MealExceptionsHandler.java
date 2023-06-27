@@ -40,7 +40,7 @@ public class MealExceptionsHandler {
 
     @ExceptionHandler(RemoveMealAdminException.class)
     public ResponseEntity<ExceptionDtout> handleRemoveMealAdminException(RemoveMealAdminException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage().toUpperCase()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 
     /**
