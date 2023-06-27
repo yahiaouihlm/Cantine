@@ -146,11 +146,11 @@ export class UpdateMealComponent  implements OnInit{
 
 
     removeMealSendReq() : void {
-        this.mealServiceService.deleteMeal(100).subscribe((data) => {
+        this.mealServiceService.deleteMeal(this.meal.id).subscribe((data) => {
             if  (data.message  == this.MEAL_DELETED_SUCCESSFULLY) {
 
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: this.MEAL_UPDATED_SUCCESSFULLY},
+                    data: {message:  "MEAL DELETED SUCCESSFULLY"},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {

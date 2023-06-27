@@ -72,7 +72,7 @@ export class MealServiceService {
               this.openDialog(errorMessage, error.status);
          }
         else if  (error.status == HttpStatusCode.NotFound){
-             errorMessage =  "Ce  plat  n'existe  pas  !"
+             errorMessage =  "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
              this.openDialog(errorMessage, error.status);
          }
         else {
