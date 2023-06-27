@@ -47,7 +47,7 @@ public class MealController implements IMealController {
     @Override
     public ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
         this.mealService.removeMeal(idMeal);
-        return ResponseEntity.ok().  body ( new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
+        return ResponseEntity.ok().body ( new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
 
 

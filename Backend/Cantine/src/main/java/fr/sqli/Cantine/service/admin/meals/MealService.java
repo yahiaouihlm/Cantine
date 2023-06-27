@@ -102,12 +102,12 @@ public class MealService implements IMealService {
         if  ( meal.getMenus() != null   &&   meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         {
             MealService.LOG.debug("THE MEAL WITH AN ID = {} IS PRESENT IN A MENU AND CAN NOT BE DELETED ", id);
-            throw new RemoveMealAdminException(" Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprime  Car  Il  Est  Present  Dans  d'autres  Menu(s)");
+            throw new RemoveMealAdminException(" Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)");
         }
 
         if  ( meal.getOrders() != null   && meal.getOrders().size() > 0 ) {
             MealService.LOG.debug("THE MEAL WITH AN ID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", id);
-            throw new RemoveMealAdminException("THE MEAL WITH AN label  = " + meal.getLabel() + " IS PRESENT IN A OTHER  ORDER(S) AND CAN NOT BE DELETED");
+            throw new RemoveMealAdminException("Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres   Commande(s)");
         }
 
         var image = meal.getImage();
