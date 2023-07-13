@@ -2,11 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-all-menus',
-  template: `
-    <p>
-      all-menus works!
-    </p>
-  `,
+  templateUrl: './all-menus.component.html',
   styles: [
   ]
 })
