@@ -10,7 +10,7 @@ export class HomeAdminComponent {
   constructor(private  router: Router ) { }
 
   goto(): void {
-     this.router.navigate(['/admin']);
+     this.router.navigate(['/admin/menus']);
   }
   gotoMeals(): void {
      this.router.navigate(['/admin/meals']);
