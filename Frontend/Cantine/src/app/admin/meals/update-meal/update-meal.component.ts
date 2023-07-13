@@ -42,8 +42,8 @@ export class UpdateMealComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const param = this.route.snapshot.paramMap.get('id');
 
+        const param = this.route.snapshot.paramMap.get('id');
         if (param) {
             const id = +param;
             this.mealServiceService.getMealById(id).subscribe(data => {
@@ -140,7 +140,6 @@ export class UpdateMealComponent implements OnInit {
 
 
     }
-
 
     removeMealSendReq(): void {
         this.mealServiceService.deleteMeal(this.meal.id).subscribe((data) => {
