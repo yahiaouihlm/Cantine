@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, PatternValidator, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
-import {MealServiceService} from "../meal-service.service";
+import {MealsService} from "../meals.service";
 import {Router} from "@angular/router";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
@@ -10,7 +10,7 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
     selector: 'app-new-meal',
     templateUrl: './new-meal.component.html',
     styleUrls: ['../../../../assets/styles/new-meal.component.scss'],
-    providers: [MealServiceService]
+    providers: [MealsService]
 })
 export class NewMealComponent {
     private MEAL_ADDED_SUCCESSFULLY = "Le plat a été ajouté avec succès !"
@@ -29,7 +29,7 @@ export class NewMealComponent {
         status: new FormControl('', [Validators.required])
     });
 
-    constructor(private mealServiceService: MealServiceService, private matDialog: MatDialog , private  router : Router) {
+    constructor(private mealServiceService: MealsService, private matDialog: MatDialog , private  router : Router) {
     }
 
      onSubmit() {

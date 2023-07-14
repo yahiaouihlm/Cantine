@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Meal} from "../../../sharedmodule/models/meal";
-import {MealServiceService} from "../meal-service.service";
+import {MealsService} from "../meals.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -12,7 +12,7 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
     selector: 'app-update-meal',
     templateUrl: './update-meal.component.html',
     styleUrls: ["../../../../assets/styles/new-meal.component.scss"],
-    providers: [MealServiceService]
+    providers: [MealsService]
 })
 export class UpdateMealComponent implements OnInit {
 
@@ -38,7 +38,7 @@ export class UpdateMealComponent implements OnInit {
         status: new FormControl('', [Validators.required])
     });
 
-    constructor(private mealServiceService: MealServiceService, private router: Router, private route: ActivatedRoute, private matDialog: MatDialog) {
+    constructor(private mealServiceService: MealsService, private router: Router, private route: ActivatedRoute, private matDialog: MatDialog) {
     }
 
     ngOnInit(): void {

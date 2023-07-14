@@ -11,7 +11,7 @@ import {ErrorResponse} from  "../../sharedmodule/models/ErrorResponse"
 import {Meal} from "../../sharedmodule/models/meal";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 @Injectable()
-export class MealServiceService {
+export class MealsService {
  // private apiUrl = environment.apiUrl;
 
   private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/meals';
