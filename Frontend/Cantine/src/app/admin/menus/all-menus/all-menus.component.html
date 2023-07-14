@@ -1,2 +1,29 @@
-<h1 class="center">   Les  Menus   </h1>
+<div class="center" style="margin: 20px">
+    <button class="btn">Ajouter un  Menu </button>
+</div>
+<div class="container">
+    <div class="row">
+        <div *ngFor="let menu of menus$ | async " class="col m4 s12">
+            <div>
+                <div class="card horizontal ">
+                        <img [src]="menu.image" height="190px" width="40%"/>
 
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p> plat :   {{menu.label}}</p>
+                                <p> description : {{menu.description}}</p>
+                                <p> prix : {{menu.price | euroSymbol }}  </p>
+                                <p><span *ngIf="menu.status == 1">  Disponible  </span><span *ngIf="menu.status == 0 ">  Pas  Disponible  </span>
+                                </p>
+                            </div>
+                                  <p  class="center" style="color: #004a9f">   voir Plus  </p>
+
+                        <div>
+                            <button class="btn" (click)="updateMenu(menu.id)" > Modifier Le Menus </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
