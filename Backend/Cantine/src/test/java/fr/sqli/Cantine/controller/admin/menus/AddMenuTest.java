@@ -161,6 +161,21 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     }
 
+    @Test
+   void addMenuWithUnavailableMeal() throws Exception {
+        var  meal   =  this.mealDao.findAll().get(0);
+        meal.setStatus(0);
+       var  mealID  =  this.mealDao.save(meal).getId();
+
+            this.formData.set("mealIDs", String.valueOf(mealID));
+
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
     /*************************************** MealIDs *************************************/
 
     @Test
