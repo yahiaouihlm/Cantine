@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ListMealsComponent} from "../list-meals/list-meals.component";
+import {MatDialog} from "@angular/material/dialog";
+import {Meal} from "../../../sharedmodule/models/meal";
 
 @Component({
   selector: 'app-new-menu',
@@ -9,7 +12,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 export class NewMenuComponent {
   submitted = false;
   image!: File
-  mealsContainMenu: number[] = []
+  mealsContainMenu: Meal[] = []
   newMenu: FormGroup = new FormGroup({
     label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),
@@ -18,6 +21,22 @@ export class NewMenuComponent {
     image: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required])
   });
+
+  constructor( private matDialog: MatDialog) {}
+  onOpenDialogClick() {
+    const result = this.matDialog.open(ListMealsComponent);
+    result.afterClosed().subscribe((result) => {
+      if (result === undefined)
+        this.mealsContainMenu = []
+      else {
+        this.mealsContainMenu = result;
+      }
+
+    // this.clicked = true;
+    })
+
+  }
+
 
   onChange = ($event: Event) => {
     const target = $event.target as HTMLInputElement;

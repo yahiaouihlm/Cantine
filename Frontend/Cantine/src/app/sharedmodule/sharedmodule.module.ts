@@ -17,6 +17,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successful-dialog.component';
 import {EuroSymbolPipe} from "./CustomPipes/euro-symbol-pipe";
 import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 
@@ -61,7 +62,8 @@ import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
     MatDialogActions,
     MatDialogModule,
     EuroSymbolPipe,
-    FoodAvailablePipe
+    FoodAvailablePipe,
+    MatProgressSpinnerModule
   ]
 
 })
