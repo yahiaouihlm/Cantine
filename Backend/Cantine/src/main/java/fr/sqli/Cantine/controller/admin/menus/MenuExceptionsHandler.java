@@ -1,10 +1,7 @@
 package fr.sqli.Cantine.controller.admin.menus;
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.NoMealInMenuException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class MenuExceptionsHandler {
+
+
+    @ExceptionHandler(UnavailableMeal.class)
+    public ResponseEntity<ExceptionDtout> handleExistingMenu(UnavailableMeal e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage().toUpperCase()));
+    }
+
 
     /**
      * Handle ExistingMenuException exception when the menu with the same  label ,  price and description already exist

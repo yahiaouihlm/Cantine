@@ -68,8 +68,8 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
 
     void cleanUp() {
-        this.studentDao.deleteAll();
         this.orderDao.deleteAll();
+        this.studentDao.deleteAll();
         this.studentClassDao.deleteAll();
         this.menuDao.deleteAll();
         this.mealDao.deleteAll(); // clean  data  after  each  test
@@ -120,7 +120,6 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     /*  TODO whe We Make Menu */
     @Test
     void removeMealInAssociationWithMenu() throws Exception {
-        var expectedExceptionMessage = "THE MEAL WITH AN LABEL  = " + this.meals.get(0).getLabel().toUpperCase() + " IS PRESENT IN A OTHER  MENU(S) AND CAN NOT BE DELETED";
         var idMealToRemove = this.mealDao.findAll().get(0);
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setLabel("menu1");
@@ -133,12 +132,13 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         menuEntity.setImage(image);
         menuEntity.setMeals(List.of(idMealToRemove));
-        this.menuDao.save(menuEntity);
+        var   removeMeal   =   this.menuDao.save(menuEntity);
 
         var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId()));
 
+   var resultReq = " Le  Plat  \" " + removeMeal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)" ;
         result.andExpect(status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(expectedExceptionMessage)));
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(resultReq)));
     }
 
     @Test

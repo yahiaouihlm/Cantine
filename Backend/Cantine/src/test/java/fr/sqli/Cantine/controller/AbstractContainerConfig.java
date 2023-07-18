@@ -11,11 +11,11 @@ public class AbstractContainerConfig {
 
     static   final PostgreSQLContainer postgreSQLContainer ;
     static {
-        postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
+            postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
                 .withDatabaseName("cantine_tests")
                 .withUsername("postgres")
                 .withPassword("halim");
-        postgreSQLContainer.start();
+            postgreSQLContainer.start();
     }
 
     /**
