@@ -47,16 +47,6 @@ export class NewMealComponent {
 
     }
 
-    onChange = ($event: Event) => {
-        const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
-    }
-
-    get f(): { [key: string]: AbstractControl } {
-        return this.newMeal.controls;
-    }
-
 
     goback(): void {
         this.router.navigate(['/admin/meals']);
@@ -107,6 +97,16 @@ export class NewMealComponent {
                  /*TODO    Remove  Token   */
              }
         });
+    }
+
+    onChange = ($event: Event) => {
+        const target = $event.target as HTMLInputElement;
+        const file: File = (target.files as FileList)[0]
+        this.image = file;
+    }
+
+    get f(): { [key: string]: AbstractControl } {
+        return this.newMeal.controls;
     }
 
 

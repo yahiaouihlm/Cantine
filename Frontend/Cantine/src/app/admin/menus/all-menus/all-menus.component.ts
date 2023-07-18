@@ -27,4 +27,9 @@ export class AllMenusComponent implements  OnInit{
   }
 
 
+  addMenu() :  void {
+    this.router.navigate(['/admin/menus/new']);
+  }
+
+
 }

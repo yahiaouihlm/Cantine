@@ -4,6 +4,7 @@ import { AllMenusComponent } from './all-menus/all-menus.component';
 import {RouterModule, Routes} from "@angular/router";
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
 import { NewMenuComponent } from './new-menu/new-menu.component';
+import { ListMealsComponent } from './list-meals/list-meals.component';
 
 
 
@@ -12,7 +13,7 @@ const  routes:  Routes  = [
   {path: '',
     children: [
       {path: '', component: AllMenusComponent},
-      {path: '\'update/:id\'', component: NewMenuComponent},
+      {path: 'new', component: NewMenuComponent},
     ]
   },
 ];
@@ -22,7 +23,8 @@ const  routes:  Routes  = [
 @NgModule({
   declarations: [
     AllMenusComponent,
-    NewMenuComponent
+    NewMenuComponent,
+    ListMealsComponent
   ],
   imports: [
     CommonModule,
