@@ -108,24 +108,6 @@
                         </div>
 
 
-                        <div class="form-group">
-                            <label for="category"> Catégorie </label>
-                            <select formControlName="category" class="form-control" id="category"
-                                    [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
-                                <option value="" disabled>-- Catégorie Du Plat --</option>
-                                <option value="Hamburgers">Hamburgers</option>
-                                <option value="Nuggets de poulet">Nuggets de poulet</option>
-                                <option value="Volailles cuites">Volailles cuites</option>
-                                <option value="Viandes">Viandes</option>
-                                <option value="Plats à la volaille">Plats à la volaille</option>
-                                <option value="Poulets">Poulets</option>
-                            </select>
-                            <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
-                                <div *ngIf="f['category'].errors['required']" class="center"> une catégorie est
-                                    requise
-                                </div>
-                            </div>
-                        </div>
 
 
                         <!---------------------- status --------------------------->
@@ -145,9 +127,9 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                             <button class="btn">Ajouter  La List </button>
-
+                        <div class="center">
+                             <button   class="btn" (click)="onOpenListMealDialog()">Ajouter  La List Des plats</button>
+                             <p *ngIf="closedDialog && mealsContainMenu.length < 2 " style="color: crimson"> Vous Devez choisir impérativement 2 plats pour former un menu  </p>
                         </div>
 
                         <!---------------------- Image --------------------------->

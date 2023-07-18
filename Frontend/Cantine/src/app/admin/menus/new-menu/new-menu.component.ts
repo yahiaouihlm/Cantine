@@ -12,7 +12,7 @@ import {Meal} from "../../../sharedmodule/models/meal";
 export class NewMenuComponent {
   submitted = false;
   image!: File
-  mealsContainMenu: Meal[] = []
+  mealsContainMenu:  number[] = []
   newMenu: FormGroup = new FormGroup({
     label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),
@@ -22,10 +22,13 @@ export class NewMenuComponent {
     status: new FormControl('', [Validators.required])
   });
 
+  closedDialog   =  false;
   constructor( private matDialog: MatDialog) {}
-  onOpenDialogClick() {
+  onOpenListMealDialog() {
+    this.closedDialog = false;
     const result = this.matDialog.open(ListMealsComponent);
     result.afterClosed().subscribe((result) => {
+      this.closedDialog = true;
       if (result === undefined)
         this.mealsContainMenu = []
       else {
