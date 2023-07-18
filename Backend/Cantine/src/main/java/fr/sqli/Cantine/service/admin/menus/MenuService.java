@@ -13,7 +13,7 @@ import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.UnavailableMeal;
+import fr.sqli.Cantine.service.admin.menus.exceptions.UnavailableMealException;
 import fr.sqli.Cantine.service.images.IImageService;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -123,7 +123,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMeal {
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException {
         var menuEntity = menuDtoIn.toMenuEntity();
 
         IMenuService.ValidateMealID(menuDtoIn);
@@ -141,7 +141,7 @@ public class MenuService implements IMenuService {
             var meal = this.mealService.getMealEntityByID(mealID);
             if (meal.getStatus() == 0 ){
                 MenuService.LOG.error("THE MEAL WITH ID = {} IS NOT AVAILABLE ", mealID);
-                throw new UnavailableMeal(" LE PLAT  " + meal.getLabel() + " N'EST PAS DISPONIBLE ");
+                throw new UnavailableMealException(" LE PLAT  " + meal.getLabel() + " N'EST PAS DISPONIBLE ");
             }
             mealsInMenu.add(meal);
         }

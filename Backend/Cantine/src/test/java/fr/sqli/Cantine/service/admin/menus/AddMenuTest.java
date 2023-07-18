@@ -1,12 +1,15 @@
 package fr.sqli.Cantine.service.admin.menus;
 
+import fr.sqli.Cantine.dao.IMealDao;
 import fr.sqli.Cantine.dao.IMenuDao;
 import fr.sqli.Cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.Cantine.entity.MealEntity;
 import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.Cantine.service.admin.meals.IMealService;
 import fr.sqli.Cantine.service.admin.meals.MealService;
 import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.Cantine.service.admin.menus.exceptions.UnavailableMealException;
 import fr.sqli.Cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +32,9 @@ import java.util.Optional;
 public class AddMenuTest {
     @Mock
     private IMenuDao iMenuDao;
+
+    @Mock
+    private MealService mealService;
     @Mock
     private MealService iMealService;
     @Mock
@@ -60,6 +66,22 @@ public class AddMenuTest {
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
         this.menu.setMealIDs(Collections.singletonList("1"));
 
+    }
+
+    @Test
+    void AddMenuWithUnalienableMeal() throws  Exception{
+        MenuDtoIn menu = new MenuDtoIn();
+        menu.setMealIDs(Collections.singletonList("1"));
+
+        MealEntity meal = new MealEntity();
+        meal.setId(1);
+        meal.setStatus(0);
+
+        Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.empty());
+        Mockito.when(mealService.getMealEntityByID(1)).thenReturn(meal);
+
+        Assertions.assertThrows(UnavailableMealException.class , () -> this.menuService.addMenu(this.menu));
+        Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
