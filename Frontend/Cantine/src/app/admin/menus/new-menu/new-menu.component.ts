@@ -12,7 +12,7 @@ import {Meal} from "../../../sharedmodule/models/meal";
 export class NewMenuComponent {
   submitted = false;
   image!: File
-  mealsContainMenu:  number[] = []
+  mealsContainMenu:  Meal[] = []
   newMenu: FormGroup = new FormGroup({
     label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),

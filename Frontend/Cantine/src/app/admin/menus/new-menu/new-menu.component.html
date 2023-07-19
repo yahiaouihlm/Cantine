@@ -129,7 +129,13 @@
 
                         <div class="center">
                              <button   class="btn" (click)="onOpenListMealDialog()">Ajouter  La List Des plats</button>
-                             <p *ngIf="closedDialog && mealsContainMenu.length < 2 " style="color: crimson"> Vous Devez choisir impérativement 2 plats pour former un menu  </p>
+                             <p *ngIf="closedDialog && mealsContainMenu.length < 2 " style="color: crimson"> Vous Devez choisir impérativement  au moins 2 plats pour former un menu  </p>
+
+                                                 <h3 *ngIf="mealsContainMenu.length >= 2"> Les plat choisis </h3>
+                                <div *ngFor="let meal of  mealsContainMenu">
+                                    <p> Label : {{meal.label}}  , Catégoey :  {{meal.category}} , prix : {{meal.price}}  </p>
+                               </div>
+
                         </div>
 
                         <!---------------------- Image --------------------------->

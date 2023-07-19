@@ -13,7 +13,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 export class ListMealsComponent implements  OnInit{
 
     meals$  :  Observable <Meal[]>  =  of([]);
-    chosenMealsIDs : number[] = [];
+    chosenMeals : Meal[] = [];
     submitted = false;
     constructor(private   coreCantineService : CoreCantineService , private dialogRef: MatDialogRef<ListMealsComponent>) {
     }
@@ -23,27 +23,30 @@ export class ListMealsComponent implements  OnInit{
 
     }
 
+    isInMealsList(meal : Meal) : boolean {
+        return !!this.chosenMeals.find(pmeal => pmeal.id === meal.id);
+    }
 
-    addToListToLinkMealToMenu(mealID : number) {
-       this.chosenMealsIDs.push(mealID);
+    addToListToLinkMealToMenu(meal : Meal) {
+       this.chosenMeals.push(meal);
     }
 
 
     resetMealsList()  : void{
-        this.chosenMealsIDs = [];
+        this.chosenMeals = [];
         this.submitted = false;
     }
 
     validate() :  void  {
         this.submitted = true;
-        if  (this.chosenMealsIDs.length > 2)
+        if  (this.chosenMeals.length >= 2)
             this.closeDialog();
     }
 
 
 
     closeDialog() {
-        this.dialogRef.close(this.chosenMealsIDs);
+        this.dialogRef.close(this.chosenMeals);
     }
 
     mealAvailableToString(mealAvailable : number): string {

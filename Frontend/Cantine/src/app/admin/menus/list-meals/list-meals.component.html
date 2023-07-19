@@ -19,12 +19,12 @@
                         </div>
 
 
-                            <div  *ngIf="!chosenMealsIDs.includes(meal.id)"  class="center">
-                                <button  [disabled]="meal.status == 0" class="btn"   (click) =  "addToListToLinkMealToMenu(meal.id)"> Ajouter Le Plat</button>
+                            <div  *ngIf="!isInMealsList(meal)"  class="center">
+                                <button  [disabled]="meal.status == 0" class="btn"   (click) =  "addToListToLinkMealToMenu(meal)"> Ajouter Le Plat</button>
                             </div>
 
 
-                            <div  *ngIf="chosenMealsIDs.includes(meal.id)"  class="center">
+                            <div  *ngIf="isInMealsList(meal)"  class="center">
                                 <p   style="color: green ;"> Séléctionné </p>
                             </div>
 
@@ -40,10 +40,10 @@
         <div class="validate-btn center">
             <div>
                 <button  class="btn"  (click)="validate()">Valider</button>
-                <p *ngIf="submitted && chosenMealsIDs.length < 2  "  style="color: crimson">Vous deverriez  absolument Choisir au moins   deux Plats  pour un  menu </p>
+                <p *ngIf="submitted && chosenMeals.length < 2  "  style="color: crimson">Vous deverriez  absolument Choisir au moins   deux Plats  pour un  menu </p>
 
             </div>
-            <div class="btn" *ngIf="chosenMealsIDs.length>0" (click)="resetMealsList()">reset</div>
+            <div class="btn" *ngIf="chosenMeals.length>0" (click)="resetMealsList()">reset</div>
         </div>
     </div>
 
