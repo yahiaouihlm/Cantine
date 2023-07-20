@@ -3,15 +3,20 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import {ListMealsComponent} from "../list-meals/list-meals.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Meal} from "../../../sharedmodule/models/meal";
+import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
+import {MenusService} from "../menus.service";
 
 @Component({
   selector: 'app-new-menu',
   templateUrl: './new-menu.component.html',
-  styleUrls: ['../../../../assets/styles/new-meal.component.scss']
+  styleUrls: ['../../../../assets/styles/new-meal.component.scss'] ,
+  providers : [MenusService]
 })
 
 export class NewMenuComponent {
   private   ATTENTION_MEAL_PRICE = "Attention, Vous  avez  Saisie un  Priw de 80€  Pour un Menu  !"
+  private   WOULD_YOU_LIKE_TO_SAVE_THIS_MENU = "Voulez-vous  enregistrer  ce  menu ?"
+
   submitted = false;
   image!: File
   mealsContainMenu:  Meal[] = []
@@ -25,7 +30,7 @@ export class NewMenuComponent {
   });
 
   closedDialog   =  false;
-  constructor( private matDialog: MatDialog) {}
+  constructor( private matDialog: MatDialog , private  menusService   : MenusService  ) {}
 
 
   onSubmit() {
@@ -36,11 +41,51 @@ export class NewMenuComponent {
     if (this.newMenu.controls["price"].value > 50) {
       alert(this.ATTENTION_MEAL_PRICE)
     }
+    this.confirmAndSendNewMeal();
+  }
 
-    console.log("le  formulaire  est bien  valider  et  pret  a  etre  envoyer  au  serveur");
+
+
+
+  confirmAndSendNewMeal(): void {
+    const result = this.matDialog.open(ValidatorDialogComponent, {
+      data: {message: this.WOULD_YOU_LIKE_TO_SAVE_THIS_MENU},
+      width: '40%',
+    });
+
+    result.afterClosed().subscribe((result) => {
+      if (result != undefined && result == true) {
+        this.sendNewMenu();
+      } else {
+        return;
+      }
+    });
+
 
   }
 
+
+  sendNewMenu() :  void  {
+    const  formData = new FormData();
+    formData.append("label", this.newMenu.controls["label"].value);
+    formData.append("description", this.newMenu.controls["description"].value);
+    formData.append("price", this.newMenu.controls["price"].value);
+    formData.append("quantity", this.newMenu.controls["quantity"].value);
+    formData.append("image", this.image);
+    formData.append("status", this.newMenu.controls["status"].value);
+    formData.append("meals", JSON.stringify(this.mealsContainMenu));
+
+    this.
+  }
+
+
+
+
+
+
+
+
+  // dialog to open  the  list  of  meals  and  select  the  meals  to  add  to  the  menu
   onOpenListMealDialog() {
     this.closedDialog = false;
     const result = this.matDialog.open(ListMealsComponent);

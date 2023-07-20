@@ -77,11 +77,8 @@ export class NewMealComponent {
         formData.append('price', this.newMeal.controls['price'].value);
         formData.append('quantity', this.newMeal.controls['quantity'].value);
         formData.append('image', this.image);
-        if  (this.newMeal.controls['status'].value == "available") {
-            formData.append('status', "1");
-        } else {
-            formData.append('status', "0");
-        }
+        formData.append('status', this.newMeal.controls['status'].value === "available" ? "1" : "0");
+
         this.mealServiceService.addMeal(formData).subscribe((data) => {
              if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY") {
                  const result = this.matDialog.open(SuccessfulDialogComponent, {
