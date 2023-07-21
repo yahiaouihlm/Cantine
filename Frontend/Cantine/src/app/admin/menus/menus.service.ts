@@ -6,18 +6,19 @@ import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
+import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 
 @Injectable()
 export class MenusService {
 
-  private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/meals';
+  private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/menus';
   private  ADD_MENU_URL = this.BASIC_ENDPOINT  + '/add';
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router ) { }
 
 
 
-  sendMenu (menu :  Menu ){
-    return this.httpClient.post <Menu>(this.ADD_MENU_URL, menu).pipe(
+  sendMenu (menu :  FormData ){
+    return this.httpClient.post <NormalResponse>(this.ADD_MENU_URL, menu).pipe(
         catchError( (error) => this.handleError(error))
     );
   }
@@ -27,7 +28,6 @@ export class MenusService {
     let  errorMessage = errorObject.exceptionMessage;
 
     if  (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable){
-      errorMessage = "Veuillez  vérifier  les  données  saisies  !";
       this.openDialog(errorMessage,  error.status);
 
     }
@@ -62,9 +62,10 @@ export class MenusService {
 
     result.afterClosed().subscribe((confirmed: boolean) => {
       if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError== HttpStatusCode.Conflict || httpError== HttpStatusCode.NotFound){
-        this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
+      //  this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
       }
       else {
+        console.log("je suis  la ")
         /* TODO  remove THE  Token  */
         //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
       }

@@ -34,13 +34,13 @@ export class NewMenuComponent {
 
 
   onSubmit() {
-    this.submitted = true;
+    /*this.submitted = true;
     if (this.newMenu.invalid || this.mealsContainMenu.length < 2) {
       return;
     }
     if (this.newMenu.controls["price"].value > 50) {
       alert(this.ATTENTION_MEAL_PRICE)
-    }
+    }*/
     this.confirmAndSendNewMeal();
   }
 
@@ -66,16 +66,33 @@ export class NewMenuComponent {
 
 
   sendNewMenu() :  void  {
+/*
     const  formData = new FormData();
     formData.append("label", this.newMenu.controls["label"].value);
     formData.append("description", this.newMenu.controls["description"].value);
     formData.append("price", this.newMenu.controls["price"].value);
     formData.append("quantity", this.newMenu.controls["quantity"].value);
     formData.append("image", this.image);
-    formData.append("status", this.newMenu.controls["status"].value);
+    formData.append('status', this.newMenu.controls['status'].value === "available" ? "1" : "0");
     formData.append("meals", JSON.stringify(this.mealsContainMenu));
+*/
 
-    this.
+    const  formData = new FormData();
+    formData.append("label", "label");
+    formData.append("description", "description");
+    formData.append("price", "1.23");
+    formData.append("quantity", "4");
+    formData.append("image", this.image);
+    formData.append('status', "1");
+    formData.append("meals", JSON.stringify([1 , 2 , 3]));
+
+
+
+    this.menusService.sendMenu(formData).subscribe((result) => {
+      if (result != undefined && result.message === "MENU ADDED SUCCESSFULLY") {
+        console.log("Bien  Ajouter")
+      }
+    })
   }
 
 

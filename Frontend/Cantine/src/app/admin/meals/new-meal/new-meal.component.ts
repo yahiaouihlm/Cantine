@@ -17,6 +17,7 @@ export class NewMealComponent {
     private  ERROR_OCCURRED_WHILE_ADDING_MEAL = "Une erreur est survenue lors de l'ajout du plat !"
     private WOULD_YOU_LIKE_TO_SAVE_THIS_MEAL = "Voulez-vous vraiment sauvegarder ce plat ?"
     private  ATTENTION_MEAL_PRICE= "Attention  vous  avez  saisi  un  prix  supérieur  à  50€  pour un  plat  !"
+
     submitted = false;
     image!: File
     newMeal: FormGroup = new FormGroup({
@@ -80,7 +81,7 @@ export class NewMealComponent {
         formData.append('status', this.newMeal.controls['status'].value === "available" ? "1" : "0");
 
         this.mealServiceService.addMeal(formData).subscribe((data) => {
-             if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY") {
+             if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY" ) {
                  const result = this.matDialog.open(SuccessfulDialogComponent, {
                      data: {message: this.MEAL_ADDED_SUCCESSFULLY },
                      width: '40%',
