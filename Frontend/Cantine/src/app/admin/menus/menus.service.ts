@@ -29,16 +29,21 @@ export class MenusService {
 
     if  (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable){
       this.openDialog(errorMessage,  error.status);
+      console.log("je   suis dans  le  BadRequest ou    dans le  not  acceptable");
+    }
+    else if  (error.status == HttpStatusCode.Conflict){
+      this.openDialog(errorMessage,  error.status);
+    }
 
+    else if  (error.status == HttpStatusCode.Forbidden){
+      this.openDialog(errorMessage,  error.status);
     }
-    /*else if (error.status == HttpStatusCode.Conflict) {
-      this.openDialog(errorMessage, error.status);
-    }
+
     else if  (error.status == HttpStatusCode.InternalServerError){
       errorMessage =  "Une  erreur  interne  est  survenue  !"
       this.openDialog(errorMessage, error.status);
     }
-    else if  (error.status == HttpStatusCode.NotFound){
+   /* else if  (error.status == HttpStatusCode.NotFound){
       errorMessage =  "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
       this.openDialog(errorMessage, error.status);
     }
