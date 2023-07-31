@@ -23,8 +23,8 @@ public class MenuDtoIn extends AbstractDtoIn {
 
     private Integer status;
 
-    private MultipartFile image;
     private Integer quantity;
+    private MultipartFile image;
 
     /**
      *  the client will send  only  the ids of the meals ( check the meals id validity in the service) and the service will fetch the meals from the database

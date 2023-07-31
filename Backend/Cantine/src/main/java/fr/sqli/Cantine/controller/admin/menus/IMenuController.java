@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.admin.menus;
 
 import fr.sqli.Cantine.dto.in.food.MenuDtoIn;
+import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.dto.out.food.MenuDtout;
 import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
@@ -12,9 +13,12 @@ import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 public interface IMenuController {
 
@@ -42,7 +46,8 @@ public interface IMenuController {
 
     public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")Integer idMenu) throws InvalidMenuInformationException, MealNotFoundException, MenuNotFoundException, ImagePathException;
 
-    public ResponseEntity<String> addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException;
+    @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
+    ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException;
 
     public ResponseEntity<MenuDtout> getMenuById(Integer idMenu) throws InvalidMenuInformationException, MealNotFoundException;
 

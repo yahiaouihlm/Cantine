@@ -124,11 +124,13 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException {
+
         var menuEntity = menuDtoIn.toMenuEntity();
 
         IMenuService.ValidateMealID(menuDtoIn);
 
         var menu = this.checkExistingMenu(menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
+
         if (menu.isPresent()) {
             MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuEntity.getLabel(), menuEntity.getDescription(), menuEntity.getPrice());
             throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
