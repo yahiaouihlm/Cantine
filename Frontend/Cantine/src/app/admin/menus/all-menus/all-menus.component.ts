@@ -23,6 +23,7 @@ export class AllMenusComponent implements  OnInit{
 
 
   updateMenu(id :  number) {
+    console.log(id)
     this.router.navigate(['/admin/menus/update', id]);
   }
 

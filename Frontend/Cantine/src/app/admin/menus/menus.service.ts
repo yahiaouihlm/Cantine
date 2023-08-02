@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Menu} from "../../sharedmodule/models/menu";
-import {HttpClient, HttpErrorResponse, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {catchError, throwError} from "rxjs";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
 import {MatDialog} from "@angular/material/dialog";
@@ -13,6 +13,7 @@ export class MenusService {
 
   private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/menus';
   private  ADD_MENU_URL = this.BASIC_ENDPOINT  + '/add';
+  private  GET_ONE_MENU_URL = this.BASIC_ENDPOINT  + '/get';
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router ) { }
 
 
@@ -23,6 +24,12 @@ export class MenusService {
     );
   }
 
+  getMenuById(id : number){
+    const params = new HttpParams().set('idMenu', id);
+    return  this.httpClient.get<Menu>(this.GET_ONE_MENU_URL ,  {params : params}).pipe(
+        catchError( (error) => this.handleError(error))
+    );
+  }
   private handleError(error: HttpErrorResponse) {
     const errorObject = error.error as ErrorResponse;
     let  errorMessage = errorObject.exceptionMessage;
