@@ -5,6 +5,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
 import { NewMenuComponent } from './new-menu/new-menu.component';
 import { ListMealsComponent } from './list-meals/list-meals.component';
+import { UpdateMenuComponent } from './update-menu/update-menu.component';
 
 
 
@@ -24,7 +25,8 @@ const  routes:  Routes  = [
   declarations: [
     AllMenusComponent,
     NewMenuComponent,
-    ListMealsComponent
+    ListMealsComponent,
+    UpdateMenuComponent
   ],
   imports: [
     CommonModule,
