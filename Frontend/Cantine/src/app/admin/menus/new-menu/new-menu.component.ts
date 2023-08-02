@@ -32,7 +32,7 @@ export class NewMenuComponent {
         image: new FormControl('', [Validators.required]),
         status: new FormControl('', [Validators.required]),
     });
-
+     isLoaded = false;
     closedDialog = false;
 
     constructor(private matDialog: MatDialog, private menusService: MenusService, private router: Router) {
@@ -40,14 +40,17 @@ export class NewMenuComponent {
 
 
     onSubmit() {
-        /*this.submitted = true;
+        this.submitted = true;
+        this.isLoaded = true;
         if (this.newMenu.invalid || this.mealsContainMenu.length < 2) {
+            this.isLoaded = false;
           return;
         }
         if (this.newMenu.controls["price"].value > 50) {
           alert(this.ATTENTION_MEAL_PRICE)
-        }*/
+        }
         this.confirmAndSendNewMeal();
+
     }
 
 

@@ -162,7 +162,9 @@
 
                         <div class="btns">
                             <div class="btn-save center">
-                                <button  class="btn" (click)="onSubmit()"> Enregistrer</button>
+                                <div *ngIf="!isLoaded; else loadingTemplate" >
+                                    <button  class="btn" (click)="onSubmit()"> Enregistrer</button>
+                                </div>
                             </div>
                             <span><mat-icon>arrow_back</mat-icon></span>
                         </div>
@@ -179,4 +181,22 @@
     </div>
 </div>
 
+
+
+<ng-template #loadingTemplate >
+    <!-- Afficher le spinner ici pendant le chargement -->
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+</ng-template>
+
+<style>
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 15vh;
+    }
+</style>
 
