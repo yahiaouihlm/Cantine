@@ -15,6 +15,7 @@ const  routes:  Routes  = [
     children: [
       {path: '', component: AllMenusComponent},
       {path: 'new', component: NewMenuComponent},
+        {path: 'update/:id', component: UpdateMenuComponent},
     ]
   },
 ];

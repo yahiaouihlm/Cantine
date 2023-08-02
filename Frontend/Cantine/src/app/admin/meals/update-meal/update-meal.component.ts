@@ -11,7 +11,7 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 @Component({
     selector: 'app-update-meal',
     templateUrl: './update-meal.component.html',
-    styleUrls: ["../../../../assets/styles/new-meal.component.scss"],
+        styleUrls: ["../../../../assets/styles/new-meal.component.scss"],
     providers: [MealsService]
 })
 export class UpdateMealComponent implements OnInit {
