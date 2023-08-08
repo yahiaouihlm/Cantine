@@ -6,7 +6,7 @@
                     <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
                     <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
                 </div>
-                <h1 class="center"> Modifier  Le  Plat </h1>
+                <h1 class="center"> Modifier Le Plat </h1>
                 <div class="register-form ">
                     <form [formGroup]="updatedMenu">
 
@@ -96,7 +96,8 @@
                             <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
                                 <div *ngIf="f['quantity'].errors['required']" class="center"> La quantité est requis
                                 </div>
-                                <div *ngIf="f['quantity'].errors['pattern']" class="center">la quantité est un entier positive
+                                <div *ngIf="f['quantity'].errors['pattern']" class="center">la quantité est un entier
+                                    positive
                                 </div>
                                 <div *ngIf="f['quantity'].errors['min']" class="center">la quantité doit être supérieur
                                     à 0
@@ -106,7 +107,6 @@
                                 </div>
                             </div>
                         </div>
-
 
 
                         <!---------------------- status --------------------------->
@@ -127,14 +127,15 @@
                         </div>
 
                         <div class="center" style="padding-top: 10px;">
-                            <p> Image du  Plat </p>
-                            <img  src="{{menu.image}}" alt="y'a pas de image ou  il  na pas pu  etre charger" width="300px" >
+                            <p> Image du Plat </p>
+                            <img src="{{menu.image}}" alt="y'a pas de image ou  il  na pas pu  etre charger"
+                                 width="300px">
                         </div>
 
 
                         <!---------------------- Image --------------------------->
                         <div class="form-group">
-                            <label for="image"> Choisissez une image pour modifier  celle  du plat </label>
+                            <label for="image"> Choisissez une image pour modifier celle du plat </label>
 
                             <input class="input-group-prepend"
                                    [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
@@ -155,26 +156,29 @@
 
 
                         <div class="center">
-                            <button   class="btn" (click)="onOpenListMealDialog()">Ajouter  La List Des plats</button>
-                            <p *ngIf="(closedDialog && mealsContainMenu.length < 2) || ( submitted && mealsContainMenu.length < 2) " style="color: crimson"> Vous Devez choisir impérativement  au moins 2 plats pour former un menu  </p>
+
+                            <p *ngIf="(closedDialog && mealsContainMenu.length < 2) || ( submitted && mealsContainMenu.length < 2) "
+                               style="color: crimson"> Vous Devez choisir impérativement au moins 2 plats pour former un
+                                menu </p>
 
                             <h3 *ngIf="mealsContainMenu.length >= 2"> Les plat choisis </h3>
                             <div *ngFor="let meal of  mealsContainMenu">
-                                <p> Label : {{meal.label}}  , Catégoey :  {{meal.category}} , prix : {{meal.price}}  </p>
+                                <p> Label : {{meal.label}}  , Catégoey :  {{meal.category}} , prix
+                                    : {{meal.price}}  </p>
                             </div>
-
+                            <button class="btn" (click)="onOpenListMealDialog()">Modifier La List Des plats</button>
                         </div>
 
                         <div class="btns">
                             <!---->
                             <div class="btn-save center">
-                                <button  class="btn"  (click)=" onSubmit()"> Valider </button>
+                                <button class="btn" (click)=" onSubmit()"> Valider</button>
                             </div>
                             <!--(click)="goback()"-->
-                            <span ><mat-icon>arrow_back</mat-icon></span>
+                            <span><mat-icon>arrow_back</mat-icon></span>
 
                             <div class="btn-save right">
-                                <button  class="btn"> supprimer </button>
+                                <button class="btn"> supprimer</button>
                             </div>
 
                         </div>

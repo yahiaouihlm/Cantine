@@ -33,11 +33,12 @@ export class UpdateMenuComponent implements OnInit {
         description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),
         price: new FormControl('', [Validators.required, Validators.min(0.01), Validators.max(999.99)]),
         quantity: new FormControl('', [Validators.required, Validators.min(0), Validators.max(2147483501), Validators.pattern("^[0-9]+$")]),
-        image: new FormControl('', ),
+        image: new FormControl('',),
         status: new FormControl('', [Validators.required]),
     });
 
-    constructor(private route: ActivatedRoute, private menuService: MenusService, private matDialog: MatDialog , private router: Router) {}
+    constructor(private route: ActivatedRoute, private menuService: MenusService, private matDialog: MatDialog, private router: Router) {
+    }
 
     ngOnInit(): void {
 
@@ -47,6 +48,7 @@ export class UpdateMenuComponent implements OnInit {
             this.menuService.getMenuById(id).subscribe(data => {
                 this.menu = data;
                 this.matchFormsValue();
+                this.mealsContainMenu = this.menu.meals;
             });
 
         }
@@ -56,7 +58,7 @@ export class UpdateMenuComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true
-        if (this.updatedMenu.invalid) {
+        if (this.updatedMenu.invalid ||  this.mealsContainMenu.length < 2) {
             return;
         }
         if (this.updatedMenu.controls["price"].value > 50) {
@@ -81,46 +83,46 @@ export class UpdateMenuComponent implements OnInit {
 
 
     editMenu() {
-      const menu = new FormData();
-      menu.append("menuId", this.menu.id.toString());
-      menu.append('label', this.updatedMenu.controls["label"].value);
-      menu.append('description', this.updatedMenu.controls["description"].value);
-      menu.append('price', this.updatedMenu.controls["price"].value);
-      menu.append('quantity', this.updatedMenu.controls["quantity"].value);
-      if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
-        menu.append('image', this.image);
+        let mealsIds: number[] = []
+        this.mealsContainMenu.forEach((meal) => {
+            mealsIds.push(meal.id);
+        });
+        const menu = new FormData();
+        menu.append("menuId", this.menu.id.toString());
+        menu.append('label', this.updatedMenu.controls["label"].value);
+        menu.append('description', this.updatedMenu.controls["description"].value);
+        menu.append('price', this.updatedMenu.controls["price"].value);
+        menu.append('quantity', this.updatedMenu.controls["quantity"].value);
+        menu.append("mealIDs", JSON.stringify(mealsIds));
+        if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
+            menu.append('image', this.image);
 
-      if (this.updatedMenu.controls['status'].value == "available") {
-        menu.append('status', "1");
-      } else {
-        menu.append('status', "0");
-      }
-
-      this.menuService.updateMenu(menu).subscribe((data) => {
-        if (data.message == "MENU UPDATED SUCCESSFULLY") {
-
-          const result = this.matDialog.open(SuccessfulDialogComponent, {
-            data: {message: this.MENU_ADDED_SUCCESSFULLY},
-            width: '40%',
-          });
-          result.afterClosed().subscribe((result) => {
-            this.router.navigate(['/admin/meals'], {queryParams: {reload: 'true'}})
-          });
-
+        if (this.updatedMenu.controls['status'].value == "available") {
+            menu.append('status', "1");
         } else {
-          alert(this.ERROR_OCCURRED_WHILE_UPDATING_MENU);
-          /*TODO    Remove  Token   */
+            menu.append('status', "0");
         }
 
-      });
+        this.menuService.updateMenu(menu).subscribe((data) => {
+            if (data.message == "MENU UPDATED SUCCESSFULLY") {
 
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: this.MENU_ADDED_SUCCESSFULLY},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    this.router.navigate(['/admin/menus'], {queryParams: {reload: 'true'}})
+                });
 
+            } else {
+                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MENU);
+                /*TODO    Remove  Token   */
+            }
 
+        });
 
 
     }
-
-
 
 
     onOpenListMealDialog() {
@@ -138,8 +140,6 @@ export class UpdateMenuComponent implements OnInit {
         })
 
     }
-
-
 
 
     matchFormsValue() {
