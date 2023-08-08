@@ -32,6 +32,66 @@
                     </div>
 
 
+
+                    <!---------------------- Name --------------------------->
+                    <div class="form-group ">
+                        <label for="lastName"> Nom :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
+                               formControlName="lastName"
+                               placeholder="  Votre Nom "
+                               type="text"
+                               id="lastName"
+                        />
+                        <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
+                            <div *ngIf="f['lastName'].errors['maxlength']" class="center">
+                                votre Nom  ne doit pas dépasser 60 charctéres
+                            </div>
+                            <div *ngIf="f['lastName'].errors['minlength']" class="center">
+                                votre Nom  doit avoir au minimum de 3 charctéres
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!---------------------- Email --------------------------->
+                    <div class="form-group ">
+                        <label for="email"> Email :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                               formControlName="email"
+                               placeholder="  Votre Email "
+                               type="email"
+                               id="email"
+                        />
+                        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                            <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                            <div *ngIf="f['email'].errors['maxlength']" class="center">
+                                votre Nom  ne doit pas dépasser 1000 charctéres
+                            </div>
+                            <div *ngIf="f['email'].errors['email']" class="center">
+                                Format  Email  incorrect
+                            </div>
+
+                            <div *ngIf="f['email'].errors['pattern']" class="center">
+                                Format  Email  incorrect pattern
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
                     <div class="validate-form center">
                         <button class="center btn" (click)="onSubmit()">
                             <span>

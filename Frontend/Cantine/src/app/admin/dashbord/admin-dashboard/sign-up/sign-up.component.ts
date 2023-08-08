@@ -13,6 +13,8 @@ export class SignUpComponent {
   isLoaded = false;
   adminForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
+    lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
+    email: new FormControl('', [Validators.required ,  Validators.maxLength(1000),  Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
   /*  label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),
     price: new FormControl('', [Validators.required, Validators.min(0.01), Validators.max(999.99)]),
@@ -28,6 +30,7 @@ export class SignUpComponent {
     if (this.adminForm.invalid) {
       return;
     }
+    console.log("form is valid")
   }
   onChange = ($event: Event) => {
     const target = $event.target as HTMLInputElement;
