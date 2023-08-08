@@ -1,1 +1,112 @@
-<p>sign-up works!</p>
+<div class="container first  first-container">
+    <div class="row first">
+        <div class="container second">
+            <div class="row">
+
+                <div class="text-center">
+                    <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
+                    <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
+                </div>
+
+
+                <form [formGroup]="adminForm">
+
+                    <!---------------------- Name --------------------------->
+                    <div class="form-group ">
+                        <label for="firstName"> Prénom :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
+                               formControlName="firstName"
+                               placeholder="  Votre Prénom "
+                               type="text"
+                               id="firstName"
+                        />
+                        <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
+                            <div *ngIf="f['firstName'].errors['maxlength']" class="center">
+                                votre Prénom  ne doit pas dépasser 60 charctéres
+                            </div>
+                            <div *ngIf="f['firstName'].errors['minlength']" class="center">
+                                votre Prénom    doit avoir au minimum de 3 charctéres
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="validate-form center">
+                        <button class="center btn" (click)="onSubmit()">
+                            <span>
+                                <i class="fa fa-check"></i>
+                            </span>
+                            Valider
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #loadingTemplate >
+    &lt;!&ndash; Afficher le spinner ici pendant le chargement &ndash;&gt;
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+</ng-template>
+
+<style>
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 15vh;
+    }
+</style>
+
+<!--
+<div class="row">
+    <div class="col-md-4 offset-md-4 col-sm-6 offset-sm-3">
+        <div class="card auth">
+            <div class="card-body auth-card">
+                <div class="auth-avatar">
+                    <img src="https://pluspng.com/img-png/user-png-icon-account-avatar-human-male-man-men-people-person-download-svg-download-png-edit-icon-512.png" alt="user" class="user-image">
+                </div>
+                <form (submit)="adminForm">
+                    <div class="form-group">
+                        <label >Name : </label>
+                        <input type="text" name="name" class="form-control" placeholder="Name" >
+                    </div>
+                    <div class="form-group">
+                        <label >Phone : </label>
+                        <input type="text" name="phone" class="form-control" placeholder="Phone" >
+                    </div>
+                    <div class="form-group">
+                        <label >Email : </label>
+                        <input type="text" name="email" class="form-control" placeholder="Email" >
+                    </div>
+                    <div class="form-group">
+                        <label >Password : </label>
+                        <input type="password" name="password" class="form-control" placeholder="********">
+                    </div>
+                    <div class="form-group">
+                        <label >Confirm Password : </label>
+                        <input type="password" name="c_password" class="form-control" placeholder="********" >
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-my" value="Sign Up">
+                    </div>
+                    <div class="text-center login">
+                        Already have an account ? <a routerLink="/login">Login</a> hera.
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>-->
