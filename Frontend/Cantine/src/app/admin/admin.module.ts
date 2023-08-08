@@ -15,6 +15,7 @@ const routes: Routes = [
       {path: 'home', component: HomeAdminComponent},
       {path: 'meals', loadChildren:() => import('./meals/meals.module').then(m => m.MealsModule)},
       {path :'menus', loadChildren:() => import('./menus/menus.module').then(m => m.MenusModule)},
+      {path : 'dashboard', loadChildren:() => import('./dashbord/admin-dashboard/admin-dashboard.module').then(m => m.AdminDashboardModule)},
       {path: '', redirectTo: 'home', pathMatch: 'full'},
     ]
   },
