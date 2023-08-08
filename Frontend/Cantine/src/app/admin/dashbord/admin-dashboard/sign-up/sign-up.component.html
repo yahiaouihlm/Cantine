@@ -57,7 +57,7 @@
 
 
 
-                    <!---------------------- Email --------------------------->
+                    <!---------------------- Password --------------------------->
                     <div class="form-group ">
                         <label for="password"> Mot  de passe  :  </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" class="form-control"
@@ -80,6 +80,25 @@
                         </div>
                     </div>
 
+
+
+                    <!---------------------- Password Confirmation--------------------------->
+                    <div class="form-group ">
+                        <label for="confirmPassword">  Confirmation Mot  de passe  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" class="form-control"
+                               formControlName="confirmPassword"
+                               placeholder="  Confirmation  Mot  de passe "
+                               type="password"
+                               id="confirmPassword"
+                        />
+                        <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
+                            <div *ngIf="f['confirmPassword'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
+                            <div *ngIf="f['confirmPassword'].errors['matching']" class="center">
+                                  Les deux mots de passe ne sont pas identiques
+                            </div>
+
+                        </div>
+                    </div>
 
 
 
