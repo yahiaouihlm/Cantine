@@ -55,16 +55,16 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity updateMenu(MenuDtoIn menuDtoIn, Integer idMenu) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException {
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException {
 
-        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", idMenu);
+        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuDtoIn.getMenuId());
         var menu = menuDtoIn.toMenuEntityWithoutImage();
         IMenuService.ValidateMealID(menuDtoIn);
 
 
-        var menuToUpdate = this.menuDao.findById(idMenu);
+        var menuToUpdate = this.menuDao.findById(menuDtoIn.getMenuId());
         if (menuToUpdate.isEmpty()) {
-            MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE updateMenu METHOD ", idMenu);
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE updateMenu METHOD ", menuDtoIn.getMenuId());
             throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
         }
 

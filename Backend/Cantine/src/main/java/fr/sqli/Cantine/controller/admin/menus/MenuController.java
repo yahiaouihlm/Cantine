@@ -39,8 +39,8 @@ public class MenuController implements   IMenuController {
 
     @PutMapping (value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<String> update(Integer idMenu, MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException {
-         this.menuService.updateMenu( menuDtoIn, idMenu);
+    public ResponseEntity<String> update(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException {
+         this.menuService.updateMenu( menuDtoIn);
         return ResponseEntity.ok(MENU_UPDATED_SUCCESSFULLY);
     }
 

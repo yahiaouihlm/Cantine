@@ -41,7 +41,7 @@ public interface IMenuController {
 
     /*------------------ METHODS ------------------*/
 
-    public ResponseEntity<String> update (@RequestParam("idMenu")Integer idMenu,   MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException;
+    public ResponseEntity<String> update (MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException;
 
 
     public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")Integer idMenu) throws InvalidMenuInformationException, MealNotFoundException, MenuNotFoundException, ImagePathException;

@@ -12,6 +12,7 @@ import java.util.List;
 
 public class MenuDtoIn extends AbstractDtoIn {
 
+    private Integer menuId;
 
     private String label;
 
@@ -96,7 +97,13 @@ public class MenuDtoIn extends AbstractDtoIn {
     }
 
 
+    public Integer getMenuId() {
+        return menuId;
+    }
 
+    public void setMenuId(Integer menuId) {
+        menuId = menuId;
+    }
     public String getLabel() {
         return label;
     }

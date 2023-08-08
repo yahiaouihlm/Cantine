@@ -39,7 +39,7 @@ public interface IMenuService {
   }
 
 
-  public MenuEntity updateMenu(MenuDtoIn menuDtoIn ,  Integer idMenu ) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException;
+  public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException;
 
 
   public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException;
