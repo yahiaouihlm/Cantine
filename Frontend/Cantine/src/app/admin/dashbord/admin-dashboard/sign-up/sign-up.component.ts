@@ -12,13 +12,17 @@ export class SignUpComponent {
    submitted = false;
     image!: File ;
   isLoaded = false;
+
+
   adminForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
-    email: new FormControl('', [Validators.required ,  Validators.maxLength(1000),  Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
+    email: new FormControl('', [Validators.required ,  Validators.maxLength(1000),  Validators.pattern(Validation.EMAIL_REGEX)]),
     password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
     confirmPassword: new FormControl("" , [Validators.required]),
-    /*  label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
+    birthDate: new FormControl('', [Validators.required]),
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern(Validation.FRENCH_PHONE_REGEX)]),
+        /*  label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     image: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required]),*/
   },

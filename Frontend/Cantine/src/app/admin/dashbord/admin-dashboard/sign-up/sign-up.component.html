@@ -57,6 +57,55 @@
 
 
 
+
+                    <!---------------------- Email --------------------------->
+                    <div class="form-group ">
+                        <label for="email"> Email :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                               formControlName="email"
+                               placeholder="  Votre Email "
+                               type="email"
+                               id="email"
+                        />
+                        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                            <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                            <div *ngIf="f['email'].errors['maxlength']" class="center">
+                                votre Nom  ne doit pas dépasser 1000 charctéres
+                            </div>
+                            <div *ngIf="f['email'].errors['email']" class="center">
+                                Format  Email  incorrect
+                            </div>
+
+                            <div *ngIf="f['email'].errors['pattern']" class="center">
+                                Format  Email  incorrect pattern
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!---------------------- Birthdate--------------------------->
+                    <div class="form-group ">
+                        <label for="birthDate"> Date De  Naissance   :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
+                               formControlName="birthDate"
+                               placeholder="Votre  Date  De  Naissance "
+                               type="Date"
+                               id="birthDate"
+                        />
+                        <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
+                            <div *ngIf="f['birthDate'].errors['required']" class="center"> La  date  de  naissance  est requise     </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
                     <!---------------------- Password --------------------------->
                     <div class="form-group ">
                         <label for="password"> Mot  de passe  :  </label>
@@ -94,11 +143,38 @@
                         <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
                             <div *ngIf="f['confirmPassword'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
                             <div *ngIf="f['confirmPassword'].errors['matching']" class="center">
-                                  Les deux mots de passe ne sont pas identiques
+                                Les deux mots de passe ne sont pas identiques
                             </div>
 
                         </div>
                     </div>
+
+
+
+                    <!---------------------- Phone Number--------------------------->
+                    <div class="form-group ">
+                        <label for="phoneNumber">  Numéro Tél  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
+                               formControlName="phoneNumber"
+                               placeholder="  Votre  Numéro Télephone "
+                               type="tel"
+                               id="phoneNumber"
+                        />
+                        <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
+                            <div *ngIf="f['phoneNumber'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
+                            <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
+                                Format  Numéro  Téléphone est   incorrect
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+
 
 
 
