@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import Validation from "../../../../sharedmodule/functions/validation";
 
 @Component({
   selector: 'app-sign-up',
@@ -15,13 +16,16 @@ export class SignUpComponent {
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     email: new FormControl('', [Validators.required ,  Validators.maxLength(1000),  Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
-  /*  label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
-    description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),
-    price: new FormControl('', [Validators.required, Validators.min(0.01), Validators.max(999.99)]),
-    quantity: new FormControl('', [Validators.required, Validators.min(0), Validators.max(2147483501), Validators.pattern("^[0-9]+$")]),
+    password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
+    confirmPassword: new FormControl("" , [Validators.required]),
+    /*  label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
     image: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required]),*/
-  });
+  },
+      {
+        validators: [Validation.match('password', 'confirmPassword')]
+  }
+  );
 
 
   onSubmit() {

@@ -59,25 +59,23 @@
 
                     <!---------------------- Email --------------------------->
                     <div class="form-group ">
-                        <label for="email"> Email :  </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
-                               formControlName="email"
-                               placeholder="  Votre Email "
-                               type="email"
-                               id="email"
+                        <label for="password"> Mot  de passe  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" class="form-control"
+                               formControlName="password"
+                               placeholder="  Votre Mot  de passe "
+                               type="password"
+                               id="password"
                         />
-                        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                            <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
-                            <div *ngIf="f['email'].errors['maxlength']" class="center">
-                                votre Nom  ne doit pas dépasser 1000 charctéres
-                            </div>
-                            <div *ngIf="f['email'].errors['email']" class="center">
-                                Format  Email  incorrect
+                        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                            <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot  de  passe  est requis</div>
+                            <div *ngIf="f['password'].errors['maxlength']" class="center">
+                                votre Mot De passe  ne doit pas dépasser   20 charctéres
                             </div>
 
-                            <div *ngIf="f['email'].errors['pattern']" class="center">
-                                Format  Email  incorrect pattern
+                            <div *ngIf="f['password'].errors['minlength']" class="center">
+                                votre Mot de passe   doit avoir au minimum de 6 charctéres
                             </div>
+
 
                         </div>
                     </div>
