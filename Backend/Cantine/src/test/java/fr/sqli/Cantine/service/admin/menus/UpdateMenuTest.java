@@ -58,6 +58,7 @@ public class UpdateMenuTest {
 
 
         this.menu =  new MenuDtoIn();
+        this.menu.setMenuId(1);
         this.menu.setLabel("label test");
         this.menu.setDescription("description  test");
         this.menu.setQuantity(10);
@@ -90,7 +91,7 @@ public class UpdateMenuTest {
 
          Mockito.when(this.iMenuDao.save(this.menuEntity)).thenReturn(this.menuEntity);
 
-          var  result = this.menuService.updateMenu(this.menu, 1 );
+          var  result = this.menuService.updateMenu(this.menu );
             Assertions.assertEquals(this.menu.getLabel(), result.getLabel());
             Assertions.assertEquals(this.menu.getDescription(), result.getDescription());
             Assertions.assertEquals(this.menu.getPrice(), result.getPrice());
@@ -110,7 +111,7 @@ public class UpdateMenuTest {
         this.menuEntity.setImage(new ImageEntity());
         this.menu.setMealIDs(Collections.singletonList("invalid id"));
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
@@ -129,7 +130,7 @@ public class UpdateMenuTest {
         Mockito.when(this.iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(),  this.menu.getPrice()))
                   .thenReturn(Optional.of(menuWithOtherID));
 
-        Assertions.assertThrows(ExistingMenuException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(ExistingMenuException.class , () -> this.menuService.updateMenu(this.menu ));
 
         Mockito.verify(iMenuDao, Mockito.times(1)).findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel(), this.menu.getDescription(),  this.menu.getPrice());
         Mockito.verify(iMenuDao, Mockito.times(1)).findById(1);
@@ -137,8 +138,8 @@ public class UpdateMenuTest {
     }
     @Test
     void  updateMenuWithMenuNotFoundTest () {
-        Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.empty());
-        Assertions.assertThrows(MenuNotFoundException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Mockito.when(iMenuDao.findById(this.menu.getMenuId())).thenReturn(Optional.empty());
+        Assertions.assertThrows(MenuNotFoundException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(1)).findById(1);
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -153,7 +154,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithInvalidStatusTest(){
         this.menu.setStatus(2);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () ->this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () ->this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -161,7 +162,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNegativeStatusTest(){
         this.menu.setQuantity(-1);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -169,7 +170,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNullStatusTest () {
         this.menu.setStatus(null);
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -181,7 +182,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithTooHeightQuantityTest(){
         this.menu.setQuantity(Integer.MAX_VALUE);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -189,7 +190,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNegativeQuantityTest(){
         this.menu.setQuantity(-1);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -197,7 +198,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNullQuantityTest () {
         this.menu.setQuantity(null);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -210,14 +211,14 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithTooHeightPriceTest(){
         this.menu.setPrice(new BigDecimal(1001   ));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
     @Test
     void UpdateMenuWithZeroPriceTest(){
         this.menu.setPrice( new BigDecimal(0));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () ->this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () ->this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -225,7 +226,7 @@ public class UpdateMenuTest {
 
     void UpdateMenuWithNegativePriceTest(){
         this.menu.setPrice(new BigDecimal("-1"));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -233,7 +234,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNullPriceTest () {
         this.menu.setPrice(null);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -248,21 +249,21 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithTooShortDescriptionTest (){
         this.menu.setDescription("abad");
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
     @Test
     void UpdateMenuWithTooLongDescriptionTest(){
         this.menu.setLabel("a".repeat(1701));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
     @Test
     void UpdateMenuWithEmptyDescriptionTest(){
         this.menu.setDescription("");
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -270,7 +271,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNullDescriptionTest () {
         this.menu.setDescription(null);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -284,21 +285,21 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithTooShortLabelTest (){
         this.menu.setLabel("ab");
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
     @Test
     void UpdateMenuWithTooLongLabelTest (){
         this.menu.setLabel("a".repeat(101));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
     @Test
     void UpdateMenuWithEmptyLabelTest(){
         this.menu.setLabel("");
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu , 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -306,7 +307,7 @@ public class UpdateMenuTest {
     @Test
     void UpdateMenuWithNullLabelTest () {
         this.menu.setLabel(null);
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu, 1 ));
+        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 
@@ -315,12 +316,14 @@ public class UpdateMenuTest {
 
     @Test
     void  UpdateMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundException {
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu,-1));
+        this.menu.setMenuId(-1);
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void UpdateMenuByIdWithNullIdTest()  {
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.updateMenu(this.menu,-1));
+        this.menu.setMenuId(-1);
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.updateMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 

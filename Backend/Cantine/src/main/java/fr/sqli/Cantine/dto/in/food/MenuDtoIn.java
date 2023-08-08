@@ -102,7 +102,7 @@ public class MenuDtoIn extends AbstractDtoIn {
     }
 
     public void setMenuId(Integer menuId) {
-        menuId = menuId;
+        this.menuId = menuId;
     }
     public String getLabel() {
         return label;
