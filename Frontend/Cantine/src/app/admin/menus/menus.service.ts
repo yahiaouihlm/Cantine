@@ -14,9 +14,15 @@ export class MenusService {
   private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/menus';
   private  ADD_MENU_URL = this.BASIC_ENDPOINT  + '/add';
   private  GET_ONE_MENU_URL = this.BASIC_ENDPOINT  + '/get';
+    private  UPDATE_MENU_URL = this.BASIC_ENDPOINT  + '/update';
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router ) { }
 
 
+  updateMenu(menu :  FormData ){
+    return this.httpClient.put <NormalResponse>(this.UPDATE_MENU_URL, menu).pipe(
+        catchError( (error) => this.handleError(error))
+    );
+  }
 
   sendMenu (menu :  FormData ){
     return this.httpClient.post <NormalResponse>(this.ADD_MENU_URL, menu).pipe(
@@ -50,10 +56,10 @@ export class MenusService {
       errorMessage =  "Une  erreur  interne  est  survenue  !"
       this.openDialog(errorMessage, error.status);
     }
-   /* else if  (error.status == HttpStatusCode.NotFound){
+    else if  (error.status == HttpStatusCode.NotFound){
       errorMessage =  "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
       this.openDialog(errorMessage, error.status);
-    }*/
+    }
     else {
       errorMessage =  "Une  erreur  est  survenue  !"
       console.log(error.status)

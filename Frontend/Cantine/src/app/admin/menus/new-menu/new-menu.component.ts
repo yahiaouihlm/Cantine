@@ -18,7 +18,7 @@ import {Router} from "@angular/router";
 export class NewMenuComponent {
 
     private MENU_ADDED_SUCCESSFULLY = "Le Menu a été ajouté avec succès !"
-    private ATTENTION_MEAL_PRICE = "Attention, Vous  avez  Saisie un  Priw de 80€  Pour un Menu  !"
+    private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  Priw de 80€  Pour un Menu  !"
     private WOULD_YOU_LIKE_TO_SAVE_THIS_MENU = "Voulez-vous  enregistrer  ce  menu ?"
 
     submitted = false;
@@ -47,7 +47,7 @@ export class NewMenuComponent {
           return;
         }
         if (this.newMenu.controls["price"].value > 50) {
-          alert(this.ATTENTION_MEAL_PRICE)
+          alert(this.ATTENTION_MENU_PRICE)
         }
         this.confirmAndSendNewMeal();
 
