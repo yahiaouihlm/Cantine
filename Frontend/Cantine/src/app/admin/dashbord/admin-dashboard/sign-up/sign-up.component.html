@@ -150,28 +150,28 @@
                     </div>
 
 
-
-                    <!---------------------- Phone Number--------------------------->
+                    <!---------------------- Town --------------------------->
                     <div class="form-group ">
-                        <label for="phoneNumber">  Numéro Tél  :  </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
-                               formControlName="phoneNumber"
-                               placeholder="  Votre  Numéro Télephone "
-                               type="tel"
-                               id="phoneNumber"
+                        <label for="address"> Ville :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['address'].errors }" class="form-control"
+                               formControlName="address"
+                               placeholder=" votre  adresse "
+                               type="text"
+                               id="address"
                         />
-                        <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
-                            <div *ngIf="f['phoneNumber'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
-                            <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
-                                Format  Numéro  Téléphone est   incorrect
+                        <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                            <div *ngIf="f['address'].errors['required']" class="center"> le  champs  est  obligatoire </div>
+                            <div *ngIf="f['address'].errors['maxlength']" class="center">
+                                Le nom de    de votre  adresse  ne doit pas dépasser   3000 charctéres
                             </div>
+
+                            <div *ngIf="f['address'].errors['minlength']" class="center">
+                                Le  nom  de votre  adresse   doit avoir au minimum de 3 charctéres
+                            </div>
+
 
                         </div>
                     </div>
-
-
-
-
 
 
 
@@ -197,6 +197,57 @@
 
                         </div>
                     </div>
+
+
+
+
+                    <!---------------------- Phone Number--------------------------->
+                    <div class="form-group ">
+                        <label for="phoneNumber">  Numéro Tél  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
+                               formControlName="phoneNumber"
+                               placeholder="  Votre  Numéro Télephone "
+                               type="tel"
+                               id="phoneNumber"
+                        />
+                        <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
+                            <div *ngIf="f['phoneNumber'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
+                            <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
+                                Format  Numéro  Téléphone est   incorrect
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+<!--
+
+                    &lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Function  -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
+
+                    <div class="form-group">
+                        <label for="category"> Votre  poste   </label>
+                        <select formControlName="category" class="form-control" id="category"
+                                [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
+                            <option value="" disabled>&#45;&#45; Catégorie Du Plat &#45;&#45;</option>
+                            <option value="Hamburgers">Hamburgers</option>
+                            <option value="Nuggets de poulet">Nuggets de poulet</option>
+                            <option value="Volailles cuites">Volailles cuites</option>
+                            <option value="Viandes">Viandes</option>
+                            <option value="Plats à la volaille">Plats à la volaille</option>
+                            <option value="Poulets">Poulets</option>
+                        </select>
+                        <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
+                            <div *ngIf="f['category'].errors['required']" class="center"> une catégorie est
+                                requise
+                            </div>
+                        </div>
+                    </div>
+-->
+
+
 
 
 
