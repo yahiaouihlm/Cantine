@@ -1,1 +1,81 @@
-<p>authentication works!</p>
+
+<div class = "image-header" >
+    <img src="assets/images/itachi.jpg"  width="100%" height="500vh">
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="text-center">
+            <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
+            <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
+        </div>
+
+
+        <form [formGroup]="signIn">
+
+
+            <!---------------------- Email --------------------------->
+            <div class="form-group ">
+                <label for="email"> Email : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                       formControlName="email"
+                       placeholder="  Votre Email "
+                       type="email"
+                       id="email"
+                />
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                    <div *ngIf="f['email'].errors['maxlength']" class="center">
+                        votre Nom ne doit pas dépasser 1000 charctéres
+                    </div>
+                    <div *ngIf="f['email'].errors['email']" class="center">
+                        Format Email incorrect
+                    </div>
+
+                    <div *ngIf="f['email'].errors['pattern']" class="center">
+                        Format Email incorrect pattern
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!---------------------- Password --------------------------->
+            <div class="form-group ">
+                <label for="password"> Mot de passe : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" class="form-control"
+                       formControlName="password"
+                       placeholder="  Votre Mot  de passe "
+                       type="password"
+                       id="password"
+                />
+                <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                    <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot de passe est requis</div>
+                    <div *ngIf="f['password'].errors['maxlength']" class="center">
+                        votre Mot De passe ne doit pas dépasser 20 charctéres
+                    </div>
+
+                    <div *ngIf="f['password'].errors['minlength']" class="center">
+                        votre Mot de passe doit avoir au minimum de 6 charctéres
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div class="validate-form center">
+                <button class="center btn">
+                            <span>
+                                <i class="fa fa-check"></i>
+                            </span>
+                    Connexion
+                </button>
+
+            </div>
+
+
+        </form>
+    </div>
+</div>

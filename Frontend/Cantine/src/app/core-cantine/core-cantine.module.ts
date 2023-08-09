@@ -7,10 +7,7 @@ import { MealsComponent } from './meals/meals.component';
 import { MenuComponent } from './menu/menu.component';
 
 import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
-import {MatListModule} from "@angular/material/list";
-import {MatIconModule} from "@angular/material/icon";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {MatToolbarModule} from "@angular/material/toolbar";
+
 import { AuthenticationComponent } from './authentication/authentication.component';
 
 
@@ -23,10 +20,11 @@ const routes: Routes = [
 
   {path: '', component: MainCoreCantineComponent,
     children: [
-      {path: '', redirectTo:'cantine/home', pathMatch:'full'},
+      {path: 'signIn', component: AuthenticationComponent},
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
       {path: 'menus', component: MenuComponent},
+      {path: '', redirectTo:'cantine/home', pathMatch:'full'},
 
     ]
   },
