@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
+import fr.sqli.Cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static fr.sqli.Cantine.controller.admin.adminDashboard.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
 
@@ -59,10 +61,14 @@ public class AdminController  implements IAdminController {
     }
 
     @Override
-    @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
     public ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException, AdminFunctionNotFoundException {
         this.adminService.signUp(adminDtoIn);
         return ResponseEntity.ok(ADMIN_ADDED_SUCCESSFULLY);
+    }
+
+    @Override
+    public ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() {
+        return ResponseEntity.ok(this.adminService.getAllAdminFunctions());
     }
 
 

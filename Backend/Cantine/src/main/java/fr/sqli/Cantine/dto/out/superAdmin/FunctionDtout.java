@@ -1,5 +1,7 @@
 package fr.sqli.Cantine.dto.out.superAdmin;
 
+import fr.sqli.Cantine.entity.FunctionEntity;
+
 public class FunctionDtout {
 
     private String name;
@@ -9,6 +11,11 @@ public class FunctionDtout {
         this.name = name;
 
     }
+    public FunctionDtout(FunctionEntity functionEntity) {
+        this.name = functionEntity.getName();
+
+
+    }
     public String getName() {
         return name;
     }
@@ -16,4 +23,9 @@ public class FunctionDtout {
     public void setName(String name) {
         this.name = name;
     }
+
+
+
+
+
 }

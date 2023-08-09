@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
+import fr.sqli.Cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
@@ -12,10 +13,13 @@ import fr.sqli.Cantine.service.images.exception.InvalidImageException;
 import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IAdminController {
 
@@ -30,6 +34,7 @@ public interface IAdminController {
 
     String  ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT = "/disableAdmin";
 
+    String  ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT = "/getAllAdminFunctions";
 
 
     String TOKEN_SENDED_SUCCESSFULLY =  "TOKEN SENDED SUCCESSFULLY";
@@ -43,8 +48,14 @@ public interface IAdminController {
     ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException, AccountAlreadyActivatedException;
 
    ResponseEntity<String> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException;
-   ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException;ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException, AdminFunctionNotFoundException;
+   ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException;
+
+    @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
+    ResponseEntity<String> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException, AdminFunctionNotFoundException;
 
     ResponseEntity<String> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException;
 
+
+    @GetMapping(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
+     ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() ;
 }
