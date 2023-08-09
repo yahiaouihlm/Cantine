@@ -235,7 +235,7 @@
                                 [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }" name="adminFunction">
                             <option value="" disabled>-- Votre  travail --</option>
                             <ng-container *ngFor="let job of adminfunction$ | async ">
-                                <option [value]="job">{{ job.name }}</option>
+                                <option [value]="job.name">{{ job.name }}</option>
                             </ng-container>
                         </select>
                         <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">

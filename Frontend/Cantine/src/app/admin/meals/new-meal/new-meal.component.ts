@@ -82,6 +82,7 @@ export class NewMealComponent {
 
         this.mealServiceService.addMeal(formData).subscribe((data) => {
              if  (data != undefined  && data.message !=undefined   && data.message == "MEAL ADDED SUCCESSFULLY" ) {
+
                  const result = this.matDialog.open(SuccessfulDialogComponent, {
                      data: {message: this.MEAL_ADDED_SUCCESSFULLY },
                      width: '40%',

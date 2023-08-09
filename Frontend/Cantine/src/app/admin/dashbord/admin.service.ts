@@ -33,14 +33,16 @@ export class AdminService {
 
 
 
-
   private handleError(error: HttpErrorResponse) {
     const errorObject = error.error as ErrorResponse;
     let  errorMessage = errorObject.exceptionMessage;
 
-    if  (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable){
-      this.openDialog(errorMessage,  error.status);
-      console.log("je   suis dans  le  BadRequest ou    dans le  not  acceptable");
+
+    if (error.status == HttpStatusCode.InternalServerError){
+      this.openDialog("Unkwon Error   has  been occured  ",  error.status);
+    }
+    else  {
+        this.openDialog(errorMessage,  error.status);
     }
 
     return throwError(() => new Error(errorMessage));
