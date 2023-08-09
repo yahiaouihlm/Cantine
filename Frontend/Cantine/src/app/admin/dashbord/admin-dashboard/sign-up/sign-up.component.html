@@ -175,10 +175,49 @@
 
 
 
+                    <!---------------------- Town --------------------------->
+                    <div class="form-group ">
+                        <label for="town"> Ville :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['town'].errors }" class="form-control"
+                               formControlName="town"
+                               placeholder="La ville "
+                               type="text"
+                               id="town"
+                        />
+                        <div *ngIf="submitted && f['town'].errors" class="invalid-feedback">
+                            <div *ngIf="f['town'].errors['required']" class="center"> le  champs  est  obligatoire </div>
+                            <div *ngIf="f['town'].errors['maxlength']" class="center">
+                                Le nom de   la ville  ne doit pas dépasser   1000 charctéres
+                            </div>
+
+                            <div *ngIf="f['town'].errors['minlength']" class="center">
+                                Le  nom  de  la ville    doit avoir au minimum de 3 charctéres
+                            </div>
+
+
+                        </div>
+                    </div>
 
 
 
 
+
+
+                    <!---------------------- Image --------------------------->
+                    <div class="form-group">
+                        <label for="image"> Choisissez une  image  de  profile   </label>
+
+                        <input class="input-group-prepend"
+                               [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
+                               formControlName="image"
+                               placeholder=" IMAGE  DU  Profil "
+                               type="file"
+                               id="image"
+                               accept="image/png, image/jpeg"
+                               (change)="onChange ($event)"
+                        />
+
+                    </div>
 
 
 

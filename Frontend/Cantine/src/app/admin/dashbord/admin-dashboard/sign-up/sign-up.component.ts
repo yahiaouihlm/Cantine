@@ -22,9 +22,9 @@ export class SignUpComponent {
     confirmPassword: new FormControl("" , [Validators.required]),
     birthDate: new FormControl('', [Validators.required]),
     phoneNumber: new FormControl('', [Validators.required, Validators.pattern(Validation.FRENCH_PHONE_REGEX)]),
-        /*  label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
-    image: new FormControl('', [Validators.required]),
-    status: new FormControl('', [Validators.required]),*/
+    town: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.minLength(3)]),
+    image: new FormControl(''),
+
   },
       {
         validators: [Validation.match('password', 'confirmPassword')]
