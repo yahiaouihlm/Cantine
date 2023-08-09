@@ -54,7 +54,7 @@ export class SignUpComponent implements OnInit {
     }
 
     onSubmit() {
-        this.sendConfirmationToken();
+
         this.submitted = true;
         this.isLoaded = true;
         if (this.adminForm.invalid) {
