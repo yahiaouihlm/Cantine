@@ -223,29 +223,24 @@
 
 
 
-<!--
 
-                    &lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Function  -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
+                    <!---------------------- Function  --------------------------->
 
                     <div class="form-group">
-                        <label for="category"> Votre  poste   </label>
-                        <select formControlName="category" class="form-control" id="category"
-                                [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
-                            <option value="" disabled>&#45;&#45; Catégorie Du Plat &#45;&#45;</option>
-                            <option value="Hamburgers">Hamburgers</option>
-                            <option value="Nuggets de poulet">Nuggets de poulet</option>
-                            <option value="Volailles cuites">Volailles cuites</option>
-                            <option value="Viandes">Viandes</option>
-                            <option value="Plats à la volaille">Plats à la volaille</option>
-                            <option value="Poulets">Poulets</option>
+                        <label for="adminFunction"> Votre  poste   </label>
+                        <select formControlName="adminFunction" class="form-control" id="adminFunction"
+                                [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }" name="adminFunction">
+                            <option value="" disabled>-- Votre  travail --</option>
+                            <ng-container *ngFor="let job of adminfunction$ | async ">
+                                <option [value]="job">{{ job.name }}</option>
+                            </ng-container>
                         </select>
-                        <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
-                            <div *ngIf="f['category'].errors['required']" class="center"> une catégorie est
+                        <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
+                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> une catégorie est
                                 requise
                             </div>
                         </div>
                     </div>
--->
 
 
 
@@ -353,3 +348,5 @@
         </div>
     </div>
 </div>-->
+
+

@@ -1,18 +1,25 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../../../sharedmodule/functions/validation";
+import {Adminfunction} from "../../../../sharedmodule/models/adminfunction";
+import {AdminService} from "../../admin.service";
+import {Observable, of} from "rxjs";
+import {Menu} from "../../../../sharedmodule/models/menu";
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styles: [
-  ]
+  styles: [],
+  providers: [AdminService]
 })
-export class SignUpComponent {
+export class SignUpComponent implements  OnInit{
    submitted = false;
     image!: File ;
   isLoaded = false;
 
+   adminfunction$ :  Observable <Adminfunction[]>  =  of([]);
+
+  constructor(private adminService : AdminService) { }
 
   adminForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -24,6 +31,7 @@ export class SignUpComponent {
     address: new FormControl('', [Validators.required, Validators.maxLength(3000), Validators.minLength(10)]),
     phoneNumber: new FormControl('', [Validators.required, Validators.pattern(Validation.FRENCH_PHONE_REGEX)]),
     town: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.minLength(3)]),
+    adminFunction: new FormControl('', [Validators.required]),
     image: new FormControl(''),
 
   },
@@ -32,14 +40,18 @@ export class SignUpComponent {
   }
   );
 
-
+  ngOnInit(): void {
+    this.adminfunction$ = this.adminService.getAdminFunctionS();
+  }
   onSubmit() {
     this.submitted = true;
     this.isLoaded = true;
     if (this.adminForm.invalid) {
       return;
     }
-    console.log("form is valid")
+
+
+
   }
 
 
@@ -69,5 +81,7 @@ export class SignUpComponent {
   get f(): { [key: string]: AbstractControl } {
     return this.adminForm.controls;
   }
+
+
 
 }

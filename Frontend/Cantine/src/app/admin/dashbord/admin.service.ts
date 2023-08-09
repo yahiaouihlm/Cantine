@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
 import {catchError, throwError} from "rxjs";
 import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
+import {Adminfunction} from "../../sharedmodule/models/adminfunction";
 
 @Injectable()
 export class AdminService {
@@ -26,7 +27,7 @@ export class AdminService {
   }
 
   getAdminFunctionS(){
-    return this.httpClient.get(this.GET_ADMIN_FUNCTION_S);
+    return this.httpClient.get<Adminfunction[]>(this.GET_ADMIN_FUNCTION_S);
   }
 
 
