@@ -21,6 +21,8 @@ export class NewMenuComponent {
     private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  Priw de 80€  Pour un Menu  !"
     private WOULD_YOU_LIKE_TO_SAVE_THIS_MENU = "Voulez-vous  enregistrer  ce  menu ?"
 
+    private   ERROR_OCCURRED_WHILE_UPDATING_MENU = "Une erreur s'est produite lors de la mise à jour du menu !"
+
     submitted = false;
     image!: File
     mealsContainMenu: Meal[] = []
@@ -99,6 +101,9 @@ export class NewMenuComponent {
                     this.router.navigate(['/admin/menus'], {queryParams: {reload: 'true'}})
                 });
 
+            }else{
+                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MENU);
+                /*TODO    Remove  Token   */
             }
         })
     }

@@ -8,6 +8,9 @@
                     <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
                 </div>
 
+                <div class="center">
+                      <h2>Je m'inscris en tant qu'Administrateur</h2>
+                </div>
 
                 <form [formGroup]="adminForm">
 
@@ -150,9 +153,9 @@
                     </div>
 
 
-                    <!---------------------- Town --------------------------->
+                    <!---------------------- adress --------------------------->
                     <div class="form-group ">
-                        <label for="address"> Ville :  </label>
+                        <label for="address"> votre  adresse :  </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['address'].errors }" class="form-control"
                                formControlName="address"
                                placeholder=" votre  adresse "
@@ -236,7 +239,7 @@
                             </ng-container>
                         </select>
                         <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
-                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> une catégorie est
+                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre  travail est
                                 requise
                             </div>
                         </div>

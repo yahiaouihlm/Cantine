@@ -5,6 +5,9 @@ import {Adminfunction} from "../../../../sharedmodule/models/adminfunction";
 import {AdminService} from "../../admin.service";
 import {Observable, of} from "rxjs";
 import {Menu} from "../../../../sharedmodule/models/menu";
+import {
+  SuccessfulDialogComponent
+} from "../../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
   selector: 'app-sign-up',
@@ -13,6 +16,8 @@ import {Menu} from "../../../../sharedmodule/models/menu";
   providers: [AdminService]
 })
 export class SignUpComponent implements  OnInit{
+
+  private    ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
    submitted = false;
     image!: File ;
   isLoaded = false;
@@ -65,9 +70,16 @@ export class SignUpComponent implements  OnInit{
     formData.append('birthdateAsString', this.adminForm.value.birthDate);
     formData.append('phoneNumber', this.adminForm.value.phoneNumber);
     formData.append('town', this.adminForm.value.town);
+    formData.append('address', this.adminForm.value.address);
+    formData.append('adminFunction', this.adminForm.value.adminFunction);
     if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
       formData.append('image', this.image);
+    this.adminService.signUpAdmin(formData).subscribe( (data) => {
+      if (data != undefined && data.message === "ADMIN ADDED SUCCESSFULLY"){
+        console.log("L'ADMIN A ETE AJOUTE AVEC SUCCES");
 
+      }
+    });
   }
 
 

@@ -6,6 +6,7 @@ import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
 import {catchError, throwError} from "rxjs";
 import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
 import {Adminfunction} from "../../sharedmodule/models/adminfunction";
+import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 
 @Injectable()
 export class AdminService {
@@ -21,7 +22,7 @@ export class AdminService {
 
 
   signUpAdmin(admin :  FormData ){
-       return this.httpClient.post(this.ADMIN_SIGN_UP_URL, admin).pipe(
+       return this.httpClient.post<NormalResponse>(this.ADMIN_SIGN_UP_URL, admin).pipe(
            catchError( (error) => this.handleError(error))
        );
   }
