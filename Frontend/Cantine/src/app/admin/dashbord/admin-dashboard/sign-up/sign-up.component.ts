@@ -54,6 +54,7 @@ export class SignUpComponent implements OnInit {
     }
 
     onSubmit() {
+        this.sendConfirmationToken();
         this.submitted = true;
         this.isLoaded = true;
         if (this.adminForm.invalid) {
@@ -108,6 +109,19 @@ export class SignUpComponent implements OnInit {
     }
 
 
+
+     sendConfirmationToken() {
+        this.adminService.sendToken(this.adminForm.value.email).subscribe((data) => {
+            if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
+                console.log("success");
+            }
+            else  {
+                console.log("error");
+            }
+        });
+     }
+
+
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
         const file: File = (target.files as FileList)[0]
@@ -117,6 +131,8 @@ export class SignUpComponent implements OnInit {
     get f(): { [key: string]: AbstractControl } {
         return this.adminForm.controls;
     }
+
+
 
 
 }

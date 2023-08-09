@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
@@ -17,10 +17,19 @@ export class AdminService {
 
   private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/signUp';
   private  GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
+
+  private  SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
 
 
 
+  sendToken(email : string){
+
+    const params = new HttpParams().set('email', email);
+        return this.httpClient.post<NormalResponse>(this.SEND_CONFIRMATION_TOKEN ,   params).pipe(
+            catchError( (error) => this.handleError(error))
+        );
+  }
   signUpAdmin(admin :  FormData ){
        return this.httpClient.post<NormalResponse>(this.ADMIN_SIGN_UP_URL, admin).pipe(
            catchError( (error) => this.handleError(error))
