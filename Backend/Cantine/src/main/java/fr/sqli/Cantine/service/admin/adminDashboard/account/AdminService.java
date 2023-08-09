@@ -263,18 +263,21 @@ public class AdminService implements IAdminService {
                      </head>
                      <body>
                          <h1>Confirmation d'inscription</h1>
-                           <p> Bonjour `{USERNAME} {USERFULLNAME}`</p>
+                           <p> Bonjour 
+                           """
+                           + adminEntity.getFirstname() +"  " + adminEntity.getLastname() +
+                         """ 
+                         </p>
                          <P>
                              Merci de cliquer sur le lien ci-dessous pour confirmer votre adresse Email et activer votre compte.
-                             <a href ="{URL}">Confirmer mon adresse Email</a>
+                            
                          </P>
                            <p> Nous  vous  Remercions  Votre  Compréhention </p>
                              <p> Cordialement </p>
-                                     
-                           <img src="images/logos/logo-aston.png" alt="logo" width="100" height="100"> </img>
+                                   
                      </body>
                      </html>
-                """;
+                """ + url;
 
 
         this.emailSenderService.send(email, "Complete Registration!", text);
