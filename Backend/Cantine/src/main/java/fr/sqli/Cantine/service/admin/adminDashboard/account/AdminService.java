@@ -36,7 +36,7 @@ public class AdminService implements IAdminService {
     private static final Logger LOG = LogManager.getLogger();
     final String SERVER_ADDRESS;
     final String DEFAULT_ADMIN_IMAGE_NAME;
-    final String EMAIL_ADMIN_DOMAIN;
+
     final String ADMIN_IMAGE_PATH;  //  path  to  admin image  directory
     final String EMAIL_ADMIN_REGEX;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -61,9 +61,8 @@ public class AdminService implements IAdminService {
         this.functionDao = functionDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
-        this.EMAIL_ADMIN_DOMAIN = environment.getProperty("sqli.cantine.admin.email.domain"); //  email  domain  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
-        this.EMAIL_ADMIN_REGEX = "^[a-zA-Z0-9._-]+@" + EMAIL_ADMIN_DOMAIN + "$";
+        this.EMAIL_ADMIN_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
         var port = environment.getProperty("sali.cantine.server.port");
@@ -193,6 +192,7 @@ public class AdminService implements IAdminService {
 
         //check  function  validity
         var functionAdmin = adminDtoIn.getFunction();
+        System.out.println(functionAdmin);
         var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
         if (functionAdminEntity.isEmpty()) {
             AdminService.LOG.error("function  is  not  found");
