@@ -24,6 +24,7 @@ import static fr.sqli.Cantine.controller.admin.adminDashboard.account.IAdminCont
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController  implements IAdminController {
 
     private AdminService adminService;
