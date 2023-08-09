@@ -11,6 +11,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 
 
@@ -38,6 +39,7 @@ const routes: Routes = [
     MainCoreCantineComponent,
     MealsComponent,
     MenuComponent,
+    AuthenticationComponent,
   ],
   imports: [
     CommonModule,
