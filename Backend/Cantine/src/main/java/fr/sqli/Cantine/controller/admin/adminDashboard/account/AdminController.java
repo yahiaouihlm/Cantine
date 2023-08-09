@@ -37,10 +37,9 @@ public class AdminController  implements IAdminController {
 
 
     @Override
-    @PostMapping(ADMIN_DASH_BOARD_VALIDATE_EMAIL_ENDPOINT)
-    public ResponseEntity<String> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException, AccountAlreadyActivatedException {
-         this.adminService.sendToken(email);
-        return ResponseEntity.ok(TOKEN_SENDED_SUCCESSFULLY);
+    public ResponseEntity<ResponseDtout> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException, AccountAlreadyActivatedException {
+        this.adminService.sendToken(email);
+        return ResponseEntity.ok(new ResponseDtout(TOKEN_SENDED_SUCCESSFULLY));
     }
     @Override
     @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
