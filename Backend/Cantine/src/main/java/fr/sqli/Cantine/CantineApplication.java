@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 
-@SpringBootApplication (exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication (/*exclude = SecurityAutoConfiguration.class*/)
 public class CantineApplication {
 
 	private static final Logger LOG = LogManager.getLogger();
