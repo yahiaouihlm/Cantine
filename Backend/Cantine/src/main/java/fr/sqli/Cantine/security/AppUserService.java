@@ -25,12 +25,14 @@ public class AppUserService  implements UserDetailsService {
 
 
 
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (iAdminDao.findByEmail(username).isPresent()){
             return  new MyUserDaitls(iAdminDao.findByEmail(username).get());
         }
-        if (iStudentDao.findByEmail(username).isPresent()){
+        else  if (iStudentDao.findByEmail(username).isPresent()){
             return  new MyUserDaitls(iStudentDao.findByEmail(username).get());
         }
         throw  new UsernameNotFoundException("user not found");
