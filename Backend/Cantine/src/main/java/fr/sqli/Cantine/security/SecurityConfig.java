@@ -1,5 +1,8 @@
 package fr.sqli.Cantine.security;
 
+import fr.sqli.Cantine.security.exceptionHandler.CustomAccessDeniedHandler;
+import fr.sqli.Cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
+import fr.sqli.Cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +20,15 @@ public class SecurityConfig {
 
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private AppUserService   appUserService ;
 
-    public SecurityConfig (BCryptPasswordEncoder bCryptPasswordEncoder){
+    private CustomAuthenticationEntryPoint  customAuthenticationEntryPoint ;
+    private CustomAccessDeniedHandler customAccessDeniedHandler ;
+    public SecurityConfig ( AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,  CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder){
+        this.appUserService = appUserService ;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint ;
+        this.customAccessDeniedHandler = customAccessDeniedHandler ;
     }
 
     @Bean
@@ -27,12 +36,18 @@ public class SecurityConfig {
 
         return  http.csrf( csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
                 .authorizeRequests(authorize -> {
                     authorize.requestMatchers("/public").permitAll();
                     authorize.anyRequest().authenticated();
                 })
 
+                .formLogin().and()
+                .exceptionHandling()
+                .accessDeniedHandler(new StoneAuthenticationFailureHandler())
+                .authenticationEntryPoint(new StoneAuthenticationFailureHandler())
 
+                .and()
                 .build();
 
     }
