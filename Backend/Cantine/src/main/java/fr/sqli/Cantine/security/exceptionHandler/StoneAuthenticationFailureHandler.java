@@ -50,6 +50,7 @@ public class StoneAuthenticationFailureHandler implements AuthenticationFailureH
         StoneAuthenticationFailureHandler.LOG.error(
                 "--> 401 <--- From AuthenticationFailureHandler.onAuthenticationFailure for '{}'",
                 request.getRequestURL(), authException);
+        System.out.println("  Here 401  ");
         this.handle(request, response, authException, HttpServletResponse.SC_UNAUTHORIZED);
     }
 
@@ -58,8 +59,10 @@ public class StoneAuthenticationFailureHandler implements AuthenticationFailureH
                          AuthenticationException authException) throws IOException, ServletException {
         StoneAuthenticationFailureHandler.LOG.error("--> 401 <--- From AuthenticationEntryPoint.commence for '{}'",
                 request.getRequestURL(), authException);
-         if  (authException.getMessage().contains("Bad credentials"))
-             System.out.println("Bad credentials  has  been  thrown");
+
+
+
+
         this.handle(request, response, authException, HttpServletResponse.SC_UNAUTHORIZED);
     }
 

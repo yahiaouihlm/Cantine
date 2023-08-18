@@ -37,21 +37,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http   ) throws Exception {
 
-        return  http.csrf( csrf -> csrf.disable())
+        return  http
+                .csrf( csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .authorizeRequests(authorize -> {
+                .authorizeRequests(
+                        authorize -> {
                     authorize.requestMatchers("/public").permitAll();
                     authorize.anyRequest().authenticated();
-                })
+                        })
                 .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
                 .exceptionHandling()
-                .authenticationEntryPoint(this.stoneAuthenticationFailureHandler)
-                .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
+                .authenticationEntryPoint(this.customAuthenticationEntryPoint)
+              //  .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
                 .and()
-
-
-                .build();
+                .httpBasic()
+                .and()
+               .build();
 
     }
 

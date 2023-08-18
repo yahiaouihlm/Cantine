@@ -36,7 +36,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
     }
 
     @Override
-    public Authentication  attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication  attemptAuthentication(HttpServletRequest request, HttpServletResponse response)  throws AuthenticationException {
         var  username =  request.getParameter("email");
         var passsword  = request.getParameter("password");
         if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(passsword) ) {
@@ -62,12 +62,12 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         }
         JwtUsernameAndPasswordAuthenticationFiler.LOG.debug("--> JwtAuthenticationFilter.attemptAuthentication({}, [PROTECTED])",
                 username);
+      Authentication  authentication =  new UsernamePasswordAuthenticationToken(username , passsword );
+      var  result  =  this.authenticationManager.authenticate(authentication) ;
+      System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
 
-        Authentication  authentication =  new UsernamePasswordAuthenticationToken(username , passsword );
-        var  result  =  this.authenticationManager.authenticate(authentication) ;
-        System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
-        return   result ;
-    }
+         return  result ;
+     }
 
 
 
