@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.Cantine.dto.in.person.Login;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,40 +40,68 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
     @Override
     public Authentication  attemptAuthentication(HttpServletRequest request, HttpServletResponse response)  throws AuthenticationException {
+           try  {
+               var  username =  request.getParameter("email");
+               var passsword  = request.getParameter("password");
+               if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(passsword) ) {
+                   JwtUsernameAndPasswordAuthenticationFiler.LOG
+                           .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as Json in Body");
+                   String body  = null ;
+                   try {
+                       body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+                       var mapper = new ObjectMapper();
+                       var login  = mapper.readValue(body ,  Login.class);
+                       username =  login.getEmail();
+                       passsword =  login.getPassword() ;
 
-        var  username =  request.getParameter("email");
-        var passsword  = request.getParameter("password");
-        if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(passsword) ) {
-            JwtUsernameAndPasswordAuthenticationFiler.LOG
-                    .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as Json in Body");
-            String body  = null ;
-            try {
-                body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-                var mapper = new ObjectMapper();
-                var login  = mapper.readValue(body ,  Login.class);
-                username =  login.getEmail();
-                passsword =  login.getPassword() ;
+
+                   } catch (IOException lExp) {
+                       JwtUsernameAndPasswordAuthenticationFiler.LOG.error(
+                               "--> JwtAuthenticationFilter.attemptAuthentication - Error, your JSon is not right!, found {}, should be something like {\"email\":\"toto@gmail.com\",\"password\":\"bonjour\"}. DO NOT use simple quote!",
+                               body, lExp);
+                   }
+
+               } else {
+                   JwtUsernameAndPasswordAuthenticationFiler.LOG
+                           .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as parameter");
+
+               }
+               JwtUsernameAndPasswordAuthenticationFiler.LOG.debug("--> JwtAuthenticationFilter.attemptAuthentication({}, [PROTECTED])",
+                       username);
+
+               Authentication  authentication =  new UsernamePasswordAuthenticationToken(username , passsword );
+               var  result  =  this.authenticationManager.authenticate(authentication) ;
+               System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
+
+               return  result ;
 
 
-            } catch (IOException lExp) {
-                JwtUsernameAndPasswordAuthenticationFiler.LOG.error(
-                        "--> JwtAuthenticationFilter.attemptAuthentication - Error, your JSon is not right!, found {}, should be something like {\"email\":\"toto@gmail.com\",\"password\":\"bonjour\"}. DO NOT use simple quote!",
-                        body, lExp);
-            }
+           }catch (DisabledException e ) {
+               Map<String, String> idToken = new HashMap<>();
+               System.out.println(e.getMessage());
+               response.setContentType("application/json");
+               idToken.put("status" , HttpStatus.FORBIDDEN.name() );
+               idToken.put("message" ,  "DISABLED ACCOUNT");
+               try {
+                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
+               } catch (IOException ex) {
+                   throw new RuntimeException(ex);
+               }
+           }catch (Exception e ) {
+               Map<String, String> idToken = new HashMap<>();
+               System.out.println(e.getMessage());
+               response.setContentType("application/json");
+               idToken.put("status" , HttpStatus.NOT_FOUND.name() );
+               idToken.put("message" ,  " An error has occurred");
+               try {
+                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
+               } catch (IOException ex) {
+                   throw new RuntimeException(ex);
+               }
+           }
 
-        } else {
-            JwtUsernameAndPasswordAuthenticationFiler.LOG
-                    .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as parameter");
 
-        }
-        JwtUsernameAndPasswordAuthenticationFiler.LOG.debug("--> JwtAuthenticationFilter.attemptAuthentication({}, [PROTECTED])",
-                username);
-
-      Authentication  authentication =  new UsernamePasswordAuthenticationToken(username , passsword );
-      var  result  =  this.authenticationManager.authenticate(authentication) ;
-      System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
-
-         return  result ;
+             return  null ;
      }
 
 
