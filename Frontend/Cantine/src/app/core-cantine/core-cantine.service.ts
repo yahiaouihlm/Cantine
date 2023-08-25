@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Meal} from "../sharedmodule/models/meal";
 import {Menu} from "../sharedmodule/models/menu";
+import {Login} from "../sharedmodule/models/login";
 
 @Injectable()
 export class CoreCantineService {
@@ -12,8 +13,8 @@ export class CoreCantineService {
   constructor(private httpClient: HttpClient) { }
 
 
-    userAuthentication(obj: any) {
-        return this.httpClient.post(this.USER_AUTHENTICATION_ENDPOINT, {email, password});
+    userAuthentication(login:Login) {
+        return this.httpClient.post(this.USER_AUTHENTICATION_ENDPOINT, login );
     }
 
    getAllMeals () {

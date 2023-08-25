@@ -29,14 +29,9 @@
                     <div *ngIf="f['email'].errors['maxlength']" class="center">
                         votre Nom ne doit pas dépasser 1000 charctéres
                     </div>
-                    <div *ngIf="f['email'].errors['email']" class="center">
-                        Format Email incorrect
+                    <div *ngIf="(f['email'].errors['email'] )  ||  (f['email'].errors['pattern'])" class="center">
+                         Le Format  de  Email est incorrecte
                     </div>
-
-                    <div *ngIf="f['email'].errors['pattern']" class="center">
-                        Format Email incorrect pattern
-                    </div>
-
                 </div>
             </div>
 
@@ -66,7 +61,7 @@
 
 
             <div class="validate-form center">
-                <button class="center btn">
+                <button class="center btn"  (click)="singIn()">
                             <span>
                                 <i class="fa fa-check"></i>
                             </span>
