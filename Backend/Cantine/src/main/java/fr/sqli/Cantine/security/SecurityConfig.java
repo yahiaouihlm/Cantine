@@ -3,6 +3,7 @@ package fr.sqli.Cantine.security;
 import fr.sqli.Cantine.security.exceptionHandler.CustomAccessDeniedHandler;
 import fr.sqli.Cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
 import fr.sqli.Cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
+import fr.sqli.Cantine.security.jwt.JwtTokenVerifier;
 import fr.sqli.Cantine.security.jwt.JwtUsernameAndPasswordAuthenticationFiler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +23,15 @@ public class SecurityConfig {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private AppUserService   appUserService ;
-
+    private JwtTokenVerifier jwtTokenVerifier ;
     private CustomAuthenticationEntryPoint  customAuthenticationEntryPoint ;
     private CustomAccessDeniedHandler customAccessDeniedHandler ;
     private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new  StoneAuthenticationFailureHandler() ;
-    public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,  CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder){
+    public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,
+                           CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder ,  JwtTokenVerifier jwtTokenVerifier){
         this.appUserService = appUserService ;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtTokenVerifier = jwtTokenVerifier ;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint ;
         this.customAccessDeniedHandler = customAccessDeniedHandler ;
       //  this.stoneAuthenticationFailureHandler = stoneAuthenticationFailureHandler ;
@@ -39,7 +42,7 @@ public class SecurityConfig {
 
         return  http
                 .csrf( csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
+               .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeRequests(
                         authorize -> {
@@ -47,12 +50,11 @@ public class SecurityConfig {
                     authorize.anyRequest().authenticated();
                         })
                 .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
-                .exceptionHandling()
-                .authenticationEntryPoint(this.customAuthenticationEntryPoint)
-              //  .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
-                .and()
-                .httpBasic()
-                .and()
+                .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
+             /*   .exceptionHandling()
+                 .authenticationEntryPoint(this.customAuthenticationEntryPoint)
+                .accessDeniedHandler(this.stoneAuthenticationFailureHandler)*/
+
                .build();
 
     }
