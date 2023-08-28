@@ -44,9 +44,20 @@ export class AdminService {
 
   checkExistenceOfEmail(email : string){
       const params = new HttpParams().set('email', email);
-      return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL , {params});
+      return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL , {params}).pipe(
+            catchError( (error) => this.handleErrors(error))
+      );
   }
 
+    private handleErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let  errorMessage = errorObject.exceptionMessage;
+
+        if  (error.status != HttpStatusCode.Conflict){
+            this.openDialog("Unkwon Error   has  been occured  ",  error.status);
+        }
+        return throwError(() => new Error(errorMessage));
+    }
 
   private handleError(error: HttpErrorResponse) {
     const errorObject = error.error as ErrorResponse;

@@ -24,7 +24,7 @@ export class SignUpComponent implements OnInit {
     submitted = false;
     image!: File;
     isLoaded = false;
-    existEmail = true;
+    existEmail = false;
     adminfunction$: Observable<Adminfunction[]> = of([]);
 
     constructor(private adminService: AdminService, private matDialog: MatDialog) {
@@ -57,38 +57,38 @@ export class SignUpComponent implements OnInit {
 
         this.submitted = true;
         this.isLoaded = true;
+        this.existEmail = false;
         if (this.adminForm.invalid) {
             return;
         }
         // check if email exist
-        this.adminService.checkExistenceOfEmail(this.adminForm.value.email).subscribe({
+        this.adminService.checkExistenceOfEmail(this.adminForm.value.email).subscribe( {
             next: (data) => {
-                if (data != undefined && data.message === "EMAIL  DOES   NOT  EXIST") {
-                    this.existEmail = false;
-                    const result = this.matDialog.open(ValidatorDialogComponent, {
-                        data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
-                        width: '40%',
-                    });
-                    result.afterClosed().subscribe((result) => {
-                        if (result != undefined && result == true) {
-                            this.signUp();
-                        } else {
-                            return;
-                        }
-                    });
-
-                } else {
-                    this.existEmail = true;
-                }
+                this.existEmail =  false;
+                this.inscription();
+            } ,
+            error: (error) => {
+                this.existEmail =  true;
             },
-            error: (err) => {
-                this.existEmail = true;
-            }
-        });
+        }
+    );
 
 
     }
 
+     inscription() {
+         const result = this.matDialog.open(ValidatorDialogComponent, {
+             data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
+             width: '40%',
+         });
+         result.afterClosed().subscribe((result) => {
+             if (result != undefined && result == true) {
+                 this.signUp();
+             } else {
+                 return;
+             }
+         });
+     }
 
     signUp() {
         const formData = new FormData();
