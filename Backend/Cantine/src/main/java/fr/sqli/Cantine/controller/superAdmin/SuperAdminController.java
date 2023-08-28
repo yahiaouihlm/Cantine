@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dto.in.superAdmin.TaxDtoIn;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.superAdmin.SuperAdminService;
 import fr.sqli.Cantine.service.superAdmin.exception.ExistingTax;
+import fr.sqli.Cantine.service.superAdmin.exception.ExistingUserByEmail;
 import fr.sqli.Cantine.service.superAdmin.exception.InvalidTaxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,12 @@ public class SuperAdminController {
     public ResponseEntity<String> addTax (@RequestBody TaxDtoIn taxDtoIn) throws InvalidTaxException, ExistingTax {
         this.superAdminService.addTax(taxDtoIn);
         return ResponseEntity.ok("tax added successfully");
+    }
+
+    @GetMapping("/ExistingEmail")
+    public ResponseEntity<String> ExistingEmail (@RequestParam String email) throws ExistingUserByEmail {
+        this.superAdminService.ExistingEmail(email);
+        return ResponseEntity.ok("EMAIL  DOES  EXIST");
     }
 
 
