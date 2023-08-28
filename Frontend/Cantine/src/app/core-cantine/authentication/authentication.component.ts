@@ -3,12 +3,13 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import Validation from "../../sharedmodule/functions/validation";
 import {HttpClient, HttpStatusCode} from "@angular/common/http";
 import {CoreCantineService} from "../core-cantine.service";
+import {SharedService} from "../../sharedmodule/shared.service";
 
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
    styleUrls: ['../../../assets/styles/authentication.component.scss'],
-    providers: [CoreCantineService]
+    providers: [CoreCantineService ,  SharedService]
 })
 export class AuthenticationComponent {
 
@@ -22,7 +23,7 @@ export class AuthenticationComponent {
         password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
     });
 
-     constructor    ( private  coreCantineService :CoreCantineService) {}
+     constructor    ( private  coreCantineService :CoreCantineService ,  private   sharedService : SharedService) {}
     singIn() {
         this.submitted = true;
         if (this.signIn.invalid) {
@@ -54,7 +55,9 @@ export class AuthenticationComponent {
 
 
     sendTokenToActivateAccount(email:string) {
-
+        this.sharedService.sendToken(email).subscribe( data => {
+            console.log(data);
+        });
     }
 
     get f(): { [key: string]: AbstractControl } {
