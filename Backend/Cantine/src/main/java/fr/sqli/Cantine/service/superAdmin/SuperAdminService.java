@@ -63,7 +63,7 @@ public class SuperAdminService {
     public void ExistingEmail(String email) throws ExistingUserByEmail {
 
         if (email == null || email.isEmpty()) {
-            throw new ExistingUserByEmail("EMAIL IS REQUIRED");
+            throw new ExistingUserByEmail("EMAIL ALREADY EXISTS");
         }
         if (this.iAdminDao.findByEmail(email).isPresent() || this.iStudentDao.findByEmail(email).isPresent()) {
             throw new ExistingUserByEmail("EMAIL ALREADY EXISTS");

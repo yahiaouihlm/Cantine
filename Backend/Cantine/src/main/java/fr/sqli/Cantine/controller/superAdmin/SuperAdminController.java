@@ -3,6 +3,7 @@ package fr.sqli.Cantine.controller.superAdmin;
 
 import fr.sqli.Cantine.dto.in.superAdmin.FunctionDtoIn;
 import fr.sqli.Cantine.dto.in.superAdmin.TaxDtoIn;
+import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.superAdmin.SuperAdminService;
 import fr.sqli.Cantine.service.superAdmin.exception.ExistingTax;
@@ -39,9 +40,9 @@ public class SuperAdminController {
     }
 
     @GetMapping("/ExistingEmail")
-    public ResponseEntity<String> ExistingEmail (@RequestParam String email) throws ExistingUserByEmail {
+    public ResponseEntity<ResponseDtout> ExistingEmail (@RequestParam ("email") String email) throws ExistingUserByEmail {
         this.superAdminService.ExistingEmail(email);
-        return ResponseEntity.ok("EMAIL  DOES  EXIST");
+        return ResponseEntity.ok( new ResponseDtout("EMAIL  DOES   NOT  EXIST"));
     }
 
 
