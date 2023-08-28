@@ -9,6 +9,7 @@ import { MenuComponent } from './menu/menu.component';
 import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 
 import { AuthenticationComponent } from './authentication/authentication.component';
+import { ConfirmationTokenComponent } from './confirmation-token/confirmation-token.component';
 
 
 
@@ -38,6 +39,7 @@ const routes: Routes = [
     MealsComponent,
     MenuComponent,
     AuthenticationComponent,
+    ConfirmationTokenComponent,
   ],
   imports: [
     CommonModule,
