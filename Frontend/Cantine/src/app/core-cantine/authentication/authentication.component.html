@@ -1,6 +1,5 @@
-
-<div class = "image-header" >
-    <img src="assets/images/itachi.jpg"  width="100%" height="500vh">
+<div class="image-header">
+    <img src="assets/images/itachi.jpg" width="100%" height="500vh">
 </div>
 
 
@@ -30,7 +29,7 @@
                         votre Nom ne doit pas dépasser 1000 charctéres
                     </div>
                     <div *ngIf="(f['email'].errors['email'] )  ||  (f['email'].errors['pattern'])" class="center">
-                         Le Format  de  Email est incorrecte
+                        Le Format de Email est incorrecte
                     </div>
                 </div>
             </div>
@@ -60,17 +59,38 @@
             </div>
 
 
-            <div class="validate-form center">
-                <button class="center btn"  (click)="singIn()">
+
+            <div class="account-state center">
+                <div  *ngIf="disabled_account" class="disabled-account">
+
+                    <p style=" color :  red "> Votre compte n'est pas Activer <br> <span style="color: #004a9f">Cliquer  ici  pour activer </span>
+                    </p>
+
+                </div>
+
+                <div *ngIf="wrong_credentials" class="wrong-auth">
+                    <p  style="color: red">  Email ou Mot de passe est incorrecte </p>
+                </div>
+
+
+
+                <div class="validate-form center">
+                    <button class="center btn" (click)="singIn()">
                             <span>
                                 <i class="fa fa-check"></i>
                             </span>
-                    Connexion
-                </button>
+                        Connexion
+                    </button>
+                </div>
 
-                <p> je  suis  pas  encore inscrit !  </p>
+
+
+                <div>
+                    <p style="color: #004a9f"> je suis pas encore inscrit ! </p>
+                </div>
 
             </div>
+
 
 
         </form>
