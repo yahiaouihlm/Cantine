@@ -53,7 +53,9 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeRequests(
                         authorize -> {
-                    authorize.requestMatchers("/public").permitAll();
+                    authorize.requestMatchers("cantine/api/**").permitAll();
+                    authorize.requestMatchers("/cantine/getAllAdminFunctions");
+                    authorize.requestMatchers("/cantine/download/images/meals/**").permitAll();
                     authorize.anyRequest().authenticated();
                         })
                 .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
