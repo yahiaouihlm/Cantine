@@ -65,7 +65,7 @@ export class SignUpComponent implements OnInit {
         this.adminService.checkExistenceOfEmail(this.adminForm.value.email).subscribe( {
             next: (data) => {
                 this.existEmail =  false;
-                this.inscription();
+            //    this.inscription();
             } ,
             error: (error) => {
                 this.existEmail =  true;
