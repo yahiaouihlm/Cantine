@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @CrossOrigin(origins = "http://localhost:4200")
 public interface IMealController {
      /*------------------ ENDPOINTS ------------------*/
-    String MEALS_BASIC_URL_ADMIN = "/cantine/api/admin/meals";
+    String MEALS_BASIC_URL_ADMIN = "/cantine/admin/api/meals";
     String ENDPOINT_ADD_MEAL_URL = "/add";
     String ENDPOINT_DELETE_MEAL_URL = "/delete";
     String ENDPOINT_GET_ONE_MEAL_URL = "/get" ;

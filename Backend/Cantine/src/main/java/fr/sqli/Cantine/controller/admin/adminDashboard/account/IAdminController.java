@@ -35,7 +35,7 @@ public interface IAdminController {
 
     String  ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT = "/disableAdmin";
 
-    String  ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT = "/getAllAdminFunctions";
+    String  ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT ="/getAllAdminFunctions";
 
 
     String TOKEN_SENDED_SUCCESSFULLY =  "TOKEN SENDED SUCCESSFULLY";

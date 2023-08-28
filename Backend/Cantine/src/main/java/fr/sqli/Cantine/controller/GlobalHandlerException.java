@@ -2,6 +2,7 @@ package fr.sqli.Cantine.controller;
 
 
 import fr.sqli.Cantine.dto.out.ExceptionDtout;
+import fr.sqli.Cantine.service.superAdmin.exception.ExistingUserByEmail;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalHandlerException {
 
 
+
+
+    @ExceptionHandler(value = ExistingUserByEmail.class)
+    public ResponseEntity<ExceptionDtout> handleExistingUserByEmailException(ExistingUserByEmail e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout("EMAIL ALREADY EXIST"));
+    }
     //  can  not   read  json  format  exception
     @ExceptionHandler  (HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionDtout> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {

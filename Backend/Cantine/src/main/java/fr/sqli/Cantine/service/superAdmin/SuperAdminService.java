@@ -52,4 +52,9 @@ public class SuperAdminService {
         return this.iTaxDao.save(taxEntity);
     }
 
+
+
+    public  void  ExistingEmail (String email) {
+
+    }
 }
