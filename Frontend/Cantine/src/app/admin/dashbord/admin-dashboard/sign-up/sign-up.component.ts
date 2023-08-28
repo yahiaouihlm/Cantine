@@ -10,12 +10,13 @@ import {
 } from "../../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {ValidatorDialogComponent} from "../../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {SharedService} from "../../../../sharedmodule/shared.service";
 
 @Component({
     selector: 'app-sign-up',
     templateUrl: './sign-up.component.html',
     styles: [],
-    providers: [AdminService]
+    providers: [AdminService, SharedService]
 })
 export class SignUpComponent implements OnInit {
 
@@ -27,7 +28,7 @@ export class SignUpComponent implements OnInit {
     existEmail = false;
     adminfunction$: Observable<Adminfunction[]> = of([]);
 
-    constructor(private adminService: AdminService, private matDialog: MatDialog) {
+    constructor(private adminService: AdminService, private matDialog: MatDialog , private sharedService: SharedService) {
     }
 
     adminForm: FormGroup = new FormGroup({
@@ -121,7 +122,7 @@ export class SignUpComponent implements OnInit {
 
 
     sendConfirmationToken() {
-        this.adminService.sendToken(this.adminForm.value.email).subscribe((data) => {
+        this.sharedService.sendToken(this.adminForm.value.email).subscribe((data) => {
             if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
                 console.log("success");
             } else {

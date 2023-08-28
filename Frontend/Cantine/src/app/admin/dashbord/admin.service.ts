@@ -17,7 +17,7 @@ export class AdminService {
     private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/signUp';
     private GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
 
-    private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';
+    /*private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';*/
 
     private CHECK_EXISTENCE_OF_EMAIL = "http://localhost:8080/cantine/superAdmin" + '/ExistingEmail';
 
@@ -25,13 +25,7 @@ export class AdminService {
     }
 
 
-    sendToken(email: string) {
 
-        const params = new HttpParams().set('email', email);
-        return this.httpClient.post<NormalResponse>(this.SEND_CONFIRMATION_TOKEN, params).pipe(
-            catchError((error) => this.handleError(error))
-        );
-    }
 
     signUpAdmin(admin: FormData) {
         return this.httpClient.post<NormalResponse>(this.ADMIN_SIGN_UP_URL, admin).pipe(

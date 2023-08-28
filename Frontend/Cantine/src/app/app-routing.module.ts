@@ -5,6 +5,7 @@ import {APP_BASE_HREF} from '@angular/common';
 const routes: Routes = [
     {path:'', loadChildren:() => import('./core-cantine/core-cantine.module').then(m => m.CoreCantineModule)},
      {path:  'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)},
+    {path:  'student', loadChildren: () => import('./student/student.module').then(m => m.StudentModule)},
     //{path:'', redirectTo:'cantine/home', pathMatch:'full'},
     {path:'**', component: PageNotFoundComponent}
 ];

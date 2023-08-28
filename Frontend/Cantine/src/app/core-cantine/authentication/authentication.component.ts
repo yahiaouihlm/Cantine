@@ -39,9 +39,11 @@ export class AuthenticationComponent {
               error : (error) => {
                 if  (error.status ===  HttpStatusCode.Forbidden  &&  error.error.message === this.USER_DISABLED_ACCOUNT) {
                     this.disabled_account = true;
+                    this.wrong_credentials = false;
                 }
                 else if  (error.status ===  HttpStatusCode.Unauthorized  &&  error.error.message === this.USER_WRONG_CREDENTIALS) {
                     this.wrong_credentials = true;
+                    this.disabled_account = false;
                 }
               }
            }
@@ -51,7 +53,9 @@ export class AuthenticationComponent {
 
 
 
+    sendTokenToActivateAccount(email:string) {
 
+    }
 
     get f(): { [key: string]: AbstractControl } {
         return this.signIn.controls;
