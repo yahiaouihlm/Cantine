@@ -4,6 +4,8 @@ import Validation from "../../sharedmodule/functions/validation";
 import {HttpClient, HttpStatusCode} from "@angular/common/http";
 import {CoreCantineService} from "../core-cantine.service";
 import {SharedService} from "../../sharedmodule/shared.service";
+import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-authentication',
@@ -18,12 +20,14 @@ export class AuthenticationComponent {
     submitted = false;
     disabled_account = false;
     wrong_credentials = false;
+
+    isLoading =  false ;
     signIn: FormGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
         password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
     });
 
-     constructor    ( private  coreCantineService :CoreCantineService ,  private   sharedService : SharedService) {}
+     constructor    ( private  coreCantineService :CoreCantineService ,  private   sharedService : SharedService ,   private matDialog :  MatDialog) {}
     singIn() {
         this.submitted = true;
         if (this.signIn.invalid) {
@@ -54,9 +58,13 @@ export class AuthenticationComponent {
 
 
 
-    sendTokenToActivateAccount(email:string) {
-        this.sharedService.sendToken(email).subscribe( data => {
-            console.log(data);
+    sendTokenToActivateAccount() {
+        this.sharedService.sendToken(this.signIn.value.email).subscribe( data => {
+            this.matDialog.open(SuccessfulDialogComponent, {
+                data: {message: "Un  Email  vous a éte  envoyer à   "+this.signIn.value.email +" pour  Activer    Votre  Compte  "},
+                width: '40%',
+            });
+
         });
     }
 
