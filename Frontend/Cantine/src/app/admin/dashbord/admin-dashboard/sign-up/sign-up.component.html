@@ -82,8 +82,12 @@
                             <div *ngIf="f['email'].errors['pattern']" class="center">
                                 Format  Email  incorrect pattern
                             </div>
-
                         </div>
+
+                        <div *ngIf="submitted && existEmail && !f['email'].errors " class="center">
+                            Email  existe déja
+                        </div>
+
                     </div>
 
 

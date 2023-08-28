@@ -24,7 +24,7 @@ export class SignUpComponent implements OnInit {
     submitted = false;
     image!: File;
     isLoaded = false;
-
+    existEmail = true;
     adminfunction$: Observable<Adminfunction[]> = of([]);
 
     constructor(private adminService: AdminService, private matDialog: MatDialog) {
@@ -60,18 +60,29 @@ export class SignUpComponent implements OnInit {
         if (this.adminForm.invalid) {
             return;
         }
+        // check if email exist
+        this.adminService.checkExistenceOfEmail(this.adminForm.value.email).subscribe({
+            next: (data) => {
+                if (data != undefined && data.message === "EMAIL  DOES   NOT  EXIST") {
+                    this.existEmail = false;
+                    const result = this.matDialog.open(ValidatorDialogComponent, {
+                        data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
+                        width: '40%',
+                    });
+                    result.afterClosed().subscribe((result) => {
+                        if (result != undefined && result == true) {
+                            this.signUp();
+                        } else {
+                            return;
+                        }
+                    });
 
-
-        const result = this.matDialog.open(ValidatorDialogComponent, {
-            data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
-            width: '40%',
-        });
-
-        result.afterClosed().subscribe((result) => {
-            if (result != undefined && result == true) {
-                this.signUp();
-            } else {
-                return;
+                } else {
+                    this.existEmail = true;
+                }
+            },
+            error: (err) => {
+                this.existEmail = true;
             }
         });
 
@@ -109,17 +120,15 @@ export class SignUpComponent implements OnInit {
     }
 
 
-
-     sendConfirmationToken() {
+    sendConfirmationToken() {
         this.adminService.sendToken(this.adminForm.value.email).subscribe((data) => {
             if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
                 console.log("success");
-            }
-            else  {
+            } else {
                 console.log("error");
             }
         });
-     }
+    }
 
 
     onChange = ($event: Event) => {
@@ -131,8 +140,6 @@ export class SignUpComponent implements OnInit {
     get f(): { [key: string]: AbstractControl } {
         return this.adminForm.controls;
     }
-
-
 
 
 }

@@ -19,6 +19,8 @@ export class AdminService {
   private  GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
 
   private  SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';
+
+  private CHECK_EXISTENCE_OF_EMAIL = "http://localhost:8080/cantine/superAdmin" + '/ExistingEmail';
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
 
 
@@ -40,6 +42,10 @@ export class AdminService {
     return this.httpClient.get<Adminfunction[]>(this.GET_ADMIN_FUNCTION_S);
   }
 
+  checkExistenceOfEmail(email : string){
+      const params = new HttpParams().set('email', email);
+      return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL , {params});
+  }
 
 
   private handleError(error: HttpErrorResponse) {
@@ -47,7 +53,7 @@ export class AdminService {
     let  errorMessage = errorObject.exceptionMessage;
 
 
-    if (error.status == HttpStatusCode.InternalServerError){
+   if (error.status == HttpStatusCode.InternalServerError){
       this.openDialog("Unkwon Error   has  been occured  ",  error.status);
     }
     else  {
