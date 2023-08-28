@@ -87,6 +87,9 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                } catch (IOException ex) {
                    throw new RuntimeException(ex);
                }
+
+               //  custom  exception  for  disabled  account
+
            }catch (Exception e ) {
                Map<String, String> idToken = new HashMap<>();
                System.out.println(e.getMessage());
