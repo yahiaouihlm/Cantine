@@ -3,9 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angula
 import {Meal} from "../sharedmodule/models/meal";
 import {Menu} from "../sharedmodule/models/menu";
 import {Login} from "../sharedmodule/models/login";
-import {ErrorResponse} from "../sharedmodule/models/ErrorResponse";
-import {catchError, throwError} from "rxjs";
-import {NormalResponse} from "../sharedmodule/models/NormalResponse";
+
 
 @Injectable()
 export class CoreCantineService {
@@ -16,6 +14,9 @@ export class CoreCantineService {
 
 
   constructor(private httpClient: HttpClient) { }
+
+
+
 
 
     userAuthentication(login:Login) {

@@ -16,6 +16,10 @@ export class SharedService {
   private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin/adminDashboard';
   private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';
 
+
+
+
+
   sendToken(email: string) {
 
     const params = new HttpParams().set('email', email);

@@ -19,12 +19,17 @@ export class AdminService {
 
     /*private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';*/
 
+    private CHECK_TOKEN_VALIDITY_ADMIN =  this.BASIC_ENDPOINT + '/checkTokenValidity';
     private CHECK_EXISTENCE_OF_EMAIL = "http://localhost:8080/cantine/superAdmin" + '/ExistingEmail';
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
 
+    checkTokenValidityAdmin(token: string) {
+        const params = new HttpParams().set('token', token);
+        return this.httpClient.get<NormalResponse>(this.CHECK_TOKEN_VALIDITY_ADMIN, {params});
+    }
 
 
     signUpAdmin(admin: FormData) {
