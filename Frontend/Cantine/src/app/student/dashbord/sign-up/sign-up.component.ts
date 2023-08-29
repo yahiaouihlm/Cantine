@@ -7,6 +7,7 @@ import {StudentClass} from "../../../sharedmodule/models/studentClass";
 import {StudentDashboardService} from "../student-dashboard.service";
 import {MatDialog} from "@angular/material/dialog";
 import {SharedService} from "../../../sharedmodule/shared.service";
+import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
   selector: 'app-sign-in',
@@ -60,12 +61,47 @@ export class SignUpComponent  implements   OnInit {
         this.sharedService.checkExistenceOfEmail(this.studentForm.value.email).subscribe( {
                 next: (data) => {
                     this.existEmail =  false;
+                    this.signUp();
                 } ,
                 error: (error) => {
                     this.existEmail =  true;
                 },
             }
         );
+
+    }
+
+
+    signUp() {
+        const formData = new FormData();
+        formData.append('firstname', this.studentForm.value.firstName);
+        formData.append('lastname', this.studentForm.value.lastName);
+        formData.append('email', this.studentForm.value.email);
+        formData.append('password', this.studentForm.value.password);
+        formData.append('birthDate', this.studentForm.value.birthDate);
+        formData.append('studentClass', this.studentForm.value.studentClass);
+
+
+        if (this.studentForm.value.phoneNumber != null || this.studentForm.value.phoneNumber != undefined)
+            formData.append('phoneNumber', this.studentForm.value.phoneNumber);
+
+        if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
+            formData.append('image', this.image);
+        this.studentService.signUpStudent(formData).subscribe(data => {
+
+            if (data != undefined && data.message === "STUDENT SAVED SUCCESSFULLY") {
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    // this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+                });
+
+            }
+
+        });
+
 
     }
 
@@ -82,3 +118,4 @@ export class SignUpComponent  implements   OnInit {
 
 
 }
+

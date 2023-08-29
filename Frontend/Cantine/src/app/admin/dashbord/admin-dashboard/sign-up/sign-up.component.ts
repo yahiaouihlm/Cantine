@@ -106,6 +106,8 @@ export class SignUpComponent implements OnInit {
 
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             formData.append('image', this.image);
+
+
         this.adminService.signUpAdmin(formData).subscribe((data) => {
             if (data != undefined && data.message === "ADMIN ADDED SUCCESSFULLY") {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
