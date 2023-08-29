@@ -1,1 +1,293 @@
-<p>sign-in works!</p>
+<div class="container first  first-container">
+    <div class="row first">
+        <div class="container second">
+            <div class="row">
+
+                <div class="text-center">
+                    <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
+                    <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
+                </div>
+
+                <div class="center">
+                    <h2>Je m'inscris en tant qu'Administrateur</h2>
+                </div>
+
+                <form [formGroup]="studentForm">
+
+                    <!---------------------- Name --------------------------->
+                    <div class="form-group ">
+                        <label for="firstName"> Prénom :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
+                               formControlName="firstName"
+                               placeholder="  Votre Prénom "
+                               type="text"
+                               id="firstName"
+                        />
+                        <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
+                            <div *ngIf="f['firstName'].errors['maxlength']" class="center">
+                                votre Prénom  ne doit pas dépasser 60 charctéres
+                            </div>
+                            <div *ngIf="f['firstName'].errors['minlength']" class="center">
+                                votre Prénom    doit avoir au minimum de 3 charctéres
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!---------------------- Name --------------------------->
+                    <div class="form-group ">
+                        <label for="lastName"> Nom :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
+                               formControlName="lastName"
+                               placeholder="  Votre Nom "
+                               type="text"
+                               id="lastName"
+                        />
+                        <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
+                            <div *ngIf="f['lastName'].errors['maxlength']" class="center">
+                                votre Nom  ne doit pas dépasser 60 charctéres
+                            </div>
+                            <div *ngIf="f['lastName'].errors['minlength']" class="center">
+                                votre Nom  doit avoir au minimum de 3 charctéres
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <!---------------------- Email --------------------------->
+                    <div class="form-group ">
+                        <label for="email"> Email :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                               formControlName="email"
+                               placeholder="  Votre Email "
+                               type="email"
+                               id="email"
+                        />
+                        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                            <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                            <div *ngIf="f['email'].errors['maxlength']" class="center">
+                                votre Nom  ne doit pas dépasser 1000 charctéres
+                            </div>
+                            <div *ngIf="f['email'].errors['email']" class="center">
+                                Format  Email  incorrect
+                            </div>
+
+                            <div *ngIf="f['email'].errors['pattern']" class="center">
+                                Format  Email  incorrect pattern
+                            </div>
+                        </div>
+
+                        <div *ngIf="submitted && existEmail && !f['email'].errors " class="center">
+                            Email  existe déja
+                        </div>
+
+                    </div>
+
+
+                    <!---------------------- Birthdate--------------------------->
+                    <div class="form-group ">
+                        <label for="birthDate"> Date De  Naissance   :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
+                               formControlName="birthDate"
+                               placeholder="Votre  Date  De  Naissance "
+                               type="Date"
+                               id="birthDate"
+                        />
+                        <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
+                            <div *ngIf="f['birthDate'].errors['required']" class="center"> La  date  de  naissance  est requise     </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+                    <!---------------------- Password --------------------------->
+                    <div class="form-group ">
+                        <label for="password"> Mot  de passe  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" class="form-control"
+                               formControlName="password"
+                               placeholder="  Votre Mot  de passe "
+                               type="password"
+                               id="password"
+                        />
+                        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                            <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot  de  passe  est requis</div>
+                            <div *ngIf="f['password'].errors['maxlength']" class="center">
+                                votre Mot De passe  ne doit pas dépasser   20 charctéres
+                            </div>
+
+                            <div *ngIf="f['password'].errors['minlength']" class="center">
+                                votre Mot de passe   doit avoir au minimum de 6 charctéres
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <!---------------------- Password Confirmation--------------------------->
+                    <div class="form-group ">
+                        <label for="confirmPassword">  Confirmation Mot  de passe  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" class="form-control"
+                               formControlName="confirmPassword"
+                               placeholder="  Confirmation  Mot  de passe "
+                               type="password"
+                               id="confirmPassword"
+                        />
+                        <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
+                            <div *ngIf="f['confirmPassword'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
+                            <div *ngIf="f['confirmPassword'].errors['matching']" class="center">
+                                Les deux mots de passe ne sont pas identiques
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <!---------------------- Town --------------------------->
+                    <div class="form-group ">
+                        <label for="town"> Ville :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['town'].errors }" class="form-control"
+                               formControlName="town"
+                               placeholder="La ville "
+                               type="text"
+                               id="town"
+                        />
+                        <div *ngIf="submitted && f['town'].errors" class="invalid-feedback">
+                            <div *ngIf="f['town'].errors['required']" class="center"> le  champs  est  obligatoire </div>
+                            <div *ngIf="f['town'].errors['maxlength']" class="center">
+                                Le nom de   la ville  ne doit pas dépasser   1000 charctéres
+                            </div>
+
+                            <div *ngIf="f['town'].errors['minlength']" class="center">
+                                Le  nom  de  la ville    doit avoir au minimum de 3 charctéres
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
+
+                    <!---------------------- Phone Number--------------------------->
+                    <div class="form-group ">
+                        <label for="phoneNumber">  Numéro Tél  :  </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
+                               formControlName="phoneNumber"
+                               placeholder="  Votre  Numéro Télephone "
+                               type="tel"
+                               id="phoneNumber"
+                        />
+                        <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
+                            <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
+                                Format  Numéro  Téléphone est   incorrect
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <!---------------------- Function  --------------------------->
+<!--
+
+                    <div class="form-group">
+                        <label for="adminFunction"> Votre  poste   </label>
+                        <select formControlName="adminFunction" class="form-control" id="adminFunction"
+                                [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }" name="adminFunction">
+                            <option value="" disabled>&#45;&#45; Votre  travail &#45;&#45;</option>
+                            <ng-container *ngFor="let job of adminfunction$ | async ">
+                                <option [value]="job.name">{{ job.name }}</option>
+                            </ng-container>
+                        </select>
+                        <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
+                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre  travail est
+                                requise
+                            </div>
+                        </div>
+                    </div>
+
+
+
+-->
+
+
+
+
+
+                    <!---------------------- Image --------------------------->
+                    <div class="form-group">
+                        <label for="image"> Choisissez une  image  de  profile   </label>
+
+                        <input class="input-group-prepend"
+                               [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
+                               formControlName="image"
+                               placeholder=" IMAGE  DU  Profil "
+                               type="file"
+                               id="image"
+                               accept="image/png, image/jpeg"
+                               (change)="onChange ($event)"
+                        />
+
+                    </div>
+
+
+
+
+
+
+                    <div class="validate-form center">
+                        <button class="center btn" (click)="onSubmit()">
+                            <span>
+                                <i class="fa fa-check"></i>
+                            </span>
+                            Valider
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #loadingTemplate >
+    &lt;!&ndash; Afficher le spinner ici pendant le chargement &ndash;&gt;
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+</ng-template>
+
+<style>
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 15vh;
+    }
+</style>
+
