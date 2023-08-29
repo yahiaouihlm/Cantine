@@ -5,10 +5,7 @@ import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -35,6 +32,12 @@ public class AdminController  implements IAdminController {
         this.adminService = adminService;
     }
 
+
+
+    public  ResponseEntity<ResponseDtout>checkTokenValidity(@RequestParam("token") String  token) throws InvalidTokenException, ExpiredToken, AdminNotFound {
+        this.adminService.checkTokenValidity(token);
+        return ResponseEntity.ok(new ResponseDtout(TOKEN_VALID));
+    }
 
     @Override
     public ResponseEntity<ResponseDtout> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException, AccountAlreadyActivatedException {

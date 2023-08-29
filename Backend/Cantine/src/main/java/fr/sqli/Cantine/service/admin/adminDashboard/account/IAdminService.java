@@ -17,7 +17,7 @@ import java.util.List;
 public interface IAdminService {
 
 
-     String  checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException;
+     String  checkTokenValidity(String token) throws InvalidPersonInformationException, AdminNotFound, InvalidTokenException, ExpiredToken;
 
      void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound;
 

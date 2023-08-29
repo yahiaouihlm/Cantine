@@ -73,7 +73,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public String checkTokenValidity(String token) throws AdminNotFound, InvalidTokenException {
+    public String checkTokenValidity(String token) throws AdminNotFound, InvalidTokenException, ExpiredToken {
         if (token == null || token.trim().isEmpty())
             throw new InvalidTokenException("INVALID TOKEN");
 
@@ -90,7 +90,7 @@ public class AdminService implements IAdminService {
         //  expired  token  ///
         if (expiredTime > fiveMinutesInMillis) {
             this.confirmationTokenDao.delete(confirmationTokenEntity);
-
+            throw new ExpiredToken("EXPIRED TOKEN");
         }
         var admin = this.adminDao.findById(adminEntity.getId());
         if (admin.isEmpty())

@@ -4,10 +4,7 @@ import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.dto.out.person.AdminDtout;
 import fr.sqli.Cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingAdminException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.Cantine.service.images.exception.ImagePathException;
 import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.Cantine.service.images.exception.InvalidImageException;
@@ -26,7 +23,7 @@ public interface IAdminController {
 
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin/adminDashboard";
 
-
+   String  ADMIN_DASH_BOARD_CHECK_TOKEN_VALIDITY = "/checkTokenValidity";
    String ADMIN_DASH_BOARD_VALIDATE_EMAIL_ENDPOINT = "/sendToken";
     String ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT = "/getAdmin";
     String ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT =  "/signUp";
@@ -38,12 +35,20 @@ public interface IAdminController {
     String  ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT ="/getAllAdminFunctions";
 
 
+    /**************************** SERVER ANSWERS ************************************/
+
+    String  TOKEN_VALID = "TOKEN VALID";
     String TOKEN_SENDED_SUCCESSFULLY =  "TOKEN SENDED SUCCESSFULLY";
 
    String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
 
    String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
    String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
+
+
+   @GetMapping(ADMIN_DASH_BOARD_CHECK_TOKEN_VALIDITY)
+    public  ResponseEntity<ResponseDtout>checkTokenValidity(@RequestParam("token") String  token) throws InvalidTokenException, ExpiredToken, AdminNotFound;
+
 
     @PostMapping(ADMIN_DASH_BOARD_VALIDATE_EMAIL_ENDPOINT)
     ResponseEntity<ResponseDtout> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException, AccountAlreadyActivatedException;
