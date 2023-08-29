@@ -51,6 +51,22 @@ export class SignUpComponent  implements   OnInit {
 
     onSubmit() {
 
+        this.submitted = true;
+        this.existEmail = false;
+        if (this.studentForm.invalid) {
+            return;
+        }
+        // check if email exist
+        this.sharedService.checkExistenceOfEmail(this.studentForm.value.email).subscribe( {
+                next: (data) => {
+                    this.existEmail =  false;
+                } ,
+                error: (error) => {
+                    this.existEmail =  true;
+                },
+            }
+        );
+
     }
 
 

@@ -13,13 +13,32 @@ export class SharedService {
 
   constructor(private httpClient: HttpClient, private matDialog: MatDialog) { }
 
+  private CHECK_EXISTENCE_OF_EMAIL = "http://localhost:8080/cantine/superAdmin" + '/ExistingEmail';
   private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin/adminDashboard';
+
   private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';
 
+  checkExistenceOfEmail(email: string) {
+    const params = new HttpParams().set('email', email);
+    return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params}).pipe(
+        catchError((error) => this.handleErrors(error))
+    );
+  }
 
+  private handleErrors(error: HttpErrorResponse) {
+    const errorObject = error.error as ErrorResponse;
+    let errorMessage = errorObject.exceptionMessage;
 
+    if (error.status == HttpStatusCode.Conflict) {
+      return throwError(() => new Error(errorMessage));
 
+    } else {
 
+      this.openDialog("Unkwon Error   has  been occured  ", error.status);
+      return throwError(() => new Error(errorMessage));
+    }
+
+  }
   sendToken(email: string) {
 
     const params = new HttpParams().set('email', email);

@@ -63,7 +63,7 @@ export class SignUpComponent implements OnInit {
             return;
         }
         // check if email exist
-        this.adminService.checkExistenceOfEmail(this.adminForm.value.email).subscribe( {
+        this.sharedService.checkExistenceOfEmail(this.adminForm.value.email).subscribe( {
             next: (data) => {
                 this.existEmail =  false;
                this.inscription();
