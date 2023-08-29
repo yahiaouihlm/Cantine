@@ -28,7 +28,7 @@ public interface IStudentController {
     String  GET_STUDENT_BY_ID_ENDPOINT = "/getStudent";
 
    String UPDATE_STUDENT_INFO_ENDPOINT = "/update/studentInfo";
-
+    String  GET_ALL_STUDENT_CLASS ="/getAllStudentClass";
 
 
    String  TOKEN_SENT_SUCCESSFULLY = "TOKEN SENT SUCCESSFULLY" ;
