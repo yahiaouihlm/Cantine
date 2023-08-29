@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.student;
 
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
@@ -13,9 +14,11 @@ import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
 import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IStudentController {
     String STUDENT_BASIC_URL = "/cantine/student";
@@ -37,6 +40,9 @@ public interface IStudentController {
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
 
+
+    @GetMapping(GET_ALL_STUDENT_CLASS)
+    ResponseEntity<List<StudentClassDtout>> getAllStudentClass() ;
     @PostMapping(SEND_TOKEN_ENDPOINT)
     ResponseEntity<String> sendTokenStudent(String email ) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException;
 

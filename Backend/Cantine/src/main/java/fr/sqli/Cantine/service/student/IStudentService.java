@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.service.student;
 
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
@@ -14,11 +15,12 @@ import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IStudentService {
 
 
-
+    List<StudentClassDtout> getAllStudentClass() ;
     void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException;
 
        void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;

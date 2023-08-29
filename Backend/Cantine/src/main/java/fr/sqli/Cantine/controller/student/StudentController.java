@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.student;
 
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(StudentController.STUDENT_BASIC_URL)
@@ -31,6 +33,11 @@ public class StudentController implements IStudentController {
 
  /* TODO  :    change  get Student  Image  URl  */
 
+
+    @Override
+    public ResponseEntity<List<StudentClassDtout>> getAllStudentClass() {
+        return ResponseEntity.ok(this.studentService.getAllStudentClass());
+    }
 
     @Override
     public ResponseEntity<String> sendTokenStudent(@RequestParam("email") String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException {

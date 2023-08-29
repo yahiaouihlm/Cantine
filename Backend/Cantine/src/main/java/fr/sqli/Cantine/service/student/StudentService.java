@@ -6,6 +6,7 @@ import fr.sqli.Cantine.dao.IConfirmationTokenDao;
 import fr.sqli.Cantine.dao.IStudentClassDao;
 import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.Cantine.entity.ImageEntity;
@@ -31,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class StudentService implements IStudentService {
@@ -71,6 +73,16 @@ public class StudentService implements IStudentService {
 
 
     /* TODO  ;  make  the  Tests */
+
+
+    @Override
+    public List<StudentClassDtout> getAllStudentClass() {
+        return this.iStudentClassDao.findAll()
+                   .stream()
+                   .map(studentClassEntity -> new StudentClassDtout(studentClassEntity.getId() , studentClassEntity.getName()))
+                   .toList();
+    }
+
     @Override
     public void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException {
         if (email == null || email.isEmpty()) {
