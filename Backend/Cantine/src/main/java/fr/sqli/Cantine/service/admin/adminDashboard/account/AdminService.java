@@ -36,6 +36,7 @@ public class AdminService implements IAdminService {
     private static final Logger LOG = LogManager.getLogger();
     final String SERVER_ADDRESS;
     final String DEFAULT_ADMIN_IMAGE_NAME;
+    final  String  CONFIRMATION_TOKEN_URL;
 
     final String ADMIN_IMAGE_PATH;  //  path  to  admin image  directory
     final String EMAIL_ADMIN_REGEX;
@@ -66,6 +67,7 @@ public class AdminService implements IAdminService {
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
         var port = environment.getProperty("sali.cantine.server.port");
+        this.CONFIRMATION_TOKEN_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
         this.SERVER_ADDRESS = protocol + host + ":" + port;
     }
 
@@ -127,8 +129,7 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException,
-            ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
+    public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidPersonInformationException, InvalidFormatImageException, InvalidImageException,ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
         if (adminDtoIn == null)
             throw new InvalidPersonInformationException("INVALID INFORMATION REQUEST");
 
@@ -252,7 +253,7 @@ public class AdminService implements IAdminService {
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(adminEntity);
         this.confirmationTokenDao.save(confirmationToken);
 
-        var url = this.SERVER_ADDRESS + "/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
+        var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
 
 
         String text = """
