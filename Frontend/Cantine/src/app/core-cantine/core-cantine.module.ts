@@ -25,7 +25,7 @@ const routes: Routes = [
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
       {path: 'menus', component: MenuComponent},
-      {path: 'confirmation-token/:token', component: ConfirmationTokenComponent},
+      {path: 'user/confirmation-token/:token', component: ConfirmationTokenComponent},
       {path: '', redirectTo:'cantine/home', pathMatch:'full'},
 
     ]

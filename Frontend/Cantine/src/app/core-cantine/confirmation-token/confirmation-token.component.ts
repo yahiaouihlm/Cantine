@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-confirmation-token',
@@ -6,6 +7,18 @@ import { Component } from '@angular/core';
   styles: [
   ]
 })
-export class ConfirmationTokenComponent {
+export class ConfirmationTokenComponent  implements  OnInit{
+
+
+
+  constructor(private   route :  ActivatedRoute) {}
+  ngOnInit(): void {
+    const token = this.route.snapshot.paramMap.get('token');
+    if (token) {
+     /* const token = +token;*/
+        console.log(token)
+    }
+
+  }
 
 }

@@ -68,6 +68,7 @@ export class AuthenticationComponent {
                     data: {message: "Un  Email  vous a éte  envoyer à   " + this.signIn.value.email + " pour  Activer    Votre  Compte  "},
                     width: '40%',
                 });
+                this.isLoading = false;
             },
             error: (error) => {
                 this.isLoading = false;
