@@ -30,7 +30,7 @@ export class SharedService {
 
 
     if (error.status == HttpStatusCode.InternalServerError) {
-      this.openDialog("Unkwon Error   has  been occured  ", error.status);
+      this.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation", error.status);
     } else {
       this.openDialog(errorMessage, error.status);
     }

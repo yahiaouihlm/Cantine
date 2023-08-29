@@ -14,17 +14,10 @@ export class CoreCantineService {
   private  GET_ALL_MEALS_ENDPOINT = this.BASIC_MEAL_URL +  'meals/getAll'
   private GET_ALL_MENUS_ENDPOINT =  this.BASIC_MEAL_URL + 'menus/getAll';
 
-    private SEND_CONFIRMATION_TOKEN = "http://localhost:8080/cantine/"+ '/sendToken';
 
   constructor(private httpClient: HttpClient) { }
 
 
-
-    sendToken(email: string) {
-
-        const params = new HttpParams().set('email', email);
-        return this.httpClient.post<NormalResponse>(this.SEND_CONFIRMATION_TOKEN, params);
-    }
     userAuthentication(login:Login) {
         return this.httpClient.post(this.USER_AUTHENTICATION_ENDPOINT, login );
     }
