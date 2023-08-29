@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class AdminExceptionHandler {
 
+
+
+
+    @ExceptionHandler(ExpiredToken.class)
+    public ResponseEntity<ExceptionDtout> handleExpiredToken(ExpiredToken e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDtout(e.getMessage()));
+    }
     @ExceptionHandler(AdminFunctionNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleAdminFunctionNotFound(  AdminFunctionNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
