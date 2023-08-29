@@ -9,7 +9,7 @@
                 </div>
 
                 <div class="center">
-                    <h2>Je m'inscris en tant qu'Administrateur</h2>
+                    <h2>Je m'inscris en tant que  Etudent  de  Aston  Ecole</h2>
                 </div>
 
                 <form [formGroup]="studentForm">
@@ -207,19 +207,18 @@
 
 
                     <!---------------------- Function  --------------------------->
-<!--
 
                     <div class="form-group">
-                        <label for="adminFunction"> Votre  poste   </label>
-                        <select formControlName="adminFunction" class="form-control" id="adminFunction"
-                                [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }" name="adminFunction">
-                            <option value="" disabled>&#45;&#45; Votre  travail &#45;&#45;</option>
-                            <ng-container *ngFor="let job of adminfunction$ | async ">
-                                <option [value]="job.name">{{ job.name }}</option>
+                        <label for="studentClass">    </label>
+                        <select formControlName="studentClass" class="form-control" id="studentClass"
+                                [ngClass]="{ 'is-invalid': submitted && f['studentClass'].errors }" name="studentClass">
+                            <option value="" disabled>-- Votre  class --</option>
+                            <ng-container *ngFor="let Sclass of studentClass$ | async ">
+                                <option [value]="Sclass.name">{{ Sclass.name }}</option>
                             </ng-container>
                         </select>
-                        <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
-                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre  travail est
+                        <div *ngIf="submitted && f['studentClass'].errors" class="invalid-feedback">
+                            <div *ngIf="f['studentClass'].errors['required']" class="center"> saisie de votre  travail est
                                 requise
                             </div>
                         </div>
@@ -227,7 +226,6 @@
 
 
 
--->
 
 
 
