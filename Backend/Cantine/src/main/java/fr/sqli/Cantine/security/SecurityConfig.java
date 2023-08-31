@@ -67,7 +67,7 @@ public class SecurityConfig {
                         })
                 .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
-             /*   .exceptionHandling()
+         /*       .exceptionHandling()
                  .authenticationEntryPoint(this.customAuthenticationEntryPoint)
                 .accessDeniedHandler(this.stoneAuthenticationFailureHandler)*/
 
