@@ -252,7 +252,7 @@
 
 
 
-                    <div class="validate-form center">
+                    <div   *ngIf="!isLoading;  else loadingTemplate" class="validate-form center">
                         <button class="center btn" (click)="onSubmit()">
                             <span>
                                 <i class="fa fa-check"></i>
@@ -273,7 +273,6 @@
 
 
 <ng-template #loadingTemplate >
-    &lt;!&ndash; Afficher le spinner ici pendant le chargement &ndash;&gt;
     <div class="spinner-container">
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>

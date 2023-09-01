@@ -25,7 +25,7 @@ export class SignUpComponent  implements   OnInit {
     image!: File;
     submitted = false;
     existEmail = false;
-
+    isLoading = false;
    studentClass$: Observable<StudentClass[]> = of([]);
   studentForm: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -56,12 +56,12 @@ export class SignUpComponent  implements   OnInit {
 
 
     onSubmit() {
-
-        this.submitted = true;
+      this.submitted = true;
         this.existEmail = false;
         if (this.studentForm.invalid) {
             return;
         }
+        this.isLoading = true;
         // check if email exist
         this.sharedService.checkExistenceOfEmail(this.studentForm.value.email).subscribe( {
                 next: (data) => {
@@ -70,7 +70,8 @@ export class SignUpComponent  implements   OnInit {
                 } ,
                 error: (error) => {
                     this.existEmail =  true;
-                },
+                    this.isLoading = false;
+                    },
             }
         );
 
@@ -85,6 +86,7 @@ export class SignUpComponent  implements   OnInit {
             if (result != undefined && result == true) {
                 this.signUp();
             } else {
+                this.isLoading = false;
                 return;
             }
         });
@@ -104,6 +106,9 @@ export class SignUpComponent  implements   OnInit {
 
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             formData.append('image', this.image);
+
+
+
         this.studentService.signUpStudent(formData).subscribe(data => {
 
             if (data != undefined && data.message === "STUDENT SAVED SUCCESSFULLY") {
@@ -117,21 +122,23 @@ export class SignUpComponent  implements   OnInit {
 
 
     sendConfirmationToken() {
-        this.sharedService.sendToken(this.studentForm.value.email).subscribe((data) => {
-            if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
+        this.sharedService.sendTokenStudent(this.studentForm.value.email).subscribe((data) => {
+            if (data != undefined && data.message === "TOKEN SENT SUCCESSFULLY") {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                     this.router.navigate(['cantine/signIn'])
+                     this.router.navigate(['/cantine/signIn'])
                 });
 
             } else {
                 console.log("error");
             }
         });
-    }
+
+     this.isLoading = false;
+  }
 
 
     onChange = ($event: Event) => {

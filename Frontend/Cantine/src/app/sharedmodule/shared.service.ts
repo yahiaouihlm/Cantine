@@ -14,10 +14,10 @@ export class SharedService {
   constructor(private httpClient: HttpClient, private matDialog: MatDialog) { }
 
   private CHECK_EXISTENCE_OF_EMAIL = "http://localhost:8080/cantine/superAdmin" + '/ExistingEmail';
-  private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin/adminDashboard';
+  private BASIC_ENDPOINT = "http://localhost:8080/cantine/";
 
-  private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';
-
+  private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT  + 'admin/adminDashboard' + '/sendToken';
+  private SEND_STUDENT_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT  +  "student/sendToken" ;
   checkExistenceOfEmail(email: string) {
     const params = new HttpParams().set('email', email);
     return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params}).pipe(
@@ -47,6 +47,14 @@ export class SharedService {
     );
   }
 
+
+  sendTokenStudent(email: string) {
+    const params = new HttpParams().set('email', email);
+    return this.httpClient.post<NormalResponse>(this.SEND_STUDENT_CONFIRMATION_TOKEN, params).pipe(
+        catchError((error) => this.handleError(error))
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     const errorObject = error.error as ErrorResponse;
     let errorMessage = errorObject.exceptionMessage;
@@ -55,6 +63,7 @@ export class SharedService {
     if (error.status == HttpStatusCode.InternalServerError) {
       this.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation", error.status);
     } else {
+      console.log(error.message)
       this.openDialog(errorMessage, error.status);
     }
 
