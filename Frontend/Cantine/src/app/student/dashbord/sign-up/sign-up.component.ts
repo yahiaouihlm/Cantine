@@ -8,6 +8,8 @@ import {StudentDashboardService} from "../student-dashboard.service";
 import {MatDialog} from "@angular/material/dialog";
 import {SharedService} from "../../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sign-in',
@@ -17,6 +19,9 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 })
 export class SignUpComponent  implements   OnInit {
 
+
+
+    private   WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vous inscrire ?";
     image!: File;
     submitted = false;
     existEmail = false;
@@ -41,7 +46,7 @@ export class SignUpComponent  implements   OnInit {
   );
 
 
-  constructor( private  studentService: StudentDashboardService, private matDialog: MatDialog , private sharedService: SharedService) {
+  constructor( private  studentService: StudentDashboardService, private matDialog: MatDialog , private sharedService: SharedService , private  router : Router) {
   }
 
     ngOnInit(): void {
@@ -61,7 +66,7 @@ export class SignUpComponent  implements   OnInit {
         this.sharedService.checkExistenceOfEmail(this.studentForm.value.email).subscribe( {
                 next: (data) => {
                     this.existEmail =  false;
-                    this.signUp();
+                    this.inscription();
                 } ,
                 error: (error) => {
                     this.existEmail =  true;
@@ -71,16 +76,28 @@ export class SignUpComponent  implements   OnInit {
 
     }
 
-
+    inscription() {
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
+            width: '40%',
+        });
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                this.signUp();
+            } else {
+                return;
+            }
+        });
+    }
     signUp() {
         const formData = new FormData();
         formData.append('firstname', this.studentForm.value.firstName);
         formData.append('lastname', this.studentForm.value.lastName);
         formData.append('email', this.studentForm.value.email);
         formData.append('password', this.studentForm.value.password);
-        formData.append('birthDate', this.studentForm.value.birthDate);
+        formData.append('birthdateAsString  ', this.studentForm.value.birthDate);
         formData.append('studentClass', this.studentForm.value.studentClass);
-
+        formData.append('town', this.studentForm.value.town);
 
         if (this.studentForm.value.phoneNumber != null || this.studentForm.value.phoneNumber != undefined)
             formData.append('phoneNumber', this.studentForm.value.phoneNumber);
@@ -90,19 +107,30 @@ export class SignUpComponent  implements   OnInit {
         this.studentService.signUpStudent(formData).subscribe(data => {
 
             if (data != undefined && data.message === "STUDENT SAVED SUCCESSFULLY") {
-                const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
-                    width: '40%',
-                });
-                result.afterClosed().subscribe((result) => {
-                    // this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
-                });
-
+                this.sendConfirmationToken();
             }
 
         });
 
 
+    }
+
+
+    sendConfirmationToken() {
+        this.sharedService.sendToken(this.studentForm.value.email).subscribe((data) => {
+            if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                     this.router.navigate(['cantine/signIn'])
+                });
+
+            } else {
+                console.log("error");
+            }
+        });
     }
 
 

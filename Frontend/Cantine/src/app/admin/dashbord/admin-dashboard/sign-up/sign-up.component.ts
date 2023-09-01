@@ -110,14 +110,7 @@ export class SignUpComponent implements OnInit {
 
         this.adminService.signUpAdmin(formData).subscribe((data) => {
             if (data != undefined && data.message === "ADMIN ADDED SUCCESSFULLY") {
-                const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
-                    width: '40%',
-                });
-                result.afterClosed().subscribe((result) => {
-                    // this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
-                });
-
+                this.sendConfirmationToken();
             }
         });
     }
@@ -126,7 +119,14 @@ export class SignUpComponent implements OnInit {
     sendConfirmationToken() {
         this.sharedService.sendToken(this.adminForm.value.email).subscribe((data) => {
             if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
-                console.log("success");
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    // this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+                });
+
             } else {
                 console.log("error");
             }
