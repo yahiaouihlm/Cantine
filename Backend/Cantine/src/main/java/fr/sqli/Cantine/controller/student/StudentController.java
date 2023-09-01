@@ -1,6 +1,7 @@
 package fr.sqli.Cantine.controller.student;
 
 import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.Cantine.dto.out.person.StudentDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
@@ -62,12 +63,10 @@ public class StudentController implements IStudentController {
    }
 
  @Override
- @PostMapping(STUDENT_SIGN_UP_ENDPOINT)
- public ResponseEntity<String> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
+ public ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
          InvalidStudentClassException, InvalidFormatImageException, InvalidImageException,
          StudentClassNotFoundException, ImagePathException, IOException, ExistingStudentException {
-
        this.studentService.signUpStudent(studentDtoIn);
-        return ResponseEntity.ok(STUDENT_SIGNED_UP_SUCCESSFULLY);
+        return ResponseEntity.ok(  new ResponseDtout(STUDENT_SIGNED_UP_SUCCESSFULLY));
  }
 }
