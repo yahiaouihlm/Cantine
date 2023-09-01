@@ -41,9 +41,9 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    public ResponseEntity<String> sendTokenStudent(@RequestParam("email") String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException {
+    public ResponseEntity<ResponseDtout> sendTokenStudent(@RequestParam("email") String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException {
         this.studentService.sendTokenStudent(email);
-        return ResponseEntity.ok(TOKEN_SENT_SUCCESSFULLY);
+        return ResponseEntity.ok(  new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }
 
     @Override

@@ -61,7 +61,7 @@ public class StudentService implements IStudentService {
         this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
         this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
         this.EMAIL_STUDENT_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
-                /*TODO make  the  only  available  email  is  the  emails ends  with  the  domain  of  the  school  */
+                /*TODO make  the  only  available  email  is      the  emails ends  with  the  domain  of  the  school  */
                 //"^[a-zA-Z0-9._-]+@" + EMAIL_STUDENT_DOMAIN + "$";
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.imageService = imageService;

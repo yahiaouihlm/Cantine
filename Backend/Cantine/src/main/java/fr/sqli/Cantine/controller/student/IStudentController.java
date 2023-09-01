@@ -45,7 +45,7 @@ public interface IStudentController {
     @GetMapping(GET_ALL_STUDENT_CLASS)
     ResponseEntity<List<StudentClassDtout>> getAllStudentClass() ;
     @PostMapping(SEND_TOKEN_ENDPOINT)
-    ResponseEntity<String> sendTokenStudent(String email ) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException;
+    ResponseEntity<ResponseDtout> sendTokenStudent(String email ) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException;
 
     ResponseEntity<StudentDtout> getStudentById(Integer id) throws StudentNotFoundException, InvalidPersonInformationException;
 
