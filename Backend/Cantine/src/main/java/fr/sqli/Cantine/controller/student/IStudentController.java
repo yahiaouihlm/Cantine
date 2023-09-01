@@ -17,6 +17,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,7 +46,7 @@ public interface IStudentController {
     @GetMapping(GET_ALL_STUDENT_CLASS)
     ResponseEntity<List<StudentClassDtout>> getAllStudentClass() ;
     @PostMapping(SEND_TOKEN_ENDPOINT)
-    ResponseEntity<ResponseDtout> sendTokenStudent(String email ) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException;
+    ResponseEntity<ResponseDtout> sendTokenStudent(@RequestParam("email")  String email ) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException;
 
     ResponseEntity<StudentDtout> getStudentById(Integer id) throws StudentNotFoundException, InvalidPersonInformationException;
 
