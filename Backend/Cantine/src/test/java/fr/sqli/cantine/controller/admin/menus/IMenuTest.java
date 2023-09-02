@@ -1,15 +1,12 @@
-package fr.sqli.Cantine.controller.admin.menus;
+package fr.sqli.cantine.controller.admin.menus;
 
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MenuEntity;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.util.LinkedMultiValueMap;
-import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;

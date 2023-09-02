@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.security.exceptionHandler;
+package fr.sqli.cantine.security.exceptionHandler;
 
 
 import jakarta.servlet.ServletException;

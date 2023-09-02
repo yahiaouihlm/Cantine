@@ -1,18 +1,18 @@
-package fr.sqli.Cantine.service.superAdmin;
+package fr.sqli.cantine.service.superAdmin;
 
 
-import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IFunctionDao;
-import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.dao.ITaxDao;
-import fr.sqli.Cantine.dto.in.superAdmin.FunctionDtoIn;
-import fr.sqli.Cantine.dto.in.superAdmin.TaxDtoIn;
-import fr.sqli.Cantine.entity.FunctionEntity;
-import fr.sqli.Cantine.entity.TaxEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.superAdmin.exception.ExistingTax;
-import fr.sqli.Cantine.service.superAdmin.exception.ExistingUserByEmail;
-import fr.sqli.Cantine.service.superAdmin.exception.InvalidTaxException;
+import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.ITaxDao;
+import fr.sqli.cantine.dto.in.superAdmin.FunctionDtoIn;
+import fr.sqli.cantine.dto.in.superAdmin.TaxDtoIn;
+import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.TaxEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.superAdmin.exception.ExistingTax;
+import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
+import fr.sqli.cantine.service.superAdmin.exception.InvalidTaxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

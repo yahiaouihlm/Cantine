@@ -1,6 +1,6 @@
-package fr.sqli.Cantine.controller.order;
+package fr.sqli.cantine.controller.order;
 
-import fr.sqli.Cantine.entity.*;
+import fr.sqli.cantine.entity.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

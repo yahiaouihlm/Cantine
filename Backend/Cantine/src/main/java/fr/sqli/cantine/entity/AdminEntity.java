@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.entity;
+package fr.sqli.cantine.entity;
 
 
 import jakarta.persistence.*;

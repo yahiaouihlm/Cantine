@@ -1,8 +1,7 @@
-package fr.sqli.Cantine.dao;
+package fr.sqli.cantine.dao;
 
 
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.cantine.entity.MenuEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

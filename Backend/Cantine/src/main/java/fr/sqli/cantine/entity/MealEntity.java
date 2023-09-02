@@ -1,13 +1,10 @@
-package fr.sqli.Cantine.entity;
+package fr.sqli.cantine.entity;
 
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 
 

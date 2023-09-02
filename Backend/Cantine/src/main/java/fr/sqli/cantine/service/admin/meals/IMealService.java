@@ -1,17 +1,17 @@
-package fr.sqli.Cantine.service.admin.meals;
+package fr.sqli.cantine.service.admin.meals;
 
 
-import fr.sqli.Cantine.dto.in.food.MealDtoIn;
-import fr.sqli.Cantine.dto.out.food.MealDtout;
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.meals.exceptions.ExistingMealException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.RemoveMealAdminException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.dto.in.food.MealDtoIn;
+import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.admin.meals.exceptions.ExistingMealException;
+import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.admin.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 
 import java.io.IOException;
 import java.util.List;

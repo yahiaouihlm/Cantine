@@ -1,20 +1,19 @@
-package fr.sqli.Cantine.controller.api;
+package fr.sqli.cantine.controller.api;
 
 
-import fr.sqli.Cantine.dto.out.food.MealDtout;
-import fr.sqli.Cantine.dto.out.food.MenuDtout;
-import fr.sqli.Cantine.service.admin.meals.MealService;
-import fr.sqli.Cantine.service.admin.menus.MenuService;
+import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.service.admin.meals.MealService;
+import fr.sqli.cantine.service.admin.menus.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static fr.sqli.Cantine.controller.api.IApi.BASIC_API_URL;
+import static fr.sqli.cantine.controller.api.IApi.BASIC_API_URL;
 
 @RestController
 @RequestMapping(BASIC_API_URL)

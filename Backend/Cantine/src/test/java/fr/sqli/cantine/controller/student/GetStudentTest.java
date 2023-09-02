@@ -1,10 +1,10 @@
-package fr.sqli.Cantine.controller.student;
+package fr.sqli.cantine.controller.student;
 
-import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.IStudentClassDao;
-import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.entity.StudentClassEntity;
-import fr.sqli.Cantine.entity.StudentEntity;
+import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.dao.IStudentClassDao;
+import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.entity.StudentEntity;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

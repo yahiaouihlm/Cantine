@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.service.qrcode;
+package fr.sqli.cantine.service.qrcode;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

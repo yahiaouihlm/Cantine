@@ -1,12 +1,12 @@
-package fr.sqli.Cantine.service.admin.meals;
+package fr.sqli.cantine.service.admin.meals;
 
-import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.dto.out.food.MealDtout;
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.Cantine.service.images.IImageService;
+import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

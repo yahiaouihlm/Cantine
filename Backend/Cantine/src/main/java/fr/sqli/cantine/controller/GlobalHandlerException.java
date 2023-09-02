@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.controller;
+package fr.sqli.cantine.controller;
 
 
-import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import fr.sqli.Cantine.service.superAdmin.exception.ExistingUserByEmail;
+import fr.sqli.cantine.dto.out.ExceptionDtout;
+import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

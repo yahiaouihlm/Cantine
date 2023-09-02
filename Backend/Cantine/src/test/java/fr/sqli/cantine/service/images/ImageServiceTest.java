@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.service.images;
+package fr.sqli.cantine.service.images;
 
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

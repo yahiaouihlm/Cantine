@@ -1,10 +1,10 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard.works;
+package fr.sqli.cantine.controller.admin.adminDashboard.works;
 
 
-import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 

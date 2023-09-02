@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard.account;
+package fr.sqli.cantine.controller.admin.adminDashboard.account;
 
-import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.entity.FunctionEntity;
-import fr.sqli.Cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.ImageEntity;
 
 import java.time.LocalDate;
 import java.util.Map;

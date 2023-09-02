@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.admin.meals;
 
 import java.util.Map;
 

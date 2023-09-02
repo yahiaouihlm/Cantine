@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.controller.student;
+package fr.sqli.cantine.controller.student;
 
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.StudentClassEntity;
-import fr.sqli.Cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.entity.StudentEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

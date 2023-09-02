@@ -1,10 +1,9 @@
-package fr.sqli.Cantine.dto.in.food;
+package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.Cantine.dto.in.food.AbstractDtoIn;
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;

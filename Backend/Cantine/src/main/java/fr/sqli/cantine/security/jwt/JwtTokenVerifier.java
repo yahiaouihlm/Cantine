@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.security.jwt;
+package fr.sqli.cantine.security.jwt;
 
 
 import com.auth0.jwt.algorithms.Algorithm;

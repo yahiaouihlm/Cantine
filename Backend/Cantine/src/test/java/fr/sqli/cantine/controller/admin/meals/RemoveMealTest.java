@@ -1,9 +1,9 @@
-package fr.sqli.Cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.admin.meals;
 
-import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.controller.student.IStudentTest;
-import fr.sqli.Cantine.dao.*;
-import fr.sqli.Cantine.entity.*;
+import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.controller.student.IStudentTest;
+import fr.sqli.cantine.dao.*;
+import fr.sqli.cantine.entity.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

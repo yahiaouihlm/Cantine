@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.dto.in.superAdmin;
+package fr.sqli.cantine.dto.in.superAdmin;
 
 import java.math.BigDecimal;
 

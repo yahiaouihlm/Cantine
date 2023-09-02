@@ -1,6 +1,6 @@
-package fr.sqli.Cantine.dto.in.superAdmin;
+package fr.sqli.cantine.dto.in.superAdmin;
 
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 
 public class FunctionDtoIn {
 

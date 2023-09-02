@@ -1,10 +1,10 @@
-package fr.sqli.Cantine.security;
+package fr.sqli.cantine.security;
 
-import fr.sqli.Cantine.security.exceptionHandler.CustomAccessDeniedHandler;
-import fr.sqli.Cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
-import fr.sqli.Cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
-import fr.sqli.Cantine.security.jwt.JwtTokenVerifier;
-import fr.sqli.Cantine.security.jwt.JwtUsernameAndPasswordAuthenticationFiler;
+import fr.sqli.cantine.security.exceptionHandler.CustomAccessDeniedHandler;
+import fr.sqli.cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
+import fr.sqli.cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
+import fr.sqli.cantine.security.jwt.JwtTokenVerifier;
+import fr.sqli.cantine.security.jwt.JwtUsernameAndPasswordAuthenticationFiler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

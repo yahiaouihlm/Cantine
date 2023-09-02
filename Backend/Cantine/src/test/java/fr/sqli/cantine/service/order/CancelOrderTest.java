@@ -1,14 +1,14 @@
-package fr.sqli.Cantine.service.order;
+package fr.sqli.cantine.service.order;
 
 
-import fr.sqli.Cantine.dao.IOrderDao;
-import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.entity.OrderEntity;
-import fr.sqli.Cantine.entity.StudentEntity;
-import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
-import fr.sqli.Cantine.service.order.exception.OrderNotFoundException;
-import fr.sqli.Cantine.service.order.exception.UnableToCancelOrderException;
-import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.dao.IOrderDao;
+import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.entity.OrderEntity;
+import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.cantine.service.order.exception.OrderNotFoundException;
+import fr.sqli.cantine.service.order.exception.UnableToCancelOrderException;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

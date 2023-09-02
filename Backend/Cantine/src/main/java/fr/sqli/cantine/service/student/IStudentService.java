@@ -1,18 +1,16 @@
-package fr.sqli.Cantine.service.student;
+package fr.sqli.cantine.service.student;
 
-import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
-import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
-import fr.sqli.Cantine.dto.out.person.StudentDtout;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
-import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
-import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
-import jakarta.mail.MessagingException;
+import fr.sqli.cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.cantine.dto.out.person.StudentClassDtout;
+import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.student.exceptions.ExistingStudentException;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 
 import java.io.IOException;
 import java.util.List;

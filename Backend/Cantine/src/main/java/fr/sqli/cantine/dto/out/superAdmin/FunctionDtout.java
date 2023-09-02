@@ -1,6 +1,6 @@
-package fr.sqli.Cantine.dto.out.superAdmin;
+package fr.sqli.cantine.dto.out.superAdmin;
 
-import fr.sqli.Cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.FunctionEntity;
 
 public class FunctionDtout {
 

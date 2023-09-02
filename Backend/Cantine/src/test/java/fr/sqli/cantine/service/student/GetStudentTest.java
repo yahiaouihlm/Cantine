@@ -1,13 +1,11 @@
-package fr.sqli.Cantine.service.student;
+package fr.sqli.cantine.service.student;
 
 
-import fr.sqli.Cantine.dao.*;
-import fr.sqli.Cantine.entity.*;
-import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.images.ImageService;
-import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.dao.*;
+import fr.sqli.cantine.entity.*;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

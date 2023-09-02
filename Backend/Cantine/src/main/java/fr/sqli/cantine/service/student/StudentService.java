@@ -1,28 +1,25 @@
-package fr.sqli.Cantine.service.student;
+package fr.sqli.cantine.service.student;
 
 
 
-import fr.sqli.Cantine.dao.IConfirmationTokenDao;
-import fr.sqli.Cantine.dao.IStudentClassDao;
-import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
-import fr.sqli.Cantine.dto.out.person.StudentClassDtout;
-import fr.sqli.Cantine.dto.out.person.StudentDtout;
-import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.StudentEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
-import fr.sqli.Cantine.service.images.ImageService;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.mailer.EmailSenderService;
-import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
-import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
-import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
-import jakarta.mail.MessagingException;
+import fr.sqli.cantine.dao.IConfirmationTokenDao;
+import fr.sqli.cantine.dao.IStudentClassDao;
+import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.cantine.dto.out.person.StudentClassDtout;
+import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.mailer.EmailSenderService;
+import fr.sqli.cantine.service.student.exceptions.ExistingStudentException;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.env.Environment;

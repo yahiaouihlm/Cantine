@@ -1,11 +1,10 @@
-package fr.sqli.Cantine.dto.in.food;
+package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.Cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 
 import java.util.List;
 

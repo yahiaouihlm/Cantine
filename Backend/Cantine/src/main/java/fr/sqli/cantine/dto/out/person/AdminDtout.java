@@ -1,6 +1,6 @@
-package fr.sqli.Cantine.dto.out.person;
+package fr.sqli.cantine.dto.out.person;
 
-import fr.sqli.Cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.AdminEntity;
 
 public class AdminDtout extends AbstractPersonDtout{
 

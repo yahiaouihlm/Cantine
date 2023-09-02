@@ -1,11 +1,10 @@
-package fr.sqli.Cantine.entity;
+package fr.sqli.cantine.entity;
 
 
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import  jakarta.persistence.*;
-import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name = "confirmation-token")

@@ -1,13 +1,12 @@
-package fr.sqli.Cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.admin.meals;
 
 
-import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.MealEntity;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

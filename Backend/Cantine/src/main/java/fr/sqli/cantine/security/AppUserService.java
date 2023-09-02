@@ -1,7 +1,7 @@
-package fr.sqli.Cantine.security;
+package fr.sqli.cantine.security;
 
-import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IStudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

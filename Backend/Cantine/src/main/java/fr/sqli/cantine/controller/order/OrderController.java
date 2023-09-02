@@ -1,16 +1,16 @@
-package fr.sqli.Cantine.controller.order;
+package fr.sqli.cantine.controller.order;
 
 import com.google.zxing.WriterException;
-import fr.sqli.Cantine.dto.in.food.OrderDtoIn;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
-import fr.sqli.Cantine.service.order.OrderService;
-import fr.sqli.Cantine.service.order.exception.*;
-import fr.sqli.Cantine.service.student.exceptions.StudentNotFoundException;
-import fr.sqli.Cantine.service.superAdmin.exception.TaxNotFoundException;
+import fr.sqli.cantine.dto.in.food.OrderDtoIn;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.cantine.service.order.OrderService;
+import fr.sqli.cantine.service.order.exception.*;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;

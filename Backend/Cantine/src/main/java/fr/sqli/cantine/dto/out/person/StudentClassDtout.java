@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.dto.out.person;
+package fr.sqli.cantine.dto.out.person;
 
 public class StudentClassDtout  {
 

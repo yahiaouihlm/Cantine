@@ -1,17 +1,16 @@
-package fr.sqli.Cantine.service.student;
+package fr.sqli.cantine.service.student;
 
 
-import fr.sqli.Cantine.dao.IStudentClassDao;
-import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.dto.in.person.StudentDtoIn;
-import fr.sqli.Cantine.entity.StudentClassEntity;
-import fr.sqli.Cantine.entity.StudentEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
-import fr.sqli.Cantine.service.images.IImageService;
-import fr.sqli.Cantine.service.images.ImageService;
-import fr.sqli.Cantine.service.student.exceptions.ExistingStudentException;
+import fr.sqli.cantine.dao.IStudentClassDao;
+import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.student.exceptions.ExistingStudentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 

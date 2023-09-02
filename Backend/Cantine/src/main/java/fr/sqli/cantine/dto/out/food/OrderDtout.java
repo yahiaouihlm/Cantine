@@ -1,8 +1,6 @@
-package fr.sqli.Cantine.dto.out.food;
+package fr.sqli.cantine.dto.out.food;
 
-import fr.sqli.Cantine.entity.MealEntity;
-import fr.sqli.Cantine.entity.MenuEntity;
-import fr.sqli.Cantine.entity.OrderEntity;
+import fr.sqli.cantine.entity.OrderEntity;
 
 import java.util.List;
 

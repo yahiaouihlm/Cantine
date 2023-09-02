@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.service.order.exception;
+package fr.sqli.cantine.service.order.exception;
 
 public class OrderLimitExceededException extends Exception{
     public OrderLimitExceededException(String message) {

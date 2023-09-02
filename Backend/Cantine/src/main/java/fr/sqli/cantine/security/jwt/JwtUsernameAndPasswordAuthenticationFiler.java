@@ -1,13 +1,11 @@
-package fr.sqli.Cantine.security.jwt;
+package fr.sqli.cantine.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.sqli.Cantine.dto.in.person.Login;
-import fr.sqli.Cantine.security.MyUserDaitls;
+import fr.sqli.cantine.dto.in.person.Login;
+import fr.sqli.cantine.security.MyUserDaitls;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -15,19 +13,15 @@ import org.apache.logging.log4j.Logger;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;

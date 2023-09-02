@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller.images;
+package fr.sqli.cantine.controller.images;
 
 public interface IImageController {
 

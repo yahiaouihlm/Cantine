@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.dto.in.person;
+package fr.sqli.cantine.dto.in.person;
 
 public class Login {
     private  String email ;

@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.dto.out.person;
+package fr.sqli.cantine.dto.out.person;
 
 import java.time.LocalDate;
 

@@ -1,10 +1,10 @@
-package fr.sqli.Cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.admin.meals;
 
 
-import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.entity.ImageEntity;
-import fr.sqli.Cantine.entity.MealEntity;
+import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.MealEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

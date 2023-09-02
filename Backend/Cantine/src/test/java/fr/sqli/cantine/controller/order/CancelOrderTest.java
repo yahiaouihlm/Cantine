@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.controller.order;
+package fr.sqli.cantine.controller.order;
 
-import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.*;
-import fr.sqli.Cantine.entity.*;
+import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.dao.*;
+import fr.sqli.cantine.entity.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

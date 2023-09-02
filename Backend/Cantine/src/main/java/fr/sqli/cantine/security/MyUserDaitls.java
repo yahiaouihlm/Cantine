@@ -1,7 +1,7 @@
-package fr.sqli.Cantine.security;
+package fr.sqli.cantine.security;
 
-import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.StudentEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

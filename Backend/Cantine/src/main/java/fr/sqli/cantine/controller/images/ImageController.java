@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.controller.images;
+package fr.sqli.cantine.controller.images;
 
-import fr.sqli.Cantine.service.images.ImageService;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;

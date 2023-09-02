@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.dto.out;
+package fr.sqli.cantine.dto.out;
 
 public class ExceptionDtout {
 

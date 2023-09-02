@@ -1,8 +1,6 @@
-package fr.sqli.Cantine.entity;
+package fr.sqli.cantine.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 import java.io.Serializable;
 import java.util.List;

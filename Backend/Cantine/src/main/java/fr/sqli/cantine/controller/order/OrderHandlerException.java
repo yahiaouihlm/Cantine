@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.controller.order;
+package fr.sqli.cantine.controller.order;
 
 
-import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import fr.sqli.Cantine.service.order.exception.*;
+import fr.sqli.cantine.dto.out.ExceptionDtout;
+import fr.sqli.cantine.service.order.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

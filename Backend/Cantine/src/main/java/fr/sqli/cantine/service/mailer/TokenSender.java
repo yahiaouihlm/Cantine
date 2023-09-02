@@ -1,17 +1,15 @@
-package fr.sqli.Cantine.service.mailer;
+package fr.sqli.cantine.service.mailer;
 
 
-import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IConfirmationTokenDao;
-import fr.sqli.Cantine.dao.IStudentDao;
-import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExpiredToken;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
-import fr.sqli.Cantine.service.student.StudentService;
-import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IConfirmationTokenDao;
+import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.entity.ConfirmationTokenEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,4 +1,4 @@
-package fr.sqli.Cantine.controller;
+package fr.sqli.cantine.controller;
 
 import org.json.JSONException;
 import org.json.JSONObject;

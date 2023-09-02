@@ -1,16 +1,14 @@
-package fr.sqli.Cantine.controller.admin.adminDashboard.account;
+package fr.sqli.cantine.controller.admin.adminDashboard.account;
 
-import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
-import fr.sqli.Cantine.dto.out.ResponseDtout;
-import fr.sqli.Cantine.dto.out.person.AdminDtout;
-import fr.sqli.Cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
-import jakarta.mail.MessagingException;
+import fr.sqli.cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.dto.out.person.AdminDtout;
+import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
+import fr.sqli.cantine.service.admin.adminDashboard.account.AdminService;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-import static fr.sqli.Cantine.controller.admin.adminDashboard.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
+import static fr.sqli.cantine.controller.admin.adminDashboard.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)

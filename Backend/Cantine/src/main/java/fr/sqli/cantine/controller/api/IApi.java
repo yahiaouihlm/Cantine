@@ -1,7 +1,7 @@
-package fr.sqli.Cantine.controller.api;
+package fr.sqli.cantine.controller.api;
 
-import fr.sqli.Cantine.dto.out.food.MealDtout;
-import fr.sqli.Cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtout;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 

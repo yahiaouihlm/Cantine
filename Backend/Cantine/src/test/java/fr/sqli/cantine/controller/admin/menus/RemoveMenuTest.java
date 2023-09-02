@@ -1,10 +1,10 @@
-package fr.sqli.Cantine.controller.admin.menus;
+package fr.sqli.cantine.controller.admin.menus;
 
 
-import fr.sqli.Cantine.controller.AbstractContainerConfig;
-import fr.sqli.Cantine.dao.IMealDao;
-import fr.sqli.Cantine.dao.IMenuDao;
-import fr.sqli.Cantine.entity.MenuEntity;
+import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.IMenuDao;
+import fr.sqli.cantine.entity.MenuEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

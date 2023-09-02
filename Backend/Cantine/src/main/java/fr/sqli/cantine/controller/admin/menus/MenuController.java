@@ -1,27 +1,26 @@
-package fr.sqli.Cantine.controller.admin.menus;
+package fr.sqli.cantine.controller.admin.menus;
 
 
-import fr.sqli.Cantine.dto.in.food.MenuDtoIn;
-import fr.sqli.Cantine.dto.out.ResponseDtout;
-import fr.sqli.Cantine.dto.out.food.MenuDtout;
-import fr.sqli.Cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.Cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.Cantine.service.admin.menus.MenuService;
-import fr.sqli.Cantine.service.admin.menus.exceptions.ExistingMenuException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.MenuNotFoundException;
-import fr.sqli.Cantine.service.admin.menus.exceptions.UnavailableMealException;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.dto.in.food.MenuDtoIn;
+import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.admin.menus.MenuService;
+import fr.sqli.cantine.service.admin.menus.exceptions.ExistingMenuException;
+import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.cantine.service.admin.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static fr.sqli.Cantine.controller.admin.menus.IMenuController.MENUS_BASIC_URL_ADMIN;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static fr.sqli.cantine.controller.admin.menus.IMenuController.MENUS_BASIC_URL_ADMIN;
 
 @RestController
 @RequestMapping(value  = MENUS_BASIC_URL_ADMIN)

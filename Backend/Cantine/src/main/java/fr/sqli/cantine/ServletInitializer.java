@@ -1,4 +1,4 @@
-package fr.sqli.Cantine;
+package fr.sqli.cantine;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

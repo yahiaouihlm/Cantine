@@ -1,19 +1,17 @@
-package fr.sqli.Cantine.controller.superAdmin;
+package fr.sqli.cantine.controller.superAdmin;
 
 
-import fr.sqli.Cantine.dto.in.superAdmin.FunctionDtoIn;
-import fr.sqli.Cantine.dto.in.superAdmin.TaxDtoIn;
-import fr.sqli.Cantine.dto.out.ResponseDtout;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.superAdmin.SuperAdminService;
-import fr.sqli.Cantine.service.superAdmin.exception.ExistingTax;
-import fr.sqli.Cantine.service.superAdmin.exception.ExistingUserByEmail;
-import fr.sqli.Cantine.service.superAdmin.exception.InvalidTaxException;
+import fr.sqli.cantine.dto.in.superAdmin.FunctionDtoIn;
+import fr.sqli.cantine.dto.in.superAdmin.TaxDtoIn;
+import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.superAdmin.SuperAdminService;
+import fr.sqli.cantine.service.superAdmin.exception.ExistingTax;
+import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
+import fr.sqli.cantine.service.superAdmin.exception.InvalidTaxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/cantine/superAdmin")

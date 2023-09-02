@@ -1,7 +1,7 @@
-package fr.sqli.Cantine.controller.admin.menus;
+package fr.sqli.cantine.controller.admin.menus;
 
-import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import fr.sqli.Cantine.service.admin.menus.exceptions.*;
+import fr.sqli.cantine.dto.out.ExceptionDtout;
+import fr.sqli.cantine.service.admin.menus.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

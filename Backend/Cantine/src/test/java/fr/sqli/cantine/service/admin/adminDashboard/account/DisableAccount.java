@@ -1,12 +1,11 @@
-package fr.sqli.Cantine.service.admin.adminDashboard.account;
+package fr.sqli.cantine.service.admin.adminDashboard.account;
 
-import fr.sqli.Cantine.dao.IAdminDao;
-import fr.sqli.Cantine.dao.IFunctionDao;
-import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.entity.FunctionEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;

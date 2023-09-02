@@ -1,13 +1,13 @@
-package fr.sqli.Cantine.controller.mailer;
+package fr.sqli.cantine.controller.mailer;
 
 
-import fr.sqli.Cantine.dto.out.ResponseDtout;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExpiredToken;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
-import fr.sqli.Cantine.service.mailer.TokenSender;
-import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.mailer.TokenSender;
+import fr.sqli.cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

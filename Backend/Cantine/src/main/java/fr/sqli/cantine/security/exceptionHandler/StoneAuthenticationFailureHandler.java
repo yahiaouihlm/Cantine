@@ -1,8 +1,8 @@
-package fr.sqli.Cantine.security.exceptionHandler;
+package fr.sqli.cantine.security.exceptionHandler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.sqli.Cantine.dto.out.ExceptionDtout;
+import fr.sqli.cantine.dto.out.ExceptionDtout;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

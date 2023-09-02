@@ -1,8 +1,7 @@
-package fr.sqli.Cantine.security.exceptionHandler;
+package fr.sqli.cantine.security.exceptionHandler;
 
 
-import fr.sqli.Cantine.dto.out.ExceptionDtout;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
+import fr.sqli.cantine.dto.out.ExceptionDtout;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

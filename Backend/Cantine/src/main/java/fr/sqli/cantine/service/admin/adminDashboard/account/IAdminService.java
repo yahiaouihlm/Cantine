@@ -1,15 +1,13 @@
-package fr.sqli.Cantine.service.admin.adminDashboard.account;
+package fr.sqli.cantine.service.admin.adminDashboard.account;
 
-import fr.sqli.Cantine.dto.in.person.AdminDtoIn;
-import fr.sqli.Cantine.dto.out.person.AdminDtout;
-import fr.sqli.Cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.Cantine.entity.AdminEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.*;
-import fr.sqli.Cantine.service.images.exception.ImagePathException;
-import fr.sqli.Cantine.service.images.exception.InvalidFormatImageException;
-import fr.sqli.Cantine.service.images.exception.InvalidImageException;
-import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
-import jakarta.mail.MessagingException;
+import fr.sqli.cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.cantine.dto.out.person.AdminDtout;
+import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
+import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
+import fr.sqli.cantine.service.images.exception.ImagePathException;
+import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 
 import java.io.IOException;
 import java.util.List;

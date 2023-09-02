@@ -1,14 +1,14 @@
-package fr.sqli.Cantine.service.admin.adminDashboard.work;
+package fr.sqli.cantine.service.admin.adminDashboard.work;
 
-import fr.sqli.Cantine.dao.*;
+import fr.sqli.cantine.dao.*;
 
-import fr.sqli.Cantine.dto.in.person.StudentClassDtoIn;
-import fr.sqli.Cantine.entity.StudentClassEntity;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
-import fr.sqli.Cantine.service.images.ImageService;
-import fr.sqli.Cantine.service.mailer.EmailSenderService;
+import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
+import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.mailer.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
