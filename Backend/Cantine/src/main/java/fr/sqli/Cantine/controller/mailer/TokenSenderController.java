@@ -3,7 +3,9 @@ package fr.sqli.Cantine.controller.mailer;
 
 import fr.sqli.Cantine.dto.out.ResponseDtout;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExpiredToken;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
 import fr.sqli.Cantine.service.mailer.TokenSender;
 import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
@@ -27,8 +29,16 @@ public class TokenSenderController  implements  ITokenSenderController{
 
 
     @Override
+    public ResponseEntity<ResponseDtout> checkTokenValidity(String token) throws InvalidTokenException, AccountAlreadyActivatedException, ExpiredToken, AdminNotFound {
+          this.tokenSender.checkTokenValidity(token);
+        return   ResponseEntity.ok(new ResponseDtout(TOKEN_VALID));
+    }
+
+    @Override
     public ResponseEntity<ResponseDtout> sendTokenStudent( String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound {
         this.tokenSender.sendToken(email);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }
+
+
 }

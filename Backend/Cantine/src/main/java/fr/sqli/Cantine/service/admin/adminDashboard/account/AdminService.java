@@ -72,7 +72,7 @@ public class AdminService implements IAdminService {
     }
 
 
-    @Override
+ /*   @Override
     public String checkTokenValidity(String token) throws AdminNotFound, InvalidTokenException, ExpiredToken {
         if (token == null || token.trim().isEmpty())
             throw new InvalidTokenException("INVALID TOKEN");
@@ -101,7 +101,7 @@ public class AdminService implements IAdminService {
 
         return "ok";
     }
-
+*/
 
     @Override
     public void disableAdminAccount(Integer idAdmin) throws InvalidPersonInformationException, AdminNotFound {

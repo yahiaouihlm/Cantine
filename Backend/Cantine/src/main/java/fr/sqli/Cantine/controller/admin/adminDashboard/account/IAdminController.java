@@ -38,7 +38,7 @@ public interface IAdminController {
     /**************************** SERVER ANSWERS ************************************/
 
     String  TOKEN_VALID = "TOKEN VALID";
-    String TOKEN_SENDED_SUCCESSFULLY =  "TOKEN SENDED SUCCESSFULLY";
+
 
    String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
 
@@ -46,8 +46,10 @@ public interface IAdminController {
    String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
 
 
+/*
    @GetMapping(ADMIN_DASH_BOARD_CHECK_TOKEN_VALIDITY)
     public  ResponseEntity<ResponseDtout>checkTokenValidity(@RequestParam("token") String  token) throws InvalidTokenException, ExpiredToken, AdminNotFound;
+*/
 
 
 /*

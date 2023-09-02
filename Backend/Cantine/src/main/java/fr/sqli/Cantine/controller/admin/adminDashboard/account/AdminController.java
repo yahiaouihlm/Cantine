@@ -33,11 +33,13 @@ public class AdminController  implements IAdminController {
     }
 
 
+/*
 
     public  ResponseEntity<ResponseDtout>checkTokenValidity(@RequestParam("token") String  token) throws InvalidTokenException, ExpiredToken, AdminNotFound {
         this.adminService.checkTokenValidity(token);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_VALID));
     }
+*/
 
 
 /*

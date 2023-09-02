@@ -62,9 +62,9 @@ public class SecurityConfig {
                                                                 ,"/cantine/admin/adminDashboard/signUp").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                             authorize.requestMatchers("/cantine/student/getAllStudentClass"
-                                                              ,"/cantine/student/sendToken"
+
                                                                ,  "/cantine/student/signUp"
-                             ,"/cantine/user/v1/token-sender/send-token"
+                             ,"/cantine/user/v1/token-sender/**"
                             ).permitAll();
                     authorize.anyRequest().authenticated();
                         })

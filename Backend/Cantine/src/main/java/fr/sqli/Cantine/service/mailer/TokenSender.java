@@ -7,7 +7,9 @@ import fr.sqli.Cantine.dao.IStudentDao;
 import fr.sqli.Cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.Cantine.service.admin.adminDashboard.account.AdminService;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.AdminNotFound;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.ExpiredToken;
 import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.Cantine.service.admin.adminDashboard.exceptions.InvalidTokenException;
 import fr.sqli.Cantine.service.student.StudentService;
 import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
@@ -31,7 +33,7 @@ public class TokenSender  {
 
     private EmailSenderService emailSenderService;
 
-
+    /* TODO :  optimise the  code */
     @Autowired
     public TokenSender(IAdminDao adminDao, Environment environment , IConfirmationTokenDao confirmationTokenDao
             , IStudentDao studentDao, EmailSenderService emailSenderService) {
@@ -153,6 +155,75 @@ public class TokenSender  {
 
     }
 
+
+    public  void  checkTokenValidity ( String   token ) throws InvalidTokenException, AccountAlreadyActivatedException, ExpiredToken,  AdminNotFound {
+        if (token == null || token.trim().isEmpty())
+            throw new InvalidTokenException("INVALID TOKEN");
+
+        var confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(
+                () -> new InvalidTokenException("INVALID TOKEN")); //  token  not  found
+
+
+        var  student  =  confirmationTokenEntity.getStudent();
+        var  admin  =  confirmationTokenEntity.getAdmin();
+        // check is  token  is  attached  to  student
+        if  (student != null) {
+            // check  if  the  student  is  already  confirmed
+            if (student.getStatus() == 1) {
+                throw new AccountAlreadyActivatedException("YOUR ACCOUNT IS ALREADY ENABLED");
+            }
+            // check  if  the  token  is  expired
+            var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+            long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+
+            //  expired  token  ///
+            if (expiredTime > fiveMinutesInMillis) {
+                this.confirmationTokenDao.delete(confirmationTokenEntity);
+                throw new ExpiredToken("EXPIRED TOKEN");
+            }
+
+            // token  is  valid  and  not  expired  here the  Exception  is  just  used to return  the  status  code  NOT FOUND even  the  is  student  or admin
+            var  studentEntity =  this.studentDao.findById(student.getId()).orElseThrow(
+                    () -> new AdminNotFound("INVALID TOKEN")
+             );
+
+            studentEntity.setStatus(1);
+            this.studentDao.save(studentEntity);
+            return;
+
+        }
+        else if  (admin != null) {
+
+            if (admin.getStatus() == 1) {
+                throw new AccountAlreadyActivatedException("YOUR ACCOUNT IS ALREADY ENABLED");
+            }
+
+            // check  if  the  token  is  expired
+            var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+            long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+
+            //  expired  token  ///
+            if (expiredTime > fiveMinutesInMillis) {
+                this.confirmationTokenDao.delete(confirmationTokenEntity);
+                throw new ExpiredToken("EXPIRED TOKEN");
+            }
+
+            // token  is  valid  and  not  expired  here the  Exception  is  just  used to return  the  status  code  NOT FOUND even  the  is  student  or admin
+            var  adminEntity =  this.adminDao.findById(admin.getId()).orElseThrow(
+                    () -> new AdminNotFound("INVALID TOKEN")
+            );
+
+            adminEntity.setStatus(1);
+            this.adminDao.save(adminEntity);
+            return;
+        }
+
+        else {
+            throw new InvalidTokenException("INVALID TOKEN");
+        }
+
+
+    }
 
 
 
