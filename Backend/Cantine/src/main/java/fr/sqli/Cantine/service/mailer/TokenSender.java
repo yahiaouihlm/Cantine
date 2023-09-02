@@ -161,7 +161,11 @@ public class TokenSender  {
             throw new InvalidTokenException("INVALID TOKEN");
 
         var confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(
-                () -> new InvalidTokenException("INVALID TOKEN")); //  token  not  found
+                () -> {
+                    TokenSender.LOG.error("token  is  not  valid because  it  is  not  found In  the  database");
+                    return new InvalidTokenException("INVALID TOKEN") ;
+                }
+        ); //  token  not  found
 
 
         var  student  =  confirmationTokenEntity.getStudent();
@@ -170,7 +174,9 @@ public class TokenSender  {
         if  (student != null) {
             // check  if  the  student  is  already  confirmed
             if (student.getStatus() == 1) {
+                TokenSender.LOG.error("student  is  already  confirmed");
                 throw new AccountAlreadyActivatedException("YOUR ACCOUNT IS ALREADY ENABLED");
+
             }
             // check  if  the  token  is  expired
             var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
@@ -179,12 +185,16 @@ public class TokenSender  {
             //  expired  token  ///
             if (expiredTime > fiveMinutesInMillis) {
                 this.confirmationTokenDao.delete(confirmationTokenEntity);
+                TokenSender.LOG.error("token  is  expired");
                 throw new ExpiredToken("EXPIRED TOKEN");
             }
 
             // token  is  valid  and  not  expired  here the  Exception  is  just  used to return  the  status  code  NOT FOUND even  the  is  student  or admin
             var  studentEntity =  this.studentDao.findById(student.getId()).orElseThrow(
-                    () -> new AdminNotFound("INVALID TOKEN")
+                    () -> {
+                        TokenSender.LOG.error("student  is  not  found but  the  token  is  valid and  not  expired");
+                         return   new AdminNotFound("INVALID TOKEN");
+                    }
              );
 
             studentEntity.setStatus(1);
@@ -195,6 +205,7 @@ public class TokenSender  {
         else if  (admin != null) {
 
             if (admin.getStatus() == 1) {
+                TokenSender.LOG.error(" Admin  Account  is  already  enabled ");
                 throw new AccountAlreadyActivatedException("YOUR ACCOUNT IS ALREADY ENABLED");
             }
 
@@ -204,13 +215,18 @@ public class TokenSender  {
 
             //  expired  token  ///
             if (expiredTime > fiveMinutesInMillis) {
+                TokenSender.LOG.error(" Token  IS  expired   ");
                 this.confirmationTokenDao.delete(confirmationTokenEntity);
                 throw new ExpiredToken("EXPIRED TOKEN");
             }
 
             // token  is  valid  and  not  expired  here the  Exception  is  just  used to return  the  status  code  NOT FOUND even  the  is  student  or admin
             var  adminEntity =  this.adminDao.findById(admin.getId()).orElseThrow(
-                    () -> new AdminNotFound("INVALID TOKEN")
+                    () ->   {
+                        TokenSender.LOG.error("  Not  admin  has been   found despite  the  validity  od  token ");
+
+                         return  new AdminNotFound("INVALID TOKEN");
+                    }
             );
 
             adminEntity.setStatus(1);

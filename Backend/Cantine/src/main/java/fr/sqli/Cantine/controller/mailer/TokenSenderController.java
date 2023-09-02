@@ -16,26 +16,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(TokenSenderController.TOKEN_SENDER_BASIC_URL)
-public class TokenSenderController  implements  ITokenSenderController{
+public class TokenSenderController implements ITokenSenderController {
 
- /// degas
+    /// degas
     private TokenSender tokenSender;
 
 
     @Autowired
-      public  TokenSenderController (TokenSender tokenSender){
-          this.tokenSender = tokenSender;
-      }
+    public TokenSenderController(TokenSender tokenSender) {
+        this.tokenSender = tokenSender;
+    }
 
 
     @Override
     public ResponseEntity<ResponseDtout> checkTokenValidity(String token) throws InvalidTokenException, AccountAlreadyActivatedException, ExpiredToken, AdminNotFound {
-          this.tokenSender.checkTokenValidity(token);
-        return   ResponseEntity.ok(new ResponseDtout(TOKEN_VALID));
+        this.tokenSender.checkTokenValidity(token);
+        return ResponseEntity.ok(new ResponseDtout(TOKEN_VALID));
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> sendTokenStudent( String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound {
+    public ResponseEntity<ResponseDtout> sendTokenStudent(String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound {
         this.tokenSender.sendToken(email);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }
