@@ -38,18 +38,20 @@ import java.util.List;
 public class StudentService implements IStudentService {
     private static final Logger LOG = LogManager.getLogger();
     final String  SERVER_ADDRESS ;
+    private final  String  CONFIRMATION_TOKEN_URL;
     final  String DEFAULT_STUDENT_IMAGE;
     final  String  IMAGES_STUDENT_PATH ;
     final  String EMAIL_STUDENT_DOMAIN ;
     final  String EMAIL_STUDENT_REGEX ;
     private IStudentDao studentDao;
-  private IStudentClassDao iStudentClassDao;
-  private Environment environment;
+    private IStudentClassDao iStudentClassDao;
+    private Environment environment;
 
-   private EmailSenderService emailSenderService;
-  private ImageService imageService;
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
-  private IConfirmationTokenDao confirmationTokenDao;
+    private EmailSenderService emailSenderService;
+    private ImageService imageService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private IConfirmationTokenDao confirmationTokenDao;
+
 
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService ,  IConfirmationTokenDao confirmationTokenDao ,  EmailSenderService emailSenderService) {
@@ -70,7 +72,7 @@ public class StudentService implements IStudentService {
         var  host = environment.getProperty("sqli.cantine.server.ip.address");
         var  port = environment.getProperty("sali.cantine.server.port");
         this.SERVER_ADDRESS = protocol+host+":"+port;
-
+        this.CONFIRMATION_TOKEN_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
     }
 
 
@@ -112,22 +114,35 @@ public class StudentService implements IStudentService {
         var  confirmationToken =  new ConfirmationTokenEntity(studentEntity);
         this.confirmationTokenDao.save(confirmationToken);
 
-        var url = this.SERVER_ADDRESS+"/api/v1/admin/confirm-account?token=" + confirmationToken.getToken();
+        var url = this.SERVER_ADDRESS+this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
 
-        var  header = "<h2> Bonjour  "+studentEntity.getFirstname()+" "+studentEntity.getLastname()+",</h2>";
 
-        var body = "<p> Merci de vous être inscrit sur notre Cantière . Afin de finaliser votre inscription, veuillez confirmer votre adresse e-mail en cliquant sur le lien ci-dessous"  +
-                "<button><a href=\""+url+"\">Confirmer mon compte</a></button></p>";
+        String text = """
+                     <!DOCTYPE html>
+                     <html lang="en">
+                     <head>
+                         <meta charset="UTF-8">
+                     </head>
+                     <body>
+                         <h1>Confirmation d'inscription</h1>
+                           <p> Bonjour 
+                           """
+                + studentEntity.getFirstname() +"  " + studentEntity.getLastname() +
+                """ 
+                </p>
+                <P>
+                    Merci de cliquer sur le lien ci-dessous pour confirmer votre adresse Email et activer votre compte.
+                   
+                </P>
+                  <p> Nous  vous  Remercions  Votre  Compréhention </p>
+                    <p> Cordialement </p>
+                          
+            </body>
+            </html>
+       """ + "<a href="+ url + '>' + "Confirmer votre compte" + "</a>";
 
-        var  footer = "<p> Cordialement </p>"
-                   + "<p> L'équipe de la cantine </p>"
-                  + "<img src=http://localhost:8080/cantine/download/images/logos/logo-aston.png> ";
 
-       //var message =  header + body + footer;
-
-        var message = "<h1>Contenu de l'email</h1>" ;
-        this.emailSenderService.send("hayahiaoui@sqli.com", "Confirmation de votre compte", message);
-        this.emailSenderService.send("yahiaouihlm@gmail.com", "Confirmation de votre compte", message);
+        this.emailSenderService.send(studentEntity.getEmail(), "Confirmation de votre compte", text);
     }
 
 
