@@ -13,11 +13,10 @@ export class SharedService {
 
   constructor(private httpClient: HttpClient, private matDialog: MatDialog) { }
 
-  private CHECK_EXISTENCE_OF_EMAIL = "http://localhost:8080/cantine/superAdmin" + '/ExistingEmail';
   private BASIC_ENDPOINT = "http://localhost:8080/cantine/";
+  private CHECK_EXISTENCE_OF_EMAIL =  this.BASIC_ENDPOINT  +  "superAdmin/ExistingEmail";
 
-  private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT  + 'admin/adminDashboard' + '/sendToken';
-  private SEND_STUDENT_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT  +  "student/sendToken" ;
+  private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + 'user/v1/token-sender/send-token';
   checkExistenceOfEmail(email: string) {
     const params = new HttpParams().set('email', email);
     return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params}).pipe(
@@ -40,20 +39,12 @@ export class SharedService {
 
   }
   sendToken(email: string) {
-
     const params = new HttpParams().set('email', email);
-    return this.httpClient.post<NormalResponse>(this.SEND_CONFIRMATION_TOKEN, params).pipe(
+    return this.httpClient.post<NormalResponse>(this.SEND_CONFIRMATION_TOKEN ,   params).pipe(
         catchError((error) => this.handleError(error))
     );
   }
 
-
-  sendTokenStudent(email: string) {
-    const params = new HttpParams().set('email', email);
-    return this.httpClient.post<NormalResponse>(this.SEND_STUDENT_CONFIRMATION_TOKEN, params).pipe(
-        catchError((error) => this.handleError(error))
-    );
-  }
 
   private handleError(error: HttpErrorResponse) {
     const errorObject = error.error as ErrorResponse;

@@ -60,7 +60,6 @@ export class AuthenticationComponent {
 
     sendTokenToActivateAccount() {
 
-
         this.isLoading = true;
         this.sharedService.sendToken(this.signIn.value.email).subscribe({
             next: (response) => {

@@ -122,14 +122,14 @@ export class SignUpComponent  implements   OnInit {
 
 
     sendConfirmationToken() {
-        this.sharedService.sendTokenStudent(this.studentForm.value.email).subscribe((data) => {
+        this.sharedService.sendToken(this.studentForm.value.email).subscribe((data) => {
             if (data != undefined && data.message === "TOKEN SENT SUCCESSFULLY") {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                     this.router.navigate(['/cantine/signIn'])
+                     this.router.navigate(['/signIn'])
                 });
 
             } else {
