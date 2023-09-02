@@ -87,6 +87,7 @@ public class StudentService implements IStudentService {
                    .toList();
     }
 
+/*
     @Override
     public void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException {
         if (email == null || email.isEmpty()) {
@@ -144,6 +145,7 @@ public class StudentService implements IStudentService {
 
         this.emailSenderService.send(studentEntity.getEmail(), "Confirmation de votre compte", text);
     }
+*/
 
 
     @Override

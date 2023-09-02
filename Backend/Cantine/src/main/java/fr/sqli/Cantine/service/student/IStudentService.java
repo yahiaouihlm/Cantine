@@ -21,7 +21,7 @@ public interface IStudentService {
 
 
     List<StudentClassDtout> getAllStudentClass() ;
-    void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException;
+   // void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException;
 
        void  updateStudentInformation (StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
 

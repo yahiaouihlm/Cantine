@@ -63,7 +63,9 @@ public class SecurityConfig {
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                             authorize.requestMatchers("/cantine/student/getAllStudentClass"
                                                               ,"/cantine/student/sendToken"
-                                                               ,  "/cantine/student/signUp" ).permitAll();
+                                                               ,  "/cantine/student/signUp"
+                             ,"/cantine/user/v1/token-sender/send-token"
+                            ).permitAll();
                     authorize.anyRequest().authenticated();
                         })
                 .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))

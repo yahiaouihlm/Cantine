@@ -233,6 +233,7 @@ public class AdminService implements IAdminService {
         return this.adminDao.save(adminEntity);
     }
 
+    /*
     public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException {
 
         if (email == null || email.trim().isEmpty()) {
@@ -283,7 +284,7 @@ public class AdminService implements IAdminService {
 
         this.emailSenderService.send(email, "Complete Registration!", text);
     }
-
+*/
     @Override
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());

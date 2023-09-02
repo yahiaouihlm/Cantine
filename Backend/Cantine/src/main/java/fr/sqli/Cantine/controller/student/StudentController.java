@@ -40,12 +40,12 @@ public class StudentController implements IStudentController {
         return ResponseEntity.ok(this.studentService.getAllStudentClass());
     }
 
-    @Override
+    /*@Override
     public ResponseEntity<ResponseDtout> sendTokenStudent(@RequestParam("email") String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, StudentNotFoundException {
         this.studentService.sendTokenStudent(email);
             return ResponseEntity.ok(  new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }
-
+*/
 
     @Override
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
