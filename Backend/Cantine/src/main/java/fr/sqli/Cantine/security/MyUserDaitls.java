@@ -62,4 +62,18 @@ public class MyUserDaitls  implements  org.springframework.security.core.userdet
         }
         return student.getStatus() == 1;
     }
+
+    public String getFirstname() {
+        if (this.admin != null) {
+            return admin.getFirstname();
+        }
+        return student.getFirstname();
+    }
+
+    public String getLastname() {
+        if (this.admin != null) {
+            return admin.getLastname();
+        }
+        return student.getLastname();
+    }
 }

@@ -3,6 +3,7 @@ package fr.sqli.Cantine.security.jwt;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.Cantine.dto.in.person.Login;
+import fr.sqli.Cantine.security.MyUserDaitls;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.ObjectUtils;
@@ -152,11 +154,16 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         var  role  =  context.getAuthentication().getAuthorities().toArray();
 
 
+        var  user  =   (MyUserDaitls) authResult.getPrincipal() ;
+
+
         Map<String, String> idToken = new HashMap<>();
         idToken.put("Authorization", "Bearer " + jwtAccessToken);
         response.setContentType("application/json");
         idToken.put("status" , HttpStatus.OK.name());
         idToken.put("message" ,  "you are authenticated");
+        idToken.put("Firstname" ,  user.getFirstname());
+        idToken.put("LastName" ,  user.getLastname());
         idToken.put("user" , username);
         idToken.put("role", role[0].toString());
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
