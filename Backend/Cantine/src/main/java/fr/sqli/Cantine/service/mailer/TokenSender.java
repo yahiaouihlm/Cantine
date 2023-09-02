@@ -13,6 +13,7 @@ import fr.sqli.Cantine.service.student.exceptions.AccountAlreadyActivatedExcepti
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ public class TokenSender  {
 
     private EmailSenderService emailSenderService;
 
+
+    @Autowired
     public TokenSender(IAdminDao adminDao, Environment environment , IConfirmationTokenDao confirmationTokenDao
             , IStudentDao studentDao, EmailSenderService emailSenderService) {
         this.adminDao = adminDao;
