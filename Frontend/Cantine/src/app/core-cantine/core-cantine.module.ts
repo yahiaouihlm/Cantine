@@ -18,20 +18,20 @@ import { ConfirmationTokenComponent } from './confirmation-token/confirmation-to
 
 
 const routes: Routes = [
-
-  {path: '', component: MainCoreCantineComponent,
+  { path: 'cantine', redirectTo: 'cantine/home', pathMatch: 'full' },
+  {path: 'cantine', component: MainCoreCantineComponent,
     children: [
+      {path: '', redirectTo:'cantine/home', pathMatch:'full'},
       {path: 'signIn', component: AuthenticationComponent},
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
       {path: 'menus', component: MenuComponent},
       {path: 'user/confirmation-token/:token', component: ConfirmationTokenComponent},
-      {path: '', redirectTo:'cantine/home', pathMatch:'full'},
 
     ]
   },
-  {path: '', redirectTo:'cantine/home', pathMatch:'full'},
 
+  {path: '', redirectTo:'cantine/home', pathMatch:'full'},
 ];
 @NgModule({
   declarations: [
