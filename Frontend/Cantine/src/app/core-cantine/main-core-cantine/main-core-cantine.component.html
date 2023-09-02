@@ -17,12 +17,22 @@
             <div class="bysqli"><span class="by">By</span> <span class="sqli">SQLI </span></div>
         </div>
     </div>
-    <div class="connect">
+
+    <div  *ngIf="isconnected" class="connect">
         <button>
             <mat-icon>logout</mat-icon>
             Deconnexion
         </button>
     </div>
+
+    <div  *ngIf="!isconnected" class="connect">
+        <button>
+            <mat-icon>login</mat-icon>
+            Connexion
+        </button>
+    </div>
+
+
     <div *ngIf="isconnected" class="not-connect-login-small">
         <mat-icon>logout</mat-icon>
     </div>

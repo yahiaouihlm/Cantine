@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AdminService} from "../../admin/dashbord/admin.service";
 import {normalizeExtraEntryPoints} from "@angular-devkit/build-angular/src/webpack/utils/helpers";
 import {HttpStatusCode} from "@angular/common/http";
+import {SharedService} from "../../sharedmodule/shared.service";
 
 @Component({
   selector: 'app-confirmation-token',
@@ -16,7 +17,7 @@ export class ConfirmationTokenComponent  implements  OnInit {
   serverResponse: string = "";
   activated: boolean = false;
 
-  constructor(private route: ActivatedRoute, private adminService: AdminService) {
+  constructor(private route: ActivatedRoute, private sharedService: SharedService) {
   }
 
   ngOnInit(): void {
@@ -29,7 +30,7 @@ export class ConfirmationTokenComponent  implements  OnInit {
 
 
   checkTokenValidityAdmin(token: string) {
-    this.adminService.checkTokenValidityAdmin(token).subscribe({
+    this.sharedService.checkTokenValidityAdmin(token).subscribe({
       next: (response) => {
         if (response.message == "TOKEN VALID") {
           this.serverResponse = "Votre compte a été activé avec succès";

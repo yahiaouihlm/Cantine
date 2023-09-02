@@ -8,6 +8,6 @@ import {BreakpointObserver} from "@angular/cdk/layout";
   styleUrls:['../../../assets/styles/main.component.scss']
 })
 export class MainCoreCantineComponent {
-    isconnected = true;
+    isconnected = false;
   constructor () {}
 }

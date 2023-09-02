@@ -17,12 +17,20 @@ export class SharedService {
   private CHECK_EXISTENCE_OF_EMAIL =  this.BASIC_ENDPOINT  +  "superAdmin/ExistingEmail";
 
   private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + 'user/v1/token-sender/send-token';
+
+    private CHECK_TOKEN_VALIDITY = this.BASIC_ENDPOINT + 'user/v1/token-sender/confirm-token';
   checkExistenceOfEmail(email: string) {
     const params = new HttpParams().set('email', email);
     return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params}).pipe(
         catchError((error) => this.handleErrors(error))
     );
   }
+
+  checkTokenValidityAdmin(token: string) {
+    const params = new HttpParams().set('token', token);
+    return this.httpClient.get<NormalResponse>(this.CHECK_TOKEN_VALIDITY, {params});
+  }
+
 
   private handleErrors(error: HttpErrorResponse) {
     const errorObject = error.error as ErrorResponse;

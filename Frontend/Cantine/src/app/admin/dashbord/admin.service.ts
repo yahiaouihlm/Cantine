@@ -17,19 +17,14 @@ export class AdminService {
     private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/signUp';
     private GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
 
-    /*private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + '/sendToken';*/
 
-    private CHECK_TOKEN_VALIDITY_ADMIN =  this.BASIC_ENDPOINT + '/checkTokenValidity';
+
 
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
 
-    checkTokenValidityAdmin(token: string) {
-        const params = new HttpParams().set('token', token);
-        return this.httpClient.get<NormalResponse>(this.CHECK_TOKEN_VALIDITY_ADMIN, {params});
-    }
 
 
     signUpAdmin(admin: FormData) {
