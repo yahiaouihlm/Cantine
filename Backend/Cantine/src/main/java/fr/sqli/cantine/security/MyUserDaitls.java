@@ -76,4 +76,12 @@ public class MyUserDaitls  implements  org.springframework.security.core.userdet
         }
         return student.getLastname();
     }
+
+    public String  getImage() {
+        if (this.admin != null) {
+            return  "http://localhost:8080/cantine/download/images/persons/admin/"+ admin.getImage().getImagename();
+        }
+        return  "http://localhost:8080/cantine/download/images/persons/students/"+ student.getImage().getImagename();
+
+    }
 }

@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePasswordAuthenticationFilter {
     private  static final Logger LOG = LogManager.getLogger();
     private AuthenticationManager authenticationManager ;
+
     public  JwtUsernameAndPasswordAuthenticationFiler (AuthenticationManager authenticationManager){
         this.authenticationManager= authenticationManager ;
     }
@@ -150,7 +153,6 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
         var  user  =   (MyUserDaitls) authResult.getPrincipal() ;
 
-
         Map<String, String> idToken = new HashMap<>();
         idToken.put("Authorization", "Bearer " + jwtAccessToken);
         response.setContentType("application/json");
@@ -158,7 +160,8 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         idToken.put("message" ,  "you are authenticated");
         idToken.put("Firstname" ,  user.getFirstname());
         idToken.put("LastName" ,  user.getLastname());
-        idToken.put("user" , username);
+        idToken.put("email" , username);
+        idToken.put("image",  user.getImage() );
         idToken.put("role", role[0].toString());
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
 
