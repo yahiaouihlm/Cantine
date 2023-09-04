@@ -10,11 +10,14 @@ export class HomeComponent  {
       
       constructor(private router :  Router  ) {}
 
+
+
+
     goToMeals() {
         this.router.navigate(['cantine/meals']);
     }
 
     goToMenus() {
-        this.router.navigate(['cantine/meals']);
+        this.router.navigate(['cantine/menus']);
     }
 }
