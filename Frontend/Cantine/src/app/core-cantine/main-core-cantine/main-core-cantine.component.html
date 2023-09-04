@@ -1,12 +1,15 @@
 <mat-toolbar>
-    <button (click)="sidenav.toggle()" *ngIf="isconnected" class="burgger" mat-icon-button>
-        <div *ngIf="!sidenav.opened">
-            <img alt="cantière-logo" src="../../assets/logo.png">
-        </div>
-        <div *ngIf="sidenav.opened">
-            <img alt="cantière-logo" src="../../assets/logo.png">
-        </div>
-    </button>
+    <div *ngIf="isconnected"  >
+        <button (click)="sidenav.toggle()"  class="burgger" mat-icon-button>
+            <div *ngIf="!sidenav.opened">
+                <img alt="cantière-logo" src="../../assets/logo.png">
+            </div>
+            <div *ngIf="sidenav.opened">
+                <img alt="cantière-logo" src="../../assets/logo.png">
+            </div>
+        </button>
+    </div>
+
     <div *ngIf="!isconnected">
         <a href="#"> <img alt="cantière-logo" src="../../assets/logo.png"> </a>
 
@@ -18,14 +21,14 @@
         </div>
     </div>
 
-    <div  *ngIf="isconnected" class="connect">
+    <div  *ngIf="isconnected" class="connect" (click)="logout()" >
         <button>
             <mat-icon>logout</mat-icon>
             Deconnexion
         </button>
     </div>
 
-    <div  *ngIf="!isconnected" class="connect">
+    <div  *ngIf="!isconnected" class="connect" (click)="toLogin()" >
         <button>
             <mat-icon>login</mat-icon>
             Connexion
@@ -33,10 +36,10 @@
     </div>
 
 
-    <div *ngIf="isconnected" class="not-connect-login-small">
+    <div *ngIf="isconnected" class="not-connect-login-small"  >
         <mat-icon>logout</mat-icon>
     </div>
-    <div *ngIf="!isconnected" class="not-connect-login-small">
+    <div *ngIf="!isconnected" class="not-connect-login-small" >
         <mat-icon>login</mat-icon>
     </div>
 </mat-toolbar>
@@ -54,7 +57,7 @@
             <mat-icon>home</mat-icon>
             <span>Home</span>
         </button>
-        <button class="menu-button" mat-button>
+        <button class="menu-button" mat-button (click)="gotoProfile()">
             <mat-icon>person</mat-icon>
             <span>Profile</span>
         </button>
@@ -80,8 +83,7 @@
 
         <mat-divider></mat-divider>
 
-        <button class="menu-button" mat-button>
-
+        <button class="menu-button" mat-button (click)=" logout()">
             <mat-icon>logout</mat-icon>
             <span>Deconnexion</span>
         </button>

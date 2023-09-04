@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from "@angular/material/sidenav";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {AuthObject} from "../../sharedmodule/models/authObject";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main-core-cantine',
@@ -11,7 +12,7 @@ import {AuthObject} from "../../sharedmodule/models/authObject";
 export class MainCoreCantineComponent  implements OnInit{
     isconnected = false;
     authObj :  AuthObject = new AuthObject();
-    constructor () {}
+    constructor (private  router : Router) {}
 
     ngOnInit(): void {
         let  authObj = localStorage.getItem('authObject');
@@ -26,7 +27,17 @@ export class MainCoreCantineComponent  implements OnInit{
 
     }
 
+    gotoProfile() {
+        this.router.navigate(['cantine/student/profile']);
+    }
+    logout() {
+        localStorage.clear();
+        this.isconnected = false;
+        window.location.reload()
+    }
 
-
-
+    toLogin() {
+        console.log(" Hello world");
+       this.router.navigate(['cantine/signIn']);
+    }
 }

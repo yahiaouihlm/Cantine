@@ -19,6 +19,16 @@ export class MealsComponent  implements  OnInit{
     this.meals$ = this.coreCantineService.getAllMeals();
   }
 
+  addToOrder() {
+    const  authObject = localStorage.getItem('authObject');
+    if (authObject) {
+      console.log("it  works");
+    }
+    else {
+        this.router.navigate(['cantine/signIn']);
+    }
+  }
+
   goback() {
     this.router.navigate(['cantine/home'])
   }

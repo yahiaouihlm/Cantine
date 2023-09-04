@@ -43,7 +43,12 @@ export class ConfirmationTokenComponent  implements  OnInit {
           this.serverResponse = "Votre  Token est Expiré ";
         } else if ((error.status === HttpStatusCode.NotFound) || (error.status === HttpStatusCode.BadRequest)) {
           this.serverResponse = "Votre  Token est Invalide ";
-        } else {
+        }
+        else if  (error.status === HttpStatusCode.Conflict) {
+          this.serverResponse = "Votre compte a été déjà activé";
+        }
+
+        else {
           console.log(error.status)
           this.serverResponse = "Une erreur s'est produite pendant la vérification du token";
         }

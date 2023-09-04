@@ -5,12 +5,13 @@ import {RouterModule, Routes} from "@angular/router";
 import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 import { MainStudentComponent } from './main-student/main-student.component';
 import { ProfileComponent } from './profile/profile.component';
+import {MainCoreCantineComponent} from "../core-cantine/main-core-cantine/main-core-cantine.component";
 
 
 
 const routes: Routes = [
   {
-    path: '', component: MainStudentComponent,
+    path: '', component: MainCoreCantineComponent,
     children: [
       {path: 'sign-up', component: SignUpComponent},
         {path: 'profile', component: ProfileComponent},

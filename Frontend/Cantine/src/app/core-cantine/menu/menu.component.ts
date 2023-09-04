@@ -20,6 +20,17 @@ export class MenuComponent implements OnInit{
     }
 
 
+    addToOrder() {
+        const  authObject = localStorage.getItem('authObject');
+        if (authObject) {
+            console.log("it  works");
+        }
+        else {
+            this.router.navigate(['cantine/signIn']);
+        }
+    }
+
+
     goback() {
       this.router.navigate(['cantine/home'])
     }
