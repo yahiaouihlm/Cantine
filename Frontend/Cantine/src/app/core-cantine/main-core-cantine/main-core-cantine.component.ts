@@ -27,6 +27,12 @@ export class MainCoreCantineComponent  implements OnInit{
 
     }
 
+    getStudentById() {
+
+    }
+    goToHome() {
+        this.router.navigate(['cantine/home']);
+    }
     gotoProfile() {
         this.router.navigate(['cantine/student/profile']);
     }
