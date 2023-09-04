@@ -43,9 +43,9 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav="matSidenav">
 
-        <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200"/>
+        <img class="avatar mat-elevation-z8" src={{authObj.image}}/>
 
-        <h4 class="name">John Smith</h4>
+        <h4 class="name">{{authObj.Firstname}} {{authObj.LastName}}</h4>
         <p class="designation"> Aston Student 😇 </p>
 
         <mat-divider></mat-divider>

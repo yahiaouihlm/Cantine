@@ -48,6 +48,7 @@ export class AuthenticationComponent {
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
                     this.router.navigate(['cantine/home']);
+
                 },
                 error: (error) => {
                     if (error.status === HttpStatusCode.Forbidden && error.error.message === this.USER_DISABLED_ACCOUNT) {
