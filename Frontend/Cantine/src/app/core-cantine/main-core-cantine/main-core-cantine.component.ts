@@ -3,6 +3,8 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {AuthObject} from "../../sharedmodule/models/authObject";
 import {Router} from "@angular/router";
+import {SharedService} from "../../sharedmodule/shared.service";
+import {User} from "../../sharedmodule/models/user";
 
 @Component({
   selector: 'app-main-core-cantine',
@@ -12,13 +14,15 @@ import {Router} from "@angular/router";
 export class MainCoreCantineComponent  implements OnInit{
     isconnected = false;
     authObj :  AuthObject = new AuthObject();
-    constructor (private  router : Router) {}
+    user : User = new User();
+    constructor (private  router : Router,   private sharedService: SharedService) {}
 
     ngOnInit(): void {
         let  authObj = localStorage.getItem('authObject');
         if (authObj) {
             this.isconnected = true;
             this.authObj = JSON.parse(authObj);
+            this.getStudentById();
         }
         else {
             this.isconnected = false;
@@ -28,7 +32,9 @@ export class MainCoreCantineComponent  implements OnInit{
     }
 
     getStudentById() {
-
+     this.sharedService.getStudentById(this.authObj.id).subscribe((response) => {
+         this.user = response;
+     });
     }
     goToHome() {
         this.router.navigate(['cantine/home']);

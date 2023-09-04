@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {NormalResponse} from "./models/NormalResponse";
 import {catchError, throwError} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {ErrorResponse} from "./models/ErrorResponse";
 import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
+import {User} from "./models/user";
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,31 @@ export class SharedService {
 
   private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + 'user/v1/token-sender/send-token';
 
-    private CHECK_TOKEN_VALIDITY = this.BASIC_ENDPOINT + 'user/v1/token-sender/confirm-token';
-  checkExistenceOfEmail(email: string) {
+  private CHECK_TOKEN_VALIDITY = this.BASIC_ENDPOINT + 'user/v1/token-sender/confirm-token';
+
+  private  GET_STUDENT_BY_ID = this.BASIC_ENDPOINT + '/cantine/student/getStudent';
+
+
+  getStudentById(id: string) {
+   let  token = localStorage.getItem('Authorization');
+   let  headers = new HttpHeaders();
+   if  (token) {
+      headers = new HttpHeaders().set('Authorization', token);
+   }
+    const params = new HttpParams().set('idStudent', id);
+    return this.httpClient.get<User>(this.GET_STUDENT_BY_ID, {
+          params: params,
+          headers: headers
+        }
+    ).pipe(
+        catchError((error) => this.handleErrors(error))
+    );
+
+  }
+
+
+
+    checkExistenceOfEmail(email: string) {
     const params = new HttpParams().set('email', email);
     return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params}).pipe(
         catchError((error) => this.handleErrors(error))
