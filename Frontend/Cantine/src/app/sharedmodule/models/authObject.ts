@@ -11,5 +11,5 @@ export  class  AuthObject  {
 
     role! : string;
 
-
+     image! : string;
 }

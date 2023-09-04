@@ -6,6 +6,7 @@ import {CoreCantineService} from "../core-cantine.service";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-authentication',
@@ -26,8 +27,10 @@ export class AuthenticationComponent {
         email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
         password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
     });
-
-    constructor(private coreCantineService: CoreCantineService, private sharedService: SharedService, private matDialog: MatDialog) {
+   /*TODO
+      make  a  behvour when  there  we  go  to  the  sign  while  have  the  token in  the  local  storage
+    */
+    constructor(private coreCantineService: CoreCantineService, private sharedService: SharedService, private matDialog: MatDialog ,  private  router: Router) {
     }
 
     singIn() {
@@ -35,13 +38,16 @@ export class AuthenticationComponent {
         if (this.signIn.invalid) {
             return;
         }
+        this.isLoading = true;
 
         this.coreCantineService.userAuthentication(this.signIn.value).subscribe({
                 next: (response) => {
                     this.disabled_account = false;
                     this.wrong_credentials = false;
-                    console.log(response);
-                    console.log("vous  etes  connecter ");
+                    this.isLoading = false
+                    const authObjectJSON = JSON.stringify(response);
+                    localStorage.setItem('authObject', authObjectJSON);
+                    this.router.navigate(['cantine/home']);
                 },
                 error: (error) => {
                     if (error.status === HttpStatusCode.Forbidden && error.error.message === this.USER_DISABLED_ACCOUNT) {
@@ -51,6 +57,8 @@ export class AuthenticationComponent {
                         this.wrong_credentials = true;
                         this.disabled_account = false;
                     }
+                    this.isLoading = false
+
                 }
             }
         );

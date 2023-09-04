@@ -3,6 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angula
 import {Meal} from "../sharedmodule/models/meal";
 import {Menu} from "../sharedmodule/models/menu";
 import {Login} from "../sharedmodule/models/login";
+import {AuthObject} from "../sharedmodule/models/authObject";
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class CoreCantineService {
 
 
     userAuthentication(login:Login) {
-        return this.httpClient.post(this.USER_AUTHENTICATION_ENDPOINT, login );
+        return this.httpClient.post<AuthObject>(this.USER_AUTHENTICATION_ENDPOINT, login );
     }
 
    getAllMeals () {
