@@ -35,7 +35,7 @@ public class ImageController implements IImageController {
   @GetMapping(ENDPOINT_GET_IMAGE_USERS)
     public ResponseEntity<InputStreamResource> getUsersImages(@PathVariable("spot") String spot, @PathVariable("image") String image) throws FileNotFoundException, InvalidImageException, ImagePathException {
 
-        var path = "images/persons/g" + spot;
+        var path = "images/persons/" + spot;
 
 
         return this.getImage(spot, image, path);

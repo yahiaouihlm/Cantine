@@ -152,7 +152,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
 
         var  user  =   (MyUserDaitls) authResult.getPrincipal() ;
-
+    /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();
         idToken.put("Authorization", "Bearer " + jwtAccessToken);
         response.setContentType("application/json");
@@ -161,6 +161,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         idToken.put("Firstname" ,  user.getFirstname());
         idToken.put("LastName" ,  user.getLastname());
         idToken.put("email" , username);
+        idToken.put("id" ,  user.getId().toString());
         idToken.put("image",  user.getImage() );
         idToken.put("role", role[0].toString());
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
