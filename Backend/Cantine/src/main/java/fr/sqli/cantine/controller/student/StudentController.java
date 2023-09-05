@@ -46,8 +46,8 @@ public class StudentController implements IStudentController {
 */
 
     @Override
-    @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
     public ResponseEntity<StudentDtout> getStudentById(@RequestParam("idStudent") Integer id) throws StudentNotFoundException, InvalidPersonInformationException {
+
       var student =  this.studentService.getStudentByID(id);
          return ResponseEntity
                  .ok()

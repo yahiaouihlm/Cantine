@@ -82,7 +82,7 @@ public class TokenSender  {
                          <meta charset="UTF-8">
                      </head>
                      <body>
-                         <h1>Confirmation d'inscription</h1>
+                         <h4>Confirmation d'inscription</h4>
                            <p> Bonjour 
                            """
                     + student.get().getFirstname() +"  " + student.get().getLastname() +
@@ -124,7 +124,7 @@ public class TokenSender  {
                          <meta charset="UTF-8">
                      </head>
                      <body>
-                         <h1>Confirmation d'inscription</h1>
+                         <h4>Confirmation d'inscription</h4>
                            <p> Bonjour 
                            """
                     + admin.get().getFirstname() +"  " + admin.get().getLastname() +
