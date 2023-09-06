@@ -5,6 +5,7 @@ import {AuthObject} from "../../sharedmodule/models/authObject";
 import {Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
+import {HttpStatusCode} from "@angular/common/http";
 
 @Component({
   selector: 'app-main-core-cantine',
@@ -13,7 +14,7 @@ import {User} from "../../sharedmodule/models/user";
 })
 export class MainCoreCantineComponent  implements OnInit{
     isconnected = false;
-    authObj :  AuthObject = new AuthObject();
+    authObj :  AuthObject =  new AuthObject();
     user : User = new User();
     constructor (private  router : Router,   private sharedService: SharedService) {}
 
@@ -22,7 +23,7 @@ export class MainCoreCantineComponent  implements OnInit{
         if (authObj) {
             this.isconnected = true;
             this.authObj = JSON.parse(authObj);
-            this.getStudentById();
+           this.getStudentById(this.authObj.id);
         }
         else {
             this.isconnected = false;
@@ -31,9 +32,9 @@ export class MainCoreCantineComponent  implements OnInit{
 
     }
 
-    getStudentById() {
-     this.sharedService.getStudentById(this.authObj.id).subscribe((response) => {
-         this.user = response;
+    getStudentById( id : string) {
+     this.sharedService.getStudentById(id).subscribe( (response) => {
+            this.user = response;
      });
     }
     goToHome() {

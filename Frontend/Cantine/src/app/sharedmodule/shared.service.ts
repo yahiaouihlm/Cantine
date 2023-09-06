@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ErrorResponse} from "./models/ErrorResponse";
 import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dialog.component";
 import {User} from "./models/user";
+import {AuthObject} from "./models/authObject";
 
 @Injectable({
   providedIn: 'root'
@@ -21,23 +22,19 @@ export class SharedService {
 
   private CHECK_TOKEN_VALIDITY = this.BASIC_ENDPOINT + 'user/v1/token-sender/confirm-token';
 
-  private  GET_STUDENT_BY_ID = this.BASIC_ENDPOINT + '/cantine/student/getStudent';
+  private  GET_STUDENT_BY_ID = this.BASIC_ENDPOINT + 'student/getStudent';
 
 
   getStudentById(id: string) {
-   let  token = localStorage.getItem('Authorization');
-   let  headers = new HttpHeaders();
-   if  (token) {
-      headers = new HttpHeaders().set('Authorization', token);
-   }
+   let  token = this.getTokenFromLocalStorage();
+
+    const headers = new HttpHeaders().set('Authorization',token);
     const params = new HttpParams().set('idStudent', id);
     return this.httpClient.get<User>(this.GET_STUDENT_BY_ID, {
-          params: params,
-          headers: headers
+      headers: headers,
+      params: params
         }
-    ).pipe(
-        catchError((error) => this.handleErrors(error))
-    );
+    ).pipe(catchError((error) => this.handleErrors(error)));
 
   }
 
@@ -57,17 +54,23 @@ export class SharedService {
 
 
   private handleErrors(error: HttpErrorResponse) {
-    const errorObject = error.error as ErrorResponse;
-    let errorMessage = errorObject.exceptionMessage;
+    console.log(error)
+    console.log("hello wolrd" )
+   const errorObject = error.error as ErrorResponse;
+    let errorMessage =   errorObject.exceptionMessage;
 
-    if (error.status == HttpStatusCode.Conflict) {
-      return throwError(() => new Error(errorMessage));
+        if (error.status == HttpStatusCode.Conflict) {
+          return throwError(() => new Error(errorMessage));
+        }
+        else  if (error.status == HttpStatusCode.Unauthorized ) {
+          console.log("erreur 401")
+          console.log(errorMessage)
+        }
+        else {
+          this.openDialog("Unkwon Error   has  been occured  ", error.status);
+        }
 
-    } else {
-
-      this.openDialog("Unkwon Error   has  been occured  ", error.status);
-      return throwError(() => new Error(errorMessage));
-    }
+    return throwError(() => new Error(error.message));
 
   }
   sendToken(email: string) {
@@ -113,6 +116,17 @@ export class SharedService {
 
     });
 
+  }
+
+
+
+  private getTokenFromLocalStorage() {
+    let   authObj = localStorage.getItem('authObject')
+    if  (!authObj) {
+        return  '';
+    }
+    let  authObject = JSON.parse(authObj) as AuthObject;
+    return  authObject.authorization;
   }
 
 
