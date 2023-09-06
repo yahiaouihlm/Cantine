@@ -13,7 +13,7 @@ import {HttpStatusCode} from "@angular/common/http";
   styleUrls:['../../../assets/styles/main.component.scss']
 })
 export class MainCoreCantineComponent  implements OnInit{
-    isconnected = false;
+    disconnected = false;
     authObj :  AuthObject =  new AuthObject();
     user : User = new User();
     constructor (private  router : Router,   private sharedService: SharedService) {}
@@ -21,12 +21,12 @@ export class MainCoreCantineComponent  implements OnInit{
     ngOnInit(): void {
         let  authObj = localStorage.getItem('authObject');
         if (authObj) {
-            this.isconnected = true;
+            this.disconnected = true;
             this.authObj = JSON.parse(authObj);
            this.getStudentById(this.authObj.id);
         }
         else {
-            this.isconnected = false;
+            this.disconnected = false;
         }
 
 
@@ -45,12 +45,11 @@ export class MainCoreCantineComponent  implements OnInit{
     }
     logout() {
         localStorage.clear();
-        this.isconnected = false;
+        this.disconnected = false;
         window.location.reload()
     }
 
     toLogin() {
-        console.log(" Hello world");
        this.router.navigate(['cantine/signIn']);
     }
 }

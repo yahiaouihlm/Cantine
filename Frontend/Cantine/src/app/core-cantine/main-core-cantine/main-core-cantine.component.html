@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <div *ngIf="isconnected"  >
+    <div *ngIf="disconnected"  >
         <button (click)="sidenav.toggle()"  class="burgger" mat-icon-button>
             <div *ngIf="!sidenav.opened">
                 <img alt="cantière-logo" src="../../assets/logo.png">
@@ -10,7 +10,7 @@
         </button>
     </div>
 
-    <div *ngIf="!isconnected">
+    <div *ngIf="!disconnected">
         <a href="#"> <img alt="cantière-logo" src="../../assets/logo.png"> </a>
 
     </div>
@@ -21,14 +21,14 @@
         </div>
     </div>
 
-    <div  *ngIf="isconnected" class="connect" (click)="logout()" >
+    <div *ngIf="disconnected" class="connect" (click)="logout()" >
         <button>
             <mat-icon>logout</mat-icon>
             Deconnexion
         </button>
     </div>
 
-    <div  *ngIf="!isconnected" class="connect" (click)="toLogin()" >
+    <div *ngIf="!disconnected" class="connect" (click)="toLogin()" >
         <button>
             <mat-icon>login</mat-icon>
             Connexion
@@ -36,10 +36,10 @@
     </div>
 
 
-    <div *ngIf="isconnected" class="not-connect-login-small"  >
+    <div *ngIf="disconnected" class="not-connect-login-small"  >
         <mat-icon>logout</mat-icon>
     </div>
-    <div *ngIf="!isconnected" class="not-connect-login-small" >
+    <div *ngIf="!disconnected" class="not-connect-login-small" >
         <mat-icon>login</mat-icon>
     </div>
 </mat-toolbar>
