@@ -218,7 +218,7 @@ public class StudentService implements IStudentService {
             throw new StudentNotFoundException("STUDENT NOT FOUND");
         }
 
-        return  new StudentDtout(studentEntity.get());
+        return  new StudentDtout(studentEntity.get(),  this.environment.getProperty("sqli.cantine.images.url.student"));
     }
 
 
