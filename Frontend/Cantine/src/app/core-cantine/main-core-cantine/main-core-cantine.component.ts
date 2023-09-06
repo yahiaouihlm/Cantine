@@ -41,7 +41,7 @@ export class MainCoreCantineComponent  implements OnInit{
         this.router.navigate(['cantine/home']);
     }
     gotoProfile() {
-        this.router.navigate(['cantine/student/profile']);
+        this.router.navigate(['cantine/student/profile'],  { queryParams: { id: this.authObj.id } });
     }
     logout() {
         localStorage.clear();

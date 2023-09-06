@@ -47,7 +47,9 @@ export class AuthenticationComponent {
                     this.isLoading = false
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
-                    this.router.navigate(['cantine/home']);
+                    this.router.navigate(['cantine/home']).then(() => {
+                        window.location.reload();
+                    });;
 
                 },
                 error: (error) => {

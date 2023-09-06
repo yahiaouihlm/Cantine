@@ -2,10 +2,10 @@
     <div *ngIf="disconnected"  >
         <button (click)="sidenav.toggle()"  class="burgger" mat-icon-button>
             <div *ngIf="!sidenav.opened">
-                <img alt="cantière-logo" src="../../assets/logo.png">
+                <img alt="cantière-logo" src={{user.image}}>
             </div>
             <div *ngIf="sidenav.opened">
-                <img alt="cantière-logo" src="../../assets/logo.png">
+                <img alt="cantière-logo" src={{user.image}}>
             </div>
         </button>
     </div>
@@ -46,9 +46,12 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav="matSidenav">
 
-        <img class="avatar mat-elevation-z8" src={{authObj.image}}/>
+        <img class="avatar mat-elevation-z8" src={{user.image}}/>
 
-        <h4 class="name">{{authObj.Firstname}} {{authObj.LastName}}</h4>
+        <h4 class="name">{{user.firstname}} {{user.lastname}}</h4>
+
+        <p class="designation"> {{user.studentClass}} </p>
+
         <p class="designation"> Aston Student 😇 </p>
 
         <mat-divider></mat-divider>
