@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../sharedmodule/functions/validation";
 import {ActivatedRoute} from "@angular/router";
 import {User} from "../../sharedmodule/models/user";
@@ -12,12 +12,14 @@ import {Subscription} from "rxjs";
     styles: []
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-    constructor(private route: ActivatedRoute ,  private  sharedService: SharedService) {
+    constructor(private route: ActivatedRoute, private sharedService: SharedService) {
     }
 
     user: User = new User();
+    submitted!: boolean;
     private queryParamsSubscription: Subscription | undefined;
-    studentForm: FormGroup = new FormGroup({
+    private getStudentByIdSubscription: Subscription | undefined;
+    studentUpdated: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
@@ -30,16 +32,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
 
     ngOnInit(): void {
-         this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
+        this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
             const id = params['id'];
             if (id) {
-
-              this.sharedService.getStudentById(id).subscribe( (response) => {
-                this.user = response;
-
-              });
-
-
+                this.getStudentByIdSubscription =this.sharedService.getStudentById(id).subscribe((response) => {
+                    this.user = response;
+                    this.matchFormsValue();
+                });
 
 
             }
@@ -51,9 +50,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (this.queryParamsSubscription) {
             this.queryParamsSubscription.unsubscribe();
         }
+        if (this.getStudentByIdSubscription) {
+            this.getStudentByIdSubscription.unsubscribe();
+        }
     }
 
+    get f(): { [key: string]: AbstractControl } {
+        return this.studentUpdated.controls;
+    }
 
+    matchFormsValue() {
+        this.studentUpdated.patchValue({
+            firstName: this.user.firstname,
+            lastName: this.user.lastname,
+            email: this.user.email,
+            birthDate: this.user.birthDate,
+            phoneNumber: this.user.phoneNumber,
+            town: this.user.town,
+            studentClass: this.user.studentClass,
+        });
 
+    }
 
 }
