@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,19 +28,19 @@ import static java.util.Arrays.stream;
 
 
 @Component
-public class JwtTokenVerifier  extends OncePerRequestFilter {
+public class JwtTokenVerifier extends OncePerRequestFilter {
 
-    private Environment environment ;
+    private Environment environment;
 
 
     @Autowired
-    public JwtTokenVerifier( Environment  environment) {
-        this.environment = environment ;
+    public JwtTokenVerifier(Environment environment) {
+        this.environment = environment;
     }
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException  {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
         if (request.getServletPath().equals("/login")) {
             filterChain.doFilter(request, response);
@@ -48,14 +49,15 @@ public class JwtTokenVerifier  extends OncePerRequestFilter {
                 String token = authorizationHeader.replace("Bearer ", "");
                 try {
 
-                    String secretKey = environment.getProperty("sqli.cantine.jwt.secret");
+                    String secretKey = "sqli.cantine.jwt.secret";
+
                     Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();
-                    String[] roles = decodedJWT.getClaim("role").asArray(String.class);
+                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 
-                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    Collection<SimpleGrantedAuthority>authorities =  new ArrayList<>();
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
@@ -65,6 +67,8 @@ public class JwtTokenVerifier  extends OncePerRequestFilter {
 
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     response.addHeader("error", e.getMessage());
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     Map<String, String> error = new HashMap<>();

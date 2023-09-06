@@ -51,26 +51,26 @@ public class SecurityConfig {
                 .csrf( csrf -> csrf.disable())
                .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .cors(Customizer.withDefaults())
-                .authenticationProvider(authenticationProvider())
                 .authorizeRequests(
-                        authorize -> {
-                            authorize.requestMatchers("cantine/api/**").permitAll();
-                            authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
-                            authorize.requestMatchers("/cantine/download/images/meals/**" ,
-                                    "/cantine/download/images/**"  ).permitAll();
-                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions",
-                                                               "/cantine/admin/adminDashboard/checkTokenValidity"
-                                                               , "/cantine/admin/adminDashboard/sendToken/**"
-                                                                ,"/cantine/admin/adminDashboard/signUp").permitAll();
-                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
-                            authorize.requestMatchers("/cantine/student/getAllStudentClass"
-                                                               ,  "/cantine/student/signUp"
-                             ,"/cantine/user/v1/token-sender/**"
-                            ).permitAll();
-                    authorize.anyRequest().authenticated();
-                        })
-                .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
+        authorize -> {
+            authorize.requestMatchers("cantine/api/**").permitAll();
+            authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
+            authorize.requestMatchers("/cantine/download/images/meals/**" ,
+            "/cantine/download/images/**"  ).permitAll();
+            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions",
+            "/cantine/admin/adminDashboard/checkTokenValidity"
+                    , "/cantine/admin/adminDashboard/sendToken/**"
+                    ,"/cantine/admin/adminDashboard/signUp").permitAll();
+            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
+            authorize.requestMatchers("/cantine/student/getAllStudentClass"
+                    ,  "/cantine/student/signUp"
+                    ,"/cantine/user/v1/token-sender/**"
+            ).permitAll();
+            authorize.anyRequest().authenticated();
+        })
+                .authenticationProvider(authenticationProvider())
                 .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
+                .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
          /*       .exceptionHandling()
                  .authenticationEntryPoint(this.customAuthenticationEntryPoint)
                 .accessDeniedHandler(this.stoneAuthenticationFailureHandler)*/

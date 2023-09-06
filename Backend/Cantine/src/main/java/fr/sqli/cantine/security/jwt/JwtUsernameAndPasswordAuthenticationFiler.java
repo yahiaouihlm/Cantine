@@ -22,6 +22,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
@@ -30,13 +31,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+
 public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePasswordAuthenticationFilter {
     private  static final Logger LOG = LogManager.getLogger();
     private AuthenticationManager authenticationManager ;
 
+
     public  JwtUsernameAndPasswordAuthenticationFiler (AuthenticationManager authenticationManager){
         this.authenticationManager= authenticationManager ;
+
     }
+
 
     @Override
     public Authentication  attemptAuthentication(HttpServletRequest request, HttpServletResponse response)  throws AuthenticationException {
@@ -126,12 +132,12 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String  key  =  "secret key"  ;
+        String  key  =  "sqli.cantine.jwt.secret" ;
         Algorithm algorithm =  Algorithm.HMAC256(key.getBytes());
 
         String jwtAccessToken  = JWT.create()
                 .withSubject(authResult.getName())   //  600=> 60 (in first of application)     ('+5 * 6000 *1000')
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 6000 *1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 6000 *10000))
                 .withIssuer(request.getRequestURI())
                 .withClaim("roles" , authResult.getAuthorities().stream().map(GrantedAuthority:: getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
