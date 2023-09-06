@@ -35,6 +35,7 @@ public class SecurityConfig {
     private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new  StoneAuthenticationFailureHandler() ;
     public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,
                            CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder ,  JwtTokenVerifier jwtTokenVerifier){
+
         this.appUserService = appUserService ;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtTokenVerifier = jwtTokenVerifier ;
@@ -63,7 +64,6 @@ public class SecurityConfig {
                                                                 ,"/cantine/admin/adminDashboard/signUp").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                             authorize.requestMatchers("/cantine/student/getAllStudentClass"
-
                                                                ,  "/cantine/student/signUp"
                              ,"/cantine/user/v1/token-sender/**"
                             ).permitAll();

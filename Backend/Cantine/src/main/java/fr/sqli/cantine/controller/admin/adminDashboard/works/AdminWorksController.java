@@ -21,6 +21,7 @@ public class AdminWorksController  implements  IAdminWorksController {
         this.adminWorksService = adminWorksService;
     }
 
+
     @Override
     @PostMapping(ADD_STUDENT_CLASS_ENDPOINT)
     public ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException {
@@ -30,7 +31,6 @@ public class AdminWorksController  implements  IAdminWorksController {
 
 
     @Override
-
     @PutMapping(UPDATE_STUDENT_CLASS_ENDPOINT)
     public ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException {
         this.adminWorksService.updateStudentClass(studentClassDtoIn);

@@ -41,7 +41,6 @@ public class JwtTokenVerifier  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException  {
         String authorizationHeader = request.getHeader("Authorization");
-
         if (request.getServletPath().equals("/login")) {
             filterChain.doFilter(request, response);
         } else {
@@ -67,11 +66,9 @@ public class JwtTokenVerifier  extends OncePerRequestFilter {
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {
                     response.addHeader("error", e.getMessage());
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     Map<String, String> error = new HashMap<>();
-                    error.put("message", "EXPIRED_TOKEN");
-                    error.put("data", "EXPIRED_TOKEN");
-                    error.put("httpStatus", "OK");
+                    error.put("exceptionMessage", "EXPIRED_TOKEN");
                     response.setContentType("application/json");
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
                 }
