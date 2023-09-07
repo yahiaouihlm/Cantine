@@ -119,14 +119,6 @@ export class SharedService {
     }
 
 
-    private getTokenFromLocalStorage() {
-        let authObj = localStorage.getItem('authObject')
-        if (!authObj) {
-            return '';
-        }
-        let authObject = JSON.parse(authObj) as AuthObject;
-        return authObject.Authorization;
-    }
 
 
 

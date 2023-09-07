@@ -16,9 +16,13 @@ export class StudentDashboardService {
 
   private  STUDENT_SIGN_UP_URL = this.BASIC_ENDPOINT + 'signUp';
   private  GET_ALL_STUDENT_CLASS = this.BASIC_ENDPOINT + 'getAllStudentClass';
+
+  private  UPDATE_STUDENT_INFO=  this.BASIC_ENDPOINT +  'update/studentInfo'
   constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) { }
 
-
+   updateStudent(student :  FormData) {
+    this.httpClient.post<NormalResponse>()
+   }
   signUpStudent(student: FormData) {
     return this.httpClient.post<NormalResponse>(this.STUDENT_SIGN_UP_URL, student).pipe(
         catchError((error) => this.handleError(error))
