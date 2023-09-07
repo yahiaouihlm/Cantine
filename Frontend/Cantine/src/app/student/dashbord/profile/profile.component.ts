@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
-import Validation from "../../sharedmodule/functions/validation";
+import Validation from "../../../sharedmodule/functions/validation";
 import {ActivatedRoute, Router} from "@angular/router";
-import {User} from "../../sharedmodule/models/user";
-import {SharedService} from "../../sharedmodule/shared.service";
+import {User} from "../../../sharedmodule/models/user";
+import {SharedService} from "../../../sharedmodule/shared.service";
 import {Observable, of, Subscription} from "rxjs";
-import {StudentDashboardService} from "../dashbord/student-dashboard.service";
-import {StudentClass} from "../../sharedmodule/models/studentClass";
+import {StudentDashboardService} from "../student-dashboard.service";
+import {StudentClass} from "../../../sharedmodule/models/studentClass";
 
 @Component({
     selector: 'app-profile',
