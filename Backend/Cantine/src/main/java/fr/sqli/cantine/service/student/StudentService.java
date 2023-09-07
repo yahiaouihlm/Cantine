@@ -84,70 +84,8 @@ public class StudentService implements IStudentService {
                    .toList();
     }
 
-/*
-    @Override
-    public void sendTokenStudent( String  email ) throws InvalidPersonInformationException, StudentNotFoundException, AccountAlreadyActivatedException, MessagingException {
-        if (email == null || email.isEmpty()) {
-            StudentService.LOG.error("email  is  null or  empty");
-            throw new InvalidPersonInformationException("INVALID EMAIL");
-        }
-
-
-        var studentEntity = this.studentDao.findByEmail(email.trim()).orElseThrow(
-                () -> {
-                    StudentService.LOG.error("student  is  not  found with  email  : {}", email) ;
-                    return new StudentNotFoundException("STUDENT NOT FOUND");
-                }
-        );
-
-        if (studentEntity.getStatus() == 1) {
-            StudentService.LOG.error("student  is  already  confirmed");
-            throw new AccountAlreadyActivatedException("STUDENT IS ALREADY CONFIRMED");
-        }
-
-        var  confirmationTokenEntity =  this.confirmationTokenDao.findByStudent(studentEntity);
-        confirmationTokenEntity.ifPresent(tokenEntity -> this.confirmationTokenDao.delete(tokenEntity));
-
-
-        var  confirmationToken =  new ConfirmationTokenEntity(studentEntity);
-        this.confirmationTokenDao.save(confirmationToken);
-
-        var url = this.SERVER_ADDRESS+this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
-
-
-        String text = """
-                     <!DOCTYPE html>
-                     <html lang="en">
-                     <head>
-                         <meta charset="UTF-8">
-                     </head>
-                     <body>
-                         <h1>Confirmation d'inscription</h1>
-                           <p> Bonjour 
-                           """
-                + studentEntity.getFirstname() +"  " + studentEntity.getLastname() +
-                """ 
-                </p>
-                <P>
-                    Merci de cliquer sur le lien ci-dessous pour confirmer votre adresse Email et activer votre compte.
-                   
-                </P>
-                  <p> Nous  vous  Remercions  Votre  Compréhention </p>
-                    <p> Cordialement </p>
-                          
-            </body>
-            </html>
-       """ + "<a href="+ url + '>' + "Confirmer votre compte" + "</a>";
-
-
-        this.emailSenderService.send(studentEntity.getEmail(), "Confirmation de votre compte", text);
-    }
-*/
-
-
     @Override
     public void updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
-
 
         if (studentDtoIn.getId() == null || studentDtoIn.getId() < 0) {
             StudentService.LOG.error("id  is  null or  0");
@@ -202,6 +140,9 @@ public class StudentService implements IStudentService {
 
         }
 
+        if  (studentDtoIn.getPhone() == null  ||  studentDtoIn.getPhone().trim().isEmpty()) {
+            studentUpdated.setPhone(null);
+        }
         this.studentDao.save(studentUpdated);
 
     }

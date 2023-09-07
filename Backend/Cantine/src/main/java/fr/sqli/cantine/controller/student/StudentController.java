@@ -65,6 +65,7 @@ public class StudentController implements IStudentController {
  public ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidPersonInformationException,
          InvalidStudentClassException, InvalidFormatImageException, InvalidImageException,
          StudentClassNotFoundException, ImagePathException, IOException, ExistingStudentException {
+     System.out.println(studentDtoIn.getPhone());
        this.studentService.signUpStudent(studentDtoIn);
         return ResponseEntity.ok(  new ResponseDtout(STUDENT_SIGNED_UP_SUCCESSFULLY));
  }
