@@ -102,7 +102,7 @@ export class SignUpComponent  implements   OnInit {
         formData.append('town', this.studentForm.value.town);
 
         if (this.studentForm.value.phoneNumber != null || this.studentForm.value.phoneNumber != undefined)
-            formData.append('phoneNumber', this.studentForm.value.phoneNumber);
+            formData.append('phone', this.studentForm.value.phoneNumber);
 
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             formData.append('image', this.image);

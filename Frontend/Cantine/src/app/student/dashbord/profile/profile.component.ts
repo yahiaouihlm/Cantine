@@ -7,15 +7,20 @@ import {SharedService} from "../../../sharedmodule/shared.service";
 import {Observable, of, Subscription} from "rxjs";
 import {StudentDashboardService} from "../student-dashboard.service";
 import {StudentClass} from "../../../sharedmodule/models/studentClass";
+import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     styles: [],
-    providers : [StudentDashboardService]
+    providers: [StudentDashboardService]
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-    constructor(private route: ActivatedRoute, private sharedService: SharedService , private  router :  Router , private  studentService : StudentDashboardService ) {
+    private WOULD_YOU_LIKE_TO_UPDATE = "Voulez-vous mettre à jour votre profile ?";
+
+    constructor(private route: ActivatedRoute, private sharedService: SharedService, private router: Router, private studentService: StudentDashboardService, private matDialog: MatDialog) {
     }
 
     user: User = new User();
@@ -24,15 +29,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private getStudentByIdSubscription: Subscription | undefined;
 
     studentClass$: Observable<StudentClass[]> = of([]);
+    isLoading = false;
+    touched: boolean = false;
 
-    touched :  boolean  =  false ;
-
-    image! :  File
+    image!: File
     studentUpdated: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
-        password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
         birthDate: new FormControl('', [Validators.required]),
         phoneNumber: new FormControl('', [Validators.pattern(Validation.FRENCH_PHONE_REGEX)]),
         town: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.minLength(3)]),
@@ -42,17 +46,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.studentUpdated.disable();
-        this.studentClass$ =  this.studentService.getAllStudentClass();
+        this.studentClass$ = this.studentService.getAllStudentClass();
         this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
             const id = params['id'];
             if (id) {
-                this.getStudentByIdSubscription =this.sharedService.getStudentById(id).subscribe((response) => {
+                this.getStudentByIdSubscription = this.sharedService.getStudentById(id).subscribe((response) => {
                     this.user = response;
                     console.log(this.user.wallet);
                     this.matchFormsValue();
                 });
-            }
-            else {
+            } else {
                 localStorage.clear();
                 this.router.navigate(["cantine/home"]).then(r => console.log(r));
             }
@@ -62,16 +65,67 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
 
+    onSubmit(): void {
+        this.submitted = true;
+        if (this.studentUpdated.invalid || !this.studentUpdated.touched) {
+            return;
+        }
 
+        this.isLoading = true;
 
-    onSubmit() : void {
-       this.studentUpdated.enable();
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_UPDATE},
+            width: '40%',
+        });
+
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                this.updateStudent();
+            } else {
+                this.isLoading = false;
+                return;
+            }
+
+        });
     }
 
 
-    get f(): { [key: string]: AbstractControl } {
-        return this.studentUpdated.controls;
+    updateStudent() {
+        const formDataStudent = new FormData();
+        formDataStudent.append('id', this.user.id.toString());
+        formDataStudent.append('firstname', this.studentUpdated.value.firstName);
+        formDataStudent.append('lastname', this.studentUpdated.value.lastName);
+        formDataStudent.append('birthdateAsString  ', this.studentUpdated.value.birthDate);
+        formDataStudent.append('studentClass', this.studentUpdated.value.studentClass);
+        formDataStudent.append('town', this.studentUpdated.value.town);
+
+        if (this.studentUpdated.value.phoneNumber != null || this.studentUpdated.value.phoneNumber != undefined)
+            formDataStudent.append('phone', this.studentUpdated.value.phoneNumber);
+
+        if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
+            formDataStudent.append('image', this.image);
+
+        console.log("valeur de  image est  ")
+        console.log(this.studentUpdated.value.phoneNumber)
+        this.studentService.updateStudent(formDataStudent).subscribe( {
+            next: (response) => {
+                this.isLoading = false;
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: " Votre profile a été mis à jour avec succès ! "},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    window.location.reload();
+                });
+            },
+            error : (error) => {
+                this.isLoading = false;
+            }
+        });
+
+
     }
+
 
     matchFormsValue() {
         this.studentUpdated.patchValue({
@@ -85,6 +139,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         });
 
     }
+
     ngOnDestroy() {
         if (this.queryParamsSubscription) {
             this.queryParamsSubscription.unsubscribe();
@@ -93,6 +148,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.getStudentByIdSubscription.unsubscribe();
         }
     }
+
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
         const file: File = (target.files as FileList)[0]
@@ -100,13 +156,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     modify() {
-        this.touched =  true ;
+        this.touched = true;
         this.studentUpdated.enable();
         this.studentUpdated.get('email')?.disable()
     }
 
     cancel() {
         this.studentUpdated.disable();
-        this.touched =  false ;
+        this.touched = false;
+    }
+
+    get f(): { [key: string]: AbstractControl } {
+        return this.studentUpdated.controls;
     }
 }
