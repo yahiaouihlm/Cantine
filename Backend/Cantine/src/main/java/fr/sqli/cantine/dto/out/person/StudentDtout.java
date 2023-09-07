@@ -2,9 +2,11 @@ package fr.sqli.cantine.dto.out.person;
 
 import fr.sqli.cantine.entity.StudentEntity;
 
+import java.math.BigDecimal;
+
 public class StudentDtout    extends AbstractPersonDtout{
 
-
+    private BigDecimal wallet ;
     private String studentClass;
 
 
@@ -20,6 +22,7 @@ public class StudentDtout    extends AbstractPersonDtout{
         super.setImage(
                 studentUrlImage + path
         );
+        this.wallet = student.getWallet();
         this.setStudentClass(student.getStudentClass().getName());
     }
 
@@ -31,4 +34,13 @@ public class StudentDtout    extends AbstractPersonDtout{
         public  String getStudentClass() {
             return this.studentClass;
         };
+
+
+    public BigDecimal getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(BigDecimal wallet) {
+        this.wallet = wallet;
+    }
 }
