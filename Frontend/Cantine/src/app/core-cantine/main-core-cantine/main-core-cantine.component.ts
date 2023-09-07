@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
 import {HttpStatusCode} from "@angular/common/http";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-main-core-cantine',
@@ -46,7 +47,7 @@ export class MainCoreCantineComponent  implements OnInit{
     logout() {
         localStorage.clear();
         this.disconnected = false;
-        window.location.reload()
+        this.router.navigate(['cantine/home']).then(  () => window.location.reload());
     }
 
     toLogin() {

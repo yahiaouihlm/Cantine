@@ -25,6 +25,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     studentClass$: Observable<StudentClass[]> = of([]);
 
+    touched :  boolean  =  false ;
+
     image! :  File
     studentUpdated: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -95,5 +97,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
         const target = $event.target as HTMLInputElement;
         const file: File = (target.files as FileList)[0]
         this.image = file;
+    }
+
+    modify() {
+        this.touched =  true ;
+        this.studentUpdated.enable();
+        this.studentUpdated.get('email')?.disable()
+    }
+
+    cancel() {
+        this.studentUpdated.disable();
+        this.touched =  false ;
     }
 }
