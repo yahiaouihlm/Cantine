@@ -64,7 +64,9 @@ export class SharedService {
             this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
 
         } else {
+            localStorage.clear();
             this.openDialog("Unkwon Error   has  been occured  ", error.status);
+            this.router.navigate(['cantine/home']).then(error => console.log("redirected to login page"));
         }
 
         return throwError(() => new Error(error.message));

@@ -1,34 +1,232 @@
+
+
 <div class="container">
     <div class="row">
-            <form [formGroup]="studentUpdated" class="test">
-                <!---------------------- Email --------------------------->
-                <div class="form-group ">
-                    <label for="email"> Email : </label>
-                    <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
-                           formControlName="email"
-                           placeholder="  Votre Email "
-                           type="email"
-                           id="email"
-                    />
-                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                        <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
-                        <div *ngIf="f['email'].errors['maxlength']" class="center">
-                            votre Nom ne doit pas dépasser 1000 charctéres
-                        </div>
-                        <div *ngIf="(f['email'].errors['email'] )  ||  (f['email'].errors['pattern'])" class="center">
-                            Le Format de Email est incorrecte
-                        </div>
+
+        <div class="wallet">
+               <p> {{user.wallet}}</p>
+        </div>
+
+        <form [formGroup]="studentUpdated" class="test">
+
+
+          <!---------------------- Name --------------------------->
+          <div class="form-group  input-card col" >
+              <label for="firstName"> Prénom :  </label>
+              <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
+                     formControlName="firstName"
+                     placeholder="  Votre Prénom "
+                     type="text"
+                     id="firstName"
+              />
+              <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                  <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
+                  <div *ngIf="f['firstName'].errors['maxlength']" class="center">
+                      votre Prénom  ne doit pas dépasser 60 charctéres
+                  </div>
+                  <div *ngIf="f['firstName'].errors['minlength']" class="center">
+                      votre Prénom    doit avoir au minimum de 3 charctéres
+                  </div>
+              </div>
+          </div>
+
+
+
+
+          <!---------------------- LastName --------------------------->
+          <div class="form-group input-card   col " >
+              <label for="lastName"> Nom :  </label>
+              <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
+                     formControlName="lastName"
+                     placeholder="  Votre Nom "
+                     type="text"
+                     id="lastName"
+              />
+              <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                  <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
+                  <div *ngIf="f['lastName'].errors['maxlength']" class="center">
+                      votre Nom  ne doit pas dépasser 60 charctéres
+                  </div>
+                  <div *ngIf="f['lastName'].errors['minlength']" class="center">
+                      votre Nom  doit avoir au minimum de 3 charctéres
+                  </div>
+              </div>
+          </div>
+
+
+
+
+
+
+
+
+            <!---------------------- Email --------------------------->
+            <div class="form-group  input-card   col">
+                <label for="email"> Email : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                       formControlName="email"
+                       placeholder="  Votre Email "
+                       type="email"
+                       id="email"
+                />
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                    <div *ngIf="f['email'].errors['maxlength']" class="center">
+                        votre Nom ne doit pas dépasser 1000 charctéres
+                    </div>
+                    <div *ngIf="(f['email'].errors['email'] )  ||  (f['email'].errors['pattern'])" class="center">
+                        Le Format de Email est incorrecte
                     </div>
                 </div>
+            </div>
 
-            </form>
+
+
+
+            <!---------------------- Birthdate--------------------------->
+            <div class="form-group  input-card   col">
+                <label for="birthDate"> Date De  Naissance   :  </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
+                       formControlName="birthDate"
+                       placeholder="Votre  Date  De  Naissance "
+                       type="Date"
+                       id="birthDate"
+                />
+                <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
+                    <div *ngIf="f['birthDate'].errors['required']" class="center"> La  date  de  naissance  est requise     </div>
+
+                </div>
+            </div>
+
+
+
+            <!---------------------- Town --------------------------->
+            <div class="form-group ">
+                <label for="town"> Ville :  </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['town'].errors }" class="form-control"
+                       formControlName="town"
+                       placeholder="La ville "
+                       type="text"
+                       id="town"
+                />
+                <div *ngIf="submitted && f['town'].errors" class="invalid-feedback">
+                    <div *ngIf="f['town'].errors['required']" class="center"> le  champs  est  obligatoire </div>
+                    <div *ngIf="f['town'].errors['maxlength']" class="center">
+                        Le nom de   la ville  ne doit pas dépasser   1000 charctéres
+                    </div>
+
+                    <div *ngIf="f['town'].errors['minlength']" class="center">
+                        Le  nom  de  la ville    doit avoir au minimum de 3 charctéres
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+
+            <!---------------------- Phone Number--------------------------->
+            <div class="form-group ">
+                <label for="phoneNumber">  Numéro Tél  :  </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
+                       formControlName="phoneNumber"
+                       placeholder="  Votre  Numéro Télephone "
+                       type="tel"
+                       id="phoneNumber"
+                />
+                <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
+                    <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
+                        Format  Numéro  Téléphone est   incorrect
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            <!---------------------- StudentClass  --------------------------->
+
+            <div class="form-group">
+                <label for="studentClass">    </label>
+                <select formControlName="studentClass" class="form-control" id="studentClass"
+                        [ngClass]="{ 'is-invalid': submitted && f['studentClass'].errors }" name="studentClass">
+                    <option value="" disabled>-- Votre  class --</option>
+                    <ng-container *ngFor="let Sclass of studentClass$ | async ">
+                        <option [value]="Sclass.name">{{ Sclass.name }}</option>
+                    </ng-container>
+                </select>
+                <div *ngIf="submitted && f['studentClass'].errors" class="invalid-feedback">
+                    <div *ngIf="f['studentClass'].errors['required']" class="center"> saisie de votre  travail est
+                        requise
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="profile-pictrure center">
+                <img src="{{user.image}}" >
+
+            </div>
+
+
+            <!---------------------- Image --------------------------->
+            <div class="form-group ">
+                <label for="image"> Choisissez une  image  de  profile   </label>
+
+                <input class="input-group-prepend"
+                       [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
+                       formControlName="image"
+                       placeholder=" IMAGE  DU  Profil "
+                       type="file"
+                       id="image"
+                       accept="image/png, image/jpeg"
+                       (change)="onChange ($event)"
+                />
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <button (click)="onSubmit()"> valider</button>
+        </form>
     </div>
 </div>
 
 
 <style>
     .test {
-      border: 1px solid red;
+         margin-top: 30px;
+        border: 1px solid red;
+
     }
+
+
+    img{
+        width: 50%;
+        }
+
+
+    .input-card{
+        width: 50%;
+    }
+
+
 
 </style>
