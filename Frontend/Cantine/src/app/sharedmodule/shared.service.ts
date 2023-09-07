@@ -8,6 +8,8 @@ import {ExceptionDialogComponent} from "./dialogs/exception-dialog/exception-dia
 import {User} from "./models/user";
 import {AuthObject} from "./models/authObject";
 import {Router} from "@angular/router";
+import Malfunctions from "./functions/malfunctions";
+
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +30,7 @@ export class SharedService {
 
 
     getStudentById(id: string) {
-        let token = this.getTokenFromLocalStorage();
+        let token = Malfunctions.getTokenFromLocalStorage();
       const headers = new HttpHeaders().set('Authorization', token);
         const params = new HttpParams().set('idStudent', id);
         return this.httpClient.get<User>(this.GET_STUDENT_BY_ID, {
