@@ -36,6 +36,7 @@ export  class  Order {
                 return;
             }
             newBasket.meals.push(meal);
+            localStorage.setItem('Order' ,   JSON.stringify( newBasket) )  ;
         }
 
 

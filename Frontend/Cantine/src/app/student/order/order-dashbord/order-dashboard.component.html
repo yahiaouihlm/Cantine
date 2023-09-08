@@ -1,1 +1,30 @@
-<p>order-dashbord works!</p>
+    <div class="container">
+        <div class="row">
+            <table>
+                <tr>
+                    <th> Date</th>
+                    <th>Nombre Menus</th>
+                    <th>Nombre de plats</th>
+                    <th> prix totale</th>
+                </tr>
+
+                <tr>
+
+                    <td>{{ date.getDate()}}/{{date.getUTCMonth()}}/ {{date.getFullYear()}}</td>
+                    <td>{{order.menus.length}}</td>
+                    <td>{{order.meals.length}}</td>
+                    <td> {{getTotalPrice()}}€</td>
+                    <td>
+                        <button class="btn"> Modifier</button>
+                    </td>
+
+                    <td>
+                        <button class="btn"> Valider </button>
+                    </td>
+                </tr>
+
+
+            </table>
+
+        </div>
+    </div>

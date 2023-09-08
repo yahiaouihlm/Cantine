@@ -9,11 +9,20 @@ import {Order} from "../../../sharedmodule/models/order";
 })
 export class OrderDashboardComponent  implements   OnInit{
 
-  private  order :   Order = new  Order();
+   date  =  new Date();
+    order :   Order = new  Order();
 
   ngOnInit(): void {
+    this.order = Order.getOrderFromLocalStorage();
   }
 
+ getTotalPrice () : number  {
+    let total : number = 0;
+    this.order.meals.forEach(meal => {  total += meal.price; });
+    this.order.menus.forEach(menu => {  total += menu.price; });
+    return total;
+
+}
 
 
 
