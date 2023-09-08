@@ -21,10 +21,10 @@ export class MealsComponent  implements  OnInit{
     this.meals$ = this.coreCantineService.getAllMeals();
   }
 
-  addToOrder( idMeal :  number) {
+  addToOrder(   meal:  Meal) {
     const  authObject = localStorage.getItem('authObject');
     if (authObject) {
-      Order.addMealToOrder(idMeal);
+      Order.addMealToOrder(meal);
     }
     else {
         localStorage.clear();

@@ -38,6 +38,11 @@ export class MainCoreCantineComponent  implements OnInit{
             this.user = response;
      });
     }
+
+    goToOrders() {
+        this.router.navigate(['cantine/student/orders']).then( () => window.location.reload());
+    }
+
     goToHome() {
         this.router.navigate(['cantine/home']);
     }

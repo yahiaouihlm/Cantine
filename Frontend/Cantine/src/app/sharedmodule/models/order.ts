@@ -5,18 +5,18 @@ export  class  Order {
 
     studentId!: number;
 
-    mealsId: number[] = [];
+    meals: Meal[] = [];
 
-    menusId:  number[]  = [];
-
-
+    menus:  Menu[]  = [];
 
 
 
 
-    public  static addMealToOrder(idMeal : number) {
+
+
+    public  static addMealToOrder(meal: Meal) {
         let  order : Order = new Order();
-        order.mealsId.push(idMeal);
+        order.meals.push(meal);
         let bascket   = localStorage.getItem('Order');
         if  (!bascket) {
             localStorage.setItem('Order' ,   JSON.stringify( order) )  ;
@@ -24,16 +24,20 @@ export  class  Order {
         }
         else  {
             let newBasket :  Order =  JSON.parse(bascket);
-            newBasket.mealsId.push(idMeal);
+            if  (newBasket.meals.length >=10) {
+                alert("you can't add more than 10 meals");
+                return;
+            }
+            newBasket.meals.push(meal);
         }
 
 
     }
 
 
-    public  static addMenuToOrder(idMenu : number) {
+    public  static addMenuToOrder(menu : Menu) {
         let  order : Order = new Order();
-        order.menusId.push(idMenu);
+        order.menus.push(menu);
         let bascket   = localStorage.getItem('Order');
         if  (!bascket) {
             localStorage.setItem('Order' ,   JSON.stringify( order) )  ;
@@ -41,7 +45,11 @@ export  class  Order {
         }
         else  {
             let newBasket :  Order =  JSON.parse(bascket);
-            newBasket.menusId.push(idMenu);
+            if  (newBasket.menus.length >=10) {
+                alert("you can't add more than 10 menus");
+                return;
+            }
+            newBasket.menus.push(menu);
         }
     }
 }
