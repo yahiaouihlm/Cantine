@@ -1,14 +1,17 @@
 package fr.sqli.cantine.service.admin.menus;
 
+import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
+import fr.sqli.cantine.service.admin.meals.IMealService;
 import fr.sqli.cantine.service.admin.meals.MealService;
 import fr.sqli.cantine.service.admin.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.admin.menus.exceptions.UnavailableMealException;
 import fr.sqli.cantine.service.images.IImageService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -33,8 +37,7 @@ public class AddMenuTest {
 
     @Mock
     private MealService mealService;
-    @Mock
-    private MealService iMealService;
+
     @Mock
     IImageService imageService;
 
@@ -42,12 +45,17 @@ public class AddMenuTest {
     private MenuService menuService;
 
     @Mock
-    MockEnvironment environment;
-    private MealEntity mealEntity;
+    private  MockEnvironment environment;
+    @Mock
+    private IMealDao iMealDao;
 
     private MenuEntity menuEntity;
 
     private MenuDtoIn menu  ;
+
+
+    @Mock
+    private IMealService iMealService;
 
     @BeforeEach
     void  init () throws IOException {
@@ -65,18 +73,22 @@ public class AddMenuTest {
         this.menu.setMealIDs(Collections.singletonList("1"));
 
     }
-
+   @AfterEach
+   void  end () {
+            this.menu = null;
+        this.menuEntity = null;
+    }
     @Test
     void AddMenuWithUnalienableMeal() throws  Exception{
-        MenuDtoIn menu = new MenuDtoIn();
-        menu.setMealIDs(Collections.singletonList("1"));
 
         MealEntity meal = new MealEntity();
+        meal.setLabel("label test");
         meal.setId(1);
         meal.setStatus(0);
 
         Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.empty());
-        Mockito.when(mealService.getMealEntityByID(1)).thenReturn(meal);
+        //Mockito.when(this.iMealDao.findById(1)).thenReturn(Optional.of(meal));
+      Mockito.when(this.iMealService.getMealEntityByID(1)).thenReturn(meal);
 
         Assertions.assertThrows(UnavailableMealException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
