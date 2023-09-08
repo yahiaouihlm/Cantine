@@ -28,7 +28,8 @@ public class GetStudentTest {
      private IStudentDao  studentDao;
     @Mock
     private ImageService imageService;
-    private IConfirmationTokenDao iConfirmationToken;
+
+    private String  IMAGE_URL = "http://localhost:8080/cantine/download/images/persons/students/";
     @Mock
     private IStudentClassDao studentClassDao;
     @Mock
@@ -45,6 +46,8 @@ public class GetStudentTest {
     @Test
     void  getAdminByIDTest () throws InvalidPersonInformationException, StudentNotFoundException {
         var id = 1 ;
+       // this.environment.setProperty("sqli.cantine.images.url.student", "src/test/resources/imagesTests");
+        Mockito.when(this.environment.getProperty("sqli.cantine.images.url.student")).thenReturn(this.IMAGE_URL);
         StudentClassEntity studentClass = new StudentClassEntity();
         studentClass.setId(1);
         studentClass.setName("test-studentClass");
@@ -65,6 +68,7 @@ public class GetStudentTest {
 
         var  rsult =  this.studentService.getStudentByID(id);
 
+        System.out.println(rsult.getImage());
         Assertions.assertEquals(rsult.getId(), student.getId());
         Assertions.assertEquals(rsult.getFirstname(), student.getFirstname());
         Assertions.assertEquals(rsult.getLastname(), student.getLastname());
@@ -72,7 +76,7 @@ public class GetStudentTest {
         Assertions.assertEquals(rsult.getBirthdate(), student.getBirthdate());
         Assertions.assertEquals(rsult.getTown(), student.getTown());
         Assertions.assertEquals(rsult.getPhone(), student.getPhone());
-        Assertions.assertEquals(rsult.getImage(), student.getImage().getImagename());
+        Assertions.assertEquals(rsult.getImage(), this.IMAGE_URL + student.getImage().getImagename());
 
 
     }
