@@ -12,8 +12,15 @@ export  class  Order {
 
 
 
-
-
+    public  static  getOrderFromLocalStorage()   :     Order  {
+         let order   =   localStorage.getItem('Order') ;
+         if  (!order) {
+             return new Order();
+         }
+            else  {
+                return  JSON.parse(order) as Order;
+         }
+    }
     public  static addMealToOrder(meal: Meal) {
         let  order : Order = new Order();
         order.meals.push(meal);
@@ -52,4 +59,5 @@ export  class  Order {
             newBasket.menus.push(menu);
         }
     }
+
 }
