@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Order} from "../../../sharedmodule/models/order";
+import {MatDialog} from "@angular/material/dialog";
+import {ModifyOrderDialogueComponent} from "./modify-order-dialogue/modify-order-dialogue.component";
 
 @Component({
   selector: 'app-order-dashbord',
@@ -11,6 +13,9 @@ export class OrderDashboardComponent  implements   OnInit{
 
    date  =  new Date();
     order :   Order = new  Order();
+
+    constructor( private  matDialog: MatDialog) {
+    }
 
   ngOnInit(): void {
     this.order = Order.getOrderFromLocalStorage();
@@ -25,5 +30,8 @@ export class OrderDashboardComponent  implements   OnInit{
 }
 
 
-
+  modifyOrder() {
+      console.log("hello  world ")
+       this.matDialog.open(ModifyOrderDialogueComponent, {  width: '500px',  height: '500px',  data: this.order});
+  }
 }
