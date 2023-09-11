@@ -63,17 +63,64 @@ export class Order {
         }
     }
 
-    public static removeMealFromOrder(meal: Meal) {
+    public static removeMealFromOrder(meal: Meal) :  Order {
         if (!meal) {
-            return
+            return  new Order();
         }
         let order = Order.getOrderFromLocalStorage();
         if (order) {
-            order.meals = order.meals.filter(pmeal => pmeal.id != meal.id);
-            localStorage.setItem('Order', JSON.stringify(order));
+            let index = -1;
+            for( let counter = 0 ; counter < order.meals.length;  counter++ )
+                if  (order.meals[counter].id === meal.id ){
+                    index =  counter;
+                    break;
+                }
+            if  (index != -1 ){
+                order.meals.splice(index, 1);
+                localStorage.setItem('Order', JSON.stringify (order) )
+                return order;
+            }
         }
 
+        return new Order();
 
+
+    }
+
+    public static removeMenuFromOrder(menu: Menu) :  Order {
+        if (!menu) {
+            return  new Order();
+        }
+        let order = Order.getOrderFromLocalStorage();
+        if (order) {
+            let index = -1;
+
+            for( let counter = 0 ; counter < order.menus.length;  counter++ )
+                if  (order.menus[counter].id === menu.id ){
+                    index =  counter;
+                    break;
+                }
+            if  (index != -1 ){
+                order.menus.splice(index, 1);
+                localStorage.setItem('Order', JSON.stringify (order) )
+                return order;
+            }
+
+        }
+
+        return new Order();
+
+
+    }
+
+
+
+    public isEmpty() : boolean {
+        if  (this.meals.length == 0 && this.menus.length == 0  && !this.studentId) {
+            return true;
+        }
+
+        return false;
     }
 
 

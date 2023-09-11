@@ -3,10 +3,10 @@
                 <h2> Ma  commande  :  </h2>
 
                  <p class="title"> Les Menus  </p>
-            <div *ngFor="let menu of order.menus">
+            <div *ngFor="let menu of order.menus" class="meal">
                 <p>{{menu.label}}</p>
                 <p>{{menu.price}}</p>
-                <div class="btn  center">  supprimer le  Menu  </div>
+                <div class="btn  center" (click)="removeMenuFromOrder(menu)">  supprimer le  Menu  </div>
             </div>
 
           <p  class="title" > Les plats   </p>
@@ -14,7 +14,7 @@
                <p>{{meal.label}}</p>
               <p>{{meal.price}}</p>
               <p>{{meal.category}}</p>
-              <div class="btn center ">  supprimer  le plat  </div>
+              <div class="btn center" (click)="removeMealFromOrder(meal)">  supprimer  le plat  </div>
           </div>
              <div class="btn">  supprimer La commande  </div>
       </div>

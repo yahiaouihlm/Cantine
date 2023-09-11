@@ -17,9 +17,12 @@ export class OrderDashboardComponent  implements   OnInit{
     constructor( private  matDialog: MatDialog) {
     }
 
-  ngOnInit(): void {
-    this.order = Order.getOrderFromLocalStorage();
-  }
+    ngOnInit(): void {
+        let order = Order.getOrderFromLocalStorage();
+        if (order) {
+            this.order = order;
+        }
+    }
 
  getTotalPrice () : number  {
     let total : number = 0;
