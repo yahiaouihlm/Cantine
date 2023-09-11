@@ -19,7 +19,6 @@ import {AdminModule} from "./admin/admin.module";
     AppRoutingModule,
     BrowserAnimationsModule,
     AdminModule,
-    CoreCantineModule,
 
   ],
 
