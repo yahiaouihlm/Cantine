@@ -1,30 +1,27 @@
-    <div class="container">
-        <div class="row">
-            <table>
-                <tr>
-                    <th> Date</th>
-                    <th>Nombre Menus</th>
-                    <th>Nombre de plats</th>
-                    <th> prix totale</th>
-                </tr>
+<h2>Ma commande  </h2>
+<div class="container test">
+    <div class="row">
+        <div class="col-md-2">
+            <span>Date : 10/09/2023</span>
+        </div>
+        <div class="col-md-2">
+            <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
+        </div>
 
-                <tr>
+        <div class="col-md-2">
+            <span><strong>Nombre de Menus : </strong> {{order.menus.length}}</span>
+        </div>
 
-                    <td>{{ date.getDate()}}/{{date.getUTCMonth()}}/ {{date.getFullYear()}}</td>
-                    <td>{{order.menus.length}}</td>
-                    <td>{{order.meals.length}}</td>
-                    <td> {{getTotalPrice()}}€</td>
-                    <td>
-                        <button class="btn"> Modifier</button>
-                    </td>
-
-                    <td>
-                        <button class="btn"> Valider </button>
-                    </td>
-                </tr>
-
-
-            </table>
-
+        <div class="col-md-2">
+            <span><strong>Prix total : </strong> {{getTotalPrice()}} € </span>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary">Modifier</button>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-success">Valider</button>
         </div>
     </div>
+</div>
+
+

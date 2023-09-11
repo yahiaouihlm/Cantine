@@ -20,7 +20,7 @@ export class OrderDashboardComponent  implements   OnInit{
     let total : number = 0;
     this.order.meals.forEach(meal => {  total += meal.price; });
     this.order.menus.forEach(menu => {  total += menu.price; });
-    return total;
+    return parseFloat (total.toFixed(2));
 
 }
 
