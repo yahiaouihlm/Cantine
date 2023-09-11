@@ -32,6 +32,6 @@ export class OrderDashboardComponent  implements   OnInit{
 
   modifyOrder() {
       console.log("hello  world ")
-       this.matDialog.open(ModifyOrderDialogueComponent, {  width: '500px',  height: '500px',  data: this.order});
+       this.matDialog.open(ModifyOrderDialogueComponent, { data: this.order});
   }
 }

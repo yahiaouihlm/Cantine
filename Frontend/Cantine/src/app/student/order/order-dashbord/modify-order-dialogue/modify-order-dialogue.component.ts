@@ -11,12 +11,9 @@ import {
   styles: [
   ]
 })
-export class ModifyOrderDialogueComponent  implements   OnInit {
+export class ModifyOrderDialogueComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data :  Order,  private dialogRef: MatDialogRef<SuccessfulDialogComponent>) { }
   order: Order = this.data;
 
-  ngOnInit(): void {
-    console.log("je  suis  dans  le dialogue  de  modification  de  commande");
-    console.log(this.order)
-  }
+
 }
