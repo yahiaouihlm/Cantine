@@ -2,6 +2,7 @@ package fr.sqli.cantine.controller.order;
 
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
+import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
@@ -32,9 +33,9 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<String>  addOrder( @RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException {
+    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException {
         this.orderService.addOrder(orderDtoIn);
-        return ResponseEntity.ok(ORDER_ADDED_SUCCESSFULLY);
+        return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }
 
     @Override

@@ -2,6 +2,7 @@ package fr.sqli.cantine.controller.order;
 
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
+import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
@@ -25,7 +26,7 @@ public interface IOrderController {
    String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
     String ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
     @PostMapping(ADD_ORDER_URL)
-    ResponseEntity <String>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException;
+    ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException;
 
 
     @PostMapping(CANCEL_ORDER_URL)
