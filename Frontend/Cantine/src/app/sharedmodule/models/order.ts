@@ -10,6 +10,8 @@ export class Order {
 
     menus: Menu[] = [];
 
+ //   private  mealsId : number[] = [];
+   // private  menusId : number[] = [];
     public static getOrderFromLocalStorage() {
         let order = localStorage.getItem('Order');
         if (!order) {
@@ -115,14 +117,19 @@ export class Order {
 
 
 
-    public isEmpty() : boolean  {
+ /*   public isEmpty() : boolean  {
         console.log(this.meals.length)
         if  (this.meals.length == 0 && this.menus.length == 0) {
             return true;
         }
 
         return false;
+    }*/
+
+    getMealsIds(): number[] {
+        return this.meals.map(meal => meal.id);
     }
-
-
+    public getMenusIds(): number[] {
+        return this.menus.map(menu => menu.id);
+    }
 }

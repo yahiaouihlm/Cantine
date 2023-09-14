@@ -16,7 +16,7 @@ export class OrderDashboardComponent implements OnInit {
     date = new Date();
     order: Order = new Order();
 
-    constructor(private matDialog: MatDialog,  private orderService : OrderService) {
+    constructor(private matDialog: MatDialog, private orderService: OrderService) {
     }
 
     ngOnInit(): void {
@@ -24,27 +24,25 @@ export class OrderDashboardComponent implements OnInit {
         if (order) {
             this.order = order;
         }
-       this.order.isEmpty()
+        console.log(this.order.getMenusIds());
     }
 
 
     sendOrder() {
-       console.log(this.order.isEmpty())
-     /*   let id = Malfunctions.getTokenFromLocalStorage();
-        console.log(this.order.isEmpty())
-        if (this.order.isEmpty() || !id) {
+
+        let studentId = Malfunctions.getStudentIdFromLocalStorage();
+
+        if ((this.order.meals.length == 0 && this.order.menus.length == 0) || !studentId) {
             return;
         }
-        let order = Order.getOrderFromLocalStorage();
-        if (order) {
-            this.order = order;
-        }
+        this.order.studentId = +studentId;
         this.orderService.addOrder(this.order).subscribe({
             next: (response) => {
                 console.log(response);
             }
         });
-*/    }
+
+    }
 
 
     getTotalPrice(): number {

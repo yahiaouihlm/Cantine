@@ -10,7 +10,7 @@ import {Order} from "../../sharedmodule/models/order";
 
 @Injectable()
 export class OrderService {
-    private ORDER_BASIC_URL = "cantine/student/order";
+    private ORDER_BASIC_URL = "http://localhost:8080/cantine/student/order";
     private ADD_ORDER_URL = this.ORDER_BASIC_URL + "/add";
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog) {
@@ -33,6 +33,8 @@ export class OrderService {
             errorMessage = "Une  erreur    est  survenue  !"
             new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
         } else {
+            console.log('error');
+            console.log(error);
             new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
         }
         return throwError(() => new Error(errorMessage));
