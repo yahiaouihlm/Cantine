@@ -1,8 +1,12 @@
 import {AuthObject} from "../models/authObject";
 import {Router} from "@angular/router";
 import {SharedService} from "../shared.service";
+import {HttpStatusCode} from "@angular/common/http";
+import {ExceptionDialogComponent} from "../dialogs/exception-dialog/exception-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 export  default class Malfunctions {
+
 
 
     public static checkStudentConnectivity(router: Router ,  sharedService : SharedService)  {
@@ -40,6 +44,16 @@ export  default class Malfunctions {
         }
         let authObject = JSON.parse(authObj) as AuthObject;
         return authObject.Authorization;
+    }
+
+
+    public  static  getStudentIdFromLocalStorage() :  string {
+        let authObj = localStorage.getItem('authObject')
+        if (!authObj) {
+            return '';
+        }
+        let authObject = JSON.parse(authObj) as AuthObject;
+        return authObject.id;
     }
 
 }

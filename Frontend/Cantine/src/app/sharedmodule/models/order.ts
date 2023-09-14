@@ -3,12 +3,12 @@ import {Menu} from "./menu";
 
 export class Order {
 
+    id!: number;
     studentId!: number;
 
     meals: Meal[] = [];
 
     menus: Menu[] = [];
-
 
     public static getOrderFromLocalStorage() {
         let order = localStorage.getItem('Order');
@@ -115,8 +115,9 @@ export class Order {
 
 
 
-    public isEmpty() : boolean {
-        if  (this.meals.length == 0 && this.menus.length == 0  && !this.studentId) {
+    public isEmpty() : boolean  {
+        console.log(this.meals.length)
+        if  (this.meals.length == 0 && this.menus.length == 0) {
             return true;
         }
 
