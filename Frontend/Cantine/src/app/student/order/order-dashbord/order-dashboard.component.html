@@ -1,6 +1,6 @@
-<h2>Ma commande  </h2>
 <div class="container test">
-    <div class="row">
+    <div class="row" *ngIf="!isOrderEmpty()">
+        <h2>Ma commande  </h2>
         <div class="col-md-2">
             <span>Date : 10/09/2023</span>
         </div>
@@ -19,9 +19,27 @@
             <button class="btn btn-primary"  (click)="modifyOrder()">Modifier</button>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-success" (click)="sendOrder()">Valider</button>
+            <button class="btn btn-success" (click)="validateOrder()">Valider</button>
         </div>
+    </div>
+    <div class="row center" *ngIf="isOrderEmpty()">
+          <div>
+              <h2> Vous  avez   Aucune  commande Aujourd'huit </h2>
+          </div>
     </div>
 </div>
 
 
+<style>
+    .test{
+        margin-top: 20px;
+        margin-bottom: 20px;
+       border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+    }
+     h2 {
+            margin-top: 0px;
+            margin-bottom: 0px;
+     }
+</style>

@@ -10,8 +10,9 @@ export class Order {
 
     menus: Menu[] = [];
 
- //   private  mealsId : number[] = [];
-   // private  menusId : number[] = [];
+    mealsId: number[] = [];
+    menusId: number[] = [];
+
     public static getOrderFromLocalStorage() {
         let order = localStorage.getItem('Order');
         if (!order) {
@@ -65,21 +66,21 @@ export class Order {
         }
     }
 
-    public static removeMealFromOrder(meal: Meal) :  Order {
+    public static removeMealFromOrder(meal: Meal): Order {
         if (!meal) {
-            return  new Order();
+            return new Order();
         }
         let order = Order.getOrderFromLocalStorage();
         if (order) {
             let index = -1;
-            for( let counter = 0 ; counter < order.meals.length;  counter++ )
-                if  (order.meals[counter].id === meal.id ){
-                    index =  counter;
+            for (let counter = 0; counter < order.meals.length; counter++)
+                if (order.meals[counter].id === meal.id) {
+                    index = counter;
                     break;
                 }
-            if  (index != -1 ){
+            if (index != -1) {
                 order.meals.splice(index, 1);
-                localStorage.setItem('Order', JSON.stringify (order) )
+                localStorage.setItem('Order', JSON.stringify(order))
                 return order;
             }
         }
@@ -89,22 +90,22 @@ export class Order {
 
     }
 
-    public static removeMenuFromOrder(menu: Menu) :  Order {
+    public static removeMenuFromOrder(menu: Menu): Order {
         if (!menu) {
-            return  new Order();
+            return new Order();
         }
         let order = Order.getOrderFromLocalStorage();
         if (order) {
             let index = -1;
 
-            for( let counter = 0 ; counter < order.menus.length;  counter++ )
-                if  (order.menus[counter].id === menu.id ){
-                    index =  counter;
+            for (let counter = 0; counter < order.menus.length; counter++)
+                if (order.menus[counter].id === menu.id) {
+                    index = counter;
                     break;
                 }
-            if  (index != -1 ){
+            if (index != -1) {
                 order.menus.splice(index, 1);
-                localStorage.setItem('Order', JSON.stringify (order) )
+                localStorage.setItem('Order', JSON.stringify(order))
                 return order;
             }
 
@@ -116,19 +117,19 @@ export class Order {
     }
 
 
+    /*   public isEmpty() : boolean  {
+           console.log(this.meals.length)
+           if  (this.meals.length == 0 && this.menus.length == 0) {
+               return true;
+           }
 
- /*   public isEmpty() : boolean  {
-        console.log(this.meals.length)
-        if  (this.meals.length == 0 && this.menus.length == 0) {
-            return true;
-        }
-
-        return false;
-    }*/
+           return false;
+       }*/
 
     getMealsIds(): number[] {
         return this.meals.map(meal => meal.id);
     }
+
     public getMenusIds(): number[] {
         return this.menus.map(menu => menu.id);
     }

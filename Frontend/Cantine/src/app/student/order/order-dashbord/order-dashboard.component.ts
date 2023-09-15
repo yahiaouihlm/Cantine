@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ModifyOrderDialogueComponent} from "./modify-order-dialogue/modify-order-dialogue.component";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 import {OrderService} from "../order.service";
+import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 
 @Component({
     selector: 'app-order-dashbord',
@@ -13,8 +14,10 @@ import {OrderService} from "../order.service";
 })
 export class OrderDashboardComponent implements OnInit {
 
+    private WOULD_YOU_LIKE_TO_SEND_ORDER = "Voulez-vous Valider votre commande ?";
     date = new Date();
     order: Order = new Order();
+    isLoading = false;
 
     constructor(private matDialog: MatDialog, private orderService: OrderService) {
     }
@@ -24,23 +27,42 @@ export class OrderDashboardComponent implements OnInit {
         if (order) {
             this.order = order;
         }
-        console.log(this.order.getMenusIds());
     }
 
 
-    sendOrder() {
+    validateOrder() {
 
-        let studentId = Malfunctions.getStudentIdFromLocalStorage();
+        let sendOrder = () => {
 
-        if ((this.order.meals.length == 0 && this.order.menus.length == 0) || !studentId) {
-            return;
+            let studentId = Malfunctions.getStudentIdFromLocalStorage();
+
+            if (this.isOrderEmpty() || !studentId) {
+                return;
+            }
+            this.order.studentId = +studentId;
+            this.order.mealsId = this.order.meals.map(meal => meal.id);
+            this.order.menusId = this.order.menus.map(menu => menu.id);
+            this.orderService.addOrder(this.order).subscribe({
+                next: (response) => {
+                    console.log(response);
+                }
+            });
+
         }
-        this.order.studentId = +studentId;
-        this.orderService.addOrder(this.order).subscribe({
-            next: (response) => {
-                console.log(response);
+
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_SEND_ORDER},
+            width: '40%',
+        });
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                sendOrder();
+            } else {
+                this.isLoading = false;
+                return;
             }
         });
+
 
     }
 
@@ -59,7 +81,14 @@ export class OrderDashboardComponent implements OnInit {
 
 
     modifyOrder() {
-        console.log("hello  world ")
-        this.matDialog.open(ModifyOrderDialogueComponent, {data: this.order});
+        let dialogue = this.matDialog.open(ModifyOrderDialogueComponent, {data: this.order});
+        dialogue.afterClosed().subscribe((order) => {
+            window.location.reload();
+        });
+    }
+
+
+    isOrderEmpty(): boolean {
+        return this.order.meals.length == 0 && this.order.menus.length == 0;
     }
 }
