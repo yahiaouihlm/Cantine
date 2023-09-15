@@ -11,10 +11,12 @@ import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationExce
 import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +47,17 @@ public class OrderService implements IOrderService {
 
     private Environment env ;
     private IMenuDao menuDao;
+
+    private ConfirmationOrderSender confirmationOrderSender;
     @Autowired
-    public OrderService( Environment env ,IOrderDao orderDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao , ITaxDao taxDao) {
+    public OrderService( Environment env ,IOrderDao orderDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao , ITaxDao taxDao, ConfirmationOrderSender confirmationOrderSender) {
         this.orderDao = orderDao;
         this.studentDao = studentDao;
         this.mealDao = mealDao;
         this.menuDao = menuDao;
         this.taxDao = taxDao;
         this.env = env ;
+        this.confirmationOrderSender = confirmationOrderSender;
         this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
         this.ORDER_QR_CODE_IMAGE_FORMAT = env.getProperty("sqli.canine.order.qrcode.image.format");
 
@@ -65,7 +70,7 @@ public class OrderService implements IOrderService {
     /* TODO change  QRcode Data */
     /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
          if  (orderDtoIn ==  null)
              throw  new InvalidOrderException("INVALID ORDER");
 
@@ -159,7 +164,7 @@ public class OrderService implements IOrderService {
         orderEntity.setStudent(student.get());
         orderEntity.setMeals(meals);
         orderEntity.setMenus(menus);
-        orderEntity.setStatus(1);
+        orderEntity.setStatus(0);
         orderEntity.setCancelled(false);
         //  create the  QrCode  and  save  the  order  in  the  database
         String  token = "qrcode" +  UUID.randomUUID();
@@ -194,7 +199,7 @@ public class OrderService implements IOrderService {
              /* SEND THE NOTIFICATION  */
         }
 
-
+        this.confirmationOrderSender.sendConfirmationOrder(student.get() , order);
 
     }
 

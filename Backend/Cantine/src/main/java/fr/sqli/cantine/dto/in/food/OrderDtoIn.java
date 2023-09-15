@@ -14,7 +14,7 @@ public class OrderDtoIn {
 
     private List<Integer> mealsId;
 
-        private List<Integer> menusId;
+    private List<Integer> menusId;
 
     @JsonIgnore
     public void checkOrderIDsValidity() throws InvalidPersonInformationException, InvalidMealInformationException, InvalidMenuInformationException, InvalidOrderException {
