@@ -36,6 +36,30 @@
              <h2> Commande Déja Valider </h2>
         </div>
 
+        <div *ngFor="let  order  of ordersOfDay$ |async">
+            <div class="col-md-2">
+                <span>Date :  {{order.id}} </span>
+            </div>
+            <div class="col-md-2">
+                <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Nombre de Menus : </strong> {{order.menus.length}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Prix total : </strong> {{order.()}} € </span>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary"  (click)="modifyOrder()">Modifier</button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success" (click)="validateOrder()">Valider</button>
+            </div>
+        </div>
+        </div>
+
 </div>
 </div>
 

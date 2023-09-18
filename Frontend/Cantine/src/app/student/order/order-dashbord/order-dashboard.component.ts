@@ -6,6 +6,8 @@ import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 import {OrderService} from "../order.service";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import {Observable, of} from "rxjs";
+import {Meal} from "../../../sharedmodule/models/meal";
 
 @Component({
     selector: 'app-order-dashbord',
@@ -17,20 +19,20 @@ export class OrderDashboardComponent implements OnInit {
 
     private WOULD_YOU_LIKE_TO_SEND_ORDER = "Voulez-vous Valider votre commande ?";
 
-    date = new Date();
+
     order: Order = new Order();
     isLoading = false;
 
+    ordersOfDay$  :  Observable <Order[]>  =  of([]);
     constructor(private matDialog: MatDialog, private orderService: OrderService) {
     }
 
     ngOnInit(): void {
-
-
         let order = Order.getOrderFromLocalStorage();
         if (order) {
             this.order = order;
         }
+        this.ordersOfDay$ = this.orderService.getOrdersOfDay();
     }
 
 

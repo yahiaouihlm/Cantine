@@ -9,7 +9,10 @@ export class Order {
     meals: Meal[] = [];
 
     menus: Menu[] = [];
-
+    creationDate!: Date;
+    creationTime!: Date;
+    isCanceled!: boolean;
+    status!: number;
     mealsId: number[] = [];
     menusId: number[] = [];
 
