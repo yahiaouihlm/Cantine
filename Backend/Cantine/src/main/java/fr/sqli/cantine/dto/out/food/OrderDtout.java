@@ -2,6 +2,7 @@ package fr.sqli.cantine.dto.out.food;
 
 import fr.sqli.cantine.entity.OrderEntity;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +21,7 @@ public class OrderDtout  {
     private Time creationTime;
 
     private  Integer status;
+    private BigDecimal price;
 
     private  boolean isCanceled;
 
@@ -32,7 +34,7 @@ public class OrderDtout  {
         this.isCanceled = orderEntity.isCancelled();
         this.meals = orderEntity.getMeals().stream().map( (mealEntity) -> new MealDtout(mealEntity , mealUrlImage)).toList();
         this.menus=orderEntity.getMenus().stream().map(menuEntity -> new MenuDtout(menuEntity, menuUrlImage , mealUrlImage)).toList();
-
+         this.price = orderEntity.getPrice();
 
     }
 
@@ -100,4 +102,11 @@ public class OrderDtout  {
         isCanceled = canceled;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 }
