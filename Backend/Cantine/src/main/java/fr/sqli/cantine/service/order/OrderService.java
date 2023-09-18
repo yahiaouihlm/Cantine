@@ -7,6 +7,8 @@ import fr.sqli.cantine.dto.out.food.OrderDtout;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
+import fr.sqli.cantine.security.MyUserDaitls;
+import fr.sqli.cantine.security.StudentFromContext;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
@@ -22,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -30,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -253,8 +257,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDtout> getOrdersByDate( Integer studentId , LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException {
-        if  (studentId ==  null  || studentId < 0) {
+    public List<OrderDtout> getOrdersByDate(  Integer studentId,  LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException {
+
+        var  username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if  (studentId ==  null  || studentId < 0 || username ==  null) {
             OrderService.LOG.error("INVALID STUDENT ID");
             throw  new InvalidOrderException("INVALID STUDENT ID");
         }
@@ -264,6 +271,23 @@ public class OrderService implements IOrderService {
             throw  new InvalidOrderException("INVALID DATE");
         }
 
-        return  this.orderDao.findByStudentIdAndCreationDate(studentId , date).stream().map(order-> new OrderDtout(order , "test" ,  "tes ")).toList();
+        var  student =  this.studentDao.findById(studentId);
+        if (student.isEmpty()) {
+            OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " NOT FOUND");
+            throw  new StudentNotFoundException("STUDENT WITH : " + studentId + " NOT FOUND");
+        }
+
+        if (!student.get().getEmail().equals(username)) {
+            OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " IS NOT THE OWNER OF THE ORDER");
+            throw new InvalidPersonInformationException("ERROR  STUDENT  ID");
+        }
+
+
+
+
+          return   this.orderDao.findByStudentIdAndCreationDate(studentId , date).stream().map(order-> new OrderDtout(order , "test" ,  "tes ")).toList();
+
+
+
     }
 }

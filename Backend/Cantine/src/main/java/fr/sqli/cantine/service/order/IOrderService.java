@@ -25,7 +25,7 @@ public interface IOrderService {
 
 
 
-      List<OrderDtout> getOrdersByDate(  Integer name , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException;
+      List<OrderDtout> getOrdersByDate(  Integer studentId , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException;
 
 
 

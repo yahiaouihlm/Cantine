@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller.order;
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.dto.out.food.OrderDtout;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(IOrderController.ORDER_BASIC_URL)
@@ -28,6 +31,13 @@ public class OrderController  implements IOrderController{
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDtout>> getOrdersByDate(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException {
+        System.out.println(studentId);
+        System.out.println(date);
+        return ResponseEntity.ok(this.orderService.getOrdersByDate(studentId,date));
     }
 
     @Override

@@ -75,7 +75,9 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                        username);
 
                Authentication  authentication =  new UsernamePasswordAuthenticationToken(username , passsword );
+
                var  result  =  this.authenticationManager.authenticate(authentication) ;
+
                System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
 
                return  result ;
@@ -156,6 +158,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
 
         var  user  =   (MyUserDaitls) authResult.getPrincipal() ;
+
     /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();
         idToken.put("Authorization", "Bearer " + jwtAccessToken);
