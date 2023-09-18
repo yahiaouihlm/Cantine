@@ -1,6 +1,6 @@
 <div class="container test">
     <div class="row" *ngIf="!isOrderEmpty()">
-        <h2>Ma commande  </h2>
+        <h2>Ma commande </h2>
         <div class="col-md-2">
             <span>Date : 10/09/2023</span>
         </div>
@@ -16,30 +16,37 @@
             <span><strong>Prix total : </strong> {{getTotalPrice()}} € </span>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-primary"  (click)="modifyOrder()">Modifier</button>
+            <button class="btn btn-primary" (click)="modifyOrder()">Modifier</button>
         </div>
         <div class="col-md-2">
             <button class="btn btn-success" (click)="validateOrder()">Valider</button>
         </div>
     </div>
     <div class="row center" *ngIf="isOrderEmpty()">
-          <div>
-              <h2> Vous  avez   Aucune  commande Aujourd'huit </h2>
-          </div>
+        <div>
+            <h2> Vous avez Aucune commande Aujourd'huit </h2>
+        </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div  class="trait"></div>
-        <div  class="center">
-             <h2> Commande Déja Valider </h2>
-        </div>
 
-        <div *ngFor="let  order  of ordersOfDay$ |async">
+<div class="trait"></div>
+<div class="center   test2">
+    <h2> Commande Déja Soumises </h2>
+    <p> Notez  Bien   :  Toutes  Les  commandes  déja valider peuvent etre retirer de 12h : 00  à 13h : 45  dans  les  locaux de  Aston </p>
+</div>
+
+
+<div *ngFor="let  order  of ordersOfDay$ |async">
+    <div class="container">
+        <div class="row">
             <div class="col-md-2">
-                <span>Date :  {{order.id}} </span>
+                <span>  N° Commande  :  {{order.id}} </span>
             </div>
+            <div class="col-md-2">
+                <span><strong>Date : </strong> {{order.creationDate}}</span>
+            </div>
+
             <div class="col-md-2">
                 <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
             </div>
@@ -49,21 +56,20 @@
             </div>
 
             <div class="col-md-2">
-                <span><strong>Prix total : </strong> {{order.()}} € </span>
+                <span><strong>Prix total : </strong> {{order.price}} € </span>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-primary"  (click)="modifyOrder()">Modifier</button>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-success" (click)="validateOrder()">Valider</button>
+                <button class="btn btn-success" (click)="validateOrder()">Annuler</button>
             </div>
         </div>
-        </div>
-
-</div>
+    </div>
 </div>
 
-
+<div class="container">
+    <div class="row">
+        <div class="center  btn"> Historique de Mes Commandes </div>
+    </div>
+</div>
 
 
 <style>
@@ -72,18 +78,30 @@
         width: 50%;
         height: 2px;
         background: black;
-        margin-bottom: 50px;
+        margin-bottom: 10px;
         transform: translate(50%, 0);
     }
-    .test{
+
+    .test {
         margin-top: 20px;
-       margin-bottom: 10%;
-       border: 1px solid #ccc;
+        margin-bottom: 10%;
+        border: 1px solid #ccc;
         padding: 10px;
         border-radius: 5px;
     }
-     h2 {
-            margin-top: 0px;
-            margin-bottom: 0px;
-     }
+
+    h2 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .test2 {
+        margin-bottom: 40px;
+    }
+
+    .historique {
+        transform: translate(50%, 0);
+        border: black 1px solid;
+        margin-top: 6px;
+    }
 </style>

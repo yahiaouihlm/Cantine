@@ -19,7 +19,8 @@ export class OrderDashboardComponent implements OnInit {
 
     private WOULD_YOU_LIKE_TO_SEND_ORDER = "Voulez-vous Valider votre commande ?";
 
-
+//http://localhost:8080/cantine/student/order/getByDate?studentId=21&date=2023-09-18
+//http://localhost:8080/cantine/student/order/getByDate?date=2023-09-18&idStudent=21
     order: Order = new Order();
     isLoading = false;
 
