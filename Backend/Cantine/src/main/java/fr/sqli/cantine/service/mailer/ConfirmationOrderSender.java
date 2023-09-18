@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class ConfirmationOrderSender {
 
@@ -31,10 +33,10 @@ public class ConfirmationOrderSender {
 
            String food =  "" ;
           for (MealEntity meal : order.getMeals()) {
-              food = food + meal.getLabel() + " , " + meal.getPrice() + "\n" ;
+              food = food + meal.getLabel() + " , " + meal.getPrice() + "<br>" ;
           }
           for ( MenuEntity menu : order.getMenus() ) {
-              food = food + menu.getLabel() + " , " + menu.getPrice() + "\n" ;
+              food = food + menu.getLabel() + " , " + menu.getPrice() + "<br>      " ;
           }
            String qrCodeUrl = this.ORDER_QR_CODE_PATH + order.getQRCode() ;
           String confirmationOrderMessage =
@@ -47,24 +49,28 @@ public class ConfirmationOrderSender {
                      <body>
                            """ +
 
-                  "<h2>Cher " + student.getFirstname() +"  " + student.getLastname()+",<h2>\n\n" +
+                  "<h2>Cher " + student.getFirstname() +"  " + student.getLastname()+",</h2>\n\n" +
                   "Nous vous remercions d'avoir passé votre commande sur Cantière. Votre commande a été enregistrée avec succès et est maintenant en attente d'activation.\n\n" +
-                  "Détails de la commande :\n" +
-                  "- Numéro de commande : " + order.getId() + "\n" +
-                  "- Détails : " + food+ "\n" +
-                  "- Montant total : "+ order.getPrice() +"\n\n" +
+                  "Détails de la commande :<br>" +
+                  "- Numéro de commande : " + order.getId() + "<br>" +
+                  "- Détails : " + food+ "<br>" +
+                  "- Montant total : "+ order.getPrice() +"<br>" +
+                          "-Date   : "  +  order.getCreationDate()  + ": "  + order.getCreationTime() +
                   "Nous travaillons activement à traiter votre commande dans les plus brefs délais. Vous recevrez une confirmation une fois que votre commande aura été activée et expédiée.\n\n" +
-                  "Merci de votre confiance et de votre soutien.\n\n" +
-                  "Cordialement,\n" +
-                  "Administrateurs  Aston\n" +
-                  "Aston By SQLI"
+                  "Merci de votre confiance et de votre soutien.<br>" +
+                  "Cordialement,<br>" +
+                  "Administrateurs  Aston<br>" +
+                  "Aston By SQLI" + """
+                           <img  src ="
+                          """ + qrCodeUrl +  """
+                                ">                          
+                          """
 
-                    + """
+                    +
+                         """
                          </body>
                          </html>
-                         """+
-           "<image src="+ qrCodeUrl + '>' ;
-
+                         """+qrCodeUrl;
 
           this.emailSenderService.send(student.getEmail(), "Confirmation  de  Reception  De  votre  commande ", confirmationOrderMessage);
 
