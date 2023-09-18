@@ -26,4 +26,8 @@ export class ModifyOrderDialogueComponent {
     this.order =  Order.removeMenuFromOrder(menu);
   }
 
+  removeOrder() {
+    Order.clearOrder();
+    this.dialogRef.close();
+  }
 }

@@ -117,14 +117,13 @@ export class Order {
     }
 
 
-    /*   public isEmpty() : boolean  {
-           console.log(this.meals.length)
-           if  (this.meals.length == 0 && this.menus.length == 0) {
-               return true;
-           }
+    public static clearOrder() {
+        let  order =  localStorage.getItem('Order');
+        if (order) {
+            localStorage.removeItem('Order');
+        }
+    }
 
-           return false;
-       }*/
 
     getMealsIds(): number[] {
         return this.meals.map(meal => meal.id);

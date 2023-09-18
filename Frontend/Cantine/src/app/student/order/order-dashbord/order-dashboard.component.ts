@@ -5,6 +5,7 @@ import {ModifyOrderDialogueComponent} from "./modify-order-dialogue/modify-order
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 import {OrderService} from "../order.service";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
+import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
     selector: 'app-order-dashbord',
@@ -15,6 +16,7 @@ import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-
 export class OrderDashboardComponent implements OnInit {
 
     private WOULD_YOU_LIKE_TO_SEND_ORDER = "Voulez-vous Valider votre commande ?";
+
     date = new Date();
     order: Order = new Order();
     isLoading = false;
@@ -23,6 +25,8 @@ export class OrderDashboardComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
+
         let order = Order.getOrderFromLocalStorage();
         if (order) {
             this.order = order;
@@ -44,7 +48,12 @@ export class OrderDashboardComponent implements OnInit {
             this.order.menusId = this.order.menus.map(menu => menu.id);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
-                    console.log(response);
+                    Order.clearOrder();
+                    let dialogue =  this.matDialog.open(SuccessfulDialogComponent, {
+                        data: {message: " Votre  Commande a éte bien enregistrer il sera validé prochainement"},
+                        width: '40%',
+                    });
+                    dialogue.afterClosed().subscribe((result) => {  window.location.reload() });
                 }
             });
 

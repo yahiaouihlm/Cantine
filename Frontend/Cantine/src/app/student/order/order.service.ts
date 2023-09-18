@@ -12,6 +12,7 @@ import {Order} from "../../sharedmodule/models/order";
 export class OrderService {
     private ORDER_BASIC_URL = "http://localhost:8080/cantine/student/order";
     private ADD_ORDER_URL = this.ORDER_BASIC_URL + "/add";
+    private GET_ORDERS_OF_DAY_URL = this.ORDER_BASIC_URL + "/getByDate";
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog) {
     }
@@ -19,11 +20,18 @@ export class OrderService {
     addOrder(order: Order) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        return  this.httpClient.post<NormalResponse>(this.ADD_ORDER_URL, order, {headers: headers}).pipe(
+        return this.httpClient.post<NormalResponse>(this.ADD_ORDER_URL, order, {headers: headers}).pipe(
             catchError((error) => this.handleError(error))
         )
     }
 
+    getOrdersOfDay(studentId: string) {
+        let date = Malfunctions.getCurrentDate();
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        const params = {studentId: studentId, date: date};
+        return this.httpClient.get<Order[]>(this.GET_ORDERS_OF_DAY_URL, {headers: headers, params: params}).pipe();
+    }
 
     private handleError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;

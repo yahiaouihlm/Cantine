@@ -56,4 +56,14 @@ export  default class Malfunctions {
         return authObject.id;
     }
 
+    /**
+     *    @doc this function  is used to  get  the  current  date  in  the  format  yyyy-mm-dd
+     */
+    public static   getCurrentDate() : string {
+        const  date = new Date();
+        let   getMonth = date.toLocaleString("default", { month: "2-digit" });
+        let   getDay = date.toLocaleString("default", { day: "2-digit" })
+        let   getYear = date.toLocaleString("default", { year: "numeric" });
+        return   getYear + "-" + getMonth + "-" + getDay;
+    }
 }
