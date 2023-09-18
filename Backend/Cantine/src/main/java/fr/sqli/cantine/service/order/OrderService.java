@@ -3,6 +3,7 @@ package fr.sqli.cantine.service.order;
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
+import fr.sqli.cantine.dto.out.food.OrderDtout;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
@@ -30,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService {
@@ -203,6 +205,8 @@ public class OrderService implements IOrderService {
 
     }
 
+
+    @Override
     public  void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException {
         if  (orderId ==  null  || orderId < 0) {
             OrderService.LOG.error("INVALID ORDER ID");
@@ -246,5 +250,20 @@ public class OrderService implements IOrderService {
 
 
 
+    }
+
+    @Override
+    public List<OrderDtout> getOrdersByDate( Integer studentId , LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException {
+        if  (studentId ==  null  || studentId < 0) {
+            OrderService.LOG.error("INVALID STUDENT ID");
+            throw  new InvalidOrderException("INVALID STUDENT ID");
+        }
+
+        if  (date ==  null) {
+            OrderService.LOG.error("INVALID DATE");
+            throw  new InvalidOrderException("INVALID DATE");
+        }
+
+        return  this.orderDao.findByStudentIdAndCreationDate(studentId , date).stream().map(order-> new OrderDtout(order , "test" ,  "tes ")).toList();
     }
 }

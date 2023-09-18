@@ -55,7 +55,7 @@ public class SecurityConfig {
         authorize -> {
             authorize.requestMatchers("cantine/api/**").permitAll();
             authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
-            authorize.requestMatchers("/cantine/download/images/meals/**" ,
+            authorize.requestMatchers("/cantine/download/images/**" ,
             "/cantine/download/images/**"  ).permitAll();
             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions",
             "/cantine/admin/adminDashboard/checkTokenValidity"

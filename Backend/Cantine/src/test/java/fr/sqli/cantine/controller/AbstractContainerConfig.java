@@ -1,8 +1,13 @@
 package fr.sqli.cantine.controller;
 
+import com.auth0.jwt.JWT;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.security.core.GrantedAuthority;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.Date;
+import java.util.stream.Collectors;
 
 public class AbstractContainerConfig {
 
@@ -48,4 +53,15 @@ public class AbstractContainerConfig {
     }
 
 
+    protected  String getAuthenticationToken  ( String username )  {
+
+        /*String jwtAccessToken  = JWT.create()
+                .withSubject(authResult.getName())   //  600=> 60 (in first of application)     ('+5 * 6000 *1000')
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 6000 *10000))
+                .withIssuer(request.getRequestURI())
+                .withClaim("roles" , authResult.getAuthorities().stream().map(GrantedAuthority:: getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);*/
+
+        return null ;
+    }
 }
