@@ -80,6 +80,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
                System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
 
+
                return  result ;
 
 
@@ -110,11 +111,17 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                }
            }
            catch (Exception e ) {
-
-               System.out.println(e.getMessage());
+               if  (e.getMessage().equals("INVALID ACCOUNT")){
+                   idToken.put("message" ,  "INVALID ACCOUNT");
+                   idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
+                   response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+               }
+               else {
+                   idToken.put("exceptionMessage" ,  " An error has occurred");
+                   idToken.put("status" , HttpStatus.NOT_FOUND.name() );
+               }
                response.setContentType("application/json");
-               idToken.put("status" , HttpStatus.NOT_FOUND.name() );
-               idToken.put("message" ,  " An error has occurred");
+
                try {
                    new ObjectMapper().writeValue( response.getOutputStream(), idToken);
                } catch (IOException ex) {

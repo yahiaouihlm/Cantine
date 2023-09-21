@@ -42,12 +42,18 @@ public class MyUserDaitls  implements  org.springframework.security.core.userdet
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
-    }
+          return true;
+     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        if (this.admin != null) {
+            if (admin.getValidation() == 0){
+                throw new RuntimeException("INVALID ACCOUNT");
+            }
+        }
+        return   true ;
+
     }
 
     @Override

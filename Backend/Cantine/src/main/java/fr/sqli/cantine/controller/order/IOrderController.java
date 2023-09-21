@@ -35,7 +35,7 @@ public interface IOrderController {
 
 
     @GetMapping(GET_ORDER_BY_DATE_URL)
-    ResponseEntity<List<OrderDtout>> getOrdersByDate(  @RequestParam("idStudent") Integer idStudent ,  @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
+    ResponseEntity<List<OrderDtout>> getOrdersByDate(  @RequestParam("studentId") Integer idStudent ,  @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
     @PostMapping(ADD_ORDER_URL)
     ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException;
 
