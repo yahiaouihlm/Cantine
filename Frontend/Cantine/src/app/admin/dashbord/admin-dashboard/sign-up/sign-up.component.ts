@@ -11,6 +11,7 @@ import {
 import {ValidatorDialogComponent} from "../../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SharedService} from "../../../../sharedmodule/shared.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-sign-up',
@@ -28,7 +29,7 @@ export class SignUpComponent implements OnInit {
     existEmail = false;
     adminfunction$: Observable<Adminfunction[]> = of([]);
 
-    constructor(private adminService: AdminService, private matDialog: MatDialog , private sharedService: SharedService) {
+    constructor(private adminService: AdminService, private matDialog: MatDialog , private sharedService: SharedService,  private  router: Router) {
     }
 
     adminForm: FormGroup = new FormGroup({
@@ -110,6 +111,7 @@ export class SignUpComponent implements OnInit {
 
         this.adminService.signUpAdmin(formData).subscribe((data) => {
             if (data != undefined && data.message === "ADMIN ADDED SUCCESSFULLY") {
+                this.isLoaded = false;
                 this.sendConfirmationToken();
             }
         });
@@ -118,18 +120,15 @@ export class SignUpComponent implements OnInit {
 
     sendConfirmationToken() {
         this.sharedService.sendToken(this.adminForm.value.email).subscribe((data) => {
-            if (data != undefined && data.message === "TOKEN SENDED SUCCESSFULLY") {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                    // this.router.navigate(['/admin/meals'] ,  { queryParams: { reload: 'true' } })
+                    this.router.navigate(['cantine/signIn']).then();
                 });
 
-            } else {
-                console.log("error");
-            }
+
         });
     }
 

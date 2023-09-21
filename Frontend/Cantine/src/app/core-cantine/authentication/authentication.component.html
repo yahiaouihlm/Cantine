@@ -72,6 +72,9 @@
                     <p  style="color: red">  Email ou Mot de passe est incorrecte </p>
                 </div>
 
+                <div *ngIf="invalid_account" class="wrong-auth" >
+                    <h2  style="color: red">  Impossible de vous connecter, votre compte est en attente de validation par Administration  de école ASTON  .</h2>
+                </div>
 
 
                 <div class="validate-form center">
