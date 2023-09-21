@@ -1,22 +1,34 @@
 import {Component, OnInit} from '@angular/core';
 import Malfunctions from "../../sharedmodule/functions/malfunctions";
+import {GlobalAdminService} from "../global-admin.service";
+import {User} from "../../sharedmodule/models/user";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main-admin',
   templateUrl: './main-admin.component.html',
-  styleUrls: ["../../../assets/styles/main.component.scss"]
+  styleUrls: ["../../../assets/styles/main.component.scss"],
+    providers: [GlobalAdminService]
 })
 export class MainAdminComponent   implements  OnInit{
-  isconnected = false;
-
-    constructor() {}
+   isconnected = false;
+   admin  =  new User() ;
+    constructor(private globalAdminService : GlobalAdminService,  private router  :  Router) {}
   ngOnInit(): void {
-    let  userid = Malfunctions.getUserIdFromLocalStorage();
-    this.isconnected = userid !== '';
+    let  adminId = Malfunctions.getUserIdFromLocalStorage();
+    if (adminId === '') {
+        this.isconnected = false;
+        this.router.navigate(['cantine/home']).then();
+    }
+    this.isconnected = adminId !== '';
+
+      this.getAdminById (adminId);
   }
 
 
-  getAdminById () {
-
+  getAdminById (adminId :  string  ) {
+      this.globalAdminService.getAdminById(adminId).subscribe((response) => {
+            this.admin = response;
+      });
   }
 }

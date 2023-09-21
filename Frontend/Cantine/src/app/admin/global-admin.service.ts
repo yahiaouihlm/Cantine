@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {User} from "../sharedmodule/models/user";
 import Malfunctions from "../sharedmodule/functions/malfunctions";
 import {ErrorResponse} from "../sharedmodule/models/ErrorResponse";
@@ -11,7 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 @Injectable()
 export class GlobalAdminService {
 
-    private BASIC_ADMIN_URL = "/cantine/admin/adminDashboard"
+    private BASIC_ADMIN_URL = "http://localhost:8080/cantine/admin/adminDashboard"
 
     private GET_ADMIN_BY_ID = this.BASIC_ADMIN_URL + "/getAdmin"
 
@@ -22,7 +22,11 @@ export class GlobalAdminService {
     getAdminById(idAdmin: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        return this.httpClient.get <User>(this.GET_ADMIN_BY_ID, {params: {idAdmin: idAdmin}, headers: headers}).pipe(
+        const params = new HttpParams().set('idAdmin', idAdmin);
+        return this.httpClient.get <User>(this.GET_ADMIN_BY_ID,   {
+            headers: headers,
+            params: params
+        }).pipe(
             catchError((error) => this.handleError(error))
         );
     }
@@ -37,11 +41,6 @@ export class GlobalAdminService {
         } else {
             this.openDialog(" Une  Erreur  Inconnue  c'est produite ", error.status);
         }
-        this.router.navigate(['cantine/home']).then(
-            () => {
-                localStorage.clear()
-            }
-        );
 
         return throwError(() => new Error(errorMessage));
 
@@ -53,10 +52,9 @@ export class GlobalAdminService {
             width: '40%',
         });
 
-        result.afterClosed().subscribe((confirmed: boolean) => {
-
-            /* TODO  remove THE  Token    and  redirect  to  the  Main  page */
-            //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
+        result.afterClosed().subscribe(() => {
+             localStorage.clear();
+               this.router.navigate(['cantine/home']);
 
         });
 
