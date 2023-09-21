@@ -26,7 +26,7 @@ export class OrderService {
     }
 
     getOrdersOfDay() {
-        let  studentId = Malfunctions.getStudentIdFromLocalStorage();
+        let  studentId = Malfunctions.getUserIdFromLocalStorage();
         let date = Malfunctions.getCurrentDate();
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);

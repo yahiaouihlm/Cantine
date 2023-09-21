@@ -47,7 +47,7 @@ export  default class Malfunctions {
     }
 
 
-    public  static  getStudentIdFromLocalStorage() :  string {
+    public  static  getUserIdFromLocalStorage() :  string {
         let authObj = localStorage.getItem('authObject')
         if (!authObj) {
             return '';

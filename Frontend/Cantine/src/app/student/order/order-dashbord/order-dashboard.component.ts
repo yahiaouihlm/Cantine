@@ -41,7 +41,7 @@ export class OrderDashboardComponent implements OnInit {
 
         let sendOrder = () => {
 
-            let studentId = Malfunctions.getStudentIdFromLocalStorage();
+            let studentId = Malfunctions.getUserIdFromLocalStorage();
 
             if (this.isOrderEmpty() || !studentId) {
                 return;
