@@ -4,16 +4,20 @@ import Validation from "../../../../sharedmodule/functions/validation";
 import {Observable, of} from "rxjs";
 import {Adminfunction} from "../../../../sharedmodule/models/adminfunction";
 import {AdminService} from "../../admin.service";
+import {GlobalAdminService} from "../../../global-admin.service";
+import {User} from "../../../../sharedmodule/models/user";
+import Malfunctions from "../../../../sharedmodule/functions/malfunctions";
 
 @Component({
     selector: 'app-admin-profile',
     templateUrl: './admin-profile.component.html',
     styles: [],
-    providers: [AdminService]
+    providers: [AdminService, GlobalAdminService]
 })
-export class AdminProfileComponent implements  OnInit{
+export class AdminProfileComponent implements OnInit {
 
-     submitted = false;
+    submitted = false;
+    admin!: User;
     adminUpdated: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -27,15 +31,32 @@ export class AdminProfileComponent implements  OnInit{
     });
     image!: File;
     isLoading = false;
-   adminfunction$: Observable<Adminfunction[]> = of([]);
-    constructor(private adminService: AdminService){
+    adminfunction$: Observable<Adminfunction[]> = of([]);
+
+    constructor(private adminService: AdminService, private globalAdminService: GlobalAdminService) {
     }
 
 
-   ngOnInit(): void {
-     this.adminfunction$ = this.adminService.getAdminFunctionS();
+    ngOnInit(): void {
+        this.adminUpdated.disable();
+        let idAdmin = Malfunctions.getUserIdFromLocalStorage();
+        this.adminfunction$ = this.adminService.getAdminFunctionS();
+        this.globalAdminService.getAdminById(idAdmin).subscribe((admin) => {
+            this.admin = admin;
+            this.matchFormsValue();
+        });
     }
-
+    matchFormsValue() {
+        this.adminUpdated.patchValue({
+            firstName: this.admin.firstname,
+            lastName: this.admin.lastname,
+            email: this.admin.email,
+            birthDate: this.admin.birthdate,
+            phoneNumber: this.admin.phone,
+            town: this.admin.town,
+            adminFunction: this.admin.function,
+        });
+    }
     onSubmit() {
         this.submitted = true;
         if (this.adminUpdated.invalid || !this.adminUpdated.touched) {
@@ -52,7 +73,6 @@ export class AdminProfileComponent implements  OnInit{
     get f(): { [key: string]: AbstractControl } {
         return this.adminUpdated.controls;
     }
-
 
 
 }

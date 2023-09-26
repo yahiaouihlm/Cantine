@@ -42,6 +42,9 @@ export class GlobalAdminService {
             this.openDialog(" Une  Erreur  Inconnue  c'est produite ", error.status);
         }
 
+        localStorage.clear();
+        this.router.navigate(['cantine/home']).then();
+
         return throwError(() => new Error(errorMessage));
 
     }
