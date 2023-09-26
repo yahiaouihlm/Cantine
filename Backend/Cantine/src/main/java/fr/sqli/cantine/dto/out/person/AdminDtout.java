@@ -6,7 +6,7 @@ public class AdminDtout extends AbstractPersonDtout{
 
    private  String function;
 
-    public AdminDtout(AdminEntity adminEntity){
+    public AdminDtout(AdminEntity adminEntity , String  imageUrl){
             super.setId(adminEntity.getId());
             super.setFirstname(adminEntity.getFirstname());
             super.setLastname(adminEntity.getLastname());
@@ -15,7 +15,7 @@ public class AdminDtout extends AbstractPersonDtout{
             super.setAddress(adminEntity.getAddress());
             super.setTown(adminEntity.getTown());
             super.setPhone(adminEntity.getPhone());
-            super.setImage(adminEntity.getImage().getImagename());
+            super.setImage(imageUrl + adminEntity.getImage().getImagename());
             this.setFunction(adminEntity.getFunction().getName());
     }
 

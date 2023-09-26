@@ -34,6 +34,7 @@ public class AdminService implements IAdminService {
     final String SERVER_ADDRESS;
     final String DEFAULT_ADMIN_IMAGE_NAME;
     final  String  CONFIRMATION_TOKEN_URL;
+    final String ADMIN_IMAGE_URL    ;
 
     final String ADMIN_IMAGE_PATH;  //  path  to  admin image  directory
     final String EMAIL_ADMIN_REGEX;
@@ -60,6 +61,7 @@ public class AdminService implements IAdminService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
+         this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
         this.EMAIL_ADMIN_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
@@ -122,7 +124,7 @@ public class AdminService implements IAdminService {
                 () -> new AdminNotFound("ADMIN NOT FOUND")
         );
 
-        return new AdminDtout(adminEntity);
+        return new AdminDtout(adminEntity , this.ADMIN_IMAGE_URL );
     }
 
     @Override
