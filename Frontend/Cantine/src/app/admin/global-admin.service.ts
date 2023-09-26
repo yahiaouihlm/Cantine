@@ -53,7 +53,7 @@ export class GlobalAdminService {
         });
 
         result.afterClosed().subscribe(() => {
-             localStorage.clear();
+           //  localStorage.clear();
                this.router.navigate(['cantine/home']);
 
         });

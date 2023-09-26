@@ -16,19 +16,21 @@ export class MainAdminComponent   implements  OnInit{
     constructor(private globalAdminService : GlobalAdminService,  private router  :  Router) {}
   ngOnInit(): void {
     let  adminId = Malfunctions.getUserIdFromLocalStorage();
-    if (adminId === '') {
+      console.log("admin  Id = " + adminId);
+  /*  if (adminId === '') {
         this.isconnected = false;
         this.router.navigate(['cantine/home']).then();
-    }
-    this.isconnected = adminId !== '';
 
-      this.getAdminById (adminId);
+    }*/
+        this.getAdminById (adminId);
+
   }
 
 
   getAdminById (adminId :  string  ) {
       this.globalAdminService.getAdminById(adminId).subscribe((response) => {
             this.admin = response;
+            this.isconnected = true;
       });
   }
 }

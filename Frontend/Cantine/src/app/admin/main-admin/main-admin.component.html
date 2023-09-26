@@ -1,10 +1,10 @@
 <mat-toolbar>
     <button (click)="sidenav.toggle()" *ngIf="isconnected" class="burgger" mat-icon-button>
         <div *ngIf="!sidenav.opened">
-            <img alt="cantière-logo" src="../../assets/logo.png">
+            <img alt="cantière-logo"  src="{{admin.image}}">
         </div>
         <div *ngIf="sidenav.opened">
-            <img alt="cantière-logo" src="../../assets/logo.png">
+            <img alt="cantière-logo"   src="{{admin.image}}" >
         </div>
     </button>
     <div *ngIf="!isconnected">
@@ -35,7 +35,7 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav="matSidenav">
 
-        <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200"/>
+        <img class="avatar mat-elevation-z8" src="{{admin.image}}"/>
 
         <h4 class="name">{{admin.firstname}}  {{admin.lastname}}</h4>
         <p class="designation"> {{admin.function}} </p>
@@ -45,17 +45,17 @@
         <mat-divider></mat-divider>
 
         <button class="menu-button" mat-button>
-            <mat-icon>home</mat-icon>
-            <span>Home</span>
+            <mat-icon>person</mat-icon>
+            <span>Profile</span>
         </button>
         <button class="menu-button" mat-button>
             <mat-icon>person</mat-icon>
-            <span>Profile</span>
+            <span>Etudiants</span>
         </button>
 
         <button class="menu-button" mat-button>
             <mat-icon>shopping_cart</mat-icon>
-            <span>Mon Panier </span>
+            <span>  Commandes  </span>
             <mat-icon class="badge" matBadge="10" matBadgeColor="warn" matBadgePosition="above after"></mat-icon>
 
         </button>
