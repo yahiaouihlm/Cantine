@@ -4,7 +4,7 @@
 
         <form [formGroup]="adminUpdated" class="test">
             <div class="wallet center">
-                <img id="profile-picture" src={{user.image}}>
+                <img id="profile-picture">
                <!-- <h1>{{user.firstname}}   {{user.lastname}}</h1>-->
 
             </div>
@@ -135,16 +135,16 @@
             <!---------------------- StudentClass  --------------------------->
 
             <div class="form-group">
-                <label for="studentClass"> </label>
-                <select formControlName="studentClass" class="form-control" id="studentClass"
-                        [ngClass]="{ 'is-invalid': submitted && f['studentClass'].errors }" name="studentClass">
+                <label for="adminFunction"> </label>
+                <select formControlName="adminFunction" class="form-control" id="adminFunction"
+                        [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }" name="adminFunction">
                     <option value="" disabled>-- Votre class --</option>
-                    <ng-container *ngFor="let Sclass of studentClass$ | async ">
-                        <option [value]="Sclass.name">{{ Sclass.name }}</option>
+                    <ng-container *ngFor="let job of adminfunction$ | async ">
+                        <option [value]="job.name">{{ job.name }}</option>
                     </ng-container>
                 </select>
-                <div *ngIf="submitted && f['studentClass'].errors" class="invalid-feedback">
-                    <div *ngIf="f['studentClass'].errors['required']" class="center"> saisie de votre travail est
+                <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
+                    <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre travail est
                         requise
                     </div>
                 </div>
@@ -174,11 +174,11 @@
         <div class=" center btn"  *ngIf="!isLoading ; else loadingTemplate">
             <div class="update-btn">
                 <mat-icon>done_outline</mat-icon>
-                <span *ngIf="!touched" (click)="modify()"> Modifier</span>
-                <span *ngIf="touched" (click)="onSubmit()">   Valider </span>
+              <!--  <span *ngIf="!touched" (click)="modify()"> Modifier</span>
+                <span *ngIf="touched" (click)="onSubmit()">   Valider </span>-->
             </div>
 
-            <div class="reset btn " (click)="cancel()">
+            <div class="reset btn " >
                 Annuler
             </div>
 

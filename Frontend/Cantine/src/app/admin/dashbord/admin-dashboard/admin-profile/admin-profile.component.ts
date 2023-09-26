@@ -1,19 +1,19 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../../../sharedmodule/functions/validation";
+import {Observable, of} from "rxjs";
+import {Adminfunction} from "../../../../sharedmodule/models/adminfunction";
+import {AdminService} from "../../admin.service";
 
 @Component({
     selector: 'app-admin-profile',
-    template: `
-        <p>
-            admin-profile works!
-        </p>
-    `,
-    styles: []
+    templateUrl: './admin-profile.component.html',
+    styles: [],
+    providers: [AdminService]
 })
-export class AdminProfileComponent {
+export class AdminProfileComponent implements  OnInit{
 
-    submitted = false;
+     submitted = false;
     adminUpdated: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -26,8 +26,14 @@ export class AdminProfileComponent {
         image: new FormControl(''),
     });
     image!: File;
+    isLoading = false;
+   adminfunction$: Observable<Adminfunction[]> = of([]);
+    constructor(private adminService: AdminService){
+    }
 
-    constructor() {
+
+   ngOnInit(): void {
+     this.adminfunction$ = this.adminService.getAdminFunctionS();
     }
 
     onSubmit() {
@@ -46,5 +52,7 @@ export class AdminProfileComponent {
     get f(): { [key: string]: AbstractControl } {
         return this.adminUpdated.controls;
     }
+
+
 
 }
