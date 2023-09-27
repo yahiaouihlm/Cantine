@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from "@angular/router";
-import { OrderDashbordComponent } from './order-dashbord/order-dashbord.component';
+import { OrderDashboardComponent } from './order-dashbord/order-dashboard.component';
+
 
 
 
 
 const routes: Routes = [
-    {path: '', component: OrderDashbordComponent }
+    {path: '', component: OrderDashboardComponent }
 ];
 
 @NgModule({
   declarations: [
-    OrderDashbordComponent
+    OrderDashboardComponent,
   ],
   imports: [
     CommonModule,

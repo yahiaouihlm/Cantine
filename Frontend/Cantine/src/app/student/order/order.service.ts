@@ -12,7 +12,7 @@ import {Order} from "../../sharedmodule/models/order";
 export class OrderService {
     private ORDER_BASIC_URL = "http://localhost:8080/cantine/student/order";
     private ADD_ORDER_URL = this.ORDER_BASIC_URL + "/add";
-    private GET_ORDERS_OF_DAY_URL = this.ORDER_BASIC_URL + "/getByDate";
+    private GET_ORDERS_OF_DAY_URL = this.ORDER_BASIC_URL + "/getByDateAndStudentId";
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog) {
     }

@@ -17,7 +17,7 @@ export class MainAdminComponent   implements  OnInit{
   ngOnInit(): void {
     let  adminId = Malfunctions.getUserIdFromLocalStorage();
       console.log("admin  Id = " + adminId);
-  /*  if (adminId === '') {
+    /*if (adminId === '') {
         this.isconnected = false;
         this.router.navigate(['cantine/home']).then();
 
@@ -33,4 +33,9 @@ export class MainAdminComponent   implements  OnInit{
             this.isconnected = true;
       });
   }
+
+
+    goToOrders() {
+        this.router.navigate(['cantine/admin/orders']).then();
+    }
 }

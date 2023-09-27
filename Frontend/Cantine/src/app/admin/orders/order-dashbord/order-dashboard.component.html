@@ -1,0 +1,28 @@
+
+<div *ngFor="let  order  of ordersOfDay$ |async">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <span>  N° Commande  :  {{order.id}} </span>
+            </div>
+            <div class="col-md-2">
+                <span><strong>Date : </strong> {{order.creationDate}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Nombre de Menus : </strong> {{order.menus.length}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Prix total : </strong> {{order.price}} € </span>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
