@@ -10,7 +10,7 @@ import {Order} from "../../sharedmodule/models/order";
 
 @Injectable()
 export class OrderService {
-    private ORDER_BASIC_URL = "http://localhost:8080/cantine/student/order";
+    private ORDER_BASIC_URL = "http://localhost:8080/cantine/order/student";
     private ADD_ORDER_URL = this.ORDER_BASIC_URL + "/add";
     private GET_ORDERS_OF_DAY_URL = this.ORDER_BASIC_URL + "/getByDateAndStudentId";
 
@@ -31,7 +31,7 @@ export class OrderService {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         const params = {studentId: studentId, date: date};
-        return this.httpClient.get<Order[]>(this.GET_ORDERS_OF_DAY_URL, {headers: headers, params: params}).pipe();
+        return this.httpClient.get<Order[]>(this.GET_ORDERS_OF_DAY_URL, {headers: headers, params: params});
     }
 
     private handleError(error: HttpErrorResponse) {
