@@ -24,21 +24,25 @@ import java.util.List;
 
 public interface IOrderController {
 
-    String ORDER_BASIC_URL = "cantine/student/order";
+    String  BASIC_ORDER_URL =  "cantine/order";
 
-    String GET_ORDER_BY_DATE_URL = "/getByDate";
-    String CANCEL_ORDER_URL = "/cancel";
-    String ADD_ORDER_URL = "/add";
+    String ADMIN_GET_ALL_ORDERS_BY_DAY = "admin/getAllOrdersOfDay";
+
+    String GET_ORDER_BY_DATE_AND_STUDENT_ID_URL = "student/getByDateAndStudentId";
+    String CANCEL_ORDER_URL = "student/cancel";
+    String ADD_ORDER_URL = "student/add";
 
    String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
     String ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
 
 
-    @GetMapping(GET_ORDER_BY_DATE_URL)
-    ResponseEntity<List<OrderDtout>> getOrdersByDate(  @RequestParam("studentId") Integer idStudent ,  @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
+    @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
+    ResponseEntity<List<OrderDtout>> getOrdersByDateAndStudentId(@RequestParam("studentId") Integer idStudent , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
     @PostMapping(ADD_ORDER_URL)
     ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException;
 
+    @GetMapping(ADMIN_GET_ALL_ORDERS_BY_DAY)
+    ResponseEntity<List<OrderDtout>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidPersonInformationException, InvalidOrderException;
 
     @PostMapping(CANCEL_ORDER_URL)
     ResponseEntity<String> cancelOrder( Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, StudentNotFoundException;

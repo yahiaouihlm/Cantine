@@ -40,28 +40,30 @@ import java.util.stream.Collectors;
 public class OrderService implements IOrderService {
 
     private static final Logger LOG = LogManager.getLogger();
-    final  Integer MAXIMUM_ORDER_PER_DAY = 20 ;
-    final  String  ORDER_QR_CODE_PATH ;
-    final  String ORDER_QR_CODE_IMAGE_FORMAT ;
+    final Integer MAXIMUM_ORDER_PER_DAY = 20;
+    final String ORDER_QR_CODE_PATH;
+    final String ORDER_QR_CODE_IMAGE_FORMAT;
     private IOrderDao orderDao;
 
     private ITaxDao taxDao;
     private IStudentDao studentDao;
-
+    private IAdminDao adminDao;
     private IMealDao mealDao;
 
-    private Environment env ;
+    private Environment env;
     private IMenuDao menuDao;
 
     private ConfirmationOrderSender confirmationOrderSender;
+
     @Autowired
-    public OrderService( Environment env ,IOrderDao orderDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao , ITaxDao taxDao, ConfirmationOrderSender confirmationOrderSender) {
+    public OrderService(Environment env, IOrderDao orderDao, IAdminDao adminDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao, ConfirmationOrderSender confirmationOrderSender) {
         this.orderDao = orderDao;
+        this.adminDao = adminDao;
         this.studentDao = studentDao;
         this.mealDao = mealDao;
         this.menuDao = menuDao;
         this.taxDao = taxDao;
-        this.env = env ;
+        this.env = env;
         this.confirmationOrderSender = confirmationOrderSender;
         this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
         this.ORDER_QR_CODE_IMAGE_FORMAT = env.getProperty("sqli.canine.order.qrcode.image.format");
@@ -71,57 +73,55 @@ public class OrderService implements IOrderService {
 
     /* TODO  FRO  ALL  THE  METHODS  WE  HAVE TO  CHECK  THE  VALIDITY  OF  parameters  */
 
-     /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
+    /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
     /* TODO change  QRcode Data */
     /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
     @Override
     public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
-         if  (orderDtoIn ==  null)
-             throw  new InvalidOrderException("INVALID ORDER");
+        if (orderDtoIn == null)
+            throw new InvalidOrderException("INVALID ORDER");
 
 
         orderDtoIn.checkOrderIDsValidity();
-        var  student = this.studentDao.findById(orderDtoIn.getStudentId());
-        var   totalPrice  =  BigDecimal.ZERO;
+        var student = this.studentDao.findById(orderDtoIn.getStudentId());
+        var totalPrice = BigDecimal.ZERO;
 
         //  check Information  validity
 
-        if(student.isEmpty())
+        if (student.isEmpty())
             throw new StudentNotFoundException("STUDENT NOT FOUND");
 
 
-        if (orderDtoIn.getMealsId() !=  null && orderDtoIn.getMenusId() !=  null && orderDtoIn.getMealsId().size() == 0  &&   orderDtoIn.getMenusId().size() ==0 ) {
+        if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && orderDtoIn.getMealsId().size() == 0 && orderDtoIn.getMenusId().size() == 0) {
             OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
-            throw  new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
+            throw new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
         }
-       if  (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMealsId().size() > MAXIMUM_ORDER_PER_DAY){
-           OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-           throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED");
-       }
-       if (orderDtoIn.getMenusId()!=  null   && orderDtoIn.getMenusId().size() > MAXIMUM_ORDER_PER_DAY) {
+        if (orderDtoIn.getMealsId() != null && orderDtoIn.getMealsId().size() > MAXIMUM_ORDER_PER_DAY) {
             OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED");
+            throw new OrderLimitExceededException("ORDER LIMIT EXCEEDED");
         }
-        if (orderDtoIn.getMealsId() !=  null  && orderDtoIn.getMenusId()!=  null   && (orderDtoIn.getMenusId().size() + orderDtoIn.getMealsId().size()) > MAXIMUM_ORDER_PER_DAY) {
+        if (orderDtoIn.getMenusId() != null && orderDtoIn.getMenusId().size() > MAXIMUM_ORDER_PER_DAY) {
             OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
-            throw  new OrderLimitExceededException( "ORDER LIMIT EXCEEDED");
+            throw new OrderLimitExceededException("ORDER LIMIT EXCEEDED");
         }
-
-
+        if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && (orderDtoIn.getMenusId().size() + orderDtoIn.getMealsId().size()) > MAXIMUM_ORDER_PER_DAY) {
+            OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
+            throw new OrderLimitExceededException("ORDER LIMIT EXCEEDED");
+        }
 
 
         List<MealEntity> meals = new ArrayList<>();
 
-        if (orderDtoIn.getMealsId() !=  null ) {
+        if (orderDtoIn.getMealsId() != null) {
             for (var mealId : orderDtoIn.getMealsId()) {
                 var meal = this.mealDao.findById(mealId);
                 if (meal.isEmpty()) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " NOT FOUND");
-                    throw new MealNotFoundException("MEAL WITH  ID : " +mealId+ " NOT FOUND");
+                    throw new MealNotFoundException("MEAL WITH  ID : " + mealId + " NOT FOUND");
                 }
-                if  (meal.get().getStatus() ==  0) {
+                if (meal.get().getStatus() == 0) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MEAL  : " + meal.get().getLabel()+ " IS UNAVAILABLE");
+                    throw new UnavailableFoodException("MEAL  : " + meal.get().getLabel() + " IS UNAVAILABLE");
                 }
                 meals.add(meal.get());
                 totalPrice = totalPrice.add(meal.get().getPrice());
@@ -129,16 +129,16 @@ public class OrderService implements IOrderService {
         }
 
         List<MenuEntity> menus = new ArrayList<>();
-        if (orderDtoIn.getMenusId() !=  null ) {
+        if (orderDtoIn.getMenusId() != null) {
             for (var menuId : orderDtoIn.getMenusId()) {
                 var menu = this.menuDao.findById(menuId);
                 if (menu.isEmpty()) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " NOT FOUND");
-                    throw new MenuNotFoundException("MENU WITH  ID: "  + menuId + " NOT FOUND");
+                    throw new MenuNotFoundException("MENU WITH  ID: " + menuId + " NOT FOUND");
                 }
                 if (menu.get().getStatus() == 0) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MENU  : " + menu.get().getLabel()+ " IS UNAVAILABLE" );
+                    throw new UnavailableFoodException("MENU  : " + menu.get().getLabel() + " IS UNAVAILABLE");
                 }
                 menus.add(menu.get());
                 totalPrice = totalPrice.add(menu.get().getPrice());
@@ -146,22 +146,22 @@ public class OrderService implements IOrderService {
         }
         // Calculate  total  price  of  order
 
-        var taxOpt = this.taxDao.findAll() ;
+        var taxOpt = this.taxDao.findAll();
 
-        if  (taxOpt.size() !=  1) {
+        if (taxOpt.size() != 1) {
             OrderService.LOG.info("TAX FOUND");
-            throw  new TaxNotFoundException("TAX NOT FOUND");
+            throw new TaxNotFoundException("TAX NOT FOUND");
         }
 
-        var  tax = taxOpt.get(0).getTax();
+        var tax = taxOpt.get(0).getTax();
 
         totalPrice = totalPrice.add(tax);
-        System.out.println("TOTAL PRICE  = "+ totalPrice);
+        System.out.println("TOTAL PRICE  = " + totalPrice);
 
         // check  if  student  has  enough  money  to  pay  for  the  order
 
-        if(student.get().getWallet().compareTo(totalPrice) < 0){
-            OrderService.LOG.error("STUDENT WITH  ID  = "+ orderDtoIn.getStudentId()  +" DOES NOT HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
+        if (student.get().getWallet().compareTo(totalPrice) < 0) {
+            OrderService.LOG.error("STUDENT WITH  ID  = " + orderDtoIn.getStudentId() + " DOES NOT HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
             throw new InsufficientBalanceException("YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
         }
 
@@ -172,74 +172,71 @@ public class OrderService implements IOrderService {
         orderEntity.setStatus(0);
         orderEntity.setCancelled(false);
         //  create the  QrCode  and  save  the  order  in  the  database
-        String  token = "qrcode" +  UUID.randomUUID();
-        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT );
-
+        String token = "qrcode" + UUID.randomUUID();
+        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT);
 
 
         orderEntity.setPrice(totalPrice);
         orderEntity.setCreationDate(LocalDate.now());
-        orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(),LocalDateTime.now().getMinute(),LocalDateTime.now().getSecond()));
-        var order  =  this.orderDao.save(orderEntity);
+        orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
+        var order = this.orderDao.save(orderEntity);
 
         //  update Student  Waller
-        var  newStudentWallet  =  student.get().getWallet().subtract(totalPrice) ;
+        var newStudentWallet = student.get().getWallet().subtract(totalPrice);
         student.get().setWallet(newStudentWallet);
         this.studentDao.save(student.get());
 
 
-
-        String  qrCodeData = "Student  : " +student.get().getFirstname() + " " +student.get().getLastname()+
-                "\n"+" Student Email : " +student.get().getEmail() +
+        String qrCodeData = "Student  : " + student.get().getFirstname() + " " + student.get().getLastname() +
+                "\n" + " Student Email : " + student.get().getEmail() +
                 "\n" + " Order Id :" + order.getId() +
-                "\n" +" Order Price : " + order.getPrice() + "£" +
-                "\n"  +" Created At  " + order.getCreationDate() + " " + order.getCreationTime() ;
+                "\n" + " Order Price : " + order.getPrice() + "£" +
+                "\n" + " Created At  " + order.getCreationDate() + " " + order.getCreationTime();
 
-        var  filePath =this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
-        QrCodeGenerator.generateQrCode(qrCodeData,filePath );
+        var filePath = this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
+        QrCodeGenerator.generateQrCode(qrCodeData, filePath);
 
 
-
-         if  ((newStudentWallet.compareTo(new BigDecimal(10 )))<= 0 ){
-             /* SEND THE NOTIFICATION  */
+        if ((newStudentWallet.compareTo(new BigDecimal(10))) <= 0) {
+            /* SEND THE NOTIFICATION  */
         }
 
-        this.confirmationOrderSender.sendConfirmationOrder(student.get() , order);
+        this.confirmationOrderSender.sendConfirmationOrder(student.get(), order);
 
     }
 
 
     @Override
-    public  void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException {
-        if  (orderId ==  null  || orderId < 0) {
+    public void cancelOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException {
+        if (orderId == null || orderId < 0) {
             OrderService.LOG.error("INVALID ORDER ID");
-            throw  new InvalidOrderException("INVALID ORDER ID");
+            throw new InvalidOrderException("INVALID ORDER ID");
         }
 
         var orderOpt = this.orderDao.findById(orderId);
 
-        if  (orderOpt.isEmpty()) {
+        if (orderOpt.isEmpty()) {
             OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " NOT FOUND");
-            throw  new OrderNotFoundException("ORDER NOT FOUND");
+            throw new OrderNotFoundException("ORDER NOT FOUND");
         }
 
-       if (orderOpt.get().getStatus() ==  1) {
-           OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY VALIDATED");
-           throw  new UnableToCancelOrderException("ORDER IS ALREADY VALIDATED");
-       }
+        if (orderOpt.get().getStatus() == 1) {
+            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY VALIDATED");
+            throw new UnableToCancelOrderException("ORDER IS ALREADY VALIDATED");
+        }
 
         if (orderOpt.get().isCancelled()) {
             OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
-            throw  new UnableToCancelOrderException("ORDER IS ALREADY CANCELED");
+            throw new UnableToCancelOrderException("ORDER IS ALREADY CANCELED");
         }
 
-       var  student =  this.studentDao.findById(orderOpt.get().getStudent().getId());
-       if (student.isEmpty()) {  // it can not   be happened
-           OrderService.LOG.error("STUDENT WITH  ID  = " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
-           throw  new StudentNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
-       }
+        var student = this.studentDao.findById(orderOpt.get().getStudent().getId());
+        if (student.isEmpty()) {  // it can not   be happened
+            OrderService.LOG.error("STUDENT WITH  ID  = " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
+            throw new StudentNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
+        }
 
-       var  orderprice = orderOpt.get().getPrice(); //  get  the  price  of  the  order
+        var orderprice = orderOpt.get().getPrice(); //  get  the  price  of  the  order
 
         student.get().setWallet(student.get().getWallet().add(orderprice)); //  get  the  student  wallet
 
@@ -251,29 +248,42 @@ public class OrderService implements IOrderService {
         this.orderDao.save(orderOpt.get());
 
 
+    }
+
+    @Override
+    public List<OrderDtout> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidPersonInformationException {
+        if (date == null) {
+            OrderService.LOG.error("INVALID DATE");
+            throw new InvalidOrderException("INVALID DATE");
+        }
+        var admin = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidPersonInformationException("INVALID ADMIN INFORMATION"));
+
+
+        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtout(order, "test", "tes ")).toList();
 
 
     }
 
     @Override
-    public List<OrderDtout> getOrdersByDate(  Integer studentId,  LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException {
+    public List<OrderDtout> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException {
 
-        var  username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if  (studentId ==  null  || studentId < 0 || username ==  null) {
+        if (studentId == null || studentId < 0 || username == null) {
             OrderService.LOG.error("INVALID STUDENT ID");
-            throw  new InvalidOrderException("INVALID STUDENT ID");
+            throw new InvalidOrderException("INVALID STUDENT ID");
         }
 
-        if  (date ==  null) {
+        if (date == null) {
             OrderService.LOG.error("INVALID DATE");
-            throw  new InvalidOrderException("INVALID DATE");
+            throw new InvalidOrderException("INVALID DATE");
         }
 
-        var  student =  this.studentDao.findById(studentId);
+        var student = this.studentDao.findById(studentId);
         if (student.isEmpty()) {
             OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " NOT FOUND");
-            throw  new StudentNotFoundException("STUDENT WITH : " + studentId + " NOT FOUND");
+            throw new StudentNotFoundException("STUDENT WITH : " + studentId + " NOT FOUND");
         }
 
         if (!student.get().getEmail().equals(username)) {
@@ -282,11 +292,10 @@ public class OrderService implements IOrderService {
         }
 
 
-
-
-          return   this.orderDao.findByStudentIdAndCreationDate(studentId , date).stream().map(order-> new OrderDtout(order , "test" ,  "tes ")).toList();
-
+        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtout(order, "test", "tes ")).toList();
 
 
     }
+
+
 }

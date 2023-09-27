@@ -57,7 +57,7 @@ public class AddOrderTest {
         /* TODO  if we change  the  path property */
         this.env.setProperty("sqli.canine.order.qrcode.path" , "images/orders/qrcode");
         this.env.setProperty("sqli.canine.order.qrcode.image.format" , "png");
-        this.orderService =  new OrderService(env , orderDao , studentDao , mealDao , menuDao , taxDao , null );
+        this.orderService =  new OrderService(env , orderDao , null ,studentDao , mealDao , menuDao , taxDao , null );
 
 
          this.orderDtoIn = new OrderDtoIn();

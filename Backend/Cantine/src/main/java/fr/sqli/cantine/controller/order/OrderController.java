@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(IOrderController.ORDER_BASIC_URL)
+@RequestMapping(IOrderController.BASIC_ORDER_URL)
 public class OrderController  implements IOrderController{
 
     private OrderService orderService;
@@ -34,16 +34,19 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<List<OrderDtout>> getOrdersByDate(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException {
-        System.out.println(studentId);
-        System.out.println(date);
-        return ResponseEntity.ok(this.orderService.getOrdersByDate(studentId,date));
+    public ResponseEntity<List<OrderDtout>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException {
+        return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentId,date));
     }
 
     @Override
     public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
         this.orderService.addOrder(orderDtoIn);
         return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDtout>> getOrdersByDate(LocalDate date) throws InvalidPersonInformationException, InvalidOrderException {
+        return ResponseEntity.ok(this.orderService.getOrdersByDate(date));
     }
 
     @Override

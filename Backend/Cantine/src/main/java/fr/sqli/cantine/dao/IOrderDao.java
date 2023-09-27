@@ -13,5 +13,6 @@ public interface IOrderDao  extends JpaRepository<OrderEntity , Integer> {
 
     public List<OrderEntity> findByStudentId(Integer studentId);
 
+    public List<OrderEntity> findByCreationDate(LocalDate creationDate);
     public List<OrderEntity>findByStudentIdAndCreationDate(Integer studentId, LocalDate creationDate);
 }

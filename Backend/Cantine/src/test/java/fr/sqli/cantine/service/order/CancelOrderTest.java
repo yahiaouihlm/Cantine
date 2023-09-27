@@ -39,7 +39,7 @@ public class CancelOrderTest {
     void setUp() {
         this.mockEnvironment.setProperty("sqli.canine.order.qrcode.path", "images/orders/");
         this.mockEnvironment.setProperty("sqli.canine.order.qrcode.image.format", ".png");
-        this.orderService = new OrderService(mockEnvironment, orderDao, studentDao, null, null, null , null );
+        this.orderService = new OrderService(mockEnvironment, orderDao,null ,studentDao, null, null, null , null );
 
     }
 
