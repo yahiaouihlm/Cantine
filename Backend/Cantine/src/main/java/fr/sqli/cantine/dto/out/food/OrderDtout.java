@@ -1,5 +1,6 @@
 package fr.sqli.cantine.dto.out.food;
 
+import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.OrderEntity;
 
 import java.math.BigDecimal;
@@ -23,15 +24,18 @@ public class OrderDtout  {
     private  Integer status;
     private BigDecimal price;
 
+    private StudentDtout studentOrder;
+
     private  boolean isCanceled;
 
-    public OrderDtout (OrderEntity orderEntity , String mealUrlImage ,  String menuUrlImage ){
+    public OrderDtout (OrderEntity orderEntity , String mealUrlImage ,  String menuUrlImage  , String  studentUrlImage){
         this.id =  orderEntity.getId();
         this.studentId = orderEntity.getStudent().getId();
         this.creationDate = orderEntity.getCreationDate();
         this.creationTime = orderEntity.getCreationTime();
         this.status = orderEntity.getStatus();
         this.isCanceled = orderEntity.isCancelled();
+        this.studentOrder = new StudentDtout(orderEntity.getStudent() , studentUrlImage);
         this.meals = orderEntity.getMeals().stream().map( (mealEntity) -> new MealDtout(mealEntity , mealUrlImage)).toList();
         this.menus=orderEntity.getMenus().stream().map(menuEntity -> new MenuDtout(menuEntity, menuUrlImage , mealUrlImage)).toList();
          this.price = orderEntity.getPrice();

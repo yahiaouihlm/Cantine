@@ -43,6 +43,9 @@ public class OrderService implements IOrderService {
     final Integer MAXIMUM_ORDER_PER_DAY = 20;
     final String ORDER_QR_CODE_PATH;
     final String ORDER_QR_CODE_IMAGE_FORMAT;
+    final String  STUDENT_IMAGE_URL ;
+    final  String MENU_IMAGE_URL;
+    final String MEAL_IMAGE_URL;
     private IOrderDao orderDao;
 
     private ITaxDao taxDao;
@@ -67,7 +70,9 @@ public class OrderService implements IOrderService {
         this.confirmationOrderSender = confirmationOrderSender;
         this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
         this.ORDER_QR_CODE_IMAGE_FORMAT = env.getProperty("sqli.canine.order.qrcode.image.format");
-
+        this.STUDENT_IMAGE_URL = env.getProperty("sqli.cantine.images.url.student");
+        this.MENU_IMAGE_URL = env.getProperty("sqli.cantine.images.url.menus");
+        this.MEAL_IMAGE_URL = env.getProperty("sqli.cantine.images.url.meals");
     }
 
 
@@ -260,7 +265,7 @@ public class OrderService implements IOrderService {
         this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidPersonInformationException("INVALID ADMIN INFORMATION"));
 
 
-        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtout(order, "test", "tes ")).toList();
+        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL , this.STUDENT_IMAGE_URL)).toList();
 
 
     }
@@ -292,7 +297,7 @@ public class OrderService implements IOrderService {
         }
 
 
-        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtout(order, "test", "tes ")).toList();
+        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL , this.STUDENT_IMAGE_URL)).toList();
 
 
     }
