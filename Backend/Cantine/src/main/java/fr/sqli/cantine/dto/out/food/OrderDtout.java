@@ -98,6 +98,14 @@ public class OrderDtout  {
         this.status = status;
     }
 
+    public StudentDtout getStudentOrder() {
+        return studentOrder;
+    }
+
+    public void setStudentOrder(StudentDtout studentOrder) {
+        this.studentOrder = studentOrder;
+    }
+
     public boolean isCanceled() {
         return isCanceled;
     }

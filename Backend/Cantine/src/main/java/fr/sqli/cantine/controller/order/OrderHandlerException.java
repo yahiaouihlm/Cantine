@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class OrderHandlerException {
 
 
+
+    @ExceptionHandler(CancelledOrderException.class)
+    public ResponseEntity<ExceptionDtout> handleCancelledOrderException(CancelledOrderException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
+    }
     @ExceptionHandler(UnableToCancelOrderException.class)
     public ResponseEntity<ExceptionDtout> handleUnableToCancelOrder(UnableToCancelOrderException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));

@@ -19,11 +19,14 @@ import java.util.List;
 
 public interface IOrderService {
 
+
+
+
+
+     void  submitOrder (Integer  orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException;
      void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException;
 
       void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException;
-
-
 
 
       List<OrderDtout> getOrdersByDate(LocalDate date ) throws InvalidOrderException, InvalidPersonInformationException;

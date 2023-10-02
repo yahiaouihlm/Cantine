@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,6 +78,37 @@ public class OrderService implements IOrderService {
     /* TODO  add  order only  available  between 09h -> 11h:30   and   13h:30 -> 14:30 */
     /* TODO change  QRcode Data */
     /* TODO  SEND  THE NOTIFICATION  IF  STUDENT WALLET  IS  LESS THAN  10 EURO */
+
+
+    @Override
+    public void submitOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException {
+          if  (orderId ==  null ) {
+              OrderService.LOG.error("ORDER ID  IS NULL IN   Submit  Order  ");
+              throw   new InvalidOrderException("INVALID ORDER  ID ");
+          }
+          var ordered = this.orderDao.findById(orderId);
+          if (ordered.isEmpty()) {
+              OrderService.LOG.error("  NO  ORDER  HAS  BEEN   FOUND  IN 'submit Order   function ' ");
+              throw   new  OrderNotFoundException("ORDER  NOT  FOUND ");
+          }
+          var  order  =  ordered.get();
+
+          if  (!order.getCreationDate().equals(LocalDate.now())){
+              OrderService.LOG.error("ORDER  CAN NOT BE  SUBMITTED ");
+              throw new CancelledOrderException("EXPIRED ORDER");
+          }
+
+          if  (order.isCancelled()){
+              OrderService.LOG.error(" ORDER  HAS BEEN  CANCLLED ");
+               throw  new  CancelledOrderException(" ORDER IS   CANCELLED ");
+          }
+
+          order.setStatus(1);
+        this.confirmationOrderSender.sendSubmittedOrder(order);
+
+
+    }
+
     @Override
     public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
         if (orderDtoIn == null)
