@@ -38,4 +38,9 @@ export class MainAdminComponent   implements  OnInit{
     goToOrders() {
         this.router.navigate(['cantine/admin/orders']).then();
     }
+
+ logout() :  void  {
+        localStorage.clear();
+        this.router.navigate(["cantine/home"]).then();
+ }
 }

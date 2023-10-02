@@ -51,11 +51,11 @@ export class OrderDashboardComponent implements OnInit {
             this.order.menusId = this.order.menus.map(menu => menu.id);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
-                    Order.clearOrder();
                     let dialogue =  this.matDialog.open(SuccessfulDialogComponent, {
                         data: {message: " Votre  Commande a éte bien enregistrer il sera validé prochainement"},
                         width: '40%',
                     });
+                    Order.clearOrder();
                     dialogue.afterClosed().subscribe((result) => {  window.location.reload() });
                 }
             });

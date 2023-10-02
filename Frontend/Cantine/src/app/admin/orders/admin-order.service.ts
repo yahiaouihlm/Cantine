@@ -17,7 +17,7 @@ export class AdminOrderService {
     let token  =  Malfunctions.getTokenFromLocalStorage();
     const headers = new HttpHeaders().set('Authorization', token);
     let date = Malfunctions.getCurrentDate();
-    const params = {date: "2023-09-15"};
+    const params = {date: date};
     return this.httpClient.get<Order[]>(this.GET_ORDERS_BY_DAY, {headers: headers, params: params});
 
   }

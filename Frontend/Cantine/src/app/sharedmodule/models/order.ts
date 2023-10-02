@@ -1,5 +1,6 @@
 import {Meal} from "./meal";
 import {Menu} from "./menu";
+import {User} from "./user";
 
 export class Order {
 
@@ -12,11 +13,11 @@ export class Order {
     price!: number;
     creationDate!: Date;
     creationTime!: Date;
-    isCanceled!: boolean;
+    isCancelled!: boolean;
     status!: number;
     mealsId: number[] = [];
     menusId: number[] = [];
-
+    studentOrder!: User;
     public static getOrderFromLocalStorage() {
         let order = localStorage.getItem('Order');
         if (!order) {

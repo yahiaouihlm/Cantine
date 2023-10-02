@@ -42,8 +42,6 @@ export class OrderService {
             errorMessage = "Une  erreur    est  survenue  !"
             new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
         } else {
-            console.log('error');
-            console.log(error);
             new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
         }
         return throwError(() => new Error(errorMessage));

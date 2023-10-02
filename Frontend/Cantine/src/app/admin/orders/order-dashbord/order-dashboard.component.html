@@ -1,28 +1,44 @@
+<div class="order">
+    <div class="center">
+        <h1>Commandes du jour</h1>
+    </div>
 
-<div *ngFor="let  order  of ordersOfDay$ |async">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <span>  N° Commande  :  {{order.id}} </span>
-            </div>
-            <div class="col-md-2">
-                <span><strong>Date : </strong> {{order.creationDate}}</span>
-            </div>
+    <div *ngFor="let  order  of ordersOfDay$ |async">
+        <div class="container">
+            <div class="row test">
+                <div class="col-md-2">
+                    <span>  N° Commande  :  {{order.id}} </span>
+                </div>
+                <div class="col-md-2">
+                    <span><strong> Etudiant : </strong> <span  (click)="goToStudentProfile()" style="color: blue">{{order.studentOrder.firstname}}  {{order.studentOrder.lastname}}</span> </span>
+                </div>
+                <div class="col-md-2">
+                    <span><strong>Date : </strong> {{order.creationDate}}</span>
+                </div>
+                <div class="col-md-2">
+                    <span><strong>Prix total : </strong> {{order.price}} € </span>
+                </div>
 
-            <div class="col-md-2">
-                <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
-            </div>
-
-            <div class="col-md-2">
-                <span><strong>Nombre de Menus : </strong> {{order.menus.length}}</span>
-            </div>
-
-            <div class="col-md-2">
-                <span><strong>Prix total : </strong> {{order.price}} € </span>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-success">Annuler</button>
+                <div class="col-md-2">
+                    <button class="btn btn-success"   (click)="validateOrder()">Valider</button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success  red" >Annuler</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<style>
+    .order{
+        border: black 2px solid;
+        margin: 50px;
+    }
+    .test{
+        border-radius: 10px;
+        padding: 1%;
+        background: #d0d5e3;
+    }
+</style>
