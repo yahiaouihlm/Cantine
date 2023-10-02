@@ -9,7 +9,7 @@ public abstract  class AbstractPersonDtout {
     private  String lastname;
     private  String email;
 
-    private  String birthdateAsString;
+
     private LocalDate birthdate;
     private  String town;
     private  String address;
@@ -51,13 +51,7 @@ public abstract  class AbstractPersonDtout {
 
 
 
-    public String getBirthdateAsString() {
-        return birthdateAsString;
-    }
 
-    public void setBirthdateAsString(String birthdateAsString) {
-        this.birthdateAsString = birthdateAsString;
-    }
 
     public LocalDate getBirthdate() {
         return birthdate;
