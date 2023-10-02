@@ -105,7 +105,7 @@ public class OrderService implements IOrderService {
 
           order.setStatus(1);
         this.confirmationOrderSender.sendSubmittedOrder(order);
-
+         this.orderDao.save(order);
 
     }
 
