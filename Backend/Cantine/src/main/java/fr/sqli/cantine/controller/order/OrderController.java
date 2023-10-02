@@ -34,6 +34,12 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
+    public ResponseEntity<ResponseDtout> submitOrder(Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException {
+         this.orderService.submitOrder(orderId);
+        return ResponseEntity.ok(new ResponseDtout(ORDER_SUBMITTED_SUCCESSFULLY));
+    }
+
+    @Override
     public ResponseEntity<List<OrderDtout>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException {
         return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentId,date));
     }

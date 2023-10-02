@@ -28,12 +28,18 @@ public interface IOrderController {
 
     String ADMIN_GET_ALL_ORDERS_BY_DAY = "admin/getAllOrdersOfDay";
 
+    String  ADMIN_SUBMIT_ORDER  =  "admin/submitOrder";
     String GET_ORDER_BY_DATE_AND_STUDENT_ID_URL = "student/getByDateAndStudentId";
     String CANCEL_ORDER_URL = "student/cancel";
     String ADD_ORDER_URL = "student/add";
 
-   String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
+    String  ORDER_SUBMITTED_SUCCESSFULLY = "ORDER  SUBMITTED SUCCESSFULLY" ;
+    String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
     String ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
+
+
+    @PostMapping(ADMIN_SUBMIT_ORDER)
+    ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException
 
 
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
