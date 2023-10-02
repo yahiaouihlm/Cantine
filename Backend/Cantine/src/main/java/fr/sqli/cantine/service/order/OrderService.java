@@ -40,8 +40,8 @@ public class OrderService implements IOrderService {
     final Integer MAXIMUM_ORDER_PER_DAY = 20;
     final String ORDER_QR_CODE_PATH;
     final String ORDER_QR_CODE_IMAGE_FORMAT;
-    final String  STUDENT_IMAGE_URL ;
-    final  String MENU_IMAGE_URL;
+    final String STUDENT_IMAGE_URL;
+    final String MENU_IMAGE_URL;
     final String MEAL_IMAGE_URL;
     private IOrderDao orderDao;
 
@@ -82,30 +82,30 @@ public class OrderService implements IOrderService {
 
     @Override
     public void submitOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException {
-          if  (orderId ==  null ) {
-              OrderService.LOG.error("ORDER ID  IS NULL IN   Submit  Order  ");
-              throw   new InvalidOrderException("INVALID ORDER  ID ");
-          }
-          var ordered = this.orderDao.findById(orderId);
-          if (ordered.isEmpty()) {
-              OrderService.LOG.error("  NO  ORDER  HAS  BEEN   FOUND  IN 'submit Order   function ' ");
-              throw   new  OrderNotFoundException("ORDER  NOT  FOUND ");
-          }
-          var  order  =  ordered.get();
+        if (orderId == null) {
+            OrderService.LOG.error("ORDER ID  IS NULL IN   Submit  Order  ");
+            throw new InvalidOrderException("INVALID ORDER  ID ");
+        }
+        var ordered = this.orderDao.findById(orderId);
+        if (ordered.isEmpty()) {
+            OrderService.LOG.error("  NO  ORDER  HAS  BEEN   FOUND  IN 'submit Order   function ' ");
+            throw new OrderNotFoundException("ORDER  NOT  FOUND ");
+        }
+        var order = ordered.get();
 
-          if  (!order.getCreationDate().equals(LocalDate.now())){
-              OrderService.LOG.error("ORDER  CAN NOT BE  SUBMITTED ");
-              throw new CancelledOrderException("EXPIRED ORDER");
-          }
+        if (!order.getCreationDate().equals(LocalDate.now())) {
+            OrderService.LOG.error("ORDER  CAN NOT BE  SUBMITTED ");
+            throw new CancelledOrderException("EXPIRED ORDER");
+        }
 
-          if  (order.isCancelled()){
-              OrderService.LOG.error(" ORDER  HAS BEEN  CANCLLED ");
-               throw  new  CancelledOrderException(" ORDER IS   CANCELLED ");
-          }
+        if (order.isCancelled()) {
+            OrderService.LOG.error(" ORDER  HAS BEEN  CANCLLED ");
+            throw new CancelledOrderException(" ORDER IS   CANCELLED ");
+        }
 
-          order.setStatus(1);
+        order.setStatus(1);
         this.confirmationOrderSender.sendSubmittedOrder(order);
-         this.orderDao.save(order);
+        this.orderDao.save(order);
 
     }
 
@@ -293,7 +293,7 @@ public class OrderService implements IOrderService {
         this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidPersonInformationException("INVALID ADMIN INFORMATION"));
 
 
-        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL , this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
 
 
     }
@@ -325,7 +325,7 @@ public class OrderService implements IOrderService {
         }
 
 
-        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL , this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
 
 
     }
