@@ -26,7 +26,7 @@ public class OrderDtout  {
 
     private StudentDtout studentOrder;
 
-    private  boolean isCanceled;
+    private  boolean isCancelled;
 
     public OrderDtout (OrderEntity orderEntity , String mealUrlImage ,  String menuUrlImage  , String  studentUrlImage){
         this.id =  orderEntity.getId();
@@ -34,12 +34,11 @@ public class OrderDtout  {
         this.creationDate = orderEntity.getCreationDate();
         this.creationTime = orderEntity.getCreationTime();
         this.status = orderEntity.getStatus();
-        this.isCanceled = orderEntity.isCancelled();
+        this.isCancelled = orderEntity.isCancelled();
         this.studentOrder = new StudentDtout(orderEntity.getStudent() , studentUrlImage);
         this.meals = orderEntity.getMeals().stream().map( (mealEntity) -> new MealDtout(mealEntity , mealUrlImage)).toList();
         this.menus=orderEntity.getMenus().stream().map(menuEntity -> new MenuDtout(menuEntity, menuUrlImage , mealUrlImage)).toList();
          this.price = orderEntity.getPrice();
-
     }
 
     public Integer getId() {
@@ -106,12 +105,12 @@ public class OrderDtout  {
         this.studentOrder = studentOrder;
     }
 
-    public boolean isCanceled() {
-        return isCanceled;
+    public boolean isCancelled() {
+        return isCancelled;
     }
 
-    public void setCanceled(boolean canceled) {
-        isCanceled = canceled;
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
     }
 
     public BigDecimal getPrice() {

@@ -39,7 +39,7 @@ public interface IOrderController {
 
 
     @PostMapping(ADMIN_SUBMIT_ORDER)
-    ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException
+    ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException;
 
 
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
