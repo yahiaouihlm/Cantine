@@ -15,7 +15,7 @@ public interface IStudentDao  extends JpaRepository<StudentEntity, Integer> {
     @Query(value = "SELECT student FROM StudentEntity student WHERE (" +
             "LOWER(REPLACE(student.firstname, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
             "AND LOWER(REPLACE(student.lastname, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
-
+            "AND  student.birthdate  =  ?3 " +
             ")"
 
     )
@@ -25,4 +25,4 @@ public interface IStudentDao  extends JpaRepository<StudentEntity, Integer> {
 }
 
 
-//  "AND  student.birthdate  =  ?3 " +
+//

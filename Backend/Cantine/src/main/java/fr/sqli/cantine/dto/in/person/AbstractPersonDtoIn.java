@@ -91,7 +91,7 @@ public  abstract  class AbstractPersonDtoIn {
         if (this.birthdateAsString == null || this.birthdateAsString.isEmpty() || this.birthdateAsString.isBlank())
               throw  new InvalidPersonInformationException("BIRTHDATE IS  REQUIRED");
         try {
-            this.birthdate = LocalDate.parse(this.birthdateAsString);
+            this.birthdate = LocalDate.parse(this.birthdateAsString.trim());
         }catch (Exception e){
             AbstractPersonDtoIn.LOG.error("INVALID BIRTHDATE FORMAT");
             throw  new InvalidPersonInformationException("INVALID BIRTHDATE FORMAT");
