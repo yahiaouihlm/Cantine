@@ -41,7 +41,7 @@ export class AdminOrderService {
   private handleError(error: HttpErrorResponse) {
     console.log(error)
     console.log(error.error)
-    /*const errorObject = error.error as ErrorResponse;
+    const errorObject = error.error as ErrorResponse;
     let errorMessage = errorObject.exceptionMessage;
 
     if (error.status == HttpStatusCode.InternalServerError) {
@@ -49,7 +49,7 @@ export class AdminOrderService {
       new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
     } else {
       new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
-    }*/
+    }
     return throwError(() => new Error(error.error));
 
   }

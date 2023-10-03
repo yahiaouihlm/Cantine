@@ -18,6 +18,7 @@ const routes: Routes = [
       {path :'menus', loadChildren:() => import('./menus/menus.module').then(m => m.MenusModule)},
       {path : 'dashboard', loadChildren:() => import('./dashbord/admin-dashboard/admin-dashboard.module').then(m => m.AdminDashboardModule)},
         {path : 'orders', loadChildren:() => import('./orders/admin-orders.module').then(m => m.AdminOrdersModule)},
+      {path:'students' , loadChildren :()=> import('./student-management/student-management.module').then(m => m.StudentManagementModule)},
       {path: '', redirectTo: 'home', pathMatch: 'full'},
     ]
   },
