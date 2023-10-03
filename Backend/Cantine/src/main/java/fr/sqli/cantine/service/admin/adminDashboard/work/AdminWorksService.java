@@ -3,35 +3,39 @@ package fr.sqli.cantine.service.admin.adminDashboard.work;
 import fr.sqli.cantine.dao.*;
 
 import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
+import fr.sqli.cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.mailer.EmailSenderService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdminWorksService implements  IAdminFunctionService{
-
-    private IAdminDao adminDao;
-    private IFunctionDao functionDao;
-    private ImageService imageService;
-    private Environment environment;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private IConfirmationTokenDao confirmationTokenDao;
-    private EmailSenderService emailSenderService;
-
+    private static final Logger LOG = LogManager.getLogger();
+    private  final  String  STUDENT_IMAGE_URL ;
     private IStudentDao studentDao;
 
     private IStudentClassDao studentClassDao;
 
+    private Environment environment;
     @Autowired
-    public AdminWorksService( IStudentClassDao iStudentClassDao) {
+    public AdminWorksService( IStudentClassDao iStudentClassDao , IStudentDao studentDao , Environment environment) {
         this.studentClassDao = iStudentClassDao;
+        this.studentDao = studentDao ;
+        this.environment = environment ;
+        this.STUDENT_IMAGE_URL =  this.environment.getProperty("sqli.cantine.images.url.student");
     }
 
 
@@ -50,6 +54,18 @@ public class AdminWorksService implements  IAdminFunctionService{
     }
 
 
+    @Override
+    public List<StudentDtout> getStudentByNameAndBirthdate(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
+        if  (studentDtoIn.getLastname() == null  || studentDtoIn.getFirstname() == null || studentDtoIn.getBirthdate()==null ){
+            AdminWorksService.LOG.error("INVALID  REQUEST LASTNAME OR FIRSTNAME OR  BIRTHDATE ARE NOT ");
+            throw   new InvalidPersonInformationException("INVALID  FIELD");
+        }
+
+        return this.studentDao.findByFirstnameAndLastnameAndBirthdate(studentDtoIn.getFirstname() ,studentDtoIn.getLastname(),studentDtoIn.getBirthdate())
+                .stream().map(student -> new StudentDtout(student , this.STUDENT_IMAGE_URL)).toList();
+
+
+    }
 
     @Override
     public void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException {

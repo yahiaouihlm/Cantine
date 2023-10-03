@@ -13,7 +13,6 @@ public class StudentClassDtoIn {
 
 
      @JsonIgnore
-
      public StudentClassEntity toStudentClassEntity () throws InvalidStudentClassException {
           this.checkNameValidity();
           StudentClassEntity studentClassEntity = new StudentClassEntity();

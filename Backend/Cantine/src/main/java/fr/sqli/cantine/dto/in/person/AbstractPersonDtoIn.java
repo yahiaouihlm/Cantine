@@ -169,7 +169,8 @@ public  abstract  class AbstractPersonDtoIn {
         this.birthdateAsString = birthdateAsString;
     }
 
-    public LocalDate getBirthdate() {
+    public LocalDate getBirthdate() throws InvalidPersonInformationException {
+        birthdateValidator();
         return birthdate;
     }
 
