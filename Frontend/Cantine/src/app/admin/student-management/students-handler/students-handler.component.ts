@@ -1,22 +1,30 @@
 import { Component } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Observable, of} from "rxjs";
+import {User} from "../../../sharedmodule/models/user";
+import {StudentsManagementService} from "../students-management.service";
 
 @Component({
   selector: 'app-students-handler',
   templateUrl:'students-handler.component.html' ,
-  styles: [
-  ]
+  styles: [],
+  providers : [StudentsManagementService]
 })
 export class StudentsHandlerComponent {
-
+  students$  :  Observable <User[]>  =  of([]);
   submitted =  false ;
+
+  isLoaded = false ;
+
   studentSeeked: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     birthDate: new FormControl('', [Validators.required]),
   });
 
-  isLoaded = false ;
+  constructor(private studentsManagementService :  StudentsManagementService) {
+  }
+
 
   validate () {
     this.submitted = true;
@@ -24,9 +32,12 @@ export class StudentsHandlerComponent {
       return;
     }
     this.isLoaded =  true ;
+
   }
 
-
+  getStudents() {
+    this.students$ = this.studentsManagementService.getStudents();
+  }
 
 
 

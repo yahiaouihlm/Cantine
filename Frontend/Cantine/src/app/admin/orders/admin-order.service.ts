@@ -39,8 +39,6 @@ export class AdminOrderService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error)
-    console.log(error.error)
     const errorObject = error.error as ErrorResponse;
     let errorMessage = errorObject.exceptionMessage;
 
