@@ -1,1 +1,86 @@
-<h1>Hello wrold </h1>
+
+
+
+<div class="container">
+     <div class="row">
+          <form [formGroup]="studentSeeked">
+
+               <!---------------------- Name --------------------------->
+               <div class="form-group ">
+                    <label for="firstName"> Prénom :  </label>
+                    <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
+                           formControlName="firstName"
+                           placeholder="  Votre Prénom "
+                           type="text"
+                           id="firstName"
+                    />
+                    <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                         <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
+                         <div *ngIf="f['firstName'].errors['maxlength']" class="center">
+                              votre Prénom  ne doit pas dépasser 60 charctéres
+                         </div>
+                         <div *ngIf="f['firstName'].errors['minlength']" class="center">
+                              votre Prénom    doit avoir au minimum de 3 charctéres
+                         </div>
+                    </div>
+               </div>
+
+
+               <!---------------------- LastName --------------------------->
+               <div class="form-group ">
+                    <label for="lastName"> Nom :  </label>
+                    <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
+                           formControlName="lastName"
+                           placeholder="  Votre Nom "
+                           type="text"
+                           id="lastName"
+                    />
+                    <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                         <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
+                         <div *ngIf="f['lastName'].errors['maxlength']" class="center">
+                              votre Nom  ne doit pas dépasser 60 charctéres
+                         </div>
+                         <div *ngIf="f['lastName'].errors['minlength']" class="center">
+                              votre Nom  doit avoir au minimum de 3 charctéres
+                         </div>
+                    </div>
+               </div>
+
+
+
+
+               <!---------------------- Birthdate--------------------------->
+               <div class="form-group ">
+                    <label for="birthDate"> Date De  Naissance   :  </label>
+                    <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
+                           formControlName="birthDate"
+                           placeholder="Votre  Date  De  Naissance "
+                           type="Date"
+                           id="birthDate"
+                    />
+                    <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
+                         <div *ngIf="f['birthDate'].errors['required']" class="center"> La  date  de  naissance  est requise     </div>
+
+                    </div>
+               </div>
+          </form>
+
+
+          <div  class="search center ">
+               <button  class="btn"> Chercher </button>
+          </div>
+     </div>
+</div>
+
+
+
+<style>
+  .row{
+       margin-top: 40px;
+       border:  1px  solid  black ;
+  }
+
+  .search{
+       margin: 10px;
+  }
+</style>
