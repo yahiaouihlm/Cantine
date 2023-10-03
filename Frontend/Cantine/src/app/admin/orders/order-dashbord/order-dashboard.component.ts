@@ -28,6 +28,7 @@ export class OrderDashboardComponent implements OnInit {
   goToStudentProfile() {}
 
     validateOrder(orderId :  number){
+
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_SUBMIT_THE_ORDER},
             width: '40%',
@@ -46,10 +47,8 @@ export class OrderDashboardComponent implements OnInit {
 
 
     submitOrder (orderId  :  number) {
-        this.adminOrderService.submitOrder(orderId).subscribe({
-            next : next  => {
-              this.matDialog.open(SuccessfulDialogComponent, {data: {message: this.ORDER_SUBMITTED_SUCCESSFULLY }, width: '40%',});
-            }
-        })
+        this.adminOrderService.submitOrder(orderId).subscribe(data =>{
+            console.log(data) ;
+        });
     }
 }

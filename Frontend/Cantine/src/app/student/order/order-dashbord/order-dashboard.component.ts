@@ -55,11 +55,12 @@ export class OrderDashboardComponent implements OnInit {
                         data: {message: " Votre  Commande a éte bien enregistrer il sera validé prochainement"},
                         width: '40%',
                     });
-                    Order.clearOrder();
+
                     dialogue.afterClosed().subscribe((result) => {  window.location.reload() });
                 }
-            });
 
+            });
+            Order.clearOrder();
         }
 
         const result = this.matDialog.open(ValidatorDialogComponent, {

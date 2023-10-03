@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import Malfunctions from "../../sharedmodule/functions/malfunctions";
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {Order} from "../../sharedmodule/models/order";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
 import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
@@ -21,10 +21,10 @@ export class AdminOrderService {
 
   submitOrder (orderId: number)  {
     let token  =  Malfunctions.getTokenFromLocalStorage();
-    const headers = new HttpHeaders().set('Authorization', token);
-    const params = {orderId: orderId};
-    return  this.httpClient.post <NormalResponse>(this.ADMIN_SUBMIT_ORDER,  {headers: headers, params: params}).pipe(
-        catchError(error => this.handleError(error))
+    const headers = new HttpHeaders().set('Authorization', token);;  // const params = new HttpParams().set('orderId', orderId);
+    const params =  new HttpParams().set('orderId' , orderId)
+    return  this.httpClient.post <NormalResponse>(this.ADMIN_SUBMIT_ORDER,  null  , {headers: headers, params: params}).pipe(
+        catchError((error) => this.handleError(error))
     )
   }
 
@@ -39,7 +39,9 @@ export class AdminOrderService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    const errorObject = error.error as ErrorResponse;
+    console.log(error)
+    console.log(error.error)
+    /*const errorObject = error.error as ErrorResponse;
     let errorMessage = errorObject.exceptionMessage;
 
     if (error.status == HttpStatusCode.InternalServerError) {
@@ -47,8 +49,8 @@ export class AdminOrderService {
       new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
     } else {
       new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
-    }
-    return throwError(() => new Error(errorMessage));
+    }*/
+    return throwError(() => new Error(error.error));
 
   }
 }
