@@ -66,15 +66,51 @@
           </form>
 
 
-          <div  class="search center ">
-               <button  class="btn"> Chercher </button>
+          <div *ngIf="!isLoaded; else loadingTemplate" class="search center ">
+               <button  class="btn" (click)="validate()"> Chercher </button>
           </div>
+     </div>
+</div>
+
+<div class="container">
+     <div class="row">
+          <div class="col-md-2">
+               <span>   Nom :  Halim  </span>
+          </div>
+          <div class="col-md-2">
+               <span><strong>Prénom : </strong> Yahiaoui </span>
+          </div>
+
+          <div class="col-md-4">
+               <span><strong>Email  : </strong> halim.yahiaoui@social.aston-ecole.com</span>
+          </div>
+
      </div>
 </div>
 
 
 
+
+
+
+
+
+
+
+<ng-template #loadingTemplate >
+     <!-- Afficher le spinner ici pendant le chargement -->
+     <div class="spinner-container">
+          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+     </div>
+
+</ng-template>
 <style>
+     .spinner-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 15vh;
+     }
   .row{
        margin-top: 40px;
        border:  1px  solid  black ;
