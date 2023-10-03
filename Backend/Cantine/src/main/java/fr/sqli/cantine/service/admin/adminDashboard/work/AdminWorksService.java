@@ -55,7 +55,7 @@ public class AdminWorksService implements  IAdminFunctionService{
 
 
     @Override
-    public List<StudentDtout> getStudentByNameAndBirthdate(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
+    public List<StudentDtout> getStudentsByNameAndBirthdate(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
         if  (studentDtoIn.getLastname() == null  || studentDtoIn.getFirstname() == null || studentDtoIn.getBirthdate()==null ){
             AdminWorksService.LOG.error("INVALID  REQUEST LASTNAME OR FIRSTNAME OR  BIRTHDATE ARE NOT ");
             throw   new InvalidPersonInformationException("INVALID  FIELD");
