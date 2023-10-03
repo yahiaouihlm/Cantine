@@ -32,11 +32,15 @@ export class StudentsHandlerComponent {
       return;
     }
     this.isLoaded =  true ;
-
+    this.getStudents();
   }
 
   getStudents() {
-    this.students$ = this.studentsManagementService.getStudents();
+    let user  =   new User();
+    user.firstname = this.studentSeeked.value.firstName ;
+    user.lastname=this.studentSeeked.value.lastName ;
+    user.birthdate =  this.studentSeeked.value.birthDate;
+    this.students$ = this.studentsManagementService.getStudents(user);
   }
 
 

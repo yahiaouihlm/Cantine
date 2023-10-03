@@ -72,22 +72,22 @@
      </div>
 </div>
 
-<div class="container">
+
+<div *ngFor="let student of students$ | async "class="container">
      <div class="row">
           <div class="col-md-2">
-               <span>   Nom :  Halim  </span>
+               <span>   Nom :  {{student.lastname}}  </span>
           </div>
           <div class="col-md-2">
-               <span><strong>Prénom : </strong> Yahiaoui </span>
+               <span><strong>Prénom : </strong> {{student.firstname}} </span>
           </div>
 
           <div class="col-md-4">
-               <span><strong>Email  : </strong> halim.yahiaoui@social.aston-ecole.com</span>
+               <span><strong>Email  : </strong> {{student.email}}</span>
           </div>
 
      </div>
 </div>
-
 
 
 

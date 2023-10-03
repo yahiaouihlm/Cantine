@@ -16,6 +16,7 @@ export class AllMenusComponent implements  OnInit{
   menus$  :  Observable <Menu[]>  =  of([]);
   ngOnInit(): void {
     this.menus$ = this.coreCantineService.getAllMenus();
+
   }
 
 
