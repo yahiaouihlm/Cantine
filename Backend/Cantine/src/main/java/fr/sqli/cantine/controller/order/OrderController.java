@@ -33,9 +33,10 @@ public class OrderController  implements IOrderController{
         this.orderService = orderService;
     }
 
+
     @Override
     public ResponseEntity<ResponseDtout> submitOrder(Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException {
-         this.orderService.submitOrder(orderId);
+        this.orderService.submitOrder(orderId);
         return ResponseEntity.ok(new ResponseDtout(ORDER_SUBMITTED_SUCCESSFULLY));
     }
 
