@@ -12,6 +12,7 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentCla
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.mailer.EmailSenderService;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,21 @@ public class AdminWorksService implements  IAdminFunctionService{
         this.studentClassDao.save(studentClassEntity);
     }
 
+
+    @Override
+    public StudentDtout getStudentById(Integer studentID) throws InvalidPersonInformationException, StudentNotFoundException {
+          if  (studentID  == null ){
+              AdminWorksService.LOG.error("studenID IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
+              throw  new  InvalidPersonInformationException("INVALID  STUDENT ID ");
+          }
+          var  student   =  this.studentDao.findById(studentID) ;
+          if  (student.isEmpty()){
+              AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentID + "DOEST NOT EXISTS" );
+              throw   new StudentNotFoundException("STUDENT NOT  FOUND");
+          }
+
+          return   new StudentDtout(student.get(), this.STUDENT_IMAGE_URL);
+    }
 
     @Override
     public List<StudentDtout> getStudentsByNameAndBirthdate(String  firstname , String  lastname  ,String  birthdateAsString) throws InvalidPersonInformationException {

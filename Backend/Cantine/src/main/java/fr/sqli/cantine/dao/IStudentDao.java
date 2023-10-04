@@ -22,6 +22,8 @@ public interface IStudentDao  extends JpaRepository<StudentEntity, Integer> {
 
     List<StudentEntity> findByFirstnameAndLastnameAndBirthdate(String firstName , String lastName , LocalDate birthdate);
     Optional<StudentEntity> findByEmail(String email);
+
+    Optional<StudentEntity>findById(Integer studentId);
 }
 
 

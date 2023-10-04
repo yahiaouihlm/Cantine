@@ -9,6 +9,7 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.admin.adminDashboard.work.AdminWorksService;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,17 +29,15 @@ public class AdminWorksController  implements  IAdminWorksController {
     }
 
 
-
-
-
     @Override
-    public ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String  firstname , @RequestParam String  lastname  , @RequestParam String  birthdateAsString) throws InvalidPersonInformationException {
-        return ResponseEntity.ok(this.adminWorksService.getStudentsByNameAndBirthdate(firstname ,lastname  , birthdateAsString));
+    public ResponseEntity<StudentDtout> getStudentById(Integer studentId) throws InvalidPersonInformationException, StudentNotFoundException {
+        return  ResponseEntity.ok(this.adminWorksService.getStudentById(studentId));
     }
 
-
-
-
+    @Override
+    public ResponseEntity<List<StudentDtout>> getStudents( String  firstname , String  lastname  ,  String  birthdateAsString) throws InvalidPersonInformationException {
+        return ResponseEntity.ok(this.adminWorksService.getStudentsByNameAndBirthdate(firstname ,lastname  , birthdateAsString));
+    }
 
 
 

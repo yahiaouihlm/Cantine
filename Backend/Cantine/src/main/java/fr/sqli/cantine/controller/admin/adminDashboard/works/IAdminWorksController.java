@@ -8,6 +8,7 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentCl
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,18 @@ public interface IAdminWorksController {
 
 
     String GET_STUDENTS = "/GetStudents";
+    String  GET_STUDENT_BY_ID =  "/getStudent";
     String  ADD_STUDENT_CLASS_ENDPOINT = "/addStudentClass";
     String UPDATE_STUDENT_CLASS_ENDPOINT = "/updateStudentClass";
    String  STUDENT_CLASS_UPDATED_SUCCESSFULLY = "STUDENT CLASS UPDATED SUCCESSFULLY";
     String STUDENT_CLASS_ADDED_SUCCESSFULLY = "STUDENT CLASS ADDED SUCCESSFULLY";
 
 
+    @GetMapping(GET_STUDENT_BY_ID)
+    ResponseEntity<StudentDtout>getStudentById(@RequestParam("studentId") Integer studentId) throws InvalidPersonInformationException, StudentNotFoundException;
+
     @GetMapping(GET_STUDENTS)
-    ResponseEntity<List<StudentDtout>> getStudents (@RequestParam String firstname , @RequestParam String Lastname , @RequestParam String birthdateAsString) throws InvalidPersonInformationException;
+    ResponseEntity<List<StudentDtout>> getStudents (@RequestParam String firstname , @RequestParam String Lastname , @RequestParam String  birthdateAsString) throws InvalidPersonInformationException;
 
     ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
     ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
