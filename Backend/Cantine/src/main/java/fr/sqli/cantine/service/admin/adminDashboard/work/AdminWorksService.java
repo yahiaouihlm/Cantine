@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -55,8 +57,13 @@ public class AdminWorksService implements  IAdminFunctionService{
 
 
     @Override
-    public List<StudentDtout> getStudentsByNameAndBirthdate(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
-        if  (studentDtoIn.getLastname() == null  || studentDtoIn.getFirstname() == null || studentDtoIn.getBirthdate()==null ){
+    public List<StudentDtout> getStudentsByNameAndBirthdate(String  firstname , String  lastname  ,LocalDate birthdate) throws InvalidPersonInformationException {
+         StudentDtoIn studentDtoIn = new StudentDtoIn();
+         studentDtoIn.setFirstname(firstname);
+         studentDtoIn.setLastname(lastname);
+         studentDtoIn.setBirthdate(birthdate);
+
+         if  (studentDtoIn.getLastname() == null  || studentDtoIn.getFirstname() == null || studentDtoIn.getBirthdate()==null ){
             AdminWorksService.LOG.error("INVALID  REQUEST LASTNAME OR FIRSTNAME OR  BIRTHDATE ARE NOT ");
             throw   new InvalidPersonInformationException("INVALID  FIELD");
         }

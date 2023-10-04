@@ -11,8 +11,10 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFo
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IAdminWorksController {
@@ -28,8 +30,8 @@ public interface IAdminWorksController {
 
 
     @GetMapping(GET_STUDENTS)
-    public  ResponseEntity<List<StudentDtout>> getStudents (@RequestBody StudentDtoIn studentDtoIn) throws InvalidPersonInformationException;
+    ResponseEntity<List<StudentDtout>> getStudents (@RequestParam String firstname , @RequestParam String Lastname , @RequestParam LocalDate birthdate) throws InvalidPersonInformationException;
 
-    public ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
-    public ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
+    ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
+    ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,6 +28,20 @@ public class AdminWorksController  implements  IAdminWorksController {
     }
 
 
+
+
+
+    @Override
+    public ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String  firstname , @RequestParam String  lastname  , @RequestParam LocalDate birthdate) throws InvalidPersonInformationException {
+        return ResponseEntity.ok(this.adminWorksService.getStudentsByNameAndBirthdate(firstname ,lastname  , birthdate));
+    }
+
+
+
+
+
+
+
     @Override
     @PostMapping(ADD_STUDENT_CLASS_ENDPOINT)
     public ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException {
@@ -34,11 +49,6 @@ public class AdminWorksController  implements  IAdminWorksController {
         return ResponseEntity.ok(STUDENT_CLASS_ADDED_SUCCESSFULLY);
     }
 
-
-    @Override
-    public ResponseEntity<List<StudentDtout>> getStudents(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException {
-        return ResponseEntity.ok(this.adminWorksService.getStudentsByNameAndBirthdate(studentDtoIn));
-    }
 
     @Override
     @PutMapping(UPDATE_STUDENT_CLASS_ENDPOINT)
