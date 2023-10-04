@@ -73,26 +73,35 @@
 </div>
 
 
-<div *ngFor="let student of students$ | async "class="container">
-     <div class="row">
-          <div class="col-md-2">
-               <span>   Nom :  {{student.lastname}}  </span>
-          </div>
-          <div class="col-md-2">
-               <span><strong>Prénom : </strong> {{student.firstname}} </span>
-          </div>
+<div *ngIf="(students$ | async)?.length; else noStudents">
+     <div *ngFor="let student of students$ | async ">
+          <div class="container">
+               <div class="row">
+                    <div class="col-md-2">
+                         <span>   Nom :  {{student.lastname}}  </span>
+                    </div>
+                    <div class="col-md-2">
+                         <span><strong>Prénom : </strong> {{student.firstname}} </span>
+                    </div>
 
-          <div class="col-md-4">
-               <span><strong>Email  : </strong> {{student.email}}</span>
-          </div>
+                    <div class="col-md-4">
+                         <span><strong>Email  : </strong> {{student.email}}</span>
+                    </div>
 
+                    <div class="col-md-4">
+                         <span><strong>Date De  Naissance  : </strong> {{student.birthdate}} </span>
+                    </div>
+
+
+               </div>
+          </div>
      </div>
 </div>
 
 
-
-
-
+<ng-template #noStudents >
+     <p class="center" >Aucun étudiant n'a été trouvé .</p>
+</ng-template>
 
 
 
@@ -118,5 +127,10 @@
 
   .search{
        margin: 10px;
+  }
+  p{
+       color: red;
+       font-size: 1.2rem;
+       font-weight: bold;
   }
 </style>

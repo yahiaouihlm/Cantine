@@ -40,7 +40,9 @@ export class StudentsHandlerComponent {
     user.firstname = this.studentSeeked.value.firstName ;
     user.lastname=this.studentSeeked.value.lastName ;
     user.birthdate =  this.studentSeeked.value.birthDate;
-    this.students$ = this.studentsManagementService.getStudents(user);
+    this.students$ = this.studentsManagementService.getStudents(user)
+    this.isLoaded =  false ;
+
   }
 
 
