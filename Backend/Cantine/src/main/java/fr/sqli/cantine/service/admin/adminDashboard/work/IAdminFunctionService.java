@@ -7,14 +7,16 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentCl
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IAdminFunctionService {
 
 
 
-    List<StudentDtout> getStudentsByNameAndBirthdate(StudentDtoIn studentDtoIn) throws InvalidPersonInformationException;
+    List<StudentDtout> getStudentsByNameAndBirthdate( String  firstname , String  lastname  , LocalDate birthdate) throws InvalidPersonInformationException;
     void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
 
     void  addStudentClass  (StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
