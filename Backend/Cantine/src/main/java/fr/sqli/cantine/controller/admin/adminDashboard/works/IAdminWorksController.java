@@ -23,7 +23,7 @@ public interface IAdminWorksController {
     String ADMIN_DASH_BOARD_BASIC_WORK_URL = "/cantine/admin/adminDashboard/works";
 
 
-    String GET_STUDENTS = "/GetStudents";
+    String GET_STUDENTS = "/getStudents";
     String  GET_STUDENT_BY_ID =  "/getStudent";
     String  ADD_STUDENT_CLASS_ENDPOINT = "/addStudentClass";
     String UPDATE_STUDENT_CLASS_ENDPOINT = "/updateStudentClass";

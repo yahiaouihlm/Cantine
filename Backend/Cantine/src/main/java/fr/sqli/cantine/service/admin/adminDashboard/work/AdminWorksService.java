@@ -60,12 +60,12 @@ public class AdminWorksService implements  IAdminFunctionService{
     @Override
     public StudentDtout getStudentById(Integer studentID) throws InvalidPersonInformationException, StudentNotFoundException {
           if  (studentID  == null ){
-              AdminWorksService.LOG.error("studenID IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
+              AdminWorksService.LOG.error("studentID IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
               throw  new  InvalidPersonInformationException("INVALID  STUDENT ID ");
           }
           var  student   =  this.studentDao.findById(studentID) ;
           if  (student.isEmpty()){
-              AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentID + "DOEST NOT EXISTS" );
+              AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentID + "  DOEST NOT EXISTS" );
               throw   new StudentNotFoundException("STUDENT NOT  FOUND");
           }
 
