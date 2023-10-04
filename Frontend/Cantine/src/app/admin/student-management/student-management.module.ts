@@ -4,17 +4,20 @@ import { StudentsHandlerComponent } from './students-handler/students-handler.co
 import {RouterModule, Routes} from "@angular/router";
 import {OrderDashboardComponent} from "../orders/order-dashbord/order-dashboard.component";
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
+import { ManageStudentWalletComponent } from './manage-student-wallet/manage-student-wallet.component';
 
 
 
 
 
 const routes: Routes = [
-  {path: '', component: StudentsHandlerComponent }
+  {path: '', component: StudentsHandlerComponent },
+  {path: 'profile', component: ManageStudentWalletComponent }
 ];
 @NgModule({
   declarations: [
-    StudentsHandlerComponent
+    StudentsHandlerComponent,
+    ManageStudentWalletComponent
   ],
   imports: [
     CommonModule,
