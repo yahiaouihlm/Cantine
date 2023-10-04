@@ -11,9 +11,9 @@ import {MatDialog} from "@angular/material/dialog";
 export class StudentsManagementService {
 
   private  BASIC_ADMIN_URL =  "http://localhost:8080/cantine/admin/adminDashboard/works";
-  private  GET_STUDENTS =  this.BASIC_ADMIN_URL + "/getStudent"
+  private  GET_STUDENTS =  this.BASIC_ADMIN_URL + "/getStudents"
 
-  private GET_STUDENT_BY_ID = this.BASIC_ADMIN_URL + "/GetStudentById";
+  private GET_STUDENT_BY_ID = this.BASIC_ADMIN_URL + "/getStudent";
   constructor(private   httpClient:HttpClient , private matDialog :  MatDialog) { }
 
 
@@ -21,7 +21,7 @@ export class StudentsManagementService {
   getStudentById(id : string) {
     let token  =  Malfunctions.getTokenFromLocalStorage();
     const headers = new HttpHeaders().set('Authorization', token);
-    const params =  new  HttpParams().set('studentId' , id.toString())
+    const params =  new  HttpParams().set('studentId' , id)
     return this.httpClient.get<User>( this.GET_STUDENT_BY_ID, { headers : headers , params : params }).pipe(
         catchError((error) => this.handleError(error))
     );
