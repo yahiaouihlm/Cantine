@@ -48,7 +48,7 @@ export class OrderDashboardComponent implements OnInit {
 
     submitOrder (orderId  :  number) {
         this.adminOrderService.submitOrder(orderId).subscribe(data =>{
-            console.log(data) ;
+            window.location.reload();
         });
     }
 }

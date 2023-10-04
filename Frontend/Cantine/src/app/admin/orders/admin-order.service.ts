@@ -34,7 +34,7 @@ export class AdminOrderService {
     const headers = new HttpHeaders().set('Authorization', token);
     let date = Malfunctions.getCurrentDate();
     const params = {date: date};
-    return this.httpClient.get<Order[]>(this.GET_ORDERS_BY_DAY, {headers: headers, params: params});
+    return this.httpClient.get<Order[]>(this.GET_ORDERS_BY_DAY,  {headers: headers, params: params});
 
   }
 

@@ -10,7 +10,8 @@
                     <span>  N° Commande  :  {{order.id}} </span>
                 </div>
                 <div class="col-md-2">
-                    <span><strong> Etudiant : </strong> <span  (click)="goToStudentProfile()" style="color: blue">{{order.studentOrder.firstname}}  {{order.studentOrder.lastname}}</span> </span>
+                    <span><strong> Etudiant : </strong> <span (click)="goToStudentProfile()"
+                                                              style="color: blue">{{order.studentOrder.firstname}}  {{order.studentOrder.lastname}}</span> </span>
                 </div>
                 <div class="col-md-2">
                     <span><strong>Date : </strong> {{order.creationDate}}</span>
@@ -19,12 +20,20 @@
                     <span><strong>Prix total : </strong> {{order.price}} € </span>
                 </div>
 
-                <div class="col-md-2">
-                    <button class="btn btn-success"   (click)="validateOrder(order.id)">Valider</button>
+
+                <div *ngIf="order.status==0" class="col-md-2">
+                    <button class="btn btn-success" (click)="validateOrder(order.id)">Valider</button>
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-success  red" >Annuler</button>
+                <div *ngIf="order.status==0" class="col-md-2">
+                    <button class="btn btn-success  red">Annuler</button>
                 </div>
+
+
+                <div *ngIf="order.status == 1" class="col-md-2">
+                    <p> Déja Validé </p>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -32,13 +41,18 @@
 
 
 <style>
-    .order{
+    .order {
         border: black 2px solid;
         margin: 50px;
     }
-    .test{
+
+    .test {
         border-radius: 10px;
         padding: 1%;
         background: #d0d5e3;
+    }
+    p{
+        color: #157815;
+        font-size: 1rem;
     }
 </style>

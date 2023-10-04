@@ -29,6 +29,7 @@ export class OrderDashboardComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
         let order = Order.getOrderFromLocalStorage();
         if (order) {
             this.order = order;
@@ -56,11 +57,16 @@ export class OrderDashboardComponent implements OnInit {
                         width: '40%',
                     });
 
-                    dialogue.afterClosed().subscribe((result) => {  window.location.reload() });
+                    dialogue.afterClosed().subscribe((result) => {
+                        window.location.reload()
+                        Order.clearOrder();
+                    });
+                   // il faut   faire  un reloade  a la page apres   les  modification
+
                 }
 
             });
-            Order.clearOrder();
+
         }
 
         const result = this.matDialog.open(ValidatorDialogComponent, {

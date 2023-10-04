@@ -84,6 +84,7 @@ export class Order {
                     break;
                 }
             if (index != -1) {
+
                 order.meals.splice(index, 1);
                 localStorage.setItem('Order', JSON.stringify(order))
                 return order;

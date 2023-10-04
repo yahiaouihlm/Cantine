@@ -14,6 +14,14 @@ import {Menu} from "../../../../sharedmodule/models/menu";
   ]
 })
 export class ModifyOrderDialogueComponent {
+
+  /*
+
+     regler le  probléme  de  supprission  de commande quans  il ya  toutes  erreur
+
+     regler le  problem  de exception  back  quand je fais une  erreur  de  un plat invalid
+   */
+
   constructor(@Inject(MAT_DIALOG_DATA) public data :  Order,  private dialogRef: MatDialogRef<ModifyOrderDialogueComponent>) { }
   order: Order = this.data;
 
