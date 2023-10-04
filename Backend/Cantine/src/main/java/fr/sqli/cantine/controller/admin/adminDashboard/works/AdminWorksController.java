@@ -32,8 +32,8 @@ public class AdminWorksController  implements  IAdminWorksController {
 
 
     @Override
-    public ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String  firstname , @RequestParam String  lastname  , @RequestParam LocalDate birthdate) throws InvalidPersonInformationException {
-        return ResponseEntity.ok(this.adminWorksService.getStudentsByNameAndBirthdate(firstname ,lastname  , birthdate));
+    public ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String  firstname , @RequestParam String  lastname  , @RequestParam String  birthdateAsString) throws InvalidPersonInformationException {
+        return ResponseEntity.ok(this.adminWorksService.getStudentsByNameAndBirthdate(firstname ,lastname  , birthdateAsString));
     }
 
 

@@ -16,7 +16,7 @@ public interface IAdminFunctionService {
 
 
 
-    List<StudentDtout> getStudentsByNameAndBirthdate( String  firstname , String  lastname  , LocalDate birthdate) throws InvalidPersonInformationException;
+    List<StudentDtout> getStudentsByNameAndBirthdate( String  firstname , String  lastname  , String  birthdateAsString) throws InvalidPersonInformationException;
     void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
 
     void  addStudentClass  (StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;

@@ -57,11 +57,11 @@ public class AdminWorksService implements  IAdminFunctionService{
 
 
     @Override
-    public List<StudentDtout> getStudentsByNameAndBirthdate(String  firstname , String  lastname  ,LocalDate birthdate) throws InvalidPersonInformationException {
+    public List<StudentDtout> getStudentsByNameAndBirthdate(String  firstname , String  lastname  ,String  birthdateAsString) throws InvalidPersonInformationException {
          StudentDtoIn studentDtoIn = new StudentDtoIn();
          studentDtoIn.setFirstname(firstname);
          studentDtoIn.setLastname(lastname);
-         studentDtoIn.setBirthdate(birthdate);
+         studentDtoIn.setBirthdateAsString(birthdateAsString);
 
          if  (studentDtoIn.getLastname() == null  || studentDtoIn.getFirstname() == null || studentDtoIn.getBirthdate()==null ){
             AdminWorksService.LOG.error("INVALID  REQUEST LASTNAME OR FIRSTNAME OR  BIRTHDATE ARE NOT ");

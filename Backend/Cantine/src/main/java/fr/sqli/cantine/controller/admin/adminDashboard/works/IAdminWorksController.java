@@ -30,7 +30,7 @@ public interface IAdminWorksController {
 
 
     @GetMapping(GET_STUDENTS)
-    ResponseEntity<List<StudentDtout>> getStudents (@RequestParam String firstname , @RequestParam String Lastname , @RequestParam LocalDate birthdate) throws InvalidPersonInformationException;
+    ResponseEntity<List<StudentDtout>> getStudents (@RequestParam String firstname , @RequestParam String Lastname , @RequestParam String birthdateAsString) throws InvalidPersonInformationException;
 
     ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
     ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
