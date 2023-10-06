@@ -14,10 +14,24 @@ export class StudentsManagementService {
   private  GET_STUDENTS =  this.BASIC_ADMIN_URL + "/getStudents"
 
   private GET_STUDENT_BY_ID = this.BASIC_ADMIN_URL + "/getStudent";
+
+  private SEND_STUDENT_WALLET = this.BASIC_ADMIN_URL + "/addStudentAmount";
   constructor(private   httpClient:HttpClient , private matDialog :  MatDialog) { }
 
 
 
+
+
+  sendStudentWallet(studentId :   number  ,   amount  : number){
+    let token  =  Malfunctions.getTokenFromLocalStorage();
+    const headers = new HttpHeaders().set('Authorization', token);
+    const params =  new  HttpParams().set('studentId' , studentId.toString())
+                                       .set('amount', amount)
+
+    return this.httpClient.put(this.SEND_STUDENT_WALLET , null , { headers : headers , params : params }).pipe(
+        catchError((error) => this.handleError(error))
+    );
+  }
   getStudentById(id : string) {
     let token  =  Malfunctions.getTokenFromLocalStorage();
     const headers = new HttpHeaders().set('Authorization', token);

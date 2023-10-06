@@ -60,17 +60,11 @@ export class ManageStudentWalletComponent implements OnInit{
   addAmount(){
     let amountToAdd  = 0 ;
      this.matDialog.open(EditStudentWalletDialogComponent , {
-       data: "Le Montant à Ajouter",
+       data:  { message :"Le Montant à Ajouter" , userid :  this.user.id } ,
+
        width: '47%',
        height: '30%'
-     }).afterClosed().subscribe(result => {
-        if  (result &&  !isNaN(result) &&  Number.isInteger(Number(result))){
-          console.log("le montant  " + result)
-        }
-        else {
-          return ;
-        }
-     });
+     })
   }
 
 

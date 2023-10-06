@@ -1,6 +1,6 @@
 <div class="amount-dialog">
 
-        <h2 class="center">{{data}}</h2>
+        <h2 class="center">{{data.message}}</h2>
         <form [formGroup]="amountForm" class="test">
 
             <!---------------------- Phone Number--------------------------->
@@ -8,7 +8,7 @@
                 <label for="amount"> Le Montat: </label>
                 <input [ngClass]="{ 'is-invalid': submitted && f['amount'].errors }" class="form-control"
                        formControlName="amount"
-                       placeholder=" {{data}}  "
+                       placeholder=" {{data.message}}  "
                        type="number"
                        id="amount"
                 />
@@ -28,13 +28,24 @@
             </div>
         </form>
 
-         <div class="center">
+         <div class="center" *ngIf="!isLoaded; else loadingTemplate" >
                 <button class="btn" (click)="onSubmit()">Ajouter</button>
          </div>
 </div>
+<ng-template #loadingTemplate >
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
 
+</ng-template>
 
 <style>
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 15vh;
+    }
     .amount-dialog {
         padding: 5%;
     }
