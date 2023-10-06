@@ -1,0 +1,45 @@
+<div class="amount-dialog">
+
+        <h2 class="center">{{data}}</h2>
+        <form [formGroup]="amountForm" class="test">
+
+            <!---------------------- Phone Number--------------------------->
+            <div class="form-group ">
+                <label for="amount"> Le Montat: </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['amount'].errors }" class="form-control"
+                       formControlName="amount"
+                       placeholder=" {{data}}  "
+                       type="number"
+                       id="amount"
+                />
+                <div *ngIf="submitted && f['amount'].errors" class="invalid-feedback">
+                    <div *ngIf="f['amount'].errors['required']" class="center">
+                        Le  Montant  est  obligatoire
+                    </div>
+                    <div *ngIf="f['amount'].errors['max']" class="center">
+                        Le  Montant   maximum  200 €
+                    </div>
+
+                    <div *ngIf="f['amount'].errors['min']" class="center">
+                        Le  Montant   Minimum est  10€
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+         <div class="center">
+                <button class="btn" (click)="onSubmit()">Ajouter</button>
+         </div>
+</div>
+
+
+<style>
+    .amount-dialog {
+        padding: 5%;
+    }
+    h2 , form{
+        padding: 0px;
+        margin: 0px;
+    }
+    </style>

@@ -7,6 +7,8 @@ import Validation from "../../../sharedmodule/functions/validation";
 import {Observable, of} from "rxjs";
 import {StudentClass} from "../../../sharedmodule/models/studentClass";
 import {StudentDashboardService} from "../../../student/dashbord/student-dashboard.service";
+import {MatDialog} from "@angular/material/dialog";
+import {EditStudentWalletDialogComponent} from "../edit-student-wallet-dialog/edit-student-wallet-dialog.component";
 
 @Component({
   selector: 'app-manage-student-wallet',
@@ -15,7 +17,7 @@ import {StudentDashboardService} from "../../../student/dashbord/student-dashboa
   providers: [StudentsManagementService,  StudentDashboardService]
 })
 export class ManageStudentWalletComponent implements OnInit{
-  constructor(private route: ActivatedRoute ,   private studentsManagementService :  StudentsManagementService , private  studentService   : StudentDashboardService){}
+  constructor(private route: ActivatedRoute ,   private studentsManagementService :  StudentsManagementService , private  studentService   : StudentDashboardService ,  private  matDialog :  MatDialog){}
 
 
   user :  User = new User();
@@ -41,7 +43,6 @@ export class ManageStudentWalletComponent implements OnInit{
         this.studentClass$ = this.studentService.getAllStudentClass();
           this.studentsManagementService.getStudentById(studentId).subscribe(data => {
           this.user = data;
-            console.log(data)
           this.matchFormsValue();
         });
       } else {
@@ -53,6 +54,33 @@ export class ManageStudentWalletComponent implements OnInit{
     });
 
   }
+
+
+
+  addAmount(){
+    let amountToAdd  = 0 ;
+     this.matDialog.open(EditStudentWalletDialogComponent , {
+       data: "Le Montant à Ajouter",
+       width: '47%',
+       height: '30%'
+     }).afterClosed().subscribe(result => {
+        if  (result &&  !isNaN(result) &&  Number.isInteger(Number(result))){
+          console.log("le montant  " + result)
+        }
+        else {
+          return ;
+        }
+     });
+  }
+
+
+
+
+
+
+
+
+
 
   matchFormsValue() {
     this.student.patchValue({
