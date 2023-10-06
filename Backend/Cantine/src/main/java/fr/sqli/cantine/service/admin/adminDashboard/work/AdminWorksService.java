@@ -67,7 +67,7 @@ public class AdminWorksService implements  IAdminFunctionService{
 
 
     @Override
-    public void addAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException {
+    public void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException {
         if (studentId == null || amount == null) {
             throw new InvalidPersonInformationException("INVALID  STUDENT ID OR AMOUNT");
         }
@@ -77,6 +77,9 @@ public class AdminWorksService implements  IAdminFunctionService{
         }
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student.get());
+        this.confirmationTokenDao.findByStudent(student.get()).ifPresent(confirmationTokenEntity -> {
+            this.confirmationTokenDao.delete(confirmationTokenEntity);
+        });
         this.confirmationTokenDao.save(confirmationToken);
 
         this.confirmationAddingAmountToStudent.sendConfirmationAmount(student.get() , amount , confirmationToken);

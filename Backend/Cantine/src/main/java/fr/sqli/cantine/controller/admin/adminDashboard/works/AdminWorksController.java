@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller.admin.adminDashboard.works;
 
 import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.person.StudentDtoIn;
+import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
@@ -10,6 +11,7 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentCla
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.admin.adminDashboard.work.AdminWorksService;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,12 @@ public class AdminWorksController  implements  IAdminWorksController {
         this.adminWorksService = adminWorksService;
     }
 
+
+    @Override
+    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException {
+        this.adminWorksService.attemptAddAmountToStudentAccount(studentId , amount);
+        return ResponseEntity.ok(new ResponseDtout(SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION));
+    }
 
     @Override
     public ResponseEntity<StudentDtout> getStudentById(Integer studentId) throws InvalidPersonInformationException, StudentNotFoundException {

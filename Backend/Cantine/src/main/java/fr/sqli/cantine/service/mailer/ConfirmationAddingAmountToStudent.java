@@ -32,7 +32,8 @@ public class ConfirmationAddingAmountToStudent {
                     <body>
                         <h2>Cher """ + student.getFirstname() +"  " + student.getLastname()+",</h2>\n\n" +
                         "Une Opération  d'ajout d'un  montant de " + amount + "  €  En  cours  sur  votre compte Cantière.\n\n" +
-                        "Veuillez  S'il  vous plait  confirmer cette  opération  en  Communiquant  Le  Code  ci-dessous Au  personnel chargé  de  cette  Opération  :\n\n" +
+                        "Veuillez  S'il  vous plait  confirmer cette  opération  en  Communiquant  +\n\n " +
+                        " Le  Code  ci-dessous Au  personnel chargé  de  cette  Opération  :\n\n" +
                         "Code  :  " + confirmationToken.getUuid() + "<br>" +
                         "Merci de votre confiance et de votre soutien.<br>" +
                         "L'équipe Cantière" +

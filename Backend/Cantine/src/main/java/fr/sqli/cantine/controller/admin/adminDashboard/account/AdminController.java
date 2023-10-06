@@ -31,22 +31,6 @@ public class AdminController  implements IAdminController {
     }
 
 
-/*
-
-    public  ResponseEntity<ResponseDtout>checkTokenValidity(@RequestParam("token") String  token) throws InvalidTokenException, ExpiredToken, AdminNotFound {
-        this.adminService.checkTokenValidity(token);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_VALID));
-    }
-*/
-
-
-/*
-    @Override
-    public ResponseEntity<ResponseDtout> sendToken(@RequestParam("email") String email) throws InvalidPersonInformationException, AdminNotFound, MessagingException, AccountAlreadyActivatedException {
-        this.adminService.sendToken(email);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_SENDED_SUCCESSFULLY));
-    }
-*/
     @Override
     @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
     public ResponseEntity<String> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidPersonInformationException {

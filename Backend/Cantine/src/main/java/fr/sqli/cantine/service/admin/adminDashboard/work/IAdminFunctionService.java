@@ -20,7 +20,7 @@ public interface IAdminFunctionService {
 
 
 
-    void addAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException;
+    void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException;
 
     StudentDtout  getStudentById(Integer studentID) throws InvalidPersonInformationException, StudentNotFoundException;
 
