@@ -8,6 +8,7 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -18,6 +19,8 @@ public interface IAdminFunctionService {
 
 
 
+
+    void addAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException;
 
     StudentDtout  getStudentById(Integer studentID) throws InvalidPersonInformationException, StudentNotFoundException;
 

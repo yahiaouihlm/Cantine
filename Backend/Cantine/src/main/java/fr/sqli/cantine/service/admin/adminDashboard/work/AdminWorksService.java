@@ -5,14 +5,17 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.mailer.ConfirmationAddingAmountToStudent;
 import fr.sqli.cantine.service.mailer.EmailSenderService;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,11 +37,16 @@ public class AdminWorksService implements  IAdminFunctionService{
     private IStudentClassDao studentClassDao;
 
     private Environment environment;
+    private  IConfirmationTokenDao confirmationTokenDao;
+    private ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent;
     @Autowired
-    public AdminWorksService( IStudentClassDao iStudentClassDao , IStudentDao studentDao , Environment environment) {
+    public AdminWorksService( IStudentClassDao iStudentClassDao , IStudentDao studentDao , Environment environment ,
+                              ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent , IConfirmationTokenDao confirmationTokenDao) {
         this.studentClassDao = iStudentClassDao;
         this.studentDao = studentDao ;
         this.environment = environment ;
+        this.confirmationAddingAmountToStudent = confirmationAddingAmountToStudent;
+        this.confirmationTokenDao = confirmationTokenDao;
         this.STUDENT_IMAGE_URL =  this.environment.getProperty("sqli.cantine.images.url.student");
     }
 
@@ -56,6 +65,22 @@ public class AdminWorksService implements  IAdminFunctionService{
         this.studentClassDao.save(studentClassEntity);
     }
 
+
+    @Override
+    public void addAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException {
+        if (studentId == null || amount == null) {
+            throw new InvalidPersonInformationException("INVALID  STUDENT ID OR AMOUNT");
+        }
+        var student = this.studentDao.findById(studentId);
+        if (student.isEmpty()) {
+            throw new StudentNotFoundException("STUDENT NOT FOUND");
+        }
+
+        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student.get());
+        this.confirmationTokenDao.save(confirmationToken);
+
+        this.confirmationAddingAmountToStudent.sendConfirmationAmount(student.get() , amount , confirmationToken);
+    }
 
     @Override
     public StudentDtout getStudentById(Integer studentID) throws InvalidPersonInformationException, StudentNotFoundException {
