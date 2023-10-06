@@ -43,7 +43,7 @@ public class ConfirmationTokenEntity {
         this.admin = admin;
         createdDate = new Date();
         token = UUID.randomUUID().toString();
-        uuid =  new Random().nextInt((9999999 - 1000000) + 1) + 1000000 ;
+        uuid =  new Random().nextInt((999999 - 100000) + 1) + 100000 ;
     }
 
     public ConfirmationTokenEntity(StudentEntity student) {
