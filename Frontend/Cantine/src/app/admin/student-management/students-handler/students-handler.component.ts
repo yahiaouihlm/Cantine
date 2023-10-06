@@ -3,6 +3,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import {Observable, of} from "rxjs";
 import {User} from "../../../sharedmodule/models/user";
 import {StudentsManagementService} from "../students-management.service";
+import {NavigationExtras, Router} from "@angular/router";
 
 @Component({
   selector: 'app-students-handler',
@@ -22,7 +23,7 @@ export class StudentsHandlerComponent {
     birthDate: new FormControl('', [Validators.required]),
   });
 
-  constructor(private studentsManagementService :  StudentsManagementService) {
+  constructor(private studentsManagementService :  StudentsManagementService,  private router : Router) {
   }
 
 
@@ -45,7 +46,13 @@ export class StudentsHandlerComponent {
 
   }
 
+  goToStudentProfile(studentId :  number) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: { studentId: studentId }
+    };
 
+    this.router.navigate(["cantine/admin/students/profile"],  navigationExtras);
+  }
 
   get f(): { [key: string]: AbstractControl } {
     return this.studentSeeked.controls;

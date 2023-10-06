@@ -1,1 +1,145 @@
-<p>manage-student-wallet works!</p>
+<div class="container test ">
+    <div class="row">
+
+
+        <form [formGroup]="student" >
+            <div class="wallet center">
+                <img id="profile-picture" src={{user.image}}>
+                <h1>{{user.firstname}}   {{user.lastname}}</h1>
+                <h2> SOLDE : {{user.wallet}} € </h2>
+
+            </div>
+
+            <!---------------------- Name --------------------------->
+            <div class="form-group  input-card col">
+                <label for="firstName"> Prénom : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
+                       formControlName="firstName"
+                       placeholder="Prénom "
+                       type="text"
+                       id="firstName"
+                />
+            </div>
+
+
+            <!---------------------- LastName --------------------------->
+            <div class="form-group input-card   col ">
+                <label for="lastName"> Nom : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
+                       formControlName="lastName"
+                       placeholder="Nom "
+                       type="text"
+                       id="lastName"
+                />
+            </div>
+
+
+            <!---------------------- Email --------------------------->
+            <div class="form-group  input-card   col">
+                <label for="email"> Email : </label>
+                <input   [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                         formControlName="email"
+                         placeholder="  Votre Email "
+                         type="email"
+                         id="email"
+
+                />
+            </div>
+
+
+            <!---------------------- Birthdate--------------------------->
+            <div class="form-group  input-card   col">
+                <label for="birthDate"> Date De Naissance : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
+                       formControlName="birthDate"
+                       placeholder=" Date  De  Naissance "
+                       type="Date"
+                       id="birthDate"
+                />
+
+            </div>
+
+
+
+            <!---------------------- Phone Number--------------------------->
+            <div class="form-group" >
+                <label for="phoneNumber"> Numéro Tél : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
+                       formControlName="phoneNumber"
+                       placeholder="  Votre  Numéro Télephone "
+                       type="tel"
+                       id="phoneNumber"
+                />
+            </div>
+
+
+            <!---------------------- StudentClass  --------------------------->
+
+            <div class="form-group">
+                <label for="studentClass"> </label>
+                <select formControlName="studentClass" class="form-control" id="studentClass"
+                        [ngClass]="{ 'is-invalid': submitted && f['studentClass'].errors }" name="studentClass">
+                    <option value="" disabled>-- Votre class --</option>
+                    <ng-container *ngFor="let Sclass of studentClass$ | async ">
+                        <option [value]="Sclass.name">{{ Sclass.name }}</option>
+                    </ng-container>
+                </select>
+
+            </div>
+        </form>
+
+        <div class="center">
+            <button class="btn"> Ajouter   Un  montant </button>
+            <button class="btn"> Soustraire  Un montant </button>
+        </div>
+
+
+    </div>
+</div>
+
+<style>
+
+
+    #profile-picture {
+        width: 20%;
+        height: auto;
+        border-radius: 100%;
+    }
+
+
+    .test {
+        padding: 5px;
+        margin-top: 30px;
+        margin-bottom: 30px ;
+        border: 1px solid rgba(50, 47, 47, 0.64);
+
+    }
+
+
+    img {
+        width: 25%;
+    }
+
+
+    .input-card {
+        width: 50%;
+    }
+
+
+</style>
+
+<ng-template #loadingTemplate >
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+</ng-template>
+
+<style>
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 15vh;
+    }
+</style>

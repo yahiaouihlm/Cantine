@@ -75,7 +75,7 @@
 
 <div *ngIf="(students$ | async)?.length; else noStudents">
      <div *ngFor="let student of students$ | async ">
-          <div class="container">
+          <div class="container" (click)="goToStudentProfile(student.id)">
                <div class="row">
                     <div class="col-md-2">
                          <span>   Nom :  {{student.lastname}}  </span>

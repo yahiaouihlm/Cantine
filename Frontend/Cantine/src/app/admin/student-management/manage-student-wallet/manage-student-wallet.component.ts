@@ -2,20 +2,25 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {StudentsManagementService} from "../students-management.service";
 import {User} from "../../../sharedmodule/models/user";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../../sharedmodule/functions/validation";
+import {Observable, of} from "rxjs";
+import {StudentClass} from "../../../sharedmodule/models/studentClass";
+import {StudentDashboardService} from "../../../student/dashbord/student-dashboard.service";
 
 @Component({
   selector: 'app-manage-student-wallet',
   templateUrl: './manage-student-wallet.component.html',
   styles: [],
-  providers: [StudentsManagementService]
+  providers: [StudentsManagementService,  StudentDashboardService]
 })
 export class ManageStudentWalletComponent implements OnInit{
-  constructor(private route: ActivatedRoute ,   private studentsManagementService :  StudentsManagementService){}
+  constructor(private route: ActivatedRoute ,   private studentsManagementService :  StudentsManagementService , private  studentService   : StudentDashboardService){}
 
 
   user :  User = new User();
+  submitted  =  false
+  studentClass$: Observable<StudentClass[]> = of([]);
   student: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -28,11 +33,15 @@ export class ManageStudentWalletComponent implements OnInit{
 
 
   ngOnInit(): void {
+    this.student.disable();
     this.route.queryParams.subscribe(params => {
-      const id = params['id'];
-      if (!isNaN(id) && Number.isInteger(Number(id))) {
-          this.studentsManagementService.getStudentById(id).subscribe(data => {
+      const studentId = params['studentId'];
+      console.log("le id  " + studentId  )
+      if (!isNaN(studentId) && Number.isInteger(Number(studentId))) {
+        this.studentClass$ = this.studentService.getAllStudentClass();
+          this.studentsManagementService.getStudentById(studentId).subscribe(data => {
           this.user = data;
+            console.log(data)
           this.matchFormsValue();
         });
       } else {
@@ -57,4 +66,10 @@ export class ManageStudentWalletComponent implements OnInit{
     });
 
   }
+
+
+  get f(): { [key: string]: AbstractControl } {
+    return this.student.controls;
+  }
+
 }
