@@ -44,7 +44,7 @@ import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-
     MatFormFieldModule,
     MatOptionModule,
     MatSelectModule,
-
+    NgOtpInputModule,
   ],
   exports : [
     MainFooterComponent,
@@ -65,7 +65,7 @@ import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-
     EuroSymbolPipe,
     FoodAvailablePipe,
     MatProgressSpinnerModule,
-    NgOtpInputModule,
+
   ]
 
 })

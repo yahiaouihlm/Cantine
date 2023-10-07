@@ -65,6 +65,8 @@ export class ManageStudentWalletComponent implements OnInit{
        width: '47%',
        height: '30%'
      })
+
+
   }
 
 
