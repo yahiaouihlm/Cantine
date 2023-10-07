@@ -36,6 +36,9 @@ public interface IAdminWorksController {
     String STUDENT_CLASS_ADDED_SUCCESSFULLY = "STUDENT CLASS ADDED SUCCESSFULLY";
 
 
+
+    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( @RequestParam("studentId") Integer studentId,@RequestParam("validationCode")  Integer validationCode,  @RequestParam("amount") Double amount);
+
     @PutMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
     ResponseEntity<ResponseDtout>attemptAddAmountToStudentAccount(@RequestParam("studentId") Integer studentId , @RequestParam("amount") Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException;
 

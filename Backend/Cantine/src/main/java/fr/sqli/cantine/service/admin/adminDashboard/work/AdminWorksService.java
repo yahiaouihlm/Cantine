@@ -29,6 +29,7 @@ import java.util.List;
 @Service
 public class AdminWorksService implements IAdminFunctionService {
     private static final Logger LOG = LogManager.getLogger();
+    private  final  Integer  MAX_STUDENT_WALLET  =   3000;
     private final String STUDENT_IMAGE_URL;
     private IStudentDao studentDao;
 
@@ -109,11 +110,20 @@ public class AdminWorksService implements IAdminFunctionService {
         }
 
 
+
+        //  if we want we can add the condifition     than  student  wallet  must  be  less than  3000
+
+        var  newWallet  =  student.getWallet().add(new BigDecimal(amount));
+         if  (newWallet.compareTo(new BigDecimal(MAX_STUDENT_WALLET)) > 0 ){
+             AdminWorksService.LOG.error("WALLET  TO  BIG");
+             throw  new InvalidPersonInformationException("EXCESSIVE AMOUNT");
+         }
+
+
         // add  new amount  to student  account
 
         student.setWallet(student.getWallet().add(new BigDecimal(amount)));
         this.studentDao.save(student);
-        return;
 
     }
 
