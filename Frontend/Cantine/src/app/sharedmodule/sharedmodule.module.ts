@@ -18,7 +18,8 @@ import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successfu
 import {EuroSymbolPipe} from "./CustomPipes/euro-symbol-pipe";
 import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-
+import {NgOtpInputConfig, NgOtpInputModule} from "ng-otp-input";
+import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
       SuccessfulDialogComponent,
         EuroSymbolPipe,
         FoodAvailablePipe,
+        NgOtpInputDialogComponent,
   ],
   imports: [
     MatSidenavModule,
@@ -42,7 +44,6 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatFormFieldModule,
     MatOptionModule,
     MatSelectModule,
-
 
   ],
   exports : [
@@ -63,7 +64,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatDialogModule,
     EuroSymbolPipe,
     FoodAvailablePipe,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    NgOtpInputModule,
   ]
 
 })

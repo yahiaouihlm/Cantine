@@ -1,4 +1,4 @@
-<div class="amount-dialog">
+<div class="amount-dialog" >
 
         <h2 class="center">{{data.message}}</h2>
         <form [formGroup]="amountForm" class="test">
@@ -32,6 +32,14 @@
                 <button class="btn" (click)="onSubmit()">Ajouter</button>
          </div>
 </div>
+
+
+
+
+
+
+
+
 <ng-template #loadingTemplate >
     <div class="spinner-container">
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
@@ -48,9 +56,16 @@
     }
     .amount-dialog {
         padding: 5%;
+        overflow-x:hidden ;
     }
     h2 , form{
         padding: 0px;
         margin: 0px;
+    }
+    .code-input{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 13vh;
     }
     </style>

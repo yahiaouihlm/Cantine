@@ -11,6 +11,7 @@ import { EditStudentWalletDialogComponent } from './edit-student-wallet-dialog/e
 
 
 
+
 const routes: Routes = [
   {path: '', component: StudentsHandlerComponent },
   {path: 'profile', component: ManageStudentWalletComponent }
@@ -21,10 +22,10 @@ const routes: Routes = [
     ManageStudentWalletComponent,
     EditStudentWalletDialogComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    SharedmoduleModule,
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        SharedmoduleModule,
+    ]
 })
 export class StudentManagementModule { }

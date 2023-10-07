@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../../sharedmodule/functions/validation";
 import {StudentsManagementService} from "../students-management.service";
+import {NgOtpInputConfig} from "ng-otp-input";
+
 
 @Component({
   selector: 'app-editer-salaire-etudiant-dialog',
@@ -18,6 +20,7 @@ export class EditStudentWalletDialogComponent {
     amount: new FormControl('', [Validators.required ,   Validators.max(200)  ,  Validators.min(10)]),
   });
 
+  inputWallet =  false ;
    constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string ,  userid : number} ,  private dialogRef: MatDialogRef<EditStudentWalletDialogComponent> ,  private studentsManagementService :  StudentsManagementService  ) { }
 
   onSubmit(): void {
@@ -31,6 +34,8 @@ export class EditStudentWalletDialogComponent {
         error : (error) => { this.isLoaded=  false } ,
     });
   }
+
+
   get f(): { [key: string]: AbstractControl } {
     return this.amountForm.controls;
   }

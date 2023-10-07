@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {APP_BASE_HREF, CommonModule} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import { MainAdminComponent } from './main-admin/main-admin.component';
 import {RouterModule, Routes} from "@angular/router";
 import { HomeAdminComponent } from './home-admin/home-admin.component';
