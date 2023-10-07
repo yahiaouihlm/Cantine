@@ -5,10 +5,7 @@ import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.ExistingStudentClassException;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidStudentClassException;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.StudentClassNotFoundException;
+import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.cantine.service.admin.adminDashboard.work.AdminWorksService;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
@@ -30,6 +27,12 @@ public class AdminWorksController  implements  IAdminWorksController {
         this.adminWorksService = adminWorksService;
     }
 
+
+    @Override
+    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidPersonInformationException, InvalidTokenException, ExpiredToken, StudentNotFoundException {
+         this.adminWorksService.addAmountToStudentAccountCodeValidation(studentId ,  validationCode , amount);
+        return  ResponseEntity.ok(new ResponseDtout(STUDENT_VALIDATE_STUDENT_AMOUNT));
+    }
 
     @Override
     public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException {
