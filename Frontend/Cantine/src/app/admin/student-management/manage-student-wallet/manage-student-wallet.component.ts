@@ -61,7 +61,6 @@ export class ManageStudentWalletComponent implements OnInit{
     let amountToAdd  = 0 ;
      this.matDialog.open(EditStudentWalletDialogComponent , {
        data:  { message :"Le Montant à Ajouter" , userid :  this.user.id } ,
-
        width: '47%',
        height: '30%'
      })

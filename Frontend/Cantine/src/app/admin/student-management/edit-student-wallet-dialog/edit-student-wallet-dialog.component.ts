@@ -1,45 +1,62 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
-import Validation from "../../../sharedmodule/functions/validation";
 import {StudentsManagementService} from "../students-management.service";
-import {NgOtpInputConfig} from "ng-otp-input";
+import {
+    NgOtpInputDialogComponent
+} from "../../../sharedmodule/dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component";
 
 
 @Component({
-  selector: 'app-editer-salaire-etudiant-dialog',
-  templateUrl: `./edit-student-wallet-dialog.component.html`,
-  styles: [] ,
-  providers: [StudentsManagementService]
+    selector: 'app-editer-salaire-etudiant-dialog',
+    templateUrl: `./edit-student-wallet-dialog.component.html`,
+    styles: [],
+    providers: [StudentsManagementService]
 })
 export class EditStudentWalletDialogComponent {
 
-  submitted: boolean = false;
-  isLoaded: boolean = false;
-  amountForm: FormGroup = new FormGroup({
-    amount: new FormControl('', [Validators.required ,   Validators.max(200)  ,  Validators.min(10)]),
-  });
-
-  inputWallet =  false ;
-   constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string ,  userid : number} ,  private dialogRef: MatDialogRef<EditStudentWalletDialogComponent> ,  private studentsManagementService :  StudentsManagementService  ) { }
-
-  onSubmit(): void {
-    this.submitted = true;
-    if (this.amountForm.invalid) {
-      return;
-    }
-    this.isLoaded =  true ;
-    this.studentsManagementService.sendStudentWallet(this.data.userid , this.amountForm.value.amount).subscribe({
-        next: (response) => { this.isLoaded = false} ,
-        error : (error) => { this.isLoaded=  false } ,
+    submitted: boolean = false;
+    isLoaded: boolean = false;
+    amountForm: FormGroup = new FormGroup({
+        amount: new FormControl('', [Validators.required, Validators.max(200), Validators.min(10)]),
     });
-  }
+
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string, userid: number }, private dialogRef: MatDialogRef<EditStudentWalletDialogComponent>, private studentsManagementService: StudentsManagementService, private matDialog: MatDialog) {
+    }
+
+    onSubmit(): void {
+        this.submitted = true;
+        if (this.amountForm.invalid) {
+            return;
+        }
+        this.isLoaded = true;
+
+        this.studentsManagementService.sendStudentWallet(this.data.userid, this.amountForm.value.amount).subscribe({
+            next: (response) => {
+                this.isLoaded = false
+                this.getValidationCode();
+                this.dialogRef.close();
+            },
+            error: (error) => {
+                this.isLoaded = false ,
+                    this.dialogRef.close();
+            },
+        });
+    }
 
 
-  get f(): { [key: string]: AbstractControl } {
-    return this.amountForm.controls;
-  }
+    // Ouvrir  un  dialogue  de  code   5  elements
+    getValidationCode() {
+        this.matDialog.open(NgOtpInputDialogComponent, {
+            width: "50vw",
+            height: "25vh"
+        });
+    }
 
+
+    get f(): { [key: string]: AbstractControl } {
+        return this.amountForm.controls;
+    }
 
 
 }

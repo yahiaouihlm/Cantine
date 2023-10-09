@@ -19,10 +19,8 @@ import {MatDialogRef} from "@angular/material/dialog";
   ]
 })
 export class NgOtpInputDialogComponent {
-
-   constructor(  private dialogRef: MatDialogRef<NgOtpInputDialogComponent> ) {
-   }
-  otpInputConfig: NgOtpInputConfig = {
+   constructor(  private dialogRef: MatDialogRef<NgOtpInputDialogComponent> ) {}
+   otpInputConfig: NgOtpInputConfig = {
     length: 7,
     inputStyles: {
       width: '4vw',
@@ -30,4 +28,6 @@ export class NgOtpInputDialogComponent {
       border : "1px solid   black"
     }
   }
+
+
 }
