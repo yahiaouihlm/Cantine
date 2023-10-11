@@ -21,27 +21,30 @@ export class EditStudentWalletDialogComponent {
         amount: new FormControl('', [Validators.required, Validators.max(200), Validators.min(10)]),
     });
 
+
     constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string, userid: number }, private dialogRef: MatDialogRef<EditStudentWalletDialogComponent>, private studentsManagementService: StudentsManagementService, private matDialog: MatDialog) {
     }
 
     onSubmit(): void {
+
         this.submitted = true;
         if (this.amountForm.invalid) {
             return;
         }
         this.isLoaded = true;
+        this.dialogRef.close(this.amountForm.value.amount);
 
-        this.studentsManagementService.sendStudentWallet(this.data.userid, this.amountForm.value.amount).subscribe({
+        /*this.studentsManagementService.sendStudentWallet(this.data.userid, this.amountForm.value.amount).subscribe({
             next: (response) => {
                 this.isLoaded = false
-                this.getValidationCode();
-                this.dialogRef.close();
+               this.getValidationCode();
+               this.dialogRef.close();
             },
             error: (error) => {
-                this.isLoaded = false ,
+                this.isLoaded = false
                     this.dialogRef.close();
             },
-        });
+        });*/
     }
 
 

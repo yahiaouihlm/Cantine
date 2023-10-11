@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NgOtpInputConfig} from "ng-otp-input";
 import {MatDialogRef} from "@angular/material/dialog";
+import {StudentsManagementService} from "../../../admin/student-management/students-management.service";
 
 @Component({
   selector: 'app-ng-otp-input-dialog',
@@ -8,26 +9,40 @@ import {MatDialogRef} from "@angular/material/dialog";
     <div class="amount-dialog">
       <h2 class="center"> Veuillez Saisir le  code de Confiramtion  </h2>
       <div class="code-input">
-        <ng-otp-input  [config]="otpInputConfig"  class="center" > </ng-otp-input>
+        <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)" [config]="otpInputConfig"  class="center" > </ng-otp-input>
       </div>
       <div class="center"> <!--*ngIf="!isLoaded; else loadingTemplate"--> 
-        <button class="btn">Valider</button>
+        <button class="btn" (click)="validate()">Valider</button>
       </div>
     </div>
   `,
-  styles: [
-  ]
+  styles: [],
+    providers: [StudentsManagementService]
 })
 export class NgOtpInputDialogComponent {
-   constructor(  private dialogRef: MatDialogRef<NgOtpInputDialogComponent> ) {}
+    otp!: string;
+   constructor(  private dialogRef: MatDialogRef<NgOtpInputDialogComponent> , private studentsManagementService :   StudentsManagementService) {}
    otpInputConfig: NgOtpInputConfig = {
     length: 7,
+       placeholder: "*",
     inputStyles: {
       width: '4vw',
       height: '7vh',
       border : "1px solid   black"
     }
   }
+
+
+  sendCodeForValidationStudent(){
+
+  }
+
+    validate(){
+        console.log("le code  " + this.otp) ;
+    }
+    onOtpChange(otp: string) {
+        this.otp = otp;
+    }
 
 
 }

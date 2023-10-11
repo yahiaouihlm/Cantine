@@ -1,3 +1,5 @@
+
+
 <div class="container test ">
     <div class="row">
         <form [formGroup]="student" >
@@ -94,7 +96,6 @@
 
     </div>
 </div>
-
 <style>
 
 
@@ -139,5 +140,18 @@
         justify-content: center;
         align-items: center;
         height: 15vh;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Arrière-plan flouté */
+        z-index: 1000; /* Assurez-vous que la superposition soit en haut des autres éléments */
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>

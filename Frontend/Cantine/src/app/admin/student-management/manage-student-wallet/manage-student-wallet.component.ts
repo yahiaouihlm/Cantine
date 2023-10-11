@@ -23,6 +23,8 @@ export class ManageStudentWalletComponent implements OnInit{
   user :  User = new User();
   submitted  =  false
   studentClass$: Observable<StudentClass[]> = of([]);
+  isLoadingPage: boolean = false;
+
   student: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -59,11 +61,16 @@ export class ManageStudentWalletComponent implements OnInit{
 
   addAmount(){
     let amountToAdd  = 0 ;
-     this.matDialog.open(EditStudentWalletDialogComponent , {
+    let  dialogRef =  this.matDialog.open(EditStudentWalletDialogComponent , {
        data:  { message :"Le Montant à Ajouter" , userid :  this.user.id } ,
        width: '47%',
        height: '30%'
-     })
+     }) ;
+    let result =  dialogRef.afterClosed().subscribe((result : number) => {
+       amountToAdd  = result ;
+    });
+
+      result.closed  =  true ;
 
 
   }
