@@ -3,9 +3,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-loading-dialog',
   template: `
-    <p>
-      loading-dialog works!
-    </p>
+      <div class="d-flex justify-content-center">
+            <div class="spinner-container">
+              <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+            </div>
+          </div>
   `,
   styles: [
   ]

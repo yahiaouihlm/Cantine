@@ -70,7 +70,9 @@ export class ManageStudentWalletComponent implements OnInit{
        amountToAdd  = result ;
     });
 
-      result.closed  =  true ;
+    if (result.closed) {
+      this.isLoadingPage =  true;
+    }
 
 
   }
@@ -101,5 +103,8 @@ export class ManageStudentWalletComponent implements OnInit{
   get f(): { [key: string]: AbstractControl } {
     return this.student.controls;
   }
+
+
+
 
 }

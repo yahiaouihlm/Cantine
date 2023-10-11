@@ -1,4 +1,6 @@
-
+<div class="loading-dialog"  *ngIf="isLoadingPage">
+    <app-loading-dialog></app-loading-dialog>
+</div>
 
 <div class="container test ">
     <div class="row">
@@ -142,14 +144,14 @@
         height: 15vh;
     }
 
-    .overlay {
+    .loading-dialog {
         position: fixed;
         top: 0;
         left: 0;
+        z-index: 1000;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Arrière-plan flouté */
-        z-index: 1000; /* Assurez-vous que la superposition soit en haut des autres éléments */
+        background-color: rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: center;
         align-items: center;

@@ -17,7 +17,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import { SuccessfulDialogComponent } from './dialogs/successful-dialog/successful-dialog.component';
 import {EuroSymbolPipe} from "./CustomPipes/euro-symbol-pipe";
 import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {NgOtpInputConfig, NgOtpInputModule} from "ng-otp-input";
 import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component';
 import { LoadingDialogComponent } from './dialogs/loading-dialog/loading-dialog.component';
@@ -46,29 +46,32 @@ import { LoadingDialogComponent } from './dialogs/loading-dialog/loading-dialog.
     MatFormFieldModule,
     MatOptionModule,
     MatSelectModule,
-    NgOtpInputModule,
-  ],
-  exports : [
-    MainFooterComponent,
-    MatSidenavModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatListModule,
-    MatBadgeModule,
-    ReactiveFormsModule,
-    MainFooterComponent,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatCardModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogModule,
-    EuroSymbolPipe,
-    FoodAvailablePipe,
-    MatProgressSpinnerModule,
+    NgOtpInputModule, MatProgressSpinnerModule,
 
-  ]
+  ],
+    exports: [
+
+        MainFooterComponent,
+        MatSidenavModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatListModule,
+        MatBadgeModule,
+        ReactiveFormsModule,
+        MainFooterComponent,
+        MatCheckboxModule,
+        MatRadioModule,
+        MatCardModule,
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogModule,
+        EuroSymbolPipe,
+        FoodAvailablePipe,
+        MatProgressSpinnerModule,
+        LoadingDialogComponent,
+
+    ]
 
 })
 export class SharedmoduleModule { }
