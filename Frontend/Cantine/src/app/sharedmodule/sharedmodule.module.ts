@@ -20,6 +20,7 @@ import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {NgOtpInputConfig, NgOtpInputModule} from "ng-otp-input";
 import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component';
+import { LoadingDialogComponent } from './dialogs/loading-dialog/loading-dialog.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-
         EuroSymbolPipe,
         FoodAvailablePipe,
         NgOtpInputDialogComponent,
+        LoadingDialogComponent,
   ],
   imports: [
     MatSidenavModule,
