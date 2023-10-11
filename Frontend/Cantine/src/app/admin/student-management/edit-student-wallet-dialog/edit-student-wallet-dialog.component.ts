@@ -34,17 +34,6 @@ export class EditStudentWalletDialogComponent {
         this.isLoaded = true;
         this.dialogRef.close(this.amountForm.value.amount);
 
-        /*this.studentsManagementService.sendStudentWallet(this.data.userid, this.amountForm.value.amount).subscribe({
-            next: (response) => {
-                this.isLoaded = false
-               this.getValidationCode();
-               this.dialogRef.close();
-            },
-            error: (error) => {
-                this.isLoaded = false
-                    this.dialogRef.close();
-            },
-        });*/
     }
 
 
