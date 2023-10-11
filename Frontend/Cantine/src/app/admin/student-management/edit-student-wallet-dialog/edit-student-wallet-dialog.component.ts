@@ -37,13 +37,7 @@ export class EditStudentWalletDialogComponent {
     }
 
 
-    // Ouvrir  un  dialogue  de  code   5  elements
-    getValidationCode() {
-        this.matDialog.open(NgOtpInputDialogComponent, {
-            width: "50vw",
-            height: "25vh"
-        });
-    }
+
 
 
     get f(): { [key: string]: AbstractControl } {

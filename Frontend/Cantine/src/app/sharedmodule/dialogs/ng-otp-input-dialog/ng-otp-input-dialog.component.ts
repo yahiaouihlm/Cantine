@@ -33,12 +33,9 @@ export class NgOtpInputDialogComponent {
   }
 
 
-  sendCodeForValidationStudent(){
-
-  }
 
     validate(){
-        console.log("le code  " + this.otp) ;
+        this.dialogRef.close(this.otp);
     }
     onOtpChange(otp: string) {
         this.otp = otp;

@@ -9,6 +9,10 @@ import {StudentClass} from "../../../sharedmodule/models/studentClass";
 import {StudentDashboardService} from "../../../student/dashbord/student-dashboard.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EditStudentWalletDialogComponent} from "../edit-student-wallet-dialog/edit-student-wallet-dialog.component";
+import {
+    NgOtpInputDialogComponent
+} from "../../../sharedmodule/dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component";
+import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
     selector: 'app-manage-student-wallet',
@@ -20,7 +24,7 @@ export class ManageStudentWalletComponent implements OnInit {
     constructor(private route: ActivatedRoute, private studentsManagementService: StudentsManagementService, private studentService: StudentDashboardService, private matDialog: MatDialog) {
     }
 
-
+    AMOUNT_ADDED_SUCCESSFULLY = "Le montant a été ajouté avec succès !"
     user: User = new User();
     submitted = false
     studentClass$: Observable<StudentClass[]> = of([]);
@@ -59,31 +63,71 @@ export class ManageStudentWalletComponent implements OnInit {
     }
 
 
-    async addAmount() {
+    addAmount() {
         let amountToAdd = 0;
         let dialogRef = this.matDialog.open(EditStudentWalletDialogComponent, {
             data: {message: "Le Montant à Ajouter", userid: this.user.id},
             width: '47%',
             height: '30%'
         });
-        let result = await dialogRef.afterClosed().subscribe((result: number) => {
-            this.isLoadingPage = true;
-           this.sendStudentAmount(result);
+        let result = dialogRef.afterClosed().subscribe((result: number) => {
+            if (result != undefined && result != 0) {
+                this.isLoadingPage = true;
+                amountToAdd = result;
+                this.sendStudentAmount(amountToAdd);
+            }
         });
 
 
     }
 
-  sendStudentAmount(amountToAdd: number) {
-    this.studentsManagementService.sendStudentWallet(this.user.id, amountToAdd).subscribe({
-      next: (response) => {
-        this.isLoadingPage = false
-      },
-      error: (error) => {
-        this.isLoadingPage = false
-      },
-    });
-  }
+    sendStudentAmount(amountToAdd: number) {
+        this.studentsManagementService.sendStudentWallet(this.user.id, amountToAdd).subscribe({
+            next: (response) => {
+                this.isLoadingPage = false
+                this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
+            },
+            error: (error) => {
+                this.isLoadingPage = false
+            },
+        });
+    }
+
+
+    /************ Le formulaire   du  saisie  du  code  ************/
+
+    sendStudentConfirmationCode(amountToAdd: number) {
+        let dialogRef = this.matDialog.open(NgOtpInputDialogComponent, {width: "50vw", height: "25vh"});
+        let result = dialogRef.afterClosed().subscribe((result: string) => {
+            if (result != undefined && result != "") {
+                this.isLoadingPage = true;
+                this.sendStudentConfirmationCodeReq(amountToAdd, Number(result)); //  envoyer le  code  de  confirmation
+            }
+        });
+    }
+
+    sendStudentConfirmationCodeReq(amountToAdd: number, validationCode: number) {
+        this.studentsManagementService.sendStudentCode(this.user.id, amountToAdd, validationCode).subscribe({
+            next: (response) => {
+                this.showConfirmationDialog();
+                this.isLoadingPage = false //  si  le code éte correcte
+            }
+            , error: (error) => {
+                this.isLoadingPage = false  //  si le code est  incorrecte
+            }
+        });
+    }
+
+
+    showConfirmationDialog(): void {
+        const result = this.matDialog.open(SuccessfulDialogComponent, {
+            data: {message: this.AMOUNT_ADDED_SUCCESSFULLY},
+            width: '40%',
+        });
+        result.afterClosed().subscribe((result) => {
+            window.location.reload();
+        });
+    }
 
     matchFormsValue() {
         this.student.patchValue({
