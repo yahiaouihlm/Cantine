@@ -19,7 +19,7 @@ public interface IAdminWorksController {
     String ADMIN_DASH_BOARD_BASIC_WORK_URL = "/cantine/admin/adminDashboard/works";
     String SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT = "/addStudentAmount";
 
-    String  VALIDATE_STUDENT_AMOUNT_STUDENT =  "/validationAmount";
+    String      VALIDATE_STUDENT_AMOUNT_STUDENT =  "/validationAmount";
     String GET_STUDENTS = "/getStudents";
     String GET_STUDENT_BY_ID = "/getStudent";
     String ADD_STUDENT_CLASS_ENDPOINT = "/addStudentClass";

@@ -18,7 +18,8 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
      * @return the meal if it exists
      */
 
-    @Query(value = "SELECT meal FROM MealEntity meal WHERE (" +
+    @Query(
+            value = "SELECT meal FROM MealEntity meal WHERE (" +
             "LOWER(REPLACE(meal.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
             "AND LOWER(REPLACE(meal.category, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
             "AND LOWER(REPLACE(meal.description, ' ', '')) = LOWER(REPLACE(?3, ' ', ''))" +

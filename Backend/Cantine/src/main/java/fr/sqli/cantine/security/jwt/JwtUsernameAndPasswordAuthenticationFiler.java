@@ -175,9 +175,9 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         idToken.put("Firstname" ,  user.getFirstname());
         idToken.put("LastName" ,  user.getLastname());
         idToken.put("email" , username);
-        idToken.put("id" ,  user.getId().toString());
+        idToken.put("id" ,  user.getId().toString()); /*TODO changer  le id  yo  UUID */
         idToken.put("image",  user.getImage() );
-        idToken.put("role", role[0].toString());
+        idToken.put("role", role[0].toString()); // pas  une
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
 
     }

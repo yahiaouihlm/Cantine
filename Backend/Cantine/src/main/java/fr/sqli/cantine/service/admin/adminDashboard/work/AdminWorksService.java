@@ -129,7 +129,7 @@ public class AdminWorksService implements IAdminFunctionService {
 
     @Override
     public void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidPersonInformationException, MessagingException {
-        if (studentId == null || amount == null) {
+        if (studentId == null || amount == null || amount < 10 || amount > 200) {
             throw new InvalidPersonInformationException("INVALID  STUDENT ID OR AMOUNT");
         }
         var student = this.studentDao.findById(studentId);

@@ -1,10 +1,12 @@
 package fr.sqli.cantine.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.cantine.security.exceptionHandler.CustomAccessDeniedHandler;
 import fr.sqli.cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
 import fr.sqli.cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
 import fr.sqli.cantine.security.jwt.JwtTokenVerifier;
 import fr.sqli.cantine.security.jwt.JwtUsernameAndPasswordAuthenticationFiler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +35,7 @@ public class SecurityConfig {
     private CustomAuthenticationEntryPoint  customAuthenticationEntryPoint ;
     private CustomAccessDeniedHandler customAccessDeniedHandler ;
     private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new  StoneAuthenticationFailureHandler() ;
+    private   ObjectMapper objectMapper ;
     public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,
                            CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder ,  JwtTokenVerifier jwtTokenVerifier){
 
@@ -69,12 +72,12 @@ public class SecurityConfig {
             authorize.anyRequest().authenticated();
         })
                 .authenticationProvider(authenticationProvider())
-                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
+                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()  /*this.objectMapper*/))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
-         /*       .exceptionHandling()
+              .exceptionHandling()
                  .authenticationEntryPoint(this.customAuthenticationEntryPoint)
-                .accessDeniedHandler(this.stoneAuthenticationFailureHandler)*/
-
+                .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
+                .and()
                .build();
 
     }
@@ -105,4 +108,8 @@ public class SecurityConfig {
     }
 
 
+    @Autowired
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 }

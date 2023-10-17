@@ -25,7 +25,7 @@ import static fr.sqli.cantine.controller.admin.meals.IMealController.MEALS_BASIC
 @RestController
 @RequestMapping(value = MEALS_BASIC_URL_ADMIN)
 @CrossOrigin(origins = "http://localhost:4200")
-public class MealController implements IMealController {
+public class    MealController implements IMealController {
 
 
     private final MealService mealService;
