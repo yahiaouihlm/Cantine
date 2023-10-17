@@ -17,11 +17,10 @@ import {StudentsManagementService} from "../../../admin/student-management/stude
     </div>
   `,
   styles: [],
-    providers: [StudentsManagementService]
 })
 export class NgOtpInputDialogComponent {
     otp!: string;
-   constructor(  private dialogRef: MatDialogRef<NgOtpInputDialogComponent> , private studentsManagementService :   StudentsManagementService) {}
+   constructor(  private dialogRef: MatDialogRef<NgOtpInputDialogComponent>) {}
    otpInputConfig: NgOtpInputConfig = {
     length: 7,
        placeholder: "*",

@@ -22,7 +22,7 @@ export class EditStudentWalletDialogComponent {
     });
 
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string, userid: number }, private dialogRef: MatDialogRef<EditStudentWalletDialogComponent>, private studentsManagementService: StudentsManagementService, private matDialog: MatDialog) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string, userid: number }, private dialogRef: MatDialogRef<EditStudentWalletDialogComponent>) {
     }
 
     onSubmit(): void {
