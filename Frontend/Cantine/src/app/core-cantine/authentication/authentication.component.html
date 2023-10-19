@@ -76,6 +76,9 @@
                     <h2  style="color: red">  Impossible de vous connecter, votre compte est en attente de validation par Administration  de école ASTON  .</h2>
                 </div>
 
+                <div class="center"  *ngIf="wrong_credentials" (click)="forgotPassword()">
+                      <p style="color: #004a9f"> Mot de passe oublié ! </p>
+                </div>
 
                 <div class="validate-form center">
                     <button class="center btn" (click)="singIn()">
@@ -86,17 +89,13 @@
                     </button>
                 </div>
 
-
-
-                <div>
-                    <p style="color: #004a9f"> je suis pas encore inscrit ! </p>
-                </div>
-
             </div>
-
-
-
         </form>
+
+        <div class="center">
+            <p style="color: #004a9f"> je suis pas encore inscrit ! </p>
+        </div>
+
     </div>
 </div>
 

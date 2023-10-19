@@ -109,4 +109,7 @@ export class AuthenticationComponent {
     }
 
 
+    forgotPassword() {
+        this.router.navigate(['cantine/user/forgot-password']);
+    }
 }
