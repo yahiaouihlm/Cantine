@@ -13,9 +13,10 @@ export class ForgotPasswordComponent {
 
   submitted = false;
   emailExist = false;
-  forgotPasswordForm = new  FormGroup({
+  forgotPasswordForm  :  FormGroup = new  FormGroup({
     email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)])
   })
+    isLoadingPage =  false;
 
  constructor( private sharedService: SharedService) {
  }
@@ -30,7 +31,10 @@ export class ForgotPasswordComponent {
     }
   }
 
-  checkExistEmail() : void {
-
+  checkExistEmail() : void {   //  we  have to change  the  loading field before  and  after  the  request
+     this.sharedService.checkExistenceOfEmail(this.forgotPasswordForm.value.email).subscribe({
+         next: (data) => {},
+            error: (error) => {}
+     });
   }
 }
