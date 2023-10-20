@@ -12,9 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -99,7 +97,21 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
                //  custom  exception  for  disabled  account
 
-           }  catch (AuthenticationException e) {
+           }
+           catch (LockedException exp){
+               idToken.put("message" ,  "INVALID ACCOUNT  FOR  TEST ");
+               idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
+               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+               response.setContentType("application/json");
+               try {
+                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
+               } catch (IOException e) {
+                   throw new RuntimeException(e);
+               }
+
+           }
+
+           catch (BadCredentialsException e) {
                response.setContentType("application/json");
                idToken.put("status" , HttpStatus.UNAUTHORIZED.name());
                idToken.put("message" ,  "WRONG CREDENTIALS");
@@ -110,17 +122,11 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                    throw new RuntimeException(ex);
                }
            }
+
            catch (Exception e ) {
-               if  (e.getMessage().equals("INVALID ACCOUNT")){
-                   idToken.put("message" ,  "INVALID ACCOUNT");
-                   idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
-                   response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-               }
-               else {
                    idToken.put("exceptionMessage" ,  " An error has occurred");
                    idToken.put("status" , HttpStatus.NOT_FOUND.name() );
-               }
-               response.setContentType("application/json");
+                  response.setContentType("application/json");
 
                try {
                    new ObjectMapper().writeValue( response.getOutputStream(), idToken);

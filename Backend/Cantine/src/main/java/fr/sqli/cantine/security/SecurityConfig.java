@@ -44,7 +44,7 @@ public class SecurityConfig {
         this.jwtTokenVerifier = jwtTokenVerifier ;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint ;
         this.customAccessDeniedHandler = customAccessDeniedHandler ;
-      //  this.stoneAuthenticationFailureHandler = stoneAuthenticationFailureHandler ;
+
     }
 
     @Bean
@@ -79,7 +79,7 @@ public class SecurityConfig {
                  .authenticationEntryPoint(this.customAuthenticationEntryPoint)
                 .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
                 .and()
-               .build();
+               .build() ;
 
     }
     @Bean
