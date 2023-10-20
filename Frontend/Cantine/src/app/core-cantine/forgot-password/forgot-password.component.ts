@@ -29,12 +29,17 @@ export class ForgotPasswordComponent {
     if (this.forgotPasswordForm.invalid) {
       return;
     }
+      this.checkExistEmail();
   }
 
   checkExistEmail() : void {   //  we  have to change  the  loading field before  and  after  the  request
      this.sharedService.checkExistenceOfEmail(this.forgotPasswordForm.value.email).subscribe({
-         next: (data) => {},
-            error: (error) => {}
+         next: (data) => {
+              this.emailExist = false;
+         },
+            error: (error) => {
+             this.emailExist = true;
+            }
      });
   }
 }
