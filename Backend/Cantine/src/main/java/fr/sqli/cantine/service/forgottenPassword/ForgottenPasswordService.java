@@ -6,7 +6,6 @@ import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.mailer.ForgotPasswordTokenSender;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
@@ -17,7 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ForgottenPassword implements IForgottenPassword {
+public class ForgottenPasswordService implements IForgottenPasswordService {
     private static final Logger LOG = LogManager.getLogger();
     private  String EMAIL8_REGEX;
     private IConfirmationTokenDao confirmationTokenDao;
@@ -29,7 +28,7 @@ public class ForgottenPassword implements IForgottenPassword {
 
     private ForgotPasswordTokenSender forgotPasswordTokenSender;
     @Autowired
-    public ForgottenPassword(IConfirmationTokenDao confirmationTokenDao,  IAdminDao adminDao, IStudentDao studentDao ,  Environment environment, ForgotPasswordTokenSender forgotPasswordTokenSender) {
+    public ForgottenPasswordService(IConfirmationTokenDao confirmationTokenDao, IAdminDao adminDao, IStudentDao studentDao , Environment environment, ForgotPasswordTokenSender forgotPasswordTokenSender) {
         this.confirmationTokenDao = confirmationTokenDao;
         this.adminDao = adminDao;
         this.studentDao = studentDao;
@@ -44,11 +43,11 @@ public class ForgottenPassword implements IForgottenPassword {
     public void sendConfirmationTokenForPasswordForgotten(String email) throws InvalidPersonInformationException, StudentNotFoundException, MessagingException {
 
         if (email == null || email.isEmpty() || email.trim().isEmpty() || email.isBlank()) {
-            ForgottenPassword.LOG.error("Email is required");
+            ForgottenPasswordService.LOG.error("Email is required");
             throw new InvalidPersonInformationException("Email is required");
         }
         if (!email.matches(this.EMAIL8_REGEX)) {
-            ForgottenPassword.LOG.error("Email is not valid");
+            ForgottenPasswordService.LOG.error("Email is not valid");
             throw new InvalidPersonInformationException("Email is not valid");
         }
         var student = this.studentDao.findByEmail(email);

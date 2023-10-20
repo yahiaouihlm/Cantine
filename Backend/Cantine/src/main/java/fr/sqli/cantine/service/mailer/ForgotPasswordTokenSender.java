@@ -31,7 +31,7 @@ public class ForgotPasswordTokenSender  {
 
 
     public void   sendStudentToken( ConfirmationTokenEntity confirmationTokenEntity) throws MessagingException {
-        String  Url  =  this.RESET_PASSWORD_TOKEN_URL + confirmationTokenEntity.getToken();
+        String  Url  =  this.RESET_PASSWORD_TOKEN_URL + "?token=" + confirmationTokenEntity.getToken();
         String confirmationOrderMessage =
                 """
                    <!DOCTYPE html>

@@ -4,7 +4,7 @@ import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInfo
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 
-public interface IForgottenPassword {
+public interface IForgottenPasswordService {
 
 
 
