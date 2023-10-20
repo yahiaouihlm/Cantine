@@ -101,7 +101,7 @@ public class TokenSender  {
 
 
             this.emailSenderService.send(student.get().getEmail(), "Confirmation de votre compte", text);
-             return;
+
         }
 
         var admin = this.adminDao.findByEmail(email.trim());
