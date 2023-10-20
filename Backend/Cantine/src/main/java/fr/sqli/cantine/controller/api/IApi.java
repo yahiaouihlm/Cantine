@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IApi {
 
-    String  BASIC_API_URL = "/cantine/api" ;
+    String  BASIC_API_URL = "/cantine/user" ;
 
     String ENDPOINT_GET_ALL_MEALS_URL = "meals/getAll";
     String ENDPOINT_GET_ALL_MENUS_URL = "menus/getAll";

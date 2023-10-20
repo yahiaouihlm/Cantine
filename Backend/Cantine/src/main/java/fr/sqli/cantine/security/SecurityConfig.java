@@ -68,6 +68,7 @@ public class SecurityConfig {
             authorize.requestMatchers("/cantine/student/getAllStudentClass"
                     ,  "/cantine/student/signUp"
                     ,"/cantine/user/v1/token-sender/**"
+                    ,"/cantine/user/resetPassword/**"
             ).permitAll();
             authorize.anyRequest().authenticated();
         })

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static fr.sqli.cantine.controller.forgottenPassword.IForgottenPasswordController.BASIC_FORGET_PASSWORD_URL;
+
 @RestController
-@RequestMapping("canitine/user")
+@RequestMapping(BASIC_FORGET_PASSWORD_URL)
 @CrossOrigin(origins = "http://localhost:4200")
 public class ForgottenPasswordController implements IForgottenPasswordController {
 

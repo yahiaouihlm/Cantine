@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface IForgottenPasswordController {
-
-    String SEND_CONFIRMATION_TOKEN_FOR_PASSWORD_FORGOTTEN = "/sendConfirmationTokenForPasswordForgotten";
+    String    BASIC_FORGET_PASSWORD_URL = "/cantine/user" ;
+    String SEND_CONFIRMATION_TOKEN_FOR_PASSWORD_FORGOTTEN = "/resetPassword" ;
 
     String  TOKEN_SENT_SUCCESSFULLY = "TOKEN_SENT_SUCCESSFULLY";
     @PostMapping(SEND_CONFIRMATION_TOKEN_FOR_PASSWORD_FORGOTTEN)
