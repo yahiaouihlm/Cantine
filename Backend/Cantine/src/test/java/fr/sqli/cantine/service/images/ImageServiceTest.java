@@ -3,9 +3,7 @@ package fr.sqli.cantine.service.images;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -26,7 +24,15 @@ class ImageServiceTest {
     @Autowired
     private ImageService imageService;
 
+    private String IMAGE_DIRECTORY;
+    private String IMAGE_TEST_URL;
 
+    @BeforeEach
+    void  initImageTest () {
+        IMAGE_DIRECTORY = environment.getProperty("sqli.cantine.default.student.images.directory");
+        var imageNAME  = environment.getProperty("sqli.cantine.default.student.images.file");
+        IMAGE_TEST_URL =IMAGE_DIRECTORY +"/"+imageNAME;
+    }
 
     /* unit Test For  Delete Images */
 
@@ -153,6 +159,10 @@ class ImageServiceTest {
 
 
 
+  /********************************************************** UPLOAD IMAGE  *******************************************************/
+
+
+
     /*  Unit TEST FOR  UPLOAD IMAGE */
 
     /**
@@ -161,19 +171,29 @@ class ImageServiceTest {
      * and check if the image is uploaded successfully with  Assertions.assertTrue(newimage.exists());
      * and   delete the image after the test
      */
+
+    /////// HELLO WORLD
     @Test
     void uploadImageWithValidFile() throws IOException, InvalidFormatImageException, InvalidImageException, ImagePathException {
-        File imageGIF = new File("src/test/java/fr/sqli/Cantine/service/images/filesTests/normalimage.jpg");
+
+       //  Image to  upload
+        File imageGIF = new File(IMAGE_TEST_URL);
         FileInputStream input = new FileInputStream(imageGIF);
-        MockMultipartFile multipartFile = new MockMultipartFile("normalimage",
-                imageGIF.getName(), "image/jpg", input);
-        var image = this.imageService.uploadImage(multipartFile, "src/test/java/fr/sqli/Cantine/service/images/filesTests/");
-        var newimagepath = "src/test/java/fr/sqli/Cantine/service/images/filesTests/" + image;
-        File newimage = new File(newimagepath);
+        MockMultipartFile multipartFile = new MockMultipartFile("Images", imageGIF.getName(), "image/jpg", input);
+
+        // use  the  uploadImage method  in ImageService
+        var imageName = this.imageService.uploadImage(multipartFile,IMAGE_DIRECTORY );
+
+
+
+         var newimagepath = IMAGE_DIRECTORY + "/" + imageName;
+         File newimage = new File(newimagepath);
         Assertions.assertTrue(newimage.exists());
-        newimage.delete();
+        Assertions.assertTrue (newimage.delete());
 
     }
+
+
 
 
     @Test
@@ -183,8 +203,10 @@ class ImageServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", imageGIF.getName(),
                 "image/gif", "test data".getBytes());
         Assertions.assertThrows(InvalidFormatImageException.class,
-                () -> imageService.uploadImage(multipartFile, "images/users/"));
+                () -> imageService.uploadImage(multipartFile, IMAGE_TEST_URL));
     }
+
+
 
 
     @Test
@@ -195,45 +217,60 @@ class ImageServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", imageSVG.getName(),
                 "image/svg", "test data".getBytes());
         Assertions.assertThrows(InvalidFormatImageException.class,
-                () -> imageService.uploadImage(multipartFile, "images/users/"));
+                () -> imageService.uploadImage(multipartFile, IMAGE_TEST_URL));
     }
+
+
 
 
     @Test
     @DisplayName("Test the uploadImage method with empty image (empty  file )")
-    void uploadImageWithEmtyImage() {
+    void uploadImageWithEmptyImage() {
         Assertions.assertThrows(InvalidImageException.class,
-                () -> imageService.uploadImage(new MockMultipartFile("file", new byte[0]), "images/users/"));
+                () -> imageService.uploadImage(new MockMultipartFile("file", new byte[0]), IMAGE_TEST_URL));
     }
 
 
     @Test
     @DisplayName("Test the uploadImage method with Null image (null  file )")
-    void uploadImagewithNullImage() {
-        Assertions.assertThrows(InvalidImageException.class, () -> imageService.uploadImage(null, "images/users/"));
+    void uploadImageWithNullImage() {
+        Assertions.assertThrows(InvalidImageException.class, () -> imageService.uploadImage(null, IMAGE_TEST_URL));
     }
+
 
 
     @Test
-    @DisplayName("Test the uploadImage method with Null path image A real path  is  used to create the MultipartFile")
-    void uploadImagewithNullPathImage() throws IOException {
-        var defaultUserImageName = environment.getProperty("sqli.cantine.default.user.imagename");
-        File image = new File("images/users/" + defaultUserImageName);
+    void uploadImageWithInvalidPath() throws IOException {
+        File image = new File(this.IMAGE_TEST_URL);
         FileInputStream input = new FileInputStream(image);
         MultipartFile multipartFile = new MockMultipartFile("file", image.getName(), "text/plain", input);
-        Assertions.assertThrows(ImagePathException.class, () -> imageService.uploadImage(multipartFile, null));
+        Assertions.assertThrows(ImagePathException.class, () -> imageService.uploadImage(multipartFile, "wrong/path"));
     }
+
+
 
 
     @Test
     @DisplayName("Test the uploadImage method with Empty path image A real path  is  used to create the MultipartFile")
-    void uploadImagewithEmptyPathImage() throws IOException {
-        var defaultUserImageName = environment.getProperty("sqli.cantine.default.user.imagename");
-        File image = new File("images/users/" + defaultUserImageName);
+    void uploadImageWithEmptyPathImage() throws IOException {
+        File image = new File(this.IMAGE_TEST_URL);
         FileInputStream input = new FileInputStream(image);
         MultipartFile multipartFile = new MockMultipartFile("file", image.getName(), "text/plain", input);
         Assertions.assertThrows(ImagePathException.class, () -> imageService.uploadImage(multipartFile, ""));
     }
+
+
+
+    @Test
+    void uploadImageWithNullPath () throws IOException {
+        File image = new File(this.IMAGE_TEST_URL);
+        FileInputStream input = new FileInputStream(image);
+        MultipartFile multipartFile = new MockMultipartFile("file", image.getName(), "text/plain", input);
+        Assertions.assertThrows(ImagePathException.class, () -> imageService.uploadImage(multipartFile , null));
+    }
+
+
+
 
 
 }

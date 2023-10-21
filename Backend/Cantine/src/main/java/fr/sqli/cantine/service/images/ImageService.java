@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -32,13 +33,15 @@ public class ImageService implements IImageService {
             LOG.fatal("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
             throw new ImagePathException("INVALID PATH CAN'T UPLOAD IMAGE");
         }
+        if  (!Files.exists(Path.of(path))){
+            LOG.fatal("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
+            throw new ImagePathException("INVALID PATH CAN'T UPLOAD IMAGE");
+        }
 
         if (image == null || image.isEmpty()) {
             LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE IMAGE IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
             throw new InvalidImageException("INVALID IMAGE IT CANNOT BE NULL OR EMPTY ");
         }
-
-
         System.out.println(image.getContentType());
 
         if (image.getContentType() == null || image.getContentType().isEmpty() ||
