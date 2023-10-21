@@ -95,7 +95,7 @@ public class ImageService implements IImageService {
             throw new ImagePathException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
         }
         var spot = path + "/" + ImageName;
-        System.out.println(spot);
+
         File file = new File(spot);
         if (file.exists()) {
             file.delete();
@@ -129,10 +129,7 @@ public class ImageService implements IImageService {
             ImageService.LOG.error("CAN'T GET IMAGE EXTENSION BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE getImageExtension METHOD ");
             throw new InvalidImageException("INVALID IMAGE NAME");
         }
-        if (extension == null || extension.isEmpty()
-                || (!extension.equals(".png")
-                && !extension.equals(".jpg")
-                && !extension.equals(".jpeg"))
+        if (extension.isEmpty() || !extension.equals(".png") && !extension.equals(".jpg") && !extension.equals(".jpeg")
         ) {
             ImageService.LOG.error("CAN'T GET IMAGE EXTENSION BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE getImageExtension METHOD ");
             throw new InvalidImageException("INVALID IMAGE NAME");

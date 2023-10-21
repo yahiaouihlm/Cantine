@@ -34,7 +34,7 @@ class ImageServiceTest {
         IMAGE_TEST_URL =IMAGE_DIRECTORY +"/"+imageNAME;
     }
 
-    /* unit Test For  Delete Images */
+    /************************************ Tests for deleteImage method  ***************************************************/
 
     /**
      * Test the deleteImage method with valid image name and path
@@ -96,8 +96,15 @@ class ImageServiceTest {
     }
 
 
-    /* unit Test For  Download Images */
 
+
+
+
+
+
+
+
+   /************************************** DOWNLOAD IMAGE  ***********************************************************/
     /**
      * Test the downloadImage method with valid image
      *
