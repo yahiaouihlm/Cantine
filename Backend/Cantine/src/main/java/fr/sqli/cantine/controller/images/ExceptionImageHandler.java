@@ -18,6 +18,10 @@ import java.io.IOException;
 @ControllerAdvice
 public class ExceptionImageHandler {
 
+
+
+
+
     @ExceptionHandler(FileNotFoundException.class)
     public ResponseEntity <ExceptionDtout> exceptionHandler (FileNotFoundException exception){
         return new ResponseEntity<ExceptionDtout>(new ExceptionDtout("IMAGE NOT FOUND ") , HttpStatus.NOT_FOUND);

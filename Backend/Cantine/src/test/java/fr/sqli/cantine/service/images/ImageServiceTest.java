@@ -107,9 +107,7 @@ class ImageServiceTest {
      */
     @Test
     void downloadValidateImage() throws FileNotFoundException, InvalidImageException, ImagePathException {
-        var userImageUrl = environment.getProperty("sqli.cantine.default.user.imagename");
-        var image = imageService.downloadImage(userImageUrl, "images/users/");
-
+        var image = imageService.downloadImage(environment.getProperty("sqli.cantine.default.student.images.file"), this.IMAGE_DIRECTORY);
         Assertions.assertNotNull(image);
 
     }
@@ -118,18 +116,13 @@ class ImageServiceTest {
     @Test
     @DisplayName("Test the downloadImage method with UnExisting image")
     void downloadNotFoundImage() {
-        var userImageUrl = environment.getProperty("sqli.cantine.default.user.imagename");
+
         Assertions.assertThrows(FileNotFoundException.class,
-                () -> imageService.downloadImage("default", userImageUrl));
+                () -> imageService.downloadImage("ImageNotFound", IMAGE_DIRECTORY));
     }
 
 
-    @Test
-    @DisplayName("Test the downloadImage method with null image name")
-    void downloadImageWithNULLImageName() {
-        Assertions.assertThrows(InvalidImageException.class,
-                () -> imageService.downloadImage(null, "test"));
-    }
+
 
 
     @Test
@@ -140,12 +133,7 @@ class ImageServiceTest {
     }
 
 
-    @Test
-    @DisplayName("Test the downloadImage method with null path")
-    void downloadImageWithNullPath() {
-        Assertions.assertThrows(ImagePathException.class,
-                () -> imageService.downloadImage("test", null));
-    }
+
 
 
     @Test
@@ -156,6 +144,18 @@ class ImageServiceTest {
     }
 
 
+    @Test
+    @DisplayName("Test the downloadImage method with null image name")
+    void downloadImageWithNULLImageName() {
+        Assertions.assertThrows(InvalidImageException.class,
+                () -> imageService.downloadImage(null, "test"));
+    }
+    @Test
+    @DisplayName("Test the downloadImage method with null path")
+    void downloadImageWithNullPath() {
+        Assertions.assertThrows(ImagePathException.class,
+                () -> imageService.downloadImage("test", null));
+    }
 
 
 

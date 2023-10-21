@@ -42,7 +42,6 @@ public class ImageService implements IImageService {
             LOG.error("CAN'T UPLOAD IMAGE BECAUSE THE IMAGE IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
             throw new InvalidImageException("INVALID IMAGE IT CANNOT BE NULL OR EMPTY ");
         }
-        System.out.println(image.getContentType());
 
         if (image.getContentType() == null || image.getContentType().isEmpty() ||
                 (!image.getContentType().equals("image/png")
@@ -68,12 +67,19 @@ public class ImageService implements IImageService {
             LOG.fatal("CAN'T DOWNLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE downloadImage METHOD ");
             throw new ImagePathException("INVALID PATH CAN'T DOWNLOAD IMAGE");
         }
-        if (ImageName == null || ImageName.isEmpty()) {
+        if (ImageName == null || ImageName.isEmpty() || ImageName.isBlank()) {
             LOG.error("CAN'T DOWNLOAD IMAGE BECAUSE THE IMAGE NAME IS INVALID ITS EMPTY OR NULL IN THE downloadImage METHOD ");
             throw new InvalidImageException("INVALID IMAGE NAME IT CANNOT BE NULL OR EMPTY ");
         }
 
         var spot = path + "/" + ImageName;
+        Path of = Path.of(path);
+
+        if (!Files.exists(of)) {
+            ImageService.LOG.error("CAN'T DOWNLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE downloadImage METHOD ");
+            throw new FileNotFoundException("IMAGE NOT FOUND");
+        }
+
         return new FileInputStream(spot);
     }
 
