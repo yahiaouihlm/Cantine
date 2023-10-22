@@ -119,16 +119,16 @@ public class MealService implements IMealService {
 
     @Override
     public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
-         if (mealDtoIn == null) {
-             MealService.LOG.error("THE MEAL CAN NOT BE NULL");
-             throw new InvalidMealInformationException("THE MEAL CAN NOT BE NULL");
-         }
+        if (mealDtoIn == null) {
+            MealService.LOG.error("THE MEAL CAN NOT BE NULL");
+            throw new InvalidMealInformationException("THE MEAL CAN NOT BE NULL");
+        }
 
-            MealEntity meal = mealDtoIn.toMealEntity();
+        MealEntity meal = mealDtoIn.toMealEntity();
 
         //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
-                throw new ExistingMealException(" LE PLAT :  " + meal.getLabel() + " AVEC  " + meal.getCategory()+ " ET " + meal.getDescription() + " EST DEJA PRESENT DANS LA BASE DE DONNEES");
+            throw new ExistingMealException(" LE PLAT :  " + meal.getLabel().trim() + " AVEC  " + meal.getCategory().trim() + " ET " + meal.getDescription().trim() + " EST DEJA PRESENT DANS LA BASE DE DONNEES");
         }
         MultipartFile image = mealDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
@@ -164,7 +164,7 @@ public class MealService implements IMealService {
 
 
     @Override
-    public Optional<MealEntity> checkExistMeal(String label, String category, String description) throws ExistingMealException {
+    public Optional<MealEntity> checkExistMeal(String label, String category, String description) {
         return this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(label, category, description);
 
     }
