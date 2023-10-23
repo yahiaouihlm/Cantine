@@ -5,6 +5,7 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dto.in.person.Login;
 import fr.sqli.cantine.entity.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,8 +94,10 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
 
     public String adminBearerToken() throws Exception {
         var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
+
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"email\": \"" + this.adminCreated.getEmail() + "\", \"password\": \"" + this.studentCreated.getPassword() + "\" }"))
+                        .content(new ObjectMapper().writeValueAsString(new Login(this.adminCreated.getEmail(), this.adminCreated.getPassword()))))
+
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn(); // Utilisez .andReturn() pour obtenir la réponse HTTP
 
@@ -165,7 +168,7 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         return studentBearerToken;
     }
 
-    public String getAdminBearerToken() {
+     public String getAdminBearerToken() {
         return adminBearerToken;
     }
 
