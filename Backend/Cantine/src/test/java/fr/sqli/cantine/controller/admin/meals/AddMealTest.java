@@ -1,6 +1,7 @@
 package fr.sqli.cantine.controller.admin.meals;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
@@ -27,7 +28,7 @@ import java.util.Objects;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
+public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
     private static final Logger LOG = LogManager.getLogger();
     final  String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
@@ -41,7 +42,11 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
 
     private MockMultipartFile imageData;
 
+    private  String adminBearerToken;
 
+     public AddMealTest () {
+         System.out.println(super.getAdminBearerToken());
+   }
 
     public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
@@ -1096,8 +1101,9 @@ public class AddMealTest extends AbstractContainerConfig implements IMealTest  {
         // given :  remove label from formData
         // word  with  101  characters
         // when : call addMeal
+        System.out.println("dans le tess "+   super.getAdminBearerToken());
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
-
+                        .header("Authorization", super.getAdminBearerToken())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :

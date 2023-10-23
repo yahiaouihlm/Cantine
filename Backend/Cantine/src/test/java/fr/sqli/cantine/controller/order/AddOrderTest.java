@@ -2,11 +2,13 @@ package fr.sqli.cantine.controller.order;
 
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.entity.*;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddOrderTest   extends AbstractContainerConfig implements   IOrderTest{
+public class AddOrderTest   extends AbstractLoginRequest implements   IOrderTest{
     @Autowired
     private Environment env;
     @Autowired
@@ -44,12 +46,16 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     @Autowired
     private IOrderDao orderDao;
 
+
+    private  String  adminAuthorizationToken;
+
     private OrderDtoIn orderDtoIn;
     private MealEntity mealEntity;
     private MenuEntity menuEntity;
     private StudentEntity studentEntity;
     private  TaxEntity  taxEntity;
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
 
     void  createMeal  ()   {
@@ -588,9 +594,9 @@ public class AddOrderTest   extends AbstractContainerConfig implements   IOrderT
     void addOrderWithNullRequest() throws Exception {
         // make    directly  the  request  without  studentId
 
-        var result =  this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
                 ).contentType(MediaType.APPLICATION_JSON)
-                );
+        );
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest());
         result.andExpect(MockMvcResultMatchers.content().string(super.exceptionMessage(exceptionsMap.get("InvalidJsonFormat"))));
