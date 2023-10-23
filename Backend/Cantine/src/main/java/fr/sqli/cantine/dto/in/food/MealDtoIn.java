@@ -30,10 +30,9 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      */
 
     @JsonIgnore
-    public MealEntity toMealEntity() throws InvalidMealInformationException, InvalidMenuInformationException {
+    public  void  checkMealInformation() throws InvalidMealInformationException, InvalidMenuInformationException {
         this.checkMealInformationValidity(); // check if the meal information is valid
-        return this.createMealEntity(); // create the MealEntity object
-    }
+        }
 
     /**
      * Check if the meal information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
@@ -41,30 +40,9 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
      */
     @JsonIgnore
-    public MealEntity toMealEntityWithoutImage() throws InvalidMealInformationException, InvalidMenuInformationException {
+    public  void  toMealEntityWithoutImage() throws InvalidMealInformationException, InvalidMenuInformationException {
         super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category); // check if the meal information is valid except the image
-        return this.createMealEntity(); // create the MealEntity object
-    }
-
-    /**
-     * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid except the image
-     * the method also make a  trim() on the label, description and category before creating the MealEntity object
-     *
-     * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
-     * @throws InvalidMealInformationException if the meal information is not valid
-     */
-    @JsonIgnore
-    private MealEntity createMealEntity() throws InvalidMealInformationException {
-        MealEntity mealEntity = new MealEntity();
-        mealEntity.setCategory(this.category.trim());
-        mealEntity.setDescription(this.description.trim());
-        mealEntity.setLabel(this.label.trim());
-        mealEntity.setPrice(this.price);
-        mealEntity.setQuantity(quantity);
-        mealEntity.setStatus(this.status);
-        return mealEntity;
-
-    }
+       }
 
     /**
      * Check if the meal information is valid or not and throw an exception

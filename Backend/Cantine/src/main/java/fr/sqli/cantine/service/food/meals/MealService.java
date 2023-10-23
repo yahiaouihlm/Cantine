@@ -54,7 +54,7 @@ public class MealService implements IMealService {
 
         IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", mealDtoIn.getId());
 
-        MealEntity mealEntity = mealDtoIn.toMealEntityWithoutImage();
+          mealDtoIn.toMealEntityWithoutImage();
 
         var overemotional = this.mealDao.findById(mealDtoIn.getId());
         if (overemotional.isEmpty()) {
@@ -63,12 +63,12 @@ public class MealService implements IMealService {
             throw new MealNotFoundException(" LE PLAT :  " + mealDtoIn.getLabel() + " N'EXISTE PAS DANS LA BASE DE DONNEES ");
         }
         var meal = overemotional.get(); // change the  meal  with  the  new  values
-        meal.setPrice(mealEntity.getPrice());
-        meal.setLabel(mealEntity.getLabel());
-        meal.setDescription(mealEntity.getDescription());
-        meal.setCategory(mealEntity.getCategory());
-        meal.setQuantity(mealEntity.getQuantity());
-        meal.setStatus(mealEntity.getStatus());
+        meal.setPrice(mealDtoIn.getPrice());
+        meal.setLabel(mealDtoIn.getLabel());
+        meal.setDescription(mealDtoIn.getDescription());
+        meal.setCategory(mealDtoIn.getCategory());
+        meal.setQuantity(mealDtoIn.getQuantity());
+        meal.setStatus(mealDtoIn.getStatus());
 
         //check  if the  meal  is  already  present  in  the  database despite  the  update
         Optional<MealEntity> mealEntity1 = this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription());
@@ -124,17 +124,20 @@ public class MealService implements IMealService {
             throw new InvalidMealInformationException("THE MEAL CAN NOT BE NULL");
         }
 
-        MealEntity meal = mealDtoIn.toMealEntity();
+          mealDtoIn.checkMealInformation();
 
         //  check if  the  meal  is  already  present  in  the  database
-        if (this.checkExistMeal(meal.getLabel(), meal.getCategory(), meal.getDescription()).isPresent()) {
-            throw new ExistingMealException(" LE PLAT :  " + meal.getLabel().trim() + " AVEC  " + meal.getCategory().trim() + " ET " + meal.getDescription().trim() + " EST DEJA PRESENT DANS LA BASE DE DONNEES");
+        if (this.checkExistMeal(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription()).isPresent()) {
+            throw new ExistingMealException(" LE PLAT :  " + mealDtoIn.getLabel().trim() + " AVEC  " + mealDtoIn.getCategory().trim() + " ET " + mealDtoIn.getDescription().trim() + " EST DEJA PRESENT DANS LA BASE DE DONNEES");
         }
         MultipartFile image = mealDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(imageName);
-        meal.setImage(imageEntity);
+
+        MealEntity  meal =  new  MealEntity(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription(), mealDtoIn.getPrice(), mealDtoIn.getQuantity(), mealDtoIn.getStatus(), imageEntity);
+
+
         return this.mealDao.save(meal);
     }
 

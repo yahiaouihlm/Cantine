@@ -7,7 +7,6 @@ import fr.sqli.cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.cantine.service.admin.exceptions.*;
 import fr.sqli.cantine.service.mailer.ConfirmationAddingAmountToStudent;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;

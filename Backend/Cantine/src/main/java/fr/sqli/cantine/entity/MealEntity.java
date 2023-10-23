@@ -93,9 +93,7 @@ public class MealEntity implements Serializable {
         this.image = image;
     }
 
-    public MealEntity() {
-
-    }
+    public MealEntity() {}
 
     public Integer getId() {
         return id;

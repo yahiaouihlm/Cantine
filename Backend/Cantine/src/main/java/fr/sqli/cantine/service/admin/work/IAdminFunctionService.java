@@ -2,7 +2,6 @@ package fr.sqli.cantine.service.admin.work;
 
 import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
 import fr.sqli.cantine.service.admin.exceptions.*;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
