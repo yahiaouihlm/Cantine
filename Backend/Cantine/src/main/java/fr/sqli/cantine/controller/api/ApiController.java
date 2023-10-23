@@ -3,8 +3,8 @@ package fr.sqli.cantine.controller.api;
 
 import fr.sqli.cantine.dto.out.food.MealDtout;
 import fr.sqli.cantine.dto.out.food.MenuDtout;
-import fr.sqli.cantine.service.admin.meals.MealService;
-import fr.sqli.cantine.service.admin.menus.MenuService;
+import fr.sqli.cantine.service.food.meals.MealService;
+import fr.sqli.cantine.service.food.menus.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

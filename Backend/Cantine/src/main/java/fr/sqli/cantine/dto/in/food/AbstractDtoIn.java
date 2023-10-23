@@ -2,8 +2,8 @@ package fr.sqli.cantine.dto.in.food;
 
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;

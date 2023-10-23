@@ -1,10 +1,10 @@
 package fr.sqli.cantine.controller.admin.meals;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
-import fr.sqli.cantine.service.admin.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.admin.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
+import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -2,7 +2,7 @@ package fr.sqli.cantine.dto.in.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.AdminEntity;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 
 public class AdminDtoIn  extends  AbstractPersonDtoIn{
 

@@ -5,7 +5,7 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.mailer.ForgotPasswordTokenSender;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;

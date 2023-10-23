@@ -1,7 +1,7 @@
 package fr.sqli.cantine.controller.forgottenPassword;
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;

@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller.admin.adminDashboard;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
+import fr.sqli.cantine.service.admin.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

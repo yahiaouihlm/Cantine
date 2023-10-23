@@ -2,18 +2,17 @@ package fr.sqli.cantine.controller.admin.adminDashboard.works;
 
 
 import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;
-import fr.sqli.cantine.dto.in.person.StudentDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.service.admin.adminDashboard.exceptions.*;
-import fr.sqli.cantine.service.admin.adminDashboard.work.AdminWorksService;
+import fr.sqli.cantine.service.admin.exceptions.*;
+import fr.sqli.cantine.service.admin.work.AdminWorksService;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController

@@ -3,7 +3,7 @@ package fr.sqli.cantine.service.student;
 
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.*;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Assertions;
