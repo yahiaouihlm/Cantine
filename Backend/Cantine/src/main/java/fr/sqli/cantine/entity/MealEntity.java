@@ -21,7 +21,8 @@ public class MealEntity implements Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
 
-
+    @Column(name = "uuid" , nullable=false , length = 254)
+    private String  uuid;
 
     @Column(nullable=false, length=100)
     private String label;
