@@ -17,7 +17,6 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
      * @param description description of the meal
      * @return the meal if it exists
      */
-
     @Query(
             value = "SELECT meal FROM MealEntity meal WHERE (" +
             "LOWER(REPLACE(meal.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
@@ -27,6 +26,9 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
 
     )
     Optional<MealEntity> findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
+
+
+    Optional<MealEntity>getMealEntitiesByUuid(String uuid);
 
 
 }
