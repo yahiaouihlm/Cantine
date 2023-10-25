@@ -24,8 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Configuration
-@EnableWebSecurity
+/*@Configuration
+@EnableWebSecurity*/
 public class SecurityConfig {
 
 
@@ -36,6 +36,7 @@ public class SecurityConfig {
     private CustomAccessDeniedHandler customAccessDeniedHandler ;
     private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new  StoneAuthenticationFailureHandler() ;
     private   ObjectMapper objectMapper ;
+/*
     public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,
                            CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder ,  JwtTokenVerifier jwtTokenVerifier){
 
@@ -46,8 +47,9 @@ public class SecurityConfig {
         this.customAccessDeniedHandler = customAccessDeniedHandler ;
 
     }
+*/
 
-    @Bean
+  /*  @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http   ) throws Exception {
 
         return  http
@@ -73,7 +75,7 @@ public class SecurityConfig {
             authorize.anyRequest().authenticated();
         })
                 .authenticationProvider(authenticationProvider())
-                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()  /*this.objectMapper*/))
+                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()  *//*this.objectMapper*//*))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
               .exceptionHandling()
                  .authenticationEntryPoint(this.customAuthenticationEntryPoint)
@@ -81,7 +83,7 @@ public class SecurityConfig {
                 .and()
                .build() ;
 
-    }
+    }*/
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

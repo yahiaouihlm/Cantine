@@ -27,4 +27,7 @@ public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
 
 
 
+    Optional<MenuEntity>findByUuid(String uuid);
+
+
 }

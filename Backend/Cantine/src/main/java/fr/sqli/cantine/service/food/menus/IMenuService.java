@@ -23,32 +23,27 @@ import java.util.Optional;
 public interface IMenuService {
        static final Logger LOG = LogManager.getLogger();
   /**
-   * Verify if the meal information is valid or not
-   * @param messageException the message of the exception to throw
-   * @param args the meal information to verify
+
    * @throws InvalidMenuInformationException the exception to throw if the meal information is invalid
    */
-  static void verifyMealInformation(String messageException, Object... args) throws InvalidMenuInformationException {
-    for (Object arg : args) {
-      if (arg == null || (arg instanceof String && ((String) arg).isEmpty()))
-        throw new InvalidMenuInformationException(messageException);
-      if (arg == null || (arg instanceof Integer && (Integer) arg < 0))
-        throw new InvalidMenuInformationException(messageException);
-
-    }
+  static void checkMenuUuidValidity(String uuid ) throws InvalidMenuInformationException {
+     if (uuid == null || uuid.isEmpty() || uuid.isBlank()) {
+       IMenuService.LOG.error("THE MEAL UUID CAN NOT BE NULL OR EMPTY");
+       throw new InvalidMenuInformationException("THE MEAL UUID CAN NOT BE NULL OR EMPTY");
+     }
   }
 
 
   public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException;
 
 
-  public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException;
+  public MenuEntity removeMenu(String menuUuid) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException;
 
 
   public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException;
 
 
-  public MenuDtout getMenuById(Integer menuID) throws MealNotFoundException, InvalidMenuInformationException;
+  public MenuDtout getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException;
 
   public List<MenuDtout> getAllMenus();
 
@@ -57,12 +52,6 @@ public interface IMenuService {
   public Optional<MenuEntity> checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException ;
 
 
-  static  void  ValidateMealID ( MenuDtoIn menuDtoIn) throws InvalidMenuInformationException {
-    if (menuDtoIn.getMealIDs() == null || menuDtoIn.getMealIDs().isEmpty() || menuDtoIn.getMealIDs().size() == 0  ) {
-        LOG.error("The menu doesn't contain any meal");
-      throw new InvalidMenuInformationException("THE MENU DOESN'T CONTAIN ANY MEAL");
-    }
 
-  }
 
 }

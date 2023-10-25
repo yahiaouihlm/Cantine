@@ -12,6 +12,8 @@ import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationExcep
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,24 +21,19 @@ import java.util.Optional;
 
 public interface IMealService {
 
+     static final Logger LOG = LogManager.getLogger();
 
-    /**
-     * Check if the meal information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
-     *
-     * @param args the meal information to check
-     * @throws InvalidMealInformationException if  one of the arguments is null or empty or less than 0
-     */
-    static void verifyMealInformation(String messageException, Object... args) throws InvalidMealInformationException {
-        for (Object arg : args) {
-            if (arg == null || (arg instanceof String && ((String) arg).isEmpty()))
-                throw new InvalidMealInformationException(messageException);
-            if (arg == null || (arg instanceof Integer && (Integer) arg < 0))
-                throw new InvalidMealInformationException(messageException);
 
+
+    static void checkUuidValidity(String  uuid) throws InvalidMealInformationException {
+
+        if (uuid == null || uuid.isEmpty() || uuid.isBlank()) {
+            IMealService.LOG.debug("THE MEAL UUID CAN NOT BE NULL OR EMPTY");
+            throw new InvalidMealInformationException("THE MEAL UUID CAN NOT BE NULL OR EMPTY");
         }
+
+
     }
-
-
 
 
 
@@ -74,7 +71,7 @@ public interface IMealService {
     /**
      * this method is used to remove a meal from the database and delete the image from the (images/meals) directory if the meal is not present in any menu
      *
-     * @param id as Integer the id of the meal to remove
+     * @param uuid as Integer the id of the meal to remove
      * @return MealEntity the meal removed from the database
      * @throws InvalidMealInformationException if the meal  id is not valid (if the id is null or less than 0)
      * @throws MealNotFoundException           if the meal is not found in the database
@@ -82,7 +79,9 @@ public interface IMealService {
      * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
      */
 
-    MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException;
+
+
+    MealEntity removeMeal(String uuid) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException;
 
     /**
      * this method is used to add a meal to  database and save the image in the (images/meals) directory
@@ -108,22 +107,15 @@ public interface IMealService {
     /**
      * Get a meal by its id from the database and return it as a MealDTO throw an exception if the meal is not found
      *
-     * @param id the meal id to search for
+     * @param uuid the meal  uuid to search for
      * @return The meal found with the given id or throw an exception if the meal is not found
      * @throws InvalidMealInformationException if the meal id is null or less than 0
      * @throws MealNotFoundException           if the meal is not found
      */
-    MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundException;
+    MealDtout getMealByID(String uuid) throws InvalidMealInformationException, MealNotFoundException;
 
 
-    /**
-     *  Get a meal by its id from the database and return it as a MealEntity throw an exception if the meal is not found
-     * @param id the meal id to search for
-     * @return The meal found with the given id or throw an exception if the meal is not found
-     * @throws InvalidMealInformationException if the meal id is null or less than 0
-     * @throws MealNotFoundException          if the meal is not found
-     */
-    MealEntity  getMealEntityByID (Integer id) throws InvalidMealInformationException, MealNotFoundException;
+    MealEntity getMealEntityByID(String uuid) throws InvalidMealInformationException, MealNotFoundException;
 
 
 }

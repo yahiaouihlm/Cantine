@@ -70,7 +70,7 @@ public class UpdateMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
-        this.menu.setMealIDs(Collections.singletonList("1"));
+        this.menu.setMealUuids(Collections.singletonList("1"));
 
     }
 
@@ -110,7 +110,7 @@ public class UpdateMenuTest {
         this.menuEntity.setPrice(new BigDecimal(1.5));
         this.menuEntity.setId(1);
         this.menuEntity.setImage(new ImageEntity());
-        this.menu.setMealIDs(Collections.singletonList("invalid id"));
+        this.menu.setMealUuids(Collections.singletonList("invalid id"));
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
         Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());

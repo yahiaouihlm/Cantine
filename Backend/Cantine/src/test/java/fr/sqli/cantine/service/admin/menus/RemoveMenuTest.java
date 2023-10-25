@@ -67,7 +67,7 @@ public class RemoveMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
-        this.mealDtoIn.setMealIDs(Collections.singletonList("1"));
+        this.mealDtoIn.setMealUuids(Collections.singletonList("1"));
 
          this.menuEntity = new MenuEntity();
         this.menuEntity.setLabel("label test");

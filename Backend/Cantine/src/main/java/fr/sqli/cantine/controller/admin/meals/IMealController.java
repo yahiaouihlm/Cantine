@@ -43,14 +43,14 @@ public interface IMealController {
 
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
-    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException ;
+    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") String idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException ;
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
    ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException ;
 
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
-     ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException ;
+     ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") String idMeal) throws MealNotFoundException, InvalidMealInformationException ;
 
 
 

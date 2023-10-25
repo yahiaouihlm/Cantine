@@ -52,14 +52,14 @@ public class MealService implements IMealService {
             throw new InvalidMealInformationException("THE MEAL DTO CAN NOT BE NULL");
         }
 
-        IMealService.verifyMealInformation("THE ID  CAN NOT BE NULL OR LESS THAN 0", mealDtoIn.getId());
+         IMealService.checkUuidValidity(mealDtoIn.getUuid());
 
           mealDtoIn.toMealEntityWithoutImage();
 
-        var overemotional = this.mealDao.findById(mealDtoIn.getId());
+        var overemotional = this.mealDao.findByUuid(mealDtoIn.getUuid());
         if (overemotional.isEmpty()) {
 
-            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getId());
+            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getUuid());
             throw new MealNotFoundException(" LE PLAT :  " + mealDtoIn.getLabel() + " N'EXISTE PAS DANS LA BASE DE DONNEES ");
         }
         var meal = overemotional.get(); // change the  meal  with  the  new  values
@@ -90,23 +90,23 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity removeMeal(Integer id) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException {
-        IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
+    public MealEntity removeMeal(String uuid) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException {
+        IMealService.checkUuidValidity(uuid);
 
-        var overemotional = this.mealDao.findById(id);
+        var overemotional = this.mealDao.findByUuid(uuid);
         if (overemotional.isEmpty()) {
-            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE removeMeal METHOD ", id);
+            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE removeMeal METHOD ", uuid);
             throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
         }
         var meal = overemotional.get();
         if  ( meal.getMenus() != null   &&   meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         {
-            MealService.LOG.debug("THE MEAL WITH AN ID = {} IS PRESENT IN A MENU AND CAN NOT BE DELETED ", id);
+            MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
             throw new RemoveMealAdminException(" Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)");
         }
 
         if  ( meal.getOrders() != null   && meal.getOrders().size() > 0 ) {
-            MealService.LOG.debug("THE MEAL WITH AN ID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", id);
+            MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
             throw new RemoveMealAdminException("Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres   Commande(s)");
         }
 
@@ -147,21 +147,21 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealDtout getMealByID(Integer id) throws InvalidMealInformationException, MealNotFoundException {
-        return new MealDtout(getMealEntityByID(id), this.MEALS_IMAGES_URL);
+    public MealDtout getMealByID(String uuid) throws InvalidMealInformationException, MealNotFoundException {
+        return new MealDtout(getMealEntityByID(uuid), this.MEALS_IMAGES_URL);
     }
 
     @Override
-    public MealEntity getMealEntityByID(Integer id) throws InvalidMealInformationException, MealNotFoundException {
-        IMealService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", id);
+    public MealEntity getMealEntityByID(String uuid) throws InvalidMealInformationException, MealNotFoundException {
+        IMealService.checkUuidValidity(uuid);
 
-        var meal = this.mealDao.findById(id);
+        var meal = this.mealDao.findByUuid(uuid);
 
         if (meal.isPresent()) {
             return meal.get();
         }
 
-        MealService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", id);
+        MealService.LOG.debug("NO DISH WAS FOUND WITH AN UUID = {} IN THE getMealByID METHOD", uuid);
         throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
     }
 

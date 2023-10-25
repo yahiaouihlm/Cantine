@@ -28,7 +28,8 @@ import static java.util.Arrays.stream;
 
 
 @Component
-public class JwtTokenVerifier extends OncePerRequestFilter {
+public class JwtTokenVerifier /*extends OncePerRequestFilter*/ {
+/*
 
     private Environment environment;
 
@@ -83,6 +84,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         }
 
     }
+*/
 
 
 }

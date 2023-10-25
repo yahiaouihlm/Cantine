@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,14 +61,14 @@ public class MenuService implements IMenuService {
             throw new InvalidMenuInformationException("THE MENU DTO CAN NOT BE NULL");
         }
 
-        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuDtoIn.getMenuId());
+        IMenuService.checkMenuUuidValidity(menuDtoIn.getUuid());
         menuDtoIn.toMenuEntityWithoutImage();
-        IMenuService.ValidateMealID(menuDtoIn);
 
 
-        var menuToUpdate = this.menuDao.findById(menuDtoIn.getMenuId());
+
+        var menuToUpdate = this.menuDao.findByUuid(menuDtoIn.getUuid());
         if (menuToUpdate.isEmpty()) {
-            MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE updateMenu METHOD ", menuDtoIn.getMenuId());
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE updateMenu METHOD ", menuDtoIn.getUuid());
             throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
         }
 
@@ -90,10 +89,10 @@ public class MenuService implements IMenuService {
         menuEntity.setStatus(menuDtoIn.getStatus());
         menuEntity.setQuantity(menuDtoIn.getQuantity());
 
-        var  mealIDs = menuDtoIn.fromStringMealIDsToIntegerMealIDs();
+        var  mealsUuids = menuDtoIn.getMealUuids();
         List<MealEntity> mealsInMenu = new ArrayList<>(); //  check  existing meals in the   database  and  add them to the menu
-        for (Integer mealID : mealIDs ) {
-            var meal = this.mealService.getMealEntityByID(mealID);
+        for (String mealUuid : mealsUuids ) {
+            var meal = this.mealService.getMealEntityByID(mealUuid);
             mealsInMenu.add(meal);
         }
 
@@ -110,14 +109,14 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity removeMenu(Integer menuID) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
+    public MenuEntity removeMenu(String menuUuid) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
 
-        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuID);
+        IMenuService.checkMenuUuidValidity(menuUuid);
 
-        var menu = this.menuDao.findById(menuID);
+        var menu = this.menuDao.findByUuid(menuUuid);
 
         if (menu.isEmpty()) {
-            MenuService.LOG.error("NO MENU WAS FOUND WITH AN ID = {} IN THE removeMenu METHOD ", menuID);
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE removeMenu METHOD ", menuUuid);
             throw new MenuNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
         }
 
@@ -132,7 +131,6 @@ public class MenuService implements IMenuService {
 
          menuDtoIn.checkMenuInformationValidity();
 
-        IMenuService.ValidateMealID(menuDtoIn);
 
         var menu = this.checkExistingMenu(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
 
@@ -141,13 +139,13 @@ public class MenuService implements IMenuService {
             throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
         }
 
-        List<Integer> mealIDs = menuDtoIn.fromStringMealIDsToIntegerMealIDs();
+        List<String> mealUuids = menuDtoIn.getMealUuids();
         List<MealEntity> mealsInMenu = new ArrayList<>();
 
-        for (Integer mealID : mealIDs) {
-            var meal = this.mealService.getMealEntityByID(mealID);
+        for (String  mealUuid : mealUuids) {
+            var meal = this.mealService.getMealEntityByID(mealUuid);
             if (meal.getStatus() == 0 ){
-                MenuService.LOG.error("THE MEAL WITH ID = {} IS NOT AVAILABLE ", mealID);
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE ", mealUuid);
                 throw new UnavailableMealException(" LE PLAT  " + meal.getLabel() + " N'EST PAS DISPONIBLE ");
             }
             mealsInMenu.add(meal);
@@ -165,15 +163,15 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtout getMenuById(Integer menuID) throws MealNotFoundException, InvalidMenuInformationException {
-        IMenuService.verifyMealInformation("THE ID CAN NOT BE NULL OR LESS THAN 0", menuID);
-        var menu = this.menuDao.findById(menuID);
+    public MenuDtout getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException {
+        IMenuService.checkMenuUuidValidity(menuUuid);
+        var menu = this.menuDao.findByUuid(menuUuid);
         if (menu.isPresent()) {
             return new MenuDtout(menu.get(), this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
         }
 
 
-        MenuService.LOG.debug("NO DISH WAS FOUND WITH AN ID = {} IN THE getMealByID METHOD ", menuID);
+        MenuService.LOG.debug("NO DISH WAS FOUND WITH AN UUID = {} IN THE getMealByID METHOD ", menuUuid);
         throw new MealNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
     }
 

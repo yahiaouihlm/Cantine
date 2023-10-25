@@ -70,7 +70,7 @@ public class AddMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
-        this.menu.setMealIDs(Collections.singletonList("1"));
+        this.menu.setMealUuids(Collections.singletonList("1"));
 
     }
    @AfterEach
@@ -103,7 +103,7 @@ public class AddMenuTest {
     }
     @Test
     void AddMeuWithoutMeals () {
-        this.menu.setMealIDs(null);
+        this.menu.setMealUuids(null);
         Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }

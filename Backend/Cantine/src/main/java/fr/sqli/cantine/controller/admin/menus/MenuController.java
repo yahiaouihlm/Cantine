@@ -46,7 +46,7 @@ public class MenuController implements   IMenuController {
 
     @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
     @Override
-    public ResponseEntity<String> deleteMenu(Integer idMenu) throws InvalidMenuInformationException, MenuNotFoundException, ImagePathException {
+    public ResponseEntity<String> deleteMenu(String idMenu) throws InvalidMenuInformationException, MenuNotFoundException, ImagePathException {
         this.menuService.removeMenu(idMenu);
         return ResponseEntity.ok(MENU_DELETED_SUCCESSFULLY);
     }
@@ -63,7 +63,7 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") Integer idMenu) throws InvalidMenuInformationException, MealNotFoundException {
+    public ResponseEntity<MenuDtout> getMenuById( String idMenu) throws InvalidMenuInformationException, MealNotFoundException {
            return  ResponseEntity.ok(this.menuService.getMenuById(idMenu));
     }
 

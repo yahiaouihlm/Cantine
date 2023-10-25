@@ -1,18 +1,19 @@
 package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class MenuDtoIn extends AbstractDtoIn {
-
-    private Integer menuId;
+    private static final Logger LOG = LogManager.getLogger();
+    private String uuid; // id of the menu only used in the update method
 
     private String label;
 
@@ -31,7 +32,7 @@ public class MenuDtoIn extends AbstractDtoIn {
      *  the client will send  only  the ids of the meals ( check the meals id validity in the service) and the service will fetch the meals from the database
      */
 
-    private List <String> mealIDs;
+    private List <String> mealUuids;
 
     /**
      * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid
@@ -54,7 +55,8 @@ public class MenuDtoIn extends AbstractDtoIn {
     @JsonIgnore
      public  void  toMenuEntityWithoutImage() throws InvalidMenuInformationException, InvalidMealInformationException {
         super.checkValidity(MenuEntity.class, this.label, this.description, this.price, this.status, this.quantity, null);
-     }
+        this.validateMealsUuids();
+    }
 
     /**
      * Convert the MenuDtoIn to a MenuEntity object and return it
@@ -72,28 +74,27 @@ public class MenuDtoIn extends AbstractDtoIn {
     public  void checkMenuInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
         super.checkValidity( MenuEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, null);
         super.checkImageValidity( MenuEntity.class ,   this.image);
+        this.validateMealsUuids();
     }
 
 
-    @JsonIgnore
-    public  List<Integer> fromStringMealIDsToIntegerMealIDs() throws  InvalidMenuInformationException{
-        try {
-            return this.getMealIDs().stream().map((id)-> id.replaceAll("[^0-9]+", "")).map(
-                    Integer::parseInt).toList();
+
+   private void validateMealsUuids ( ) throws InvalidMenuInformationException {
+        if (this.getMealUuids() == null || this.getMealUuids().isEmpty() || this.getMealUuids().size() == 0  ) {
+            MenuDtoIn.LOG.error("The menu doesn't contain any meal");
+            throw new InvalidMenuInformationException("THE MENU DOESN'T CONTAIN ANY MEAL");
         }
-        catch (NumberFormatException e){
-            throw new InvalidMenuInformationException("INVALID  MEALS IDS");
-        }
+
     }
 
-
-    public Integer getMenuId() {
-        return menuId;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setMenuId(Integer menuId) {
-        this.menuId = menuId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
+
     public String getLabel() {
         return label;
     }
@@ -142,11 +143,11 @@ public class MenuDtoIn extends AbstractDtoIn {
         this.quantity = quantity;
     }
 
-    public List<String> getMealIDs() {
-        return mealIDs;
+    public List<String> getMealUuids() {
+        return mealUuids;
     }
 
-    public void setMealIDs(List<String> mealIDs) {
-        this.mealIDs = mealIDs;
+    public void setMealUuids(List<String> mealUuids) {
+        this.mealUuids = mealUuids;
     }
 }

@@ -28,7 +28,7 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
     Optional<MealEntity> findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
 
 
-    Optional<MealEntity>getMealEntitiesByUuid(String uuid);
+    Optional<MealEntity>findByUuid(String uuid);
 
 
 }

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 public class MealDtoIn  extends AbstractDtoIn implements Serializable {
 
-    private  Integer id ; // id of the meal only used in the update method
+    private  String uuid; // id of the meal only used in the update method
     private String label;
     private String category;
     private String description;
@@ -118,11 +118,11 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
         this.image = image;
     }
 
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

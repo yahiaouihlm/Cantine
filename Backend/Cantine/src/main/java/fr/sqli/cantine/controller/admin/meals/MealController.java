@@ -45,14 +45,14 @@ public class    MealController implements IMealController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
+    public ResponseEntity<ResponseDtout> deleteMeal(String idMeal) throws MealNotFoundException, InvalidMealInformationException, RemoveMealAdminException, ImagePathException {
         this.mealService.removeMeal(idMeal);
         return ResponseEntity.ok().body ( new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
 
 
     @Override
-    public ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+    public ResponseEntity<ResponseDtout> addMeal( MealDtoIn newMeal) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_ADDED_SUCCESSFULLY));
     }
@@ -60,7 +60,7 @@ public class    MealController implements IMealController {
 
 
     @Override
-    public ResponseEntity<MealDtout> getMealByID(@RequestParam("idMeal") Integer idMeal) throws MealNotFoundException, InvalidMealInformationException {
+    public ResponseEntity<MealDtout> getMealByID( String idMeal) throws MealNotFoundException, InvalidMealInformationException {
         var meal = this.mealService.getMealByID(idMeal);
         return ResponseEntity.ok(meal);
     }

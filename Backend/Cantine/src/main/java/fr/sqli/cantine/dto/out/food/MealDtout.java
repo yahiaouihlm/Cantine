@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class MealDtout {
 
-    private  final   Integer id ;
+    private  final   String uuid ;
     private  final String label ;
     private final String description;
     private  final  String category;
@@ -22,7 +22,7 @@ public class MealDtout {
 
 
     public MealDtout(MealEntity meal ,  String mealUrlImage) {
-        this.id = meal.getId();
+        this.uuid = meal.getUuid();
         this.description = meal.getDescription();
         this.category = meal.getCategory();
         this.price = meal.getPrice();
@@ -33,8 +33,8 @@ public class MealDtout {
         this.image =mealUrlImage + path;
     }
 
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
     public String getLabel() {
