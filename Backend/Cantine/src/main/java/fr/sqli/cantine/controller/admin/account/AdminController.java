@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.adminDashboard.account;
+package fr.sqli.cantine.controller.admin.account;
 
 import fr.sqli.cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-import static fr.sqli.cantine.controller.admin.adminDashboard.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
+import static fr.sqli.cantine.controller.admin.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)

@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.food.meals;
 
 
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static fr.sqli.cantine.controller.admin.meals.IMealController.MEALS_BASIC_URL_ADMIN;
+import static fr.sqli.cantine.controller.food.meals.IMealController.MEALS_BASIC_URL_ADMIN;
 
 
 @RestController

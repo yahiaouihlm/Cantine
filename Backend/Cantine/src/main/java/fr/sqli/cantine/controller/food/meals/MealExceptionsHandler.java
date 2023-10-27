@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.food.meals;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;

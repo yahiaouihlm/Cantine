@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.adminDashboard.works;
+package fr.sqli.cantine.controller.admin.works;
 
 
 import fr.sqli.cantine.dto.in.person.StudentClassDtoIn;

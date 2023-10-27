@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.food.meals;
 
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;

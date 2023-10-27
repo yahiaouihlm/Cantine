@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.menus;
+package fr.sqli.cantine.controller.food.menus;
 
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static fr.sqli.cantine.controller.admin.menus.IMenuController.MENUS_BASIC_URL_ADMIN;
+import static fr.sqli.cantine.controller.food.menus.IMenuController.MENUS_BASIC_URL_ADMIN;
 
 @RestController
 @RequestMapping(value  = MENUS_BASIC_URL_ADMIN)

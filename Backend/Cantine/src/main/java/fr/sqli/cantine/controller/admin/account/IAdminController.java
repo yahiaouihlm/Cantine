@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.adminDashboard.account;
+package fr.sqli.cantine.controller.admin.account;
 
 import fr.sqli.cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;

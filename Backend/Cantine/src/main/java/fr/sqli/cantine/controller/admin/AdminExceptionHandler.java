@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.adminDashboard;
+package fr.sqli.cantine.controller.admin;
 
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
