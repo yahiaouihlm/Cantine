@@ -2,6 +2,8 @@ package fr.sqli.cantine.service.food.meals.exceptions;
 
 public class InvalidMealInformationException extends  Exception {
 
+
+    @Deprecated
     public InvalidMealInformationException() {
     }
 

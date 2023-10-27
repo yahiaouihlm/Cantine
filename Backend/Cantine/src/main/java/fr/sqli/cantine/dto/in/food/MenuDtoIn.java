@@ -2,6 +2,7 @@ package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.MenuEntity;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class MenuDtoIn extends AbstractDtoIn {
+public class MenuDtoIn extends AbstractFoodDtoIn {
     private static final Logger LOG = LogManager.getLogger();
     private String uuid; // id of the menu only used in the update method
 
@@ -53,8 +54,12 @@ public class MenuDtoIn extends AbstractDtoIn {
      * @throws InvalidMealInformationException it's never thrown because it's a menu
      */
     @JsonIgnore
-     public  void  toMenuEntityWithoutImage() throws InvalidMenuInformationException, InvalidMealInformationException {
-        super.checkValidity(MenuEntity.class, this.label, this.description, this.price, this.status, this.quantity, null);
+     public  void  toMenuEntityWithoutImage() throws InvalidMenuInformationException,InvalidFoodInformationException {
+        super.CheckNullabilityAndEmptiness(this.label, this.description, this.price, this.status, this.quantity);
+        if (description.length() > 1700) {
+           throw new  InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
+        }
+
         this.validateMealsUuids();
     }
 
@@ -67,13 +72,15 @@ public class MenuDtoIn extends AbstractDtoIn {
     /**
      * Check if the menu information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
      *       the image is also checked
-     * @throws InvalidMealInformationException it's  never thrown because it's a menu
      * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
      */
     @JsonIgnore
-    public  void checkMenuInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
-        super.checkValidity( MenuEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, null);
-        super.checkImageValidity( MenuEntity.class ,   this.image);
+    public  void checkMenuInformationValidity() throws InvalidMenuInformationException, InvalidFoodInformationException {
+        super.CheckNullabilityAndEmptiness(this.label,  this.description, this.price, this.status ,  this.quantity);
+        if (description.length() > 1700) {
+            throw new  InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
+        }
+        super.checkImageValidity(this.image);
         this.validateMealsUuids();
     }
 

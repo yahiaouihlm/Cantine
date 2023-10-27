@@ -2,6 +2,7 @@ package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,17 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class MealDtoIn  extends AbstractDtoIn implements Serializable {
+public class MealDtoIn  extends AbstractFoodDtoIn implements Serializable {
 
-    private  String uuid; // id of the meal only used in the update method
-    private String label;
-    private String category;
-    private String description;
-    private BigDecimal price;
-    private Integer quantity;
-    private Integer status;
+       private String category;
 
-    private MultipartFile image;
 
     /**
      * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid
@@ -30,7 +24,7 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      */
 
     @JsonIgnore
-    public  void  checkMealInformation() throws InvalidMealInformationException, InvalidMenuInformationException {
+    public  void  checkMealInformation() throws  InvalidFoodInformationException {
         this.checkMealInformationValidity(); // check if the meal information is valid
         }
 
@@ -40,9 +34,10 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
      */
     @JsonIgnore
-    public  void  toMealEntityWithoutImage() throws InvalidMealInformationException, InvalidMenuInformationException {
-        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category); // check if the meal information is valid except the image
-       }
+    public void toMealEntityWithoutImage() throws  InvalidFoodInformationException {
+        super.CheckNullabilityAndEmptiness(this.label, this.description, this.price, this.status, this.quantity); // check if the meal information is valid except the image and  category
+        this.checkCategoryValidity();
+    }
 
     /**
      * Check if the meal information is valid or not and throw an exception
@@ -53,14 +48,30 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
      *      *                                        because the method is called only in the MealDtoIn class with  type  MealEntity
      */
     @JsonIgnore
-    private void checkMealInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
-        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category);
-        super.checkImageValidity( MealEntity.class ,   this.image);
+    private void checkMealInformationValidity() throws   InvalidFoodInformationException {
+        super.CheckNullabilityAndEmptiness( this.label,  this.description, this.price, this.status ,  this.quantity);
+        super.checkImageValidity(this.image);
+        checkCategoryValidity();
     }
 
 
 
+    public void checkCategoryValidity() throws InvalidFoodInformationException {
+        if (category == null || category.trim().isEmpty()) {
+            throw new InvalidFoodInformationException("CATEGORY_IS_MANDATORY");
+        }
 
+        if (this.removeSpaces(category).length() < 3)
+            throw new InvalidFoodInformationException("CATEGORY_IS_TOO_SHORT");
+
+        if (category.length() > 44) {
+            throw new InvalidFoodInformationException("CATEGORY_IS_TOO_LONG");
+        }
+
+        if (description.length() > 1600) {
+            throw new InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
+        }
+    }
 
     public String getCategory() {
         return category;

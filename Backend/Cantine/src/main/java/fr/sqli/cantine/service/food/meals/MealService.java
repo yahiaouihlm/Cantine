@@ -5,6 +5,7 @@ import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.food.MealDtout;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
@@ -45,11 +46,11 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidFoodInformationException {
 
         if (mealDtoIn == null) {
             MealService.LOG.debug("THE MEAL DTO CAN NOT BE NULL IN THE updateMeal METHOD ");
-            throw new InvalidMealInformationException("THE MEAL DTO CAN NOT BE NULL");
+            throw new InvalidFoodInformationException("THE MEAL CAN NOT BE NULL");
         }
 
          IMealService.checkUuidValidity(mealDtoIn.getUuid());
@@ -90,7 +91,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity removeMeal(String uuid) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException {
+    public MealEntity removeMeal(String uuid) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException, InvalidFoodInformationException {
         IMealService.checkUuidValidity(uuid);
 
         var overemotional = this.mealDao.findByUuid(uuid);
@@ -118,7 +119,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException {
         if (mealDtoIn == null) {
             MealService.LOG.error("THE MEAL CAN NOT BE NULL");
             throw new InvalidMealInformationException("THE MEAL CAN NOT BE NULL");
@@ -147,12 +148,12 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealDtout getMealByID(String uuid) throws InvalidMealInformationException, MealNotFoundException {
+    public MealDtout getMealByID(String uuid) throws InvalidMealInformationException, MealNotFoundException, InvalidFoodInformationException {
         return new MealDtout(getMealEntityByID(uuid), this.MEALS_IMAGES_URL);
     }
 
     @Override
-    public MealEntity getMealEntityByID(String uuid) throws InvalidMealInformationException, MealNotFoundException {
+    public MealEntity getMealEntityByID(String uuid) throws InvalidMealInformationException, MealNotFoundException, InvalidFoodInformationException {
         IMealService.checkUuidValidity(uuid);
 
         var meal = this.mealDao.findByUuid(uuid);
