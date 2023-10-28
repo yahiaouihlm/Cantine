@@ -20,6 +20,9 @@ public class StudentEntity  implements Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
 
+
+    @Column(name = "uuid" , nullable=false , length = 254)
+    private String  uuid;
     @Column(name = "firstname" , nullable=false , length = 99)
     private String firstname  ;
 
@@ -73,6 +76,15 @@ public class StudentEntity  implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+
 
     public String getFirstname() {
         return firstname;

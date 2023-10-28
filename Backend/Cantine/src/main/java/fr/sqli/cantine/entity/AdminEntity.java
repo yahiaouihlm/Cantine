@@ -17,6 +17,8 @@ public class AdminEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(unique=true, nullable=false )
     private Integer id;
+    @Column(name = "uuid" , nullable=false , length = 254)
+    private String  uuid;
     @Column(name = "firstname" , nullable=false , length = 99)
     private String firstname  ;
 

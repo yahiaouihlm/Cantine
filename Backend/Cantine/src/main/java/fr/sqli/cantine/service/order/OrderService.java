@@ -8,11 +8,11 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
 
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
 import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.qrcode.QrCodeGenerator;
@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService {
@@ -110,7 +109,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException {
         if (orderDtoIn == null)
             throw new InvalidOrderException("INVALID ORDER");
 

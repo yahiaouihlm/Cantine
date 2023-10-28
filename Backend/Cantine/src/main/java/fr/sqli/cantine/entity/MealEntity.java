@@ -21,16 +21,17 @@ public class MealEntity implements Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
 
-
+    @Column(name = "uuid" , nullable=false , length = 254)
+    private String  uuid ;
 
     @Column(nullable=false, length=100)
     private String label;
 
 
-    @Column(nullable=false, length=45)
+    @Column(nullable=false, length=101)
     private String category ;
 
-    @Column(nullable=false, length=1700)
+    @Column(nullable=false, length=3002)
     private String description;
 
     @Column(nullable=false, precision=5, scale=2)
@@ -81,19 +82,18 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/
 
-    public MealEntity( String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
-        this.category = category;
-        this.description = description;
-        this.label = label;
+    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
+        this.uuid = java.util.UUID.randomUUID().toString();
+        this.label = label.trim();
+        this.category = category.trim();
+        this.description = description.trim();
         this.price = price;
         this.quantity = quantity;
         this.status = status;
         this.image = image;
     }
 
-    public MealEntity() {
-
-    }
+    public MealEntity() {}
 
     public Integer getId() {
         return id;
@@ -101,6 +101,14 @@ public class MealEntity implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getCategory() {

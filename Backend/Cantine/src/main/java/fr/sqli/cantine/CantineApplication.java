@@ -1,6 +1,7 @@
 package fr.sqli.cantine;
 
 
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 
-@SpringBootApplication (/*exclude = SecurityAutoConfiguration.class*/)
+@SpringBootApplication (exclude = SecurityAutoConfiguration.class)
 public class CantineApplication {
 
 	private static final Logger LOG = LogManager.getLogger();

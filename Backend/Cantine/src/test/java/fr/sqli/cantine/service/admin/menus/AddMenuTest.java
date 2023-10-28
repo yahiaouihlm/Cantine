@@ -5,11 +5,12 @@ import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.admin.meals.IMealService;
-import fr.sqli.cantine.service.admin.meals.MealService;
-import fr.sqli.cantine.service.admin.menus.exceptions.ExistingMenuException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.admin.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.food.meals.IMealService;
+import fr.sqli.cantine.service.food.meals.MealService;
+import fr.sqli.cantine.service.food.menus.MenuService;
+import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.menus.exceptions.UnavailableMealException;
 import fr.sqli.cantine.service.images.IImageService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 
-import javax.swing.text.html.Option;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -70,7 +70,7 @@ public class AddMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
-        this.menu.setMealIDs(Collections.singletonList("1"));
+        this.menu.setMealUuids(Collections.singletonList("1"));
 
     }
    @AfterEach
@@ -88,7 +88,7 @@ public class AddMenuTest {
 
         Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.empty());
         //Mockito.when(this.iMealDao.findById(1)).thenReturn(Optional.of(meal));
-      Mockito.when(this.iMealService.getMealEntityByID(1)).thenReturn(meal);
+      Mockito.when(this.iMealService.getMealEntityByUUID(1)).thenReturn(meal);
 
         Assertions.assertThrows(UnavailableMealException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
@@ -103,7 +103,7 @@ public class AddMenuTest {
     }
     @Test
     void AddMeuWithoutMeals () {
-        this.menu.setMealIDs(null);
+        this.menu.setMealUuids(null);
         Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }

@@ -20,6 +20,8 @@ public class OrderEntity implements Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
 
+    @Column(name = "uuid" , nullable=false , length = 254)
+    private String  uuid;
 
     @Column(name = "creation_date", nullable=false)
     private LocalDate creationDate;

@@ -7,11 +7,12 @@ import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
-import fr.sqli.cantine.service.admin.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.admin.meals.exceptions.RemoveMealAdminException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.meals.MealService;
+import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
+import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -85,14 +86,14 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test  removeMeal method with  valid iformation")
-    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealAdminException, MealNotFoundException {
+    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealException, MealNotFoundException {
 
         this.mealEntity.setMenus(List.of()); //  empty list of  menu
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
 
         Mockito.doNothing().when(this.imageService).deleteImage(null, this.env.getProperty("sqli.cantine.images.meals.path"));
-        var result = mealService.removeMeal(1);
+        var result = mealService.deleteMeal(1);
 
         // tests
         Assertions.assertNotNull(result);
@@ -111,8 +112,8 @@ class AddAndRemoveMealTest {
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
-        Assertions.assertThrows(RemoveMealAdminException.class,
-                () -> mealService.removeMeal(1)); // the meal is in association with menu
+        Assertions.assertThrows(RemoveMealException.class,
+                () -> mealService.deleteMeal(1)); // the meal is in association with menu
 
         Mockito.verify(mealDao, Mockito.times(1)).findById(1);
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
@@ -126,8 +127,8 @@ class AddAndRemoveMealTest {
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
-        Assertions.assertThrows(RemoveMealAdminException.class,
-                () -> mealService.removeMeal(1)); // the meal is in association with menu
+        Assertions.assertThrows(RemoveMealException.class,
+                () -> mealService.deleteMeal(1)); // the meal is in association with menu
 
         Mockito.verify(mealDao, Mockito.times(1)).findById(1);
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
@@ -138,7 +139,7 @@ class AddAndRemoveMealTest {
     @DisplayName("Test the removeMeal method with positive id")
     void removeMealTestWithNegativeIDTest() throws InvalidMealInformationException, ImagePathException {
         Assertions.assertThrows(InvalidMealInformationException.class,
-                () -> mealService.removeMeal(-1));
+                () -> mealService.deleteMeal(-1));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).deleteImage(Mockito.any(String.class), Mockito.any(String.class));
@@ -148,7 +149,7 @@ class AddAndRemoveMealTest {
     @DisplayName("Test the removeMeal method with NULL id")
     void removeMealTestWithNullIdTest() throws ImagePathException {
         Assertions.assertThrows(InvalidMealInformationException.class,
-                () -> mealService.removeMeal(null));
+                () -> mealService.deleteMeal(null));
         Mockito.verify(mealDao, Mockito.times(0)).findById(-1);
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).deleteImage(Mockito.any(String.class), Mockito.any(String.class));

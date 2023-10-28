@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS "function" (
 
 CREATE TABLE  IF NOT EXISTS  student (
     id SERIAL PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL,
     firstname VARCHAR(100) NOT NULL,
     lastname VARCHAR(100) NOT NULL,
     birthdate DATE NOT NULL,
@@ -64,8 +65,9 @@ CREATE TABLE  IF NOT EXISTS  student (
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS "admin" (
       id SERIAL PRIMARY KEY,
-       firstname VARCHAR(100) NOT NULL,
-       lastname VARCHAR(100) NOT NULL,
+      uuid VARCHAR(255) NOT NULL,
+      firstname VARCHAR(100) NOT NULL,
+      lastname VARCHAR(100) NOT NULL,
       birthdate DATE NOT NULL,
       registration_date DATE NOT NULL,
       email VARCHAR(1000) NOT NULL,
@@ -88,6 +90,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
 
  CREATE table  if NOT EXISTS payment (
     id SERIAL PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL,
     student_id INT NOT NULL,
     admin_id INT NOT NULL,
     amount DECIMAL(5,2) NOT NULL,
@@ -103,12 +106,13 @@ CREATE  TABLE IF NOT EXISTS "admin" (
 
 CREATE table  if NOT EXISTS  st_order(
      id SERIAL PRIMARY KEY,
+     uuid VARCHAR(255) NOT NULL,
      student_id INT NOT NULL,
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
      status INT  NOT NULL DEFAULT 0   ,   /* 0 = disabled, 1 = enabled */
-    isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
+     isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
     qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
     check (status IN (0,1)),
@@ -120,6 +124,7 @@ CREATE table  if NOT EXISTS  st_order(
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS meal(
     id  SERIAL ,
+    uuid VARCHAR(255) NOT NULL,
     label  VARCHAR(100) NOT NULL,
     description   TEXT NOT NULL ,
     price  DECIMAL(5,2) NOT NULL,
@@ -138,6 +143,7 @@ CREATE TABLE IF NOT EXISTS meal(
 
 CREATE TABLE IF NOT EXISTS menu (
     id SERIAL PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL,
     label  VARCHAR(100) NOT NULL,
     description  TEXT NOT NULL,
     status INT  NOT  NULL,  /* 0 = disabled, 1 = enabled */

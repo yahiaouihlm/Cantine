@@ -5,12 +5,13 @@ import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.admin.meals.MealService;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.admin.menus.exceptions.ExistingMenuException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.cantine.service.food.meals.MealService;
+import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.menus.MenuService;
+import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -69,7 +70,7 @@ public class UpdateMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
-        this.menu.setMealIDs(Collections.singletonList("1"));
+        this.menu.setMealUuids(Collections.singletonList("1"));
 
     }
 
@@ -109,7 +110,7 @@ public class UpdateMenuTest {
         this.menuEntity.setPrice(new BigDecimal(1.5));
         this.menuEntity.setId(1);
         this.menuEntity.setImage(new ImageEntity());
-        this.menu.setMealIDs(Collections.singletonList("invalid id"));
+        this.menu.setMealUuids(Collections.singletonList("invalid id"));
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
         Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());

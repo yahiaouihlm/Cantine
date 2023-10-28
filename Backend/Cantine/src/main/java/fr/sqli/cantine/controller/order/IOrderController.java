@@ -4,11 +4,11 @@ import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.OrderDtout;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.admin.menus.exceptions.MenuNotFoundException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
@@ -45,7 +45,7 @@ public interface IOrderController {
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
     ResponseEntity<List<OrderDtout>> getOrdersByDateAndStudentId(@RequestParam("studentId") Integer idStudent , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
     @PostMapping(ADD_ORDER_URL)
-    ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException;
+    ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException;
 
     @GetMapping(ADMIN_GET_ALL_ORDERS_BY_DAY)
     ResponseEntity<List<OrderDtout>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidPersonInformationException, InvalidOrderException;

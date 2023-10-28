@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MenuDtout {
 
-    private final Integer id;
+    private final String  uuid;
     private final  String label;
 
     private final  String description;
@@ -26,7 +26,7 @@ public class MenuDtout {
 
 
     public MenuDtout(MenuEntity menu , String menuUrlImage,  String mealUrlImage) {
-        this.id = menu.getId();
+        this.uuid = menu.getUuid();
         this.description = menu.getDescription();
         this.createdDate = menu.getCreatedDate();
         this.price = menu.getPrice();
@@ -41,8 +41,8 @@ public class MenuDtout {
         this.meals = menu.getMeals().stream().map(meal -> new MealDtout(meal,mealUrlImage)).toList();
     }
 
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
     public String getLabel() {

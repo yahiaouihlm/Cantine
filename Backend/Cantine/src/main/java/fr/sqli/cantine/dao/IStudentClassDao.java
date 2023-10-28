@@ -8,7 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface IStudentClassDao  extends JpaRepository <fr.sqli.cantine.entity.StudentClassEntity, Integer>{
-
-
     public Optional<StudentClassEntity> findByName(String name);
 }

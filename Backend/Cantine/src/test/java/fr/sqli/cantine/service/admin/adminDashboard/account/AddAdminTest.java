@@ -5,8 +5,9 @@ import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dto.in.person.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.account.AdminService;
+import fr.sqli.cantine.service.admin.exceptions.AdminFunctionNotFoundException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.images.ImageService;
 
 import org.apache.logging.log4j.LogManager;

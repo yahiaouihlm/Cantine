@@ -23,6 +23,8 @@ public class AbstractContainerConfig {
             postgreSQLContainer.start();
     }
 
+
+
     /**
      *  return   String  witch contains exception message combined with right  key= "exceptionMessage" as json format
      * @param exceptionMessage message to be combined with key "exceptionMessage"
@@ -64,4 +66,6 @@ public class AbstractContainerConfig {
 
         return null ;
     }
+
+
 }

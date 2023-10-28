@@ -1,88 +1,47 @@
 package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.cantine.entity.MealEntity;
-import fr.sqli.cantine.service.admin.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.admin.menus.exceptions.InvalidMenuInformationException;
+
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class MealDtoIn  extends AbstractDtoIn implements Serializable {
+public class MealDtoIn extends AbstractFoodDtoIn implements Serializable {
 
-    private  Integer id ; // id of the meal only used in the update method
-    private String label;
     private String category;
-    private String description;
-    private BigDecimal price;
-    private Integer quantity;
-    private Integer status;
 
-    private MultipartFile image;
-
-    /**
-     * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid
-     *
-     * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
-     * @throws InvalidMealInformationException if the meal information is not valid
-     * @throws InvalidMenuInformationException if the menu information is not valid but it will never be thrown in MealDtoIn
-     */
 
     @JsonIgnore
-    public MealEntity toMealEntity() throws InvalidMealInformationException, InvalidMenuInformationException {
-        this.checkMealInformationValidity(); // check if the meal information is valid
-        return this.createMealEntity(); // create the MealEntity object
-    }
-
-    /**
-     * Check if the meal information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
-     *
-     * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
-     */
-    @JsonIgnore
-    public MealEntity toMealEntityWithoutImage() throws InvalidMealInformationException, InvalidMenuInformationException {
-        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category); // check if the meal information is valid except the image
-        return this.createMealEntity(); // create the MealEntity object
-    }
-
-    /**
-     * Convert the MealDtoIn to a MealEntity object and return it  after checking if the meal information is valid except the image
-     * the method also make a  trim() on the label, description and category before creating the MealEntity object
-     *
-     * @return the MealEntity object created from the MealDtoIn object or throw an exception if the meal information is not valid
-     * @throws InvalidMealInformationException if the meal information is not valid
-     */
-    @JsonIgnore
-    private MealEntity createMealEntity() throws InvalidMealInformationException {
-        MealEntity mealEntity = new MealEntity();
-        mealEntity.setCategory(this.category.trim());
-        mealEntity.setDescription(this.description.trim());
-        mealEntity.setLabel(this.label.trim());
-        mealEntity.setPrice(this.price);
-        mealEntity.setQuantity(quantity);
-        mealEntity.setStatus(this.status);
-        return mealEntity;
-
-    }
-
-    /**
-     * Check if the meal information is valid or not and throw an exception
-     * if it is not valid ( if one of the arguments is null or empty or less than 0)
-     *
-     * @throws InvalidMealInformationException if the meal information is not valid
-     * @throws InvalidMenuInformationException if the menu information is not valid but  in  this  cas  it will never be thrown
-     *      *                                        because the method is called only in the MealDtoIn class with  type  MealEntity
-     */
-    @JsonIgnore
-    private void checkMealInformationValidity() throws InvalidMealInformationException, InvalidMenuInformationException {
-        super.checkValidity( MealEntity.class, this.label,  this.description, this.price, this.status ,  this.quantity, this.category);
-        super.checkImageValidity( MealEntity.class ,   this.image);
+    public void checkMealInformation() throws InvalidFoodInformationException {
+        super.CheckNullabilityAndEmptiness();
+        checkCategoryValidity();
+        super.checkImageValidity(this.image);
     }
 
 
+    @JsonIgnore
+    public void toMealEntityWithoutImage() throws InvalidFoodInformationException {
+        super.CheckNullabilityAndEmptiness(); // check if the meal information is valid except the image and  category
+        this.checkCategoryValidity();
+    }
 
 
+    public void checkCategoryValidity() throws InvalidFoodInformationException {
+        if (category == null || category.isBlank()) {
+            throw new InvalidFoodInformationException("CATEGORY_IS_MANDATORY");
+        }
+
+        if (this.removeSpaces(category).length() < 3)
+            throw new InvalidFoodInformationException("CATEGORY_IS_TOO_SHORT");
+
+        if (category.length() > 100) {
+            throw new InvalidFoodInformationException("CATEGORY_IS_TOO_LONG");
+        }
+
+    }
 
     public String getCategory() {
         return category;
@@ -140,11 +99,11 @@ public class MealDtoIn  extends AbstractDtoIn implements Serializable {
         this.image = image;
     }
 
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

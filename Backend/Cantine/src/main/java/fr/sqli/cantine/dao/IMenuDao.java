@@ -12,6 +12,10 @@ import java.util.Optional;
 @Repository
 public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
 
+
+
+
+
     @Query(value = "SELECT menu FROM MenuEntity menu WHERE (" +
             "LOWER(REPLACE(menu.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
             "AND LOWER(REPLACE(menu.description, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
@@ -21,6 +25,9 @@ public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
     )
     Optional<MenuEntity> findByLabelAndAndPriceAndDescriptionIgnoreCase(String label, String description , BigDecimal price);
 
+
+
+    Optional<MenuEntity>findByUuid(String uuid);
 
 
 }

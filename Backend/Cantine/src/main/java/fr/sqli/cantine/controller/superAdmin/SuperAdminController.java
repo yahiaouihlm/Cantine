@@ -4,7 +4,7 @@ package fr.sqli.cantine.controller.superAdmin;
 import fr.sqli.cantine.dto.in.superAdmin.FunctionDtoIn;
 import fr.sqli.cantine.dto.in.superAdmin.TaxDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.admin.adminDashboard.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.superAdmin.SuperAdminService;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingTax;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;

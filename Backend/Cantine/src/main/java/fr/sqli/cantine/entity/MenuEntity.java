@@ -18,10 +18,13 @@ public class MenuEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Integer id;
+
+    @Column(name = "uuid" , nullable=false , length = 254)
+    private String  uuid;
     @Column(nullable = false, length = 100)
     private String label;
 
-    @Column(nullable = false, length = 1800)
+    @Column(nullable = false, length = 3002)
     private String description;
    @Column(name ="creation_date",  nullable = false )
    private LocalDate createdDate;
@@ -66,11 +69,29 @@ public class MenuEntity implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    public MenuEntity() {
+    public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image , List<MealEntity> meals) {
+        this.uuid = java.util.UUID.randomUUID().toString();
+        this.label = label;
+        this.description = description;
+        this.createdDate = LocalDate.now();
+        this.price = price;
+        this.status = status;
+        this.quantity = quantity;
+        this.image = image;
+        this.meals = meals;
     }
 
+    public MenuEntity() {}
     public Integer getId() {
         return id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public void setId(Integer id) {
