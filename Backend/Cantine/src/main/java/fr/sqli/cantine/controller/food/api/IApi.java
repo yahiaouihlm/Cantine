@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.api;
+package fr.sqli.cantine.controller.food.api;
 
 import fr.sqli.cantine.dto.out.food.MealDtout;
 import fr.sqli.cantine.dto.out.food.MenuDtout;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IApi {
 
-    String  BASIC_API_URL = "/cantine/user" ;
+    String  BASIC_API_URL = "/cantine/api" ;
 
     String ENDPOINT_GET_ALL_MEALS_URL = "meals/getAll";
     String ENDPOINT_GET_ALL_MENUS_URL = "menus/getAll";

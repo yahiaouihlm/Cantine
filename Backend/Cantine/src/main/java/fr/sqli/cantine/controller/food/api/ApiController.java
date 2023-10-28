@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.api;
+package fr.sqli.cantine.controller.food.api;
 
 
 import fr.sqli.cantine.dto.out.food.MealDtout;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static fr.sqli.cantine.controller.api.IApi.BASIC_API_URL;
+import static fr.sqli.cantine.controller.food.api.IApi.BASIC_API_URL;
 
 @RestController
 @RequestMapping(BASIC_API_URL)
