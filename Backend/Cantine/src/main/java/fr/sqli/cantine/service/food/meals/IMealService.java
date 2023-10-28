@@ -6,7 +6,6 @@ import fr.sqli.cantine.dto.out.food.MealDtout;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
@@ -58,7 +57,7 @@ public interface IMealService {
      *
      * @param mealDtoIn the  meal with the updated information
      * @return MealEntity the meal updated in the database
-     * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
+
      * @throws MealNotFoundException           if the meal is not found in the database
      * @throws InvalidFormatImageException            if the image type is not valid (if the image type is not jpg or png)
      * @throws InvalidImageException                if the image is not valid (if the image is null or empty)
@@ -66,7 +65,7 @@ public interface IMealService {
      * @throws IOException                          if the image is not found or  the jvm cannot create the file
      */
 
-    MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
+    MealEntity updateMeal(MealDtoIn mealDtoIn) throws  MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
 
 
     /**
@@ -74,7 +73,6 @@ public interface IMealService {
      *
      * @param uuid as Integer the id of the meal to remove
      * @return MealEntity the meal removed from the database
-     * @throws InvalidMealInformationException if the meal  id is not valid (if the id is null or less than 0)
      * @throws MealNotFoundException           if the meal is not found in the database
      * @throws RemoveMealAdminException             if the meal is present in a menu(s)
      * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
@@ -82,21 +80,20 @@ public interface IMealService {
 
 
 
-    MealEntity removeMeal(String uuid) throws InvalidMealInformationException, MealNotFoundException, RemoveMealAdminException, ImagePathException, InvalidFoodInformationException;
+    MealEntity removeMeal(String uuid) throws MealNotFoundException, RemoveMealAdminException, ImagePathException, InvalidFoodInformationException;
 
     /**
      * this method is used to add a meal to  database and save the image in the (images/meals) directory
      *
      * @param mealDtoIn as  MealDtoIn the meal to add to the database
      * @return MealEntity the meal added to the database
-     * @throws InvalidMealInformationException if the meal information is not valid (if one of the arguments is null or empty or less than 0)
      * @throws InvalidFormatImageException            if the image type is not valid (if the image type is not jpg or png)
      * @throws InvalidImageException                if the image is not valid (if the image is null or empty)
      * @throws ImagePathException                   if the path is not valid (if the path is null or empty)
      * @throws IOException                          if the image is not found
      */
 
-    MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
+    MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
 
     /**
      * Get all the meals from the database and return them as a list of MealDTO
@@ -110,13 +107,12 @@ public interface IMealService {
      *
      * @param uuid the meal  uuid to search for
      * @return The meal found with the given id or throw an exception if the meal is not found
-     * @throws InvalidMealInformationException if the meal id is null or less than 0
      * @throws MealNotFoundException           if the meal is not found
      */
-    MealDtout getMealByID(String uuid) throws InvalidMealInformationException, MealNotFoundException, InvalidFoodInformationException;
+    MealDtout getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException;
 
 
-    MealEntity getMealEntityByID(String uuid) throws InvalidMealInformationException, MealNotFoundException, InvalidFoodInformationException;
+    MealEntity getMealEntityByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException;
 
 
 }

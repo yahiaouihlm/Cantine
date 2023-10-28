@@ -5,7 +5,7 @@ import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.OrderDtout;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping(IOrderController.BASIC_ORDER_URL)
 public class OrderController  implements IOrderController{
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -46,7 +46,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
+    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException {
         this.orderService.addOrder(orderDtoIn) ;
         return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }

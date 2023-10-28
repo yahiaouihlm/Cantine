@@ -3,7 +3,8 @@ package fr.sqli.cantine.service.food.menus;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.food.MenuDtout;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
@@ -34,13 +35,13 @@ public interface IMenuService {
   }
 
 
-  public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException;
+  public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException, InvalidFoodInformationException;
 
 
   public MenuEntity removeMenu(String menuUuid) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException;
 
 
-  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException;
+  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
 
 
   public MenuDtout getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException;

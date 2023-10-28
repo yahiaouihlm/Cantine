@@ -9,7 +9,7 @@ import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
 
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
@@ -109,7 +109,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException {
         if (orderDtoIn == null)
             throw new InvalidOrderException("INVALID ORDER");
 

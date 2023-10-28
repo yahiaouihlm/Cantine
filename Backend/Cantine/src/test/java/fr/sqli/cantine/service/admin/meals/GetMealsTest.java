@@ -118,7 +118,7 @@ class GetMealsTest {
 
         Mockito.when(this.iMealDao.findById(1)).thenReturn(Optional.of(this.mealEntity));
 
-        MealDtout resultTest = this.iMealService.getMealByID(1);
+        MealDtout resultTest = this.iMealService.getMealByUUID(1);
 
         MealDtout shouldResult = new MealDtout(this.mealEntity, urlMealImage);
 
@@ -138,7 +138,7 @@ class GetMealsTest {
 
 
         Assertions.assertThrows(MealNotFoundException.class, () -> {
-            this.iMealService.getMealByID(idMeal);
+            this.iMealService.getMealByUUID(idMeal);
         });
 
         Mockito.verify(this.iMealDao, times(1)).findById(idMeal);
@@ -150,7 +150,7 @@ class GetMealsTest {
     void getMealIdWithInvalidID() {
         Integer IdTest = -1;
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
-            this.iMealService.getMealByID(IdTest);
+            this.iMealService.getMealByUUID(IdTest);
         });
 
     }
@@ -159,7 +159,7 @@ class GetMealsTest {
     @DisplayName("Test  getMealByID with null ID  ")
     void getMealByIdWithNullID() {
         Assertions.assertThrows(InvalidMealInformationException.class, () -> {
-            this.iMealService.getMealByID(null);
+            this.iMealService.getMealByUUID(null);
         });
     }
 

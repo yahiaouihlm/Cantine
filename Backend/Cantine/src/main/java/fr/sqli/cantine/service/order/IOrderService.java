@@ -4,7 +4,7 @@ import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.food.OrderDtout;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
@@ -24,7 +24,7 @@ public interface IOrderService {
 
 
      void  submitOrder (Integer  orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException;
-     void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, InvalidMealInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException;
+     void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException;
 
       void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException;
 

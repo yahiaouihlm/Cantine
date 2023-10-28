@@ -88,7 +88,7 @@ public class AddMenuTest {
 
         Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menu.getLabel().trim(), this.menu.getDescription(), this.menu.getPrice())).thenReturn(Optional.empty());
         //Mockito.when(this.iMealDao.findById(1)).thenReturn(Optional.of(meal));
-      Mockito.when(this.iMealService.getMealEntityByID(1)).thenReturn(meal);
+      Mockito.when(this.iMealService.getMealEntityByUUID(1)).thenReturn(meal);
 
         Assertions.assertThrows(UnavailableMealException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());

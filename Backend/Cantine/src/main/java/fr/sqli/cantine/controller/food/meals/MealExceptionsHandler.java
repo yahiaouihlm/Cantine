@@ -2,7 +2,6 @@ package fr.sqli.cantine.controller.food.meals;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
 import org.springframework.http.HttpStatus;
@@ -54,17 +53,6 @@ public class MealExceptionsHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
     }
 
-
-    /**
-     * Handle InvalidMealInformationAdminException exception  when the meal information is invalid
-     *
-     * @param e InvalidMealInformationAdminException
-     * @return ResponseEntity<ExceptionDtout> with the message of the exception
-     */
-    @ExceptionHandler(value = InvalidMealInformationException.class)
-    public ResponseEntity<ExceptionDtout> handleInvalidMealInformationAdminException(InvalidMealInformationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage().toUpperCase()));
-    }
 
 
 

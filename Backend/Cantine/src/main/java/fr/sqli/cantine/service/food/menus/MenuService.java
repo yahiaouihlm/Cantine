@@ -7,8 +7,8 @@ import fr.sqli.cantine.dto.out.food.MenuDtout;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.IMealService;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
@@ -54,7 +54,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException {
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException, InvalidFoodInformationException {
 
         if  (menuDtoIn == null) {
             MenuService.LOG.debug("THE MENU DTO CAN NOT BE NULL IN THE updateMenu METHOD ");
@@ -92,7 +92,7 @@ public class MenuService implements IMenuService {
         var  mealsUuids = menuDtoIn.getMealUuids();
         List<MealEntity> mealsInMenu = new ArrayList<>(); //  check  existing meals in the   database  and  add them to the menu
         for (String mealUuid : mealsUuids ) {
-            var meal = this.mealService.getMealEntityByID(mealUuid);
+            var meal = this.mealService.getMealEntityByUUID(mealUuid);
             mealsInMenu.add(meal);
         }
 
@@ -127,7 +127,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, InvalidMealInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException {
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException {
 
          menuDtoIn.checkMenuInformationValidity();
 
@@ -143,7 +143,7 @@ public class MenuService implements IMenuService {
         List<MealEntity> mealsInMenu = new ArrayList<>();
 
         for (String  mealUuid : mealUuids) {
-            var meal = this.mealService.getMealEntityByID(mealUuid);
+            var meal = this.mealService.getMealEntityByUUID(mealUuid);
             if (meal.getStatus() == 0 ){
                 MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE ", mealUuid);
                 throw new UnavailableMealException(" LE PLAT  " + meal.getLabel() + " N'EST PAS DISPONIBLE ");

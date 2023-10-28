@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.food.menus;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.MenuDtout;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
@@ -43,13 +43,13 @@ public interface IMenuController {
 
     /*------------------ METHODS ------------------*/
     @PutMapping(value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException;
+    public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException, InvalidFoodInformationException;
 
 
     public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")String idMenu) throws InvalidMenuInformationException, MealNotFoundException, MenuNotFoundException, ImagePathException;
 
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
-    ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException;
+    ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
 
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") String idMenu) throws InvalidMenuInformationException, MealNotFoundException;

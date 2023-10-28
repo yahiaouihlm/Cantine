@@ -1,10 +1,7 @@
 package fr.sqli.cantine.dto.in.food;
 
-import fr.sqli.cantine.entity.MealEntity;
-import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -21,15 +18,13 @@ public abstract class AbstractFoodDtoIn {
     /**
      * check  if the   validity of the  parameters  passed  to the  method  ( the information shared  by the  meal and the menu)
      *
-     * @param type        the type of the object  ( meal or menu) to  check  the validity of the  parameters
+
      * @param label       the label of the  meal or the menu
      * @param description the description of the  meal or the menu
      * @param price       the price of the  meal or the menu
      * @param status      the status of the  meal or the menu
      * @param quantity    the quantity of the  meal or the menu
-     * @param category    the category of the  meal or the menu
-     * @throws InvalidMealInformationException if the meal information is not valid if  type is a meal
-     * @throws InvalidMenuInformationException if the menu information is not valid if  type is a menu
+
      */
     public void CheckNullabilityAndEmptiness( String label, String description, BigDecimal price, Integer status, Integer quantity) throws InvalidFoodInformationException {
 
@@ -66,7 +61,6 @@ public abstract class AbstractFoodDtoIn {
         }
 
         else if (this.removeSpaces(label).length() < 3) {
-
             throw  new InvalidFoodInformationException("LABEL_IS_TOO_SHORT");
         }
 

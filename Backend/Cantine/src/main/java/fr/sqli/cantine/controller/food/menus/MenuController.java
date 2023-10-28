@@ -4,7 +4,7 @@ package fr.sqli.cantine.controller.food.menus;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.MenuDtout;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.MenuService;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
@@ -38,7 +38,7 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> update(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException {
+    public ResponseEntity<ResponseDtout> update(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException, InvalidFoodInformationException {
          this.menuService.updateMenu( menuDtoIn);
         return ResponseEntity.ok(new ResponseDtout(MENU_UPDATED_SUCCESSFULLY));
     }
@@ -54,7 +54,7 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException {
+    public ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException {
              this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(new ResponseDtout(MENU_ADDED_SUCCESSFULLY));
 

@@ -1,9 +1,8 @@
 package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +38,6 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
      * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid
      * @return the MenuEntity object created from the MenuDtoIn object or throw an exception if the menu information is not valid
      * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
-     * @throws InvalidMealInformationException it's never thrown because it's a menu
      */
    /*  @JsonIgnore
     public MenuEntity  toMenuEntity() throws InvalidMenuInformationException, InvalidMealInformationException {
