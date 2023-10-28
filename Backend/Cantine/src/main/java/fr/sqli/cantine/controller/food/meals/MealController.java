@@ -25,7 +25,7 @@ import static fr.sqli.cantine.controller.food.meals.IMealController.MEALS_BASIC_
 @RestController
 @RequestMapping(value = MEALS_BASIC_URL_ADMIN)
 @CrossOrigin(origins = "http://localhost:4200")
-public class    MealController implements IMealController {
+public class MealController implements IMealController {
 
 
     private final MealService mealService;
@@ -34,7 +34,6 @@ public class    MealController implements IMealController {
     public MealController(MealService mealService) {
         this.mealService = mealService;
     }
-
 
 
     @Override
@@ -47,16 +46,15 @@ public class    MealController implements IMealController {
     @Override
     public ResponseEntity<ResponseDtout> deleteMeal(String idMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
         this.mealService.removeMeal(idMeal);
-        return ResponseEntity.ok().body ( new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
+        return ResponseEntity.ok().body(new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
 
 
     @Override
-    public ResponseEntity<ResponseDtout> addMeal( MealDtoIn newMeal) throws  InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException {
+    public ResponseEntity<ResponseDtout> addMeal(MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_ADDED_SUCCESSFULLY));
     }
-
 
 
     @Override
@@ -64,7 +62,6 @@ public class    MealController implements IMealController {
         var mealdtout = this.mealService.getMealByUUID(uuidMeal);
         return ResponseEntity.ok(mealdtout);
     }
-
 
 
 }

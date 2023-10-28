@@ -21,11 +21,10 @@ import java.util.Optional;
 
 public interface IMealService {
 
-     static final Logger LOG = LogManager.getLogger();
+    static final Logger LOG = LogManager.getLogger();
 
 
-
-    static void checkUuidValidity(String  uuid) throws InvalidFoodInformationException {
+    static void checkUuidValidity(String uuid) throws InvalidFoodInformationException {
 
         if (uuid == null || uuid.isEmpty() || uuid.isBlank() || uuid.length() < 20) {
             IMealService.LOG.debug("THE MEAL UUID CAN NOT BE NULL OR EMPTY OR LESS THAN 20 CHARACTERS ");
@@ -34,8 +33,6 @@ public interface IMealService {
 
 
     }
-
-
 
 
     /**
@@ -47,7 +44,7 @@ public interface IMealService {
      * @param category    the category of the meal
      * @throws ExistingMealException if the meal is already present in the database with the same label, description and category
      */
-    Optional<MealEntity> checkExistMeal (String label, String description, String category) throws ExistingMealException;
+    Optional<MealEntity> getMealWithLabelAndCategoryAndDescription(String label, String description, String category) throws ExistingMealException;
 
 
     /**
@@ -57,15 +54,14 @@ public interface IMealService {
      *
      * @param mealDtoIn the  meal with the updated information
      * @return MealEntity the meal updated in the database
-
-     * @throws MealNotFoundException           if the meal is not found in the database
-     * @throws InvalidFormatImageException            if the image type is not valid (if the image type is not jpg or png)
-     * @throws InvalidImageException                if the image is not valid (if the image is null or empty)
-     * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
-     * @throws IOException                          if the image is not found or  the jvm cannot create the file
+     * @throws MealNotFoundException       if the meal is not found in the database
+     * @throws InvalidFormatImageException if the image type is not valid (if the image type is not jpg or png)
+     * @throws InvalidImageException       if the image is not valid (if the image is null or empty)
+     * @throws ImagePathException          if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
+     * @throws IOException                 if the image is not found or  the jvm cannot create the file
      */
 
-    MealEntity updateMeal(MealDtoIn mealDtoIn) throws  MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
+    MealEntity updateMeal(MealDtoIn mealDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
 
 
     /**
@@ -73,11 +69,10 @@ public interface IMealService {
      *
      * @param uuid as Integer the id of the meal to remove
      * @return MealEntity the meal removed from the database
-     * @throws MealNotFoundException           if the meal is not found in the database
-     * @throws RemoveMealException             if the meal is present in a menu(s)
-     * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
+     * @throws MealNotFoundException if the meal is not found in the database
+     * @throws RemoveMealException   if the meal is present in a menu(s)
+     * @throws ImagePathException    if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
      */
-
 
 
     MealEntity removeMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
@@ -87,10 +82,10 @@ public interface IMealService {
      *
      * @param mealDtoIn as  MealDtoIn the meal to add to the database
      * @return MealEntity the meal added to the database
-     * @throws InvalidFormatImageException            if the image type is not valid (if the image type is not jpg or png)
-     * @throws InvalidImageException                if the image is not valid (if the image is null or empty)
-     * @throws ImagePathException                   if the path is not valid (if the path is null or empty)
-     * @throws IOException                          if the image is not found
+     * @throws InvalidFormatImageException if the image type is not valid (if the image type is not jpg or png)
+     * @throws InvalidImageException       if the image is not valid (if the image is null or empty)
+     * @throws ImagePathException          if the path is not valid (if the path is null or empty)
+     * @throws IOException                 if the image is not found
      */
 
     MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
@@ -107,7 +102,7 @@ public interface IMealService {
      *
      * @param uuid the meal  uuid to search for
      * @return The meal found with the given id or throw an exception if the meal is not found
-     * @throws MealNotFoundException           if the meal is not found
+     * @throws MealNotFoundException if the meal is not found
      */
     MealDtout getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException;
 

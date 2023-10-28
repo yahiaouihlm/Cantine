@@ -9,13 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class MealDtoIn  extends AbstractFoodDtoIn implements Serializable {
+public class MealDtoIn extends AbstractFoodDtoIn implements Serializable {
 
-       private String category;
+    private String category;
 
 
     @JsonIgnore
-    public  void  checkMealInformation() throws  InvalidFoodInformationException {
+    public void checkMealInformation() throws InvalidFoodInformationException {
         super.CheckNullabilityAndEmptiness();
         checkCategoryValidity();
         super.checkImageValidity(this.image);
@@ -23,19 +23,10 @@ public class MealDtoIn  extends AbstractFoodDtoIn implements Serializable {
 
 
     @JsonIgnore
-    public void toMealEntityWithoutImage() throws  InvalidFoodInformationException {
+    public void toMealEntityWithoutImage() throws InvalidFoodInformationException {
         super.CheckNullabilityAndEmptiness(); // check if the meal information is valid except the image and  category
         this.checkCategoryValidity();
     }
-
-
-    @JsonIgnore
-    private void checkMealInformationValidity() throws   InvalidFoodInformationException {
-       /* super.CheckNullabilityAndEmptiness( this.label,  this.description, this.price, this.status ,  this.quantity);
-        super.checkImageValidity(this.image);
-        checkCategoryValidity();*/
-    }
-
 
 
     public void checkCategoryValidity() throws InvalidFoodInformationException {
