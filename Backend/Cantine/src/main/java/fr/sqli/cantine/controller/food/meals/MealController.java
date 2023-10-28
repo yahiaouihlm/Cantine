@@ -60,8 +60,8 @@ public class    MealController implements IMealController {
 
 
     @Override
-    public ResponseEntity<MealDtout> getMealByUUID(String idMeal) throws MealNotFoundException, InvalidFoodInformationException {
-        var meal = this.mealService.getMealByUUID(idMeal);
+    public ResponseEntity<MealDtout> getMealByUUID(String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException {
+        var meal = this.mealService.getMealByUUID(uuidMeal);
         return ResponseEntity.ok(meal);
     }
 

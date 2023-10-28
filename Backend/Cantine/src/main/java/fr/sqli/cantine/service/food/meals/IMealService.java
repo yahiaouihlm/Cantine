@@ -29,7 +29,7 @@ public interface IMealService {
 
         if (uuid == null || uuid.isEmpty() || uuid.isBlank()) {
             IMealService.LOG.debug("THE MEAL UUID CAN NOT BE NULL OR EMPTY");
-            throw new InvalidFoodInformationException("THE MEAL UUID CAN NOT BE NULL OR EMPTY");
+            throw new InvalidFoodInformationException("INVALID MEAL UUID");
         }
 
 

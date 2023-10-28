@@ -157,8 +157,8 @@ public class MealService implements IMealService {
         IMealService.checkUuidValidity(uuid);
 
         return this.mealDao.findByUuid(uuid).orElseThrow(() -> {
-            MealService.LOG.debug("NO DISH WAS FOUND WITH AN UUID = {} IN THE getMealByID METHOD", uuid);
-            return new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
+            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE getMealEntityByUUID METHOD", uuid);
+            return new MealNotFoundException("NO MEAL WAS FOUND");
         });
     }
 

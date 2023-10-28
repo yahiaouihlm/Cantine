@@ -50,7 +50,7 @@ public interface IMealController {
 
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
-     ResponseEntity<MealDtout> getMealByUUID(@RequestParam("idMeal") String idMeal) throws MealNotFoundException, InvalidFoodInformationException;
+     ResponseEntity<MealDtout> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException;
 
 
 
