@@ -24,7 +24,7 @@ public class MenuEntity implements Serializable {
     @Column(nullable = false, length = 100)
     private String label;
 
-    @Column(nullable = false, length = 1800)
+    @Column(nullable = false, length = 3002)
     private String description;
    @Column(name ="creation_date",  nullable = false )
    private LocalDate createdDate;

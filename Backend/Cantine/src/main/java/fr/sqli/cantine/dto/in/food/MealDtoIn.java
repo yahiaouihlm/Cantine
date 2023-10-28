@@ -16,41 +16,40 @@ public class MealDtoIn  extends AbstractFoodDtoIn implements Serializable {
 
     @JsonIgnore
     public  void  checkMealInformation() throws  InvalidFoodInformationException {
-        this.checkMealInformationValidity(); // check if the meal information is valid
-        }
+        super.CheckNullabilityAndEmptiness();
+        checkCategoryValidity();
+        super.checkImageValidity(this.image);
+    }
 
 
     @JsonIgnore
     public void toMealEntityWithoutImage() throws  InvalidFoodInformationException {
-        super.CheckNullabilityAndEmptiness(this.label, this.description, this.price, this.status, this.quantity); // check if the meal information is valid except the image and  category
+        super.CheckNullabilityAndEmptiness(); // check if the meal information is valid except the image and  category
         this.checkCategoryValidity();
     }
 
 
     @JsonIgnore
     private void checkMealInformationValidity() throws   InvalidFoodInformationException {
-        super.CheckNullabilityAndEmptiness( this.label,  this.description, this.price, this.status ,  this.quantity);
+       /* super.CheckNullabilityAndEmptiness( this.label,  this.description, this.price, this.status ,  this.quantity);
         super.checkImageValidity(this.image);
-        checkCategoryValidity();
+        checkCategoryValidity();*/
     }
 
 
 
     public void checkCategoryValidity() throws InvalidFoodInformationException {
-        if (category == null || category.trim().isEmpty()) {
+        if (category == null || category.isBlank()) {
             throw new InvalidFoodInformationException("CATEGORY_IS_MANDATORY");
         }
 
         if (this.removeSpaces(category).length() < 3)
             throw new InvalidFoodInformationException("CATEGORY_IS_TOO_SHORT");
 
-        if (category.length() > 44) {
+        if (category.length() > 100) {
             throw new InvalidFoodInformationException("CATEGORY_IS_TOO_LONG");
         }
 
-        if (description.length() > 1600) {
-            throw new InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
-        }
     }
 
     public String getCategory() {

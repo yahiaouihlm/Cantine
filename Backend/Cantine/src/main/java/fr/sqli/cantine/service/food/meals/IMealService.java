@@ -7,7 +7,7 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -74,13 +74,13 @@ public interface IMealService {
      * @param uuid as Integer the id of the meal to remove
      * @return MealEntity the meal removed from the database
      * @throws MealNotFoundException           if the meal is not found in the database
-     * @throws RemoveMealAdminException             if the meal is present in a menu(s)
+     * @throws RemoveMealException             if the meal is present in a menu(s)
      * @throws ImagePathException                   if the path or imageName is not valid ( null or empty) or  image is not found in 'images/meals' directory
      */
 
 
 
-    MealEntity removeMeal(String uuid) throws MealNotFoundException, RemoveMealAdminException, ImagePathException, InvalidFoodInformationException;
+    MealEntity removeMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
 
     /**
      * this method is used to add a meal to  database and save the image in the (images/meals) directory

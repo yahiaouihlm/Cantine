@@ -9,8 +9,7 @@ import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -91,7 +90,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity removeMeal(String uuid) throws  MealNotFoundException, RemoveMealAdminException, ImagePathException, InvalidFoodInformationException {
+    public MealEntity removeMeal(String uuid) throws  MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
         IMealService.checkUuidValidity(uuid);
 
         var overemotional = this.mealDao.findByUuid(uuid);
@@ -103,12 +102,12 @@ public class MealService implements IMealService {
         if  ( meal.getMenus() != null   &&   meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveMealAdminException(" Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)");
+            throw new RemoveMealException(" Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)");
         }
 
         if  ( meal.getOrders() != null   && meal.getOrders().size() > 0 ) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveMealAdminException("Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres   Commande(s)");
+            throw new RemoveMealException("Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres   Commande(s)");
         }
 
         var image = meal.getImage();
@@ -119,9 +118,10 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws  InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws  InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidFoodInformationException {
+
         if (mealDtoIn == null) {
-            MealService.LOG.error("THE MEAL CAN NOT BE NULL");
+            MealService.LOG.error("THE MEAL_DTO_IN CAN NOT BE NULL");
             throw new InvalidFoodInformationException("THE MEAL CAN NOT BE NULL");
         }
 
@@ -129,8 +129,10 @@ public class MealService implements IMealService {
 
         //  check if  the  meal  is  already  present  in  the  database
         if (this.checkExistMeal(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription()).isPresent()) {
-            throw new ExistingMealException(" LE PLAT :  " + mealDtoIn.getLabel().trim() + " AVEC  " + mealDtoIn.getCategory().trim() + " ET " + mealDtoIn.getDescription().trim() + " EST DEJA PRESENT DANS LA BASE DE DONNEES");
+            MealService.LOG.debug("THE MEAL WITH A LABEL = {} AND A CATEGORY = {} AND A DESCRIPTION = {} IS ALREADY PRESENT IN THE DATABASE", mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
+            throw new ExistingMealException("THE MEAL WITH A LABEL = " +  mealDtoIn.getLabel()  + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
         }
+
         MultipartFile image = mealDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();

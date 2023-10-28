@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.food.meals;
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,7 +21,7 @@ public class MealExceptionsHandler {
      * @return ResponseEntity<ExceptionDtout> with the message of the exception
      */
     @ExceptionHandler(ExistingMealException.class)
-    public ResponseEntity<ExceptionDtout> handleExistingMeal(ExistingMealException e) {
+    public ResponseEntity<ExceptionDtout> handleExistingMealException(ExistingMealException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 
@@ -37,8 +37,8 @@ public class MealExceptionsHandler {
      */
 
 
-    @ExceptionHandler(RemoveMealAdminException.class)
-    public ResponseEntity<ExceptionDtout> handleRemoveMealAdminException(RemoveMealAdminException e) {
+    @ExceptionHandler(RemoveMealException.class)
+    public ResponseEntity<ExceptionDtout> handleRemoveMealAdminException(RemoveMealException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 

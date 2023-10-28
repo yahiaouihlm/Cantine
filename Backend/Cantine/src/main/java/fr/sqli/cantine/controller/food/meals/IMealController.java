@@ -6,7 +6,7 @@ import fr.sqli.cantine.dto.out.food.MealDtout;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -43,7 +43,7 @@ public interface IMealController {
 
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
-    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") String idMeal) throws MealNotFoundException,  RemoveMealAdminException, ImagePathException, InvalidFoodInformationException;
+    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") String idMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
    ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws  InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;

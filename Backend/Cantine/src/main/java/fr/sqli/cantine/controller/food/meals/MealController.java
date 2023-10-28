@@ -8,7 +8,7 @@ import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -45,7 +45,7 @@ public class    MealController implements IMealController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> deleteMeal(String idMeal) throws MealNotFoundException,  RemoveMealAdminException, ImagePathException, InvalidFoodInformationException {
+    public ResponseEntity<ResponseDtout> deleteMeal(String idMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
         this.mealService.removeMeal(idMeal);
         return ResponseEntity.ok().body ( new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
@@ -61,8 +61,8 @@ public class    MealController implements IMealController {
 
     @Override
     public ResponseEntity<MealDtout> getMealByUUID(String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException {
-        var meal = this.mealService.getMealByUUID(uuidMeal);
-        return ResponseEntity.ok(meal);
+        var mealdtout = this.mealService.getMealByUUID(uuidMeal);
+        return ResponseEntity.ok(mealdtout);
     }
 
 

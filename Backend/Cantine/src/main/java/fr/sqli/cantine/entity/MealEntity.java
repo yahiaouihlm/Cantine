@@ -28,10 +28,10 @@ public class MealEntity implements Serializable {
     private String label;
 
 
-    @Column(nullable=false, length=45)
+    @Column(nullable=false, length=101)
     private String category ;
 
-    @Column(nullable=false, length=1700)
+    @Column(nullable=false, length=3002)
     private String description;
 
     @Column(nullable=false, precision=5, scale=2)
@@ -84,9 +84,9 @@ public class MealEntity implements Serializable {
 
     public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
         this.uuid = java.util.UUID.randomUUID().toString();
-        this.category = category;
-        this.description = description;
-        this.label = label;
+        this.label = label.trim();
+        this.category = category.trim();
+        this.description = description.trim();
         this.price = price;
         this.quantity = quantity;
         this.status = status;

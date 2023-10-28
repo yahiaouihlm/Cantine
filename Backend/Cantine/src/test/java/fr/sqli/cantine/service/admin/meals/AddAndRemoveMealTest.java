@@ -11,7 +11,7 @@ import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealAdminException;
+import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
@@ -86,7 +86,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test  removeMeal method with  valid iformation")
-    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealAdminException, MealNotFoundException {
+    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealException, MealNotFoundException {
 
         this.mealEntity.setMenus(List.of()); //  empty list of  menu
 
@@ -112,7 +112,7 @@ class AddAndRemoveMealTest {
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
-        Assertions.assertThrows(RemoveMealAdminException.class,
+        Assertions.assertThrows(RemoveMealException.class,
                 () -> mealService.removeMeal(1)); // the meal is in association with menu
 
         Mockito.verify(mealDao, Mockito.times(1)).findById(1);
@@ -127,7 +127,7 @@ class AddAndRemoveMealTest {
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
-        Assertions.assertThrows(RemoveMealAdminException.class,
+        Assertions.assertThrows(RemoveMealException.class,
                 () -> mealService.removeMeal(1)); // the meal is in association with menu
 
         Mockito.verify(mealDao, Mockito.times(1)).findById(1);

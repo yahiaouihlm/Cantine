@@ -53,7 +53,7 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
      */
     @JsonIgnore
      public  void  toMenuEntityWithoutImage() throws InvalidMenuInformationException,InvalidFoodInformationException {
-        super.CheckNullabilityAndEmptiness(this.label, this.description, this.price, this.status, this.quantity);
+        super.CheckNullabilityAndEmptiness();
         if (description.length() > 1700) {
            throw new  InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
         }
@@ -74,7 +74,7 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
      */
     @JsonIgnore
     public  void checkMenuInformationValidity() throws InvalidMenuInformationException, InvalidFoodInformationException {
-        super.CheckNullabilityAndEmptiness(this.label,  this.description, this.price, this.status ,  this.quantity);
+        super.CheckNullabilityAndEmptiness();
         if (description.length() > 1700) {
             throw new  InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
         }
