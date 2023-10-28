@@ -37,21 +37,21 @@ public class MealController implements IMealController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException {
+    public ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidFoodInformationException {
         this.mealService.updateMeal(mealDtoIn);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_UPDATED_SUCCESSFULLY));
     }
 
 
     @Override
-    public ResponseEntity<ResponseDtout> deleteMeal(String idMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
-        this.mealService.removeMeal(idMeal);
+    public ResponseEntity<ResponseDtout> deleteMeal(String uuidMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
+        this.mealService.deleteMeal(uuidMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
 
 
     @Override
-    public ResponseEntity<ResponseDtout> addMeal(MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException {
+    public ResponseEntity<ResponseDtout> addMeal(MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException,InvalidFoodInformationException {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_ADDED_SUCCESSFULLY));
     }

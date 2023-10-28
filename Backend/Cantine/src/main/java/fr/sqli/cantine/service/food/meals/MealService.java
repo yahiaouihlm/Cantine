@@ -91,25 +91,28 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity removeMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
+    public MealEntity deleteMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
+
         IMealService.checkUuidValidity(uuid);
 
-        var overemotional = this.mealDao.findByUuid(uuid);
-        if (overemotional.isEmpty()) {
+        var meal = this.mealDao.findByUuid(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE removeMeal METHOD ", uuid);
-            throw new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
-        }
-        var meal = overemotional.get();
-        if (meal.getMenus() != null && meal.getMenus().size() > 0) // check  that this  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
-        {
+            return new MealNotFoundException("NO MEAL WAS FOUND");
+        });
+
+
+        // check  if  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
+        if (meal.getMenus() != null && meal.getMenus().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveMealException(" Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)");
+            throw new RemoveMealException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)");
         }
 
+        // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
         if (meal.getOrders() != null && meal.getOrders().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveMealException("Le  Plat  \" " + meal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres   Commande(s)");
+            throw new RemoveMealException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)");
         }
+
 
         var image = meal.getImage();
         this.imageService.deleteImage(image.getImagename(), MEALS_IMAGES_PATH);

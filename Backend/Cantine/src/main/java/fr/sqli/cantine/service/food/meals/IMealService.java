@@ -75,7 +75,7 @@ public interface IMealService {
      */
 
 
-    MealEntity removeMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
+    MealEntity deleteMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
 
     /**
      * this method is used to add a meal to  database and save the image in the (images/meals) directory

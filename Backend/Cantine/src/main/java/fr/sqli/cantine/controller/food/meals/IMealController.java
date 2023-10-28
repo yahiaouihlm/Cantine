@@ -29,7 +29,7 @@ public interface IMealController {
 
 
     /*------------------ MESSAGES ------------------*/
-    String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
+    String MEAL_ADDED_SUCCESSFULLY   = "MEAL ADDED SUCCESSFULLY";
     String MEAL_DELETED_SUCCESSFULLY = "MEAL DELETED SUCCESSFULLY";
     String MEAL_UPDATED_SUCCESSFULLY = "MEAL UPDATED SUCCESSFULLY";
 
@@ -40,7 +40,7 @@ public interface IMealController {
 
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
-    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("idMeal") String idMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
+    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("uuidMeal") String uuidMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
