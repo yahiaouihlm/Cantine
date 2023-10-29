@@ -8,14 +8,14 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 
-public class OrderDtout  {
+public class OrderDtOut {
 
     private  Integer id ;
     private Integer studentId;
 
-    private List<MealDtout> meals;
+    private List<MealDtOut> meals;
 
-    private List<MenuDtout> menus;
+    private List<MenuDtOut> menus;
 
     private LocalDate creationDate;
 
@@ -28,7 +28,7 @@ public class OrderDtout  {
 
     private  boolean isCancelled;
 
-    public OrderDtout (OrderEntity orderEntity , String mealUrlImage ,  String menuUrlImage  , String  studentUrlImage){
+    public OrderDtOut(OrderEntity orderEntity , String mealUrlImage , String menuUrlImage  , String  studentUrlImage){
         this.id =  orderEntity.getId();
         this.studentId = orderEntity.getStudent().getId();
         this.creationDate = orderEntity.getCreationDate();
@@ -36,8 +36,8 @@ public class OrderDtout  {
         this.status = orderEntity.getStatus();
         this.isCancelled = orderEntity.isCancelled();
         this.studentOrder = new StudentDtout(orderEntity.getStudent() , studentUrlImage);
-        this.meals = orderEntity.getMeals().stream().map( (mealEntity) -> new MealDtout(mealEntity , mealUrlImage)).toList();
-        this.menus=orderEntity.getMenus().stream().map(menuEntity -> new MenuDtout(menuEntity, menuUrlImage , mealUrlImage)).toList();
+        this.meals = orderEntity.getMeals().stream().map( (mealEntity) -> new MealDtOut(mealEntity , mealUrlImage)).toList();
+        this.menus=orderEntity.getMenus().stream().map(menuEntity -> new MenuDtOut(menuEntity, menuUrlImage , mealUrlImage)).toList();
          this.price = orderEntity.getPrice();
     }
 
@@ -57,19 +57,19 @@ public class OrderDtout  {
         this.studentId = studentId;
     }
 
-    public List<MealDtout> getMeals() {
+    public List<MealDtOut> getMeals() {
         return meals;
     }
 
-    public void setMeals(List<MealDtout> meals) {
+    public void setMeals(List<MealDtOut> meals) {
         this.meals = meals;
     }
 
-    public List<MenuDtout> getMenus() {
+    public List<MenuDtOut> getMenus() {
         return menus;
     }
 
-    public void setMenus(List<MenuDtout> menus) {
+    public void setMenus(List<MenuDtOut> menus) {
         this.menus = menus;
     }
 

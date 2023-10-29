@@ -1,8 +1,8 @@
 package fr.sqli.cantine.controller.food.api;
 
 
-import fr.sqli.cantine.dto.out.food.MealDtout;
-import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
+import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.menus.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,14 @@ public class ApiController   implements   IApi {
 
 
     @Override
-    public ResponseEntity<List<MealDtout>> getAllMeals() {
+    public ResponseEntity<List<MealDtOut>> getAllMeals() {
         var meals = this.mealService.getAllMeals();
         return ResponseEntity.ok(meals);
     }
 
 
     @Override
-    public ResponseEntity<List<MenuDtout>> getAllMenus() {
+    public ResponseEntity<List<MenuDtOut>> getAllMenus() {
         return ResponseEntity.ok(this.menuService.getAllMenus());
     }
 

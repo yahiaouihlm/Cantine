@@ -2,7 +2,7 @@ package fr.sqli.cantine.service.order;
 
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
-import fr.sqli.cantine.dto.out.food.OrderDtout;
+import fr.sqli.cantine.dto.out.food.OrderDtOut;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
@@ -29,8 +29,8 @@ public interface IOrderService {
       void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException;
 
 
-      List<OrderDtout> getOrdersByDate(LocalDate date ) throws InvalidOrderException, InvalidPersonInformationException;
-      List<OrderDtout> getOrdersByDateAndStudentId(Integer studentId , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException;
+      List<OrderDtOut> getOrdersByDate(LocalDate date ) throws InvalidOrderException, InvalidPersonInformationException;
+      List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException;
 
 
 

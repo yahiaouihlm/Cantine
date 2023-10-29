@@ -1,7 +1,7 @@
 package fr.sqli.cantine.service.food.menus;
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
-import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 
@@ -44,9 +44,9 @@ public interface IMenuService {
   public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
 
 
-  public MenuDtout getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException;
+  public MenuDtOut getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException;
 
-  public List<MenuDtout> getAllMenus();
+  public List<MenuDtOut> getAllMenus();
 
 
 

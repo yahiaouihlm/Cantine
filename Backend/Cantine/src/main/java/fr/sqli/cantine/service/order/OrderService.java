@@ -3,7 +3,7 @@ package fr.sqli.cantine.service.order;
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
-import fr.sqli.cantine.dto.out.food.OrderDtout;
+import fr.sqli.cantine.dto.out.food.OrderDtOut;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
@@ -283,7 +283,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDtout> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidPersonInformationException {
+    public List<OrderDtOut> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidPersonInformationException {
         if (date == null) {
             OrderService.LOG.error("INVALID DATE");
             throw new InvalidOrderException("INVALID DATE");
@@ -292,13 +292,13 @@ public class OrderService implements IOrderService {
         this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidPersonInformationException("INVALID ADMIN INFORMATION"));
 
 
-        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
 
 
     }
 
     @Override
-    public List<OrderDtout> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException {
+    public List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException {
 
         var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -324,7 +324,7 @@ public class OrderService implements IOrderService {
         }
 
 
-        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtout(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
 
 
     }

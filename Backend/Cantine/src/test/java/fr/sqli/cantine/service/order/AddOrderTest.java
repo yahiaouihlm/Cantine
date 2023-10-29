@@ -8,7 +8,8 @@ import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.TaxEntity;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
+
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
@@ -502,13 +503,13 @@ public class AddOrderTest {
     void addOrderWithNegativeMealIdWithNullMenuIdTest()  {
         this.orderDtoIn.setMenusId(null);
         this.orderDtoIn.setMealsId(List.of( 1 , 1 , -1));
-        Assertions.assertThrows(InvalidMealInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(InvalidFoodInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
         Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addOrderWithNegativeMealIdTest()  {
         this.orderDtoIn.setMealsId(List.of( 1 , 1 , -1));
-        Assertions.assertThrows(InvalidMealInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(InvalidFoodInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
         Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
     }
 

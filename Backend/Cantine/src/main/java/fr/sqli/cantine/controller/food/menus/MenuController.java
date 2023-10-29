@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.food.menus;
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.MenuService;
@@ -63,7 +63,7 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    public ResponseEntity<MenuDtout> getMenuById( String idMenu) throws InvalidMenuInformationException, MealNotFoundException {
+    public ResponseEntity<MenuDtOut> getMenuById(String idMenu) throws InvalidMenuInformationException, MealNotFoundException {
            return  ResponseEntity.ok(this.menuService.getMenuById(idMenu));
     }
 
