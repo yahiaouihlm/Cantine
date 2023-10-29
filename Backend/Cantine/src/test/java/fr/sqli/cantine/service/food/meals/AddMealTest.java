@@ -17,7 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.env.MockEnvironment;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -61,7 +62,7 @@ public class AddMealTest {
         this.mealDtoIn.setPrice(new BigDecimal("1.3"));
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
-        this.mealDtoIn.setImage(Mockito.mock(MultipartFile.class));
+        this.mealDtoIn.setImage(new MockMultipartFile("oldImage", "image.jpg", "text/plain", "Spring Framework".getBytes()));
 
     }
 
@@ -94,12 +95,12 @@ public class AddMealTest {
         // Verify the result
         Assertions.assertNotNull(result);
         Assertions.assertEquals(mealDtoIn.getLabel(), result.getLabel());
-        Assertions.assertEquals(mealDtoIn.getDescription(), result.getDescription());
+        Assertions.assertEquals(mealDtoIn.getDescription().trim(), result.getDescription());
         Assertions.assertEquals(mealDtoIn.getPrice(), result.getPrice());
         Assertions.assertNotNull(result.getImage());
 
         Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
-        Mockito.verify(mealDao, Mockito.times(1)).save(this.mealEntity);
+        Mockito.verify(mealDao, Mockito.times(1)).save(Mockito.any(MealEntity.class));  //  we  can not  make save(this.mealEntity) because  the  new mealEntity object will  be saved  and  not (this.mealEntity)
         Mockito.verify(imageService, Mockito.times(1)).uploadImage(mealDtoIn.getImage(), "images/meals");
     }
 
@@ -123,7 +124,7 @@ public class AddMealTest {
                 () -> mealService.addMeal(mealDtoIn));
 
         Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
-        Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getCategory(), this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription());
         Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
     }
 
@@ -237,20 +238,6 @@ public class AddMealTest {
 
 
     /********************************** Price  ************************************/
-    @Test
-    @DisplayName("Test the addMeal method with Invalid price")
-    void AddMealWithInvalidPriceTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
-
-        this.mealDtoIn.setPrice(new BigDecimal("eibed"));
-
-        Assertions.assertThrows(InvalidFoodInformationException.class,
-                () -> mealService.addMeal(mealDtoIn));
-
-        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
-
-        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
-    }
-
 
     @Test
     @DisplayName("Test the addMeal method with Too Big price")

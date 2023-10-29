@@ -105,7 +105,7 @@ public class UpdateMealTest {
         Assertions.assertEquals("Frites", result.getCategory());
         Assertions.assertEquals("newImage", result.getImage().getImagename());
         Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription());
-        Mockito.verify(mealDao, Mockito.times(1)).findById(1);
+        Mockito.verify(mealDao, Mockito.times(1)).findByUuid(this.mealEntity.getUuid());
         Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(1)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
     }
@@ -157,16 +157,16 @@ public class UpdateMealTest {
     @Test
     @DisplayName("Update Meal With Valid ID But Meal Not Found")
     void updateMealTestWithIdMealNotFound() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
-        var mealUuIDNotFound = java.util.UUID.randomUUID().toString();
 
-        Mockito.when(mealDao.findByUuid(mealUuIDNotFound)).thenReturn(Optional.empty());
+
+        Mockito.when(mealDao.findByUuid(this.mealDtoIn.getUuid())).thenReturn(Optional.empty());
 
 
         Assertions.assertThrows(MealNotFoundException.class, () -> {
             mealService.updateMeal(mealDtoIn);
         });
 
-        Mockito.verify(mealDao, Mockito.times(1)).findByUuid(mealUuIDNotFound);
+        Mockito.verify(mealDao, Mockito.times(1)).findByUuid(this.mealDtoIn.getUuid());
         Mockito.verify(mealDao, Mockito.times(0)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
     }
@@ -321,7 +321,7 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With TOO LONG Description")
     void updateMealTestWithTooLongDescription() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         String tooLongString = "t".repeat(3000) + "ee";
-        this.mealDtoIn.setLabel(tooLongString);
+        this.mealDtoIn.setDescription(tooLongString);
 
 
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
@@ -334,10 +334,10 @@ public class UpdateMealTest {
 
 
     @Test
-    @DisplayName("Update Meal With TOO Short Category")
+    @DisplayName("Update Meal With TOO Short Description")
     void updateMealTestWithTooShortDescription() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
-        String tooshortString = "ta" + " ".repeat(10) + "ba";
-        this.mealDtoIn.setLabel(tooshortString);
+        String tooshortString = "ta" +" ".repeat(10) + "ba";
+        this.mealDtoIn.setDescription(tooshortString);
 
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn);
@@ -349,7 +349,7 @@ public class UpdateMealTest {
 
 
     @Test
-    @DisplayName("Update Meal With NULL Category")
+    @DisplayName("Update Meal With NULL Description")
     void updateMealTestWithNullDescription() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
         this.mealDtoIn.setDescription(null);
@@ -372,7 +372,7 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With TOO LONG Category")
     void updateMealTestWithTooLongCategory() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         String tooLongString = "t".repeat(101);
-        this.mealDtoIn.setLabel(tooLongString);
+        this.mealDtoIn.setCategory(tooLongString);
 
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn);
@@ -387,7 +387,7 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With TOO Short Category")
     void updateMealTestWithTooShortCategory() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         String tooshortString = "t" + " ".repeat(10) + "b";
-        this.mealDtoIn.setLabel(tooshortString);
+        this.mealDtoIn.setCategory(tooshortString);
 
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             mealService.updateMeal(mealDtoIn);
@@ -402,7 +402,7 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With NULL Category")
     void updateMealTestWithNullCategory() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
-        this.mealDtoIn.setLabel(null);
+        this.mealDtoIn.setCategory(null);
 
 
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {

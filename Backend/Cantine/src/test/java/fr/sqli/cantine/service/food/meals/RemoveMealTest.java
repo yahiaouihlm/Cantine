@@ -92,7 +92,7 @@ class RemoveMealTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(this.mealEntity.getLabel(), result.getLabel());
 
-        Mockito.verify(mealDao, Mockito.times(1)).findById(1);
+        Mockito.verify(mealDao, Mockito.times(1)).findByUuid(this.mealEntity.getUuid());
         Mockito.verify(mealDao, Mockito.times(1)).delete(this.mealEntity);
         Mockito.verify(imageService, Mockito.times(1)).deleteImage(this.mealEntity.getImage().getImagename(), "images/meals");
 
@@ -109,7 +109,7 @@ class RemoveMealTest {
         Assertions.assertThrows(RemoveMealException.class,
                 () -> mealService.deleteMeal(this.mealEntity.getUuid())); // the meal is in association with menu
 
-        Mockito.verify(mealDao, Mockito.times(1)).findById(1);
+        Mockito.verify(mealDao, Mockito.times(1)).findByUuid(this.mealEntity.getUuid());
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).deleteImage(Mockito.any(String.class), Mockito.any(String.class));
     }
