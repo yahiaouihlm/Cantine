@@ -2,7 +2,7 @@ package fr.sqli.cantine.service.food.meals;
 
 
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
-import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
@@ -95,7 +95,7 @@ public interface IMealService {
      *
      * @return The list of all the meals found in the database or an empty list if no meal is found
      */
-    List<MealDtout> getAllMeals();
+    List<MealDtOut> getAllMeals();
 
     /**
      * Get a meal by its id from the database and return it as a MealDTO throw an exception if the meal is not found
@@ -104,7 +104,7 @@ public interface IMealService {
      * @return The meal found with the given id or throw an exception if the meal is not found
      * @throws MealNotFoundException if the meal is not found
      */
-    MealDtout getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException;
+    MealDtOut getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException;
 
 
     MealEntity getMealEntityByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException;

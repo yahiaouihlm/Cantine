@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public class MenuDtout {
+public class MenuDtOut {
 
     private final String  uuid;
     private final  String label;
@@ -21,11 +21,11 @@ public class MenuDtout {
 
     private final String  image;
 
-    private  final List<MealDtout> meals;
+    private  final List<MealDtOut> meals;
 
 
 
-    public MenuDtout(MenuEntity menu , String menuUrlImage,  String mealUrlImage) {
+    public MenuDtOut(MenuEntity menu , String menuUrlImage, String mealUrlImage) {
         this.uuid = menu.getUuid();
         this.description = menu.getDescription();
         this.createdDate = menu.getCreatedDate();
@@ -38,7 +38,7 @@ public class MenuDtout {
         this.image =menuUrlImage + path;
 
 
-        this.meals = menu.getMeals().stream().map(meal -> new MealDtout(meal,mealUrlImage)).toList();
+        this.meals = menu.getMeals().stream().map(meal -> new MealDtOut(meal,mealUrlImage)).toList();
     }
 
     public String getUuid() {
@@ -73,7 +73,7 @@ public class MenuDtout {
     public Integer getQuantity() {
         return quantity;
     }
-    public List<MealDtout> getMeals() {
+    public List<MealDtOut> getMeals() {
         return meals;
     }
 }

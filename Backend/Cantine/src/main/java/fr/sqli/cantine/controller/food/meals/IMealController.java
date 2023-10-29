@@ -2,7 +2,7 @@ package fr.sqli.cantine.controller.food.meals;
 
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
@@ -47,7 +47,7 @@ public interface IMealController {
 
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
-    ResponseEntity<MealDtout> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException;
+    ResponseEntity<MealDtOut> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException;
 
 
 }

@@ -5,14 +5,13 @@ import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class AddMealTest {
@@ -66,9 +66,345 @@ public class AddMealTest {
 
     }
 
+    @AfterEach
+    void clean (){
+        this.mealDtoIn = null ;
+        this.mealEntity = null;
+        this.mealService = null;
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with valid meal information and valid image")
+    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingMealException {
+
+        //  spaces  from  the  label  is   removed
+        Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
+
+        String imageName = "test-image.jpg";
+        Mockito.when(imageService.uploadImage(mealDtoIn.getImage(), "images/meals")).thenReturn(imageName);
+
+        // Mock database save
+
+        Mockito.when(this.mealDao.save(Mockito.any(MealEntity.class))).thenReturn(mealEntity);
+
+
+        // Call the method
+        MealEntity result = this.mealService.addMeal(this.mealDtoIn);
+
+        // Verify the result
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(mealDtoIn.getLabel(), result.getLabel());
+        Assertions.assertEquals(mealDtoIn.getDescription(), result.getDescription());
+        Assertions.assertEquals(mealDtoIn.getPrice(), result.getPrice());
+        Assertions.assertNotNull(result.getImage());
+
+        Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
+        Mockito.verify(mealDao, Mockito.times(1)).save(this.mealEntity);
+        Mockito.verify(imageService, Mockito.times(1)).uploadImage(mealDtoIn.getImage(), "images/meals");
+    }
 
 
 
+
+
+
+
+
+
+
+
+    @Test
+    @DisplayName("Test the addMeal method with Existing meal")
+    void AddMealWithExistingMealTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        //  the spaces are  removed  from  the  label
+        Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription())).thenReturn(Optional.of(this.mealEntity));
+        Assertions.assertThrows(ExistingMealException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getCategory(), this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription());
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+
+
+
+
+
+
+
+    /********************************** Quantity  ************************************/
+
+
+    @Test
+    @DisplayName("Test the addMeal method with Too Big Quantity")
+    void AddMealWithTooBigQuantityTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setQuantity(10001);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+
+
+
+
+    @Test
+    @DisplayName("Test the addMeal method with negative Quantity")
+    void AddMealWithNegativeQuantityTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setQuantity(-2);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+    @Test
+    @DisplayName("Test the addMeal method with null Quantity")
+    void AddMealWithNullQuantityTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setQuantity(null);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+
+
+
+
+
+
+
+
+
+    /********************************** Price  ************************************/
+
+    @Test
+    @DisplayName("Test the addMeal method with status out of bound status = -1")
+    public void AddMealWithStatusOutOfBoundTest1() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn.setStatus(-1);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).uploadImage(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    @DisplayName("Test the addMeal method with status out of bound status = 3")
+    public void AddMealWithStatusOutOfBoundTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn.setStatus(3);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).uploadImage(Mockito.any(), Mockito.any());
+    }
+
+
+
+
+    @Test
+    @DisplayName("Test the addMeal method with null  status ")
+    public void AddMealWithNullStatusTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn.setStatus(null);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).uploadImage(Mockito.any(), Mockito.any());
+    }
+
+
+
+
+
+    /********************************** Price  ************************************/
+    @Test
+    @DisplayName("Test the addMeal method with Invalid price")
+    void AddMealWithInvalidPriceTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setPrice(new BigDecimal("eibed"));
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with Too Big price")
+    void AddMealWithTooBigPriceTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setPrice(BigDecimal.valueOf(1001));
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+
+
+
+
+    @Test
+    @DisplayName("Test the addMeal method with negative price")
+    void AddMealWithNegativePriceTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setPrice(BigDecimal.valueOf(-1.3));
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+    @Test
+    @DisplayName("Test the addMeal method with null price")
+    void AddMealWithNullPriceTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setPrice(null);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
+    }
+
+
+
+
+
+    /********************************** Category ************************************/
+
+    @Test
+    @DisplayName("Test the addMeal method with too lang category")
+    void AddMealWithTooLangCategoryTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        String tooLongString = "t".repeat(101);
+
+
+        this.mealDtoIn.setCategory(tooLongString);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with too short category")
+    void AddMealWithTooShortCategoryTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        String tooshortString = "t" +" ".repeat(10) + "b";
+
+
+        this.mealDtoIn.setCategory(tooshortString);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with null category")
+    void AddMealWithNullCategoryTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setCategory(null);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+
+
+
+
+    /********************************** Description ************************************/
+
+    @Test
+    @DisplayName("Test the addMeal method with too lang Description ")
+    void AddMealWithTooLangDescriptionTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        String tooLongString = "t".repeat(3000)+"ee";
+
+
+        this.mealDtoIn.setDescription(tooLongString);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with too short Description")
+    void AddMealWithTooShortDescriptionTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        String tooshortString = "ta" +" ".repeat(10) + "ba";
+
+
+        this.mealDtoIn.setDescription(tooshortString);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+
+    @Test
+    @DisplayName("Test the addMeal method with null Description")
+    void AddMealWithNullDescriptionTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+
+        this.mealDtoIn.setDescription(null);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class,
+                () -> mealService.addMeal(mealDtoIn));
+
+        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+
+
+
+
+
+    /********************************** Label ************************************/
 
     @Test
     @DisplayName("Test the addMeal method with too lang label")
@@ -104,7 +440,7 @@ public class AddMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with null label")
-    void AddMealWithNullLangLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+    void AddMealWithNullLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
         this.mealDtoIn.setLabel(null);
 
@@ -117,7 +453,7 @@ public class AddMealTest {
 
 
 
-
+    /********************************** MealDtoIn ************************************/
 
     @Test
     @DisplayName("Test the addMeal method with null image")

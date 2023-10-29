@@ -5,9 +5,7 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
-import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.IImageService;
@@ -84,7 +82,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID And Meal Found With Image")
-    void updateMealTestWithRightMealAndWithImage() throws ExistingMealException, InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+    void updateMealTestWithRightMealAndWithImage() throws ExistingMealException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         //init
         this.mealDtoIn.setLabel("Meal 1 Updated");
         ImageEntity imageEntity = new ImageEntity();
@@ -114,7 +112,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID And Meal Found  WithOut Image")
-    void updateMealTestWithRightMealAndWithOutImage() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundException, InvalidMealInformationException, ExistingMealException, InvalidMenuInformationException {
+    void updateMealTestWithRightMealAndWithOutImage() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundException, ExistingMealException {
         this.mealDtoIn.setLabel("Meal 1 Updated");
         this.mealDtoIn.setImage(null);
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(mealEntity));
@@ -270,10 +268,6 @@ public class UpdateMealTest {
         Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
 
     }
-
-
-
-
 
 
 }

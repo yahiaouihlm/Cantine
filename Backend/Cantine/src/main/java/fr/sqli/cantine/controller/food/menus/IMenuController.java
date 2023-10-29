@@ -2,7 +2,7 @@ package fr.sqli.cantine.controller.food.menus;
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
@@ -52,6 +52,6 @@ public interface IMenuController {
     ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
 
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
-    public ResponseEntity<MenuDtout> getMenuById(@RequestParam("idMenu") String idMenu) throws InvalidMenuInformationException, MealNotFoundException;
+    public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("idMenu") String idMenu) throws InvalidMenuInformationException, MealNotFoundException;
 
 }

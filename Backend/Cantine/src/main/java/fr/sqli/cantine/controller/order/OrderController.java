@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.order;
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.dto.out.food.OrderDtout;
+import fr.sqli.cantine.dto.out.food.OrderDtOut;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
@@ -41,7 +41,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<List<OrderDtout>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException {
+    public ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException {
         return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentId,date));
     }
 
@@ -52,7 +52,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<List<OrderDtout>> getOrdersByDate(LocalDate date) throws InvalidPersonInformationException, InvalidOrderException {
+    public ResponseEntity<List<OrderDtOut>> getOrdersByDate(LocalDate date) throws InvalidPersonInformationException, InvalidOrderException {
         return ResponseEntity.ok(this.orderService.getOrdersByDate(date));
     }
 

@@ -3,7 +3,7 @@ package fr.sqli.cantine.service.food.menus;
 
 import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
-import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
@@ -163,11 +163,11 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtout getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException {
+    public MenuDtOut getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException {
         IMenuService.checkMenuUuidValidity(menuUuid);
         var menu = this.menuDao.findByUuid(menuUuid);
         if (menu.isPresent()) {
-            return new MenuDtout(menu.get(), this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
+            return new MenuDtOut(menu.get(), this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
         }
 
 
@@ -176,9 +176,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public List<MenuDtout> getAllMenus() {
+    public List<MenuDtOut> getAllMenus() {
         return this.menuDao.findAll().stream()
-                .map(menuEntity -> new MenuDtout(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
+                .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
                 .toList();
     }
 

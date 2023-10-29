@@ -2,7 +2,7 @@ package fr.sqli.cantine.service.food.meals;
 
 import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
-import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
@@ -149,13 +149,13 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public List<MealDtout> getAllMeals() {
-        return this.mealDao.findAll().stream().map(meal -> new MealDtout(meal, this.MEALS_IMAGES_URL)).toList();
+    public List<MealDtOut> getAllMeals() {
+        return this.mealDao.findAll().stream().map(meal -> new MealDtOut(meal, this.MEALS_IMAGES_URL)).toList();
     }
 
     @Override
-    public MealDtout getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException {
-        return new MealDtout(getMealEntityByUUID(uuid), this.MEALS_IMAGES_URL);
+    public MealDtOut getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException {
+        return new MealDtOut(getMealEntityByUUID(uuid), this.MEALS_IMAGES_URL);
     }
 
     @Override

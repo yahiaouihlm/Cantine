@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.order;
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.dto.out.food.OrderDtout;
+import fr.sqli.cantine.dto.out.food.OrderDtOut;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
@@ -43,12 +43,12 @@ public interface IOrderController {
 
 
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
-    ResponseEntity<List<OrderDtout>> getOrdersByDateAndStudentId(@RequestParam("studentId") Integer idStudent , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
+    ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(@RequestParam("studentId") Integer idStudent , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidPersonInformationException;
     @PostMapping(ADD_ORDER_URL)
     ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException;
 
     @GetMapping(ADMIN_GET_ALL_ORDERS_BY_DAY)
-    ResponseEntity<List<OrderDtout>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidPersonInformationException, InvalidOrderException;
+    ResponseEntity<List<OrderDtOut>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidPersonInformationException, InvalidOrderException;
 
     @PostMapping(CANCEL_ORDER_URL)
     ResponseEntity<String> cancelOrder( Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, StudentNotFoundException;

@@ -1,7 +1,7 @@
 package fr.sqli.cantine.service.food.meals;
 
 import fr.sqli.cantine.dao.IMealDao;
-import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
@@ -64,7 +64,7 @@ class GetMealsTest {
 
         final var ListToFindAsEntity = List.of(this.mealEntity, meal2);
 
-        final var ListToGetAsDtout = List.of(this.mealEntity, meal2).stream().map(meal -> new MealDtout(meal, this.environment.getProperty("sqli.cantine.images.url.meals"))).toList();
+        final var ListToGetAsDtout = List.of(this.mealEntity, meal2).stream().map(meal -> new MealDtOut(meal, this.environment.getProperty("sqli.cantine.images.url.meals"))).toList();
 
         Mockito.when(this.iMealDao.findAll()).thenReturn(ListToFindAsEntity);
         var result = this.iMealService.getAllMeals();
@@ -107,9 +107,9 @@ class GetMealsTest {
 
         Mockito.when(this.iMealDao.findByUuid(uuidMealToFind)).thenReturn(Optional.of(this.mealEntity));
 
-        MealDtout resultTest = this.iMealService.getMealByUUID(uuidMealToFind);
+        MealDtOut resultTest = this.iMealService.getMealByUUID(uuidMealToFind);
 
-        MealDtout shouldResult = new MealDtout(this.mealEntity, urlMealImage);
+        MealDtOut shouldResult = new MealDtOut(this.mealEntity, urlMealImage);
 
         Assertions.assertEquals(shouldResult.getUuid(), resultTest.getUuid());
         Assertions.assertEquals(shouldResult.getCategory(), resultTest.getCategory());
@@ -136,7 +136,7 @@ class GetMealsTest {
 
 
     @Test
-    @DisplayName("Test  getMealWithUuid with Empty ID ")
+    @DisplayName("Test  getMealWithUuid with Short ID ")
     void getMealByUuidWithShortUuid() {
         String  uuidMeal = "a".repeat(19) ;
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
@@ -155,15 +155,6 @@ class GetMealsTest {
         Mockito.verify(this.iMealDao, times(0)).findByUuid(Mockito.anyString());
     }
 
-    @Test
-    @DisplayName("Test  getMealWithUuid with invalid ID  with negative value (-1 ) ")
-    void getMealByUuidWithNullUuid() {
-        String  uuidMeal = null ;
-        Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
-            this.iMealService.getMealByUUID(uuidMeal);
-        });
-        Mockito.verify(this.iMealDao, times(0)).findByUuid(Mockito.anyString());
-    }
 
     @Test
     @DisplayName("Test  getMealWithUuid with null UUID  ")

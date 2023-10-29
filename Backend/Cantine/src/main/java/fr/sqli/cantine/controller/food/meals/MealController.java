@@ -3,13 +3,12 @@ package fr.sqli.cantine.controller.food.meals;
 
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.dto.out.food.MealDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -58,7 +57,7 @@ public class MealController implements IMealController {
 
 
     @Override
-    public ResponseEntity<MealDtout> getMealByUUID(String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException {
+    public ResponseEntity<MealDtOut> getMealByUUID(String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException {
         var mealdtout = this.mealService.getMealByUUID(uuidMeal);
         return ResponseEntity.ok(mealdtout);
     }

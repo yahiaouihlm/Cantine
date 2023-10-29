@@ -1,13 +1,12 @@
 package fr.sqli.cantine.service.food.menus;
 
 import fr.sqli.cantine.dao.IMenuDao;
-import fr.sqli.cantine.dto.out.food.MenuDtout;
+import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.menus.MenuService;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
@@ -80,7 +79,7 @@ class GetMenuTest {
     void getMenuByIdWithValidateId() throws InvalidMenuInformationException, MealNotFoundException {
         Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
         var  result  =  this.menuService.getMenuById(1);
-        Assertions.assertTrue(result instanceof MenuDtout);
+        Assertions.assertTrue(result instanceof MenuDtOut);
         Assertions.assertEquals(result.getDescription(), this.menuEntity.getDescription());
         Assertions.assertEquals(result.getId() , this.menuEntity.getId());
         Mockito.verify(iMenuDao, Mockito.times(1)).findById(Mockito.anyInt());
@@ -124,8 +123,8 @@ class GetMenuTest {
 
         var result = menuService.getAllMenus();
 
-        Assertions.assertTrue(result.get(0) instanceof MenuDtout);
-        Assertions.assertTrue(result.get(1) instanceof MenuDtout);
+        Assertions.assertTrue(result.get(0) instanceof MenuDtOut);
+        Assertions.assertTrue(result.get(1) instanceof MenuDtOut);
 
         Assertions.assertEquals(2, result.size());
         Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
@@ -139,7 +138,7 @@ class GetMenuTest {
         Mockito.when(iMenuDao.findAll()).thenReturn(List.of(this.menuEntity));
 
         var result = menuService.getAllMenus();
-        Assertions.assertTrue(result.get(0) instanceof MenuDtout);
+        Assertions.assertTrue(result.get(0) instanceof MenuDtOut);
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
         Assertions.assertEquals(result.get(0).getQuantity(), this.menuEntity.getQuantity());

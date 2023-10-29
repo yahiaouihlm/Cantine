@@ -4,7 +4,7 @@ import fr.sqli.cantine.entity.MealEntity;
 
 import java.math.BigDecimal;
 
-public class MealDtout {
+public class MealDtOut {
 
     private  final   String uuid ;
     private  final String label ;
@@ -21,7 +21,7 @@ public class MealDtout {
 
 
 
-    public MealDtout(MealEntity meal ,  String mealUrlImage) {
+    public MealDtOut(MealEntity meal , String mealUrlImage) {
         this.uuid = meal.getUuid();
         this.description = meal.getDescription();
         this.category = meal.getCategory();
