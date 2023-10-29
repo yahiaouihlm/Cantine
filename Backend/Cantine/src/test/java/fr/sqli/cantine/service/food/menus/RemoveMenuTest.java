@@ -95,7 +95,7 @@ public class RemoveMenuTest {
         Mockito.doNothing().when(this.imageService).deleteImage(this.menuEntity.getImage().getImagename(), "images/menus");
         Mockito.doNothing().when(this.iMenuDao).delete(this.menuEntity);
 
-       var  result = this.menuService.removeMenu(1);
+       var  result = this.menuService.removeMenu("2");/*TODO:  this  is  not  correct*/
 
         Assertions.assertEquals(this.menuEntity, result);
         Mockito.verify(this.imageService, Mockito.times(1)).deleteImage(this.menuEntity.getImage().getImagename(), "images/menus");
@@ -108,7 +108,7 @@ public class RemoveMenuTest {
         Mockito.when(this.iMenuDao.findById(1)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(MenuNotFoundException.class, () -> {
-            this.menuService.removeMenu(1);
+            this.menuService.removeMenu("58");/*TODO:  this  is  not  correct*/
         });
         Mockito.verify(this.iMenuDao, Mockito.times(1)).findById(1);
        Mockito.verify(this.iMenuDao, Mockito.times(0)).delete(Mockito.any());
@@ -118,7 +118,7 @@ public class RemoveMenuTest {
     @Test
     void removeMenuWithInvalidID2(){
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> {
-            this.menuService.removeMenu(-10);
+            this.menuService.removeMenu("-10");/*TODO:  this  is  not  correct*/
         });
         Mockito.verify(this.iMenuDao, Mockito.times(0)).findById(Mockito.any());
         Mockito.verify(this.iMenuDao, Mockito.times(0)).delete(Mockito.any());
@@ -126,7 +126,7 @@ public class RemoveMenuTest {
     @Test
     void removeMenuWithInvalidID(){
         Assertions.assertThrows(InvalidMenuInformationException.class, () -> {
-            this.menuService.removeMenu(-1);
+            this.menuService.removeMenu("-1");/*TODO:  this  is  not  correct*/
         });
         Mockito.verify(this.iMenuDao, Mockito.times(0)).findById(Mockito.any());
         Mockito.verify(this.iMenuDao, Mockito.times(0)).delete(Mockito.any());

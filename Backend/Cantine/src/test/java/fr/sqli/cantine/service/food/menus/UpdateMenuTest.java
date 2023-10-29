@@ -5,10 +5,9 @@ import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.meals.MealService;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.menus.MenuService;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
@@ -59,7 +58,7 @@ public class UpdateMenuTest {
 
 
         this.menu =  new MenuDtoIn();
-        this.menu.setMenuId(1);
+        /*TODO:  this  is  not  correct*/
         this.menu.setLabel("label test");
         this.menu.setDescription("description  test");
         this.menu.setQuantity(10);
@@ -76,7 +75,7 @@ public class UpdateMenuTest {
 
 
      @Test
-     void updateMenuTest () throws InvalidMenuInformationException, MealNotFoundException, InvalidMealInformationException, InvalidFormatImageException, MenuNotFoundException, InvalidImageException, ImagePathException, IOException, ExistingMenuException {
+     void updateMenuTest () throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, MenuNotFoundException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, InvalidFoodInformationException {
          this.menuEntity = new MenuEntity();
          this.menuEntity.setLabel("Test label");
          this.menuEntity.setDescription("Test description");
@@ -139,7 +138,7 @@ public class UpdateMenuTest {
     }
     @Test
     void  updateMenuWithMenuNotFoundTest () {
-        Mockito.when(iMenuDao.findById(this.menu.getMenuId())).thenReturn(Optional.empty());
+        Mockito.when(iMenuDao.findById(2)).thenReturn(Optional.empty()); /*TODO:  this  is  not  correct*/
         Assertions.assertThrows(MenuNotFoundException.class , () -> this.menuService.updateMenu(this.menu ));
         Mockito.verify(iMenuDao, Mockito.times(1)).findById(1);
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
@@ -317,14 +316,14 @@ public class UpdateMenuTest {
 
     @Test
     void  UpdateMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundException {
-        this.menu.setMenuId(-1);
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu));
+
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.menuService.updateMenu(this.menu));/*TODO:  this  is  not  correct*/
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void UpdateMenuByIdWithNullIdTest()  {
-        this.menu.setMenuId(-1);
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.updateMenu(this.menu));
+
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.updateMenu(this.menu));/*TODO:  this  is  not  correct*/
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 

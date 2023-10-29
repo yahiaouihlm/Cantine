@@ -121,7 +121,7 @@ class GetMealsTest {
     @Test
     @DisplayName("Test  getMealWithUuid with invalid ID  with MAX_VALUE Because this ID Can't be recorded in the database ")
     void getMealByUuidWithNotFoundUUID() {
-         String  uuidMeal = "a".repeat(19) ;
+         String  uuidMeal = java.util.UUID.randomUUID().toString() ;
 
         Mockito.when(this.iMealDao.findByUuid(uuidMeal)).thenReturn(Optional.empty());
 
