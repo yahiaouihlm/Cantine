@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.admin.adminDashboard.account;
+package fr.sqli.cantine.service.admin.adminDashboard;
 
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;

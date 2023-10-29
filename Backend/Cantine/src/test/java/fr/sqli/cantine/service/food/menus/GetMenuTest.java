@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.admin.menus;
+package fr.sqli.cantine.service.food.menus;
 
 import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.out.food.MenuDtout;

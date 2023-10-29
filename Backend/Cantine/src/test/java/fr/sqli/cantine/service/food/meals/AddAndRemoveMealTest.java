@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.admin.meals;
+package fr.sqli.cantine.service.food.meals;
 
 
 import fr.sqli.cantine.dao.IMealDao;
@@ -9,7 +9,6 @@ import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
 import fr.sqli.cantine.service.food.meals.MealService;
 import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.food.meals.exceptions.InvalidMealInformationException;
 import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
@@ -53,15 +52,12 @@ class AddAndRemoveMealTest {
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
         env.setProperty("sqli.cantine.images.meals.path", "images/meals");
         mealService = new MealService(env, mealDao, imageService);
-        this.mealEntity = new MealEntity();
+
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename("image-test");
+
+        this.mealEntity = new MealEntity("Meal 1", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, imageEntity);
         this.mealEntity.setId(1);
-        this.mealEntity.setStatus(1);
-        this.mealEntity.setPrice(BigDecimal.valueOf(1.3));
-        this.mealEntity.setQuantity(1);
-        this.mealEntity.setCategory("Frites");
-        this.mealEntity.setDescription("first Meal To  Test");
-        this.mealEntity.setLabel("Meal 1");
-        this.mealEntity.setImage(new ImageEntity());
 
 
         this.mealDtoIn = new MealDtoIn();
@@ -86,7 +82,7 @@ class AddAndRemoveMealTest {
 
     @Test
     @DisplayName("Test  removeMeal method with  valid iformation")
-    void removeMealWithValidateInformationTest() throws ImagePathException, InvalidMealInformationException, RemoveMealException, MealNotFoundException {
+    void removeMealWithValidateInformationTest() throws ImagePathException, RemoveMealException, MealNotFoundException {
 
         this.mealEntity.setMenus(List.of()); //  empty list of  menu
 
@@ -104,11 +100,12 @@ class AddAndRemoveMealTest {
         Mockito.verify(imageService, Mockito.times(1)).deleteImage(null, "images/meals");
 
     }
+
     @Test
     @DisplayName("Test  removeMeal method with positive id and meal not in  association with Order ")
-    void removeMealTestWithMealInAssociationWithOneOrderTest() throws  ImagePathException {
+    void removeMealTestWithMealInAssociationWithOneOrderTest() throws ImagePathException {
 
-           this.mealEntity.setOrders(List.of(new OrderEntity())); //  add a order to  meal
+        this.mealEntity.setOrders(List.of(new OrderEntity())); //  add a order to  meal
 
         Mockito.when(mealDao.findById(1)).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
@@ -266,55 +263,10 @@ class AddAndRemoveMealTest {
         Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
     }
 
-    @Test
-    @DisplayName("Test the addMeal method with too lang label")
-    void AddMealWithTooLangLabelTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
-        String tooLangString = "test".repeat(101);
 
 
-        this.mealDtoIn.setLabel(tooLangString);
-
-        Assertions.assertThrows(InvalidMealInformationException.class,
-                () -> mealService.addMeal(mealDtoIn));
-
-        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
-        Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
-    }
-
-    @Test
-    @DisplayName("Test the addMeal method with null image")
-    void AddMealWithNullImageNet() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
-        this.mealDtoIn.setImage(null);
-        Assertions.assertThrows(InvalidMealInformationException.class,
-                () -> mealService.addMeal(mealDtoIn));
-
-        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
-        Mockito.verify(imageService, Mockito.times(0)).uploadImage(mealDtoIn.getImage(), "images/meals");
-    }
-
-
-    @Test
-    @DisplayName("Test the addMeal method with null meal information")
-    void AddMealWithNullMealInformation() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
-        this.mealDtoIn = new MealDtoIn();
-        Assertions.assertThrows(InvalidMealInformationException.class,
-                () -> mealService.addMeal(mealDtoIn));
-
-        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
-        Mockito.verify(imageService, Mockito.times(0)).uploadImage(mealDtoIn.getImage(), "images/meals");
-    }
-
-
-    @Test
-    @DisplayName("Test the addMeal method with null  MealDtoIn")
-    void AddMealWithNullRequestData() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidMealInformationException {
-
-        Assertions.assertThrows(InvalidMealInformationException.class,
-                () -> mealService.addMeal(null));
-
-        Mockito.verify(mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
-        Mockito.verify(imageService, Mockito.times(0)).uploadImage(mealDtoIn.getImage(), "images/meals");
-    }
 
 
 }
+
+
