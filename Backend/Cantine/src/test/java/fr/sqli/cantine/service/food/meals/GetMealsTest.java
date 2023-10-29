@@ -49,7 +49,7 @@ class GetMealsTest {
         this.iMealService = new MealService(this.environment, this.iMealDao, this.imageService);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("image-test");
-        this.mealEntity = new MealEntity("Meal 1 ","Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, imageEntity);
+        this.mealEntity = new MealEntity("Meal 1 ", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, imageEntity);
         this.mealEntity.setId(1);
 
 
@@ -58,7 +58,8 @@ class GetMealsTest {
     @Test
     @DisplayName("Test getAllMeals() with list of 2 elements")
     void getAllMealsWithListOf2Elements() {
-        var meal2 = new MealEntity("Meal 2 ","Frites", "firt Meal To  Test 2   ",  BigDecimal.valueOf(1.3), 1, 1, new ImageEntity());;
+        var meal2 = new MealEntity("Meal 2 ", "Frites", "firt Meal To  Test 2   ", BigDecimal.valueOf(1.3), 1, 1, new ImageEntity());
+        ;
         meal2.setId(2);
 
 
@@ -102,7 +103,7 @@ class GetMealsTest {
     @Test
     @DisplayName("Test  getMealWithUuid with valid ID  return a Meal Instanced By Mockito ")
     void geMealWithValidUUID() throws MealNotFoundException, InvalidFoodInformationException {
-        String  uuidMealToFind = this.mealEntity.getUuid();
+        String uuidMealToFind = this.mealEntity.getUuid();
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
         Mockito.when(this.iMealDao.findByUuid(uuidMealToFind)).thenReturn(Optional.of(this.mealEntity));
@@ -121,7 +122,7 @@ class GetMealsTest {
     @Test
     @DisplayName("Test  getMealWithUuid with invalid ID  with MAX_VALUE Because this ID Can't be recorded in the database ")
     void getMealByUuidWithNotFoundUUID() {
-         String  uuidMeal = java.util.UUID.randomUUID().toString() ;
+        String uuidMeal = java.util.UUID.randomUUID().toString();
 
         Mockito.when(this.iMealDao.findByUuid(uuidMeal)).thenReturn(Optional.empty());
 
@@ -134,11 +135,10 @@ class GetMealsTest {
     }
 
 
-
     @Test
     @DisplayName("Test  getMealWithUuid with Short ID ")
     void getMealByUuidWithShortUuid() {
-        String  uuidMeal = "a".repeat(19) ;
+        String uuidMeal = "a".repeat(19);
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.iMealService.getMealByUUID(uuidMeal);
         });
@@ -148,7 +148,7 @@ class GetMealsTest {
     @Test
     @DisplayName("Test  getMealWithUuid with Empty ID ")
     void getMealByUuidWithEmptyUuid() {
-        String  uuidMeal = "    " ;
+        String uuidMeal = "    ";
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.iMealService.getMealByUUID(uuidMeal);
         });

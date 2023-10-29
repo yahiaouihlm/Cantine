@@ -97,10 +97,10 @@ public class SecurityConfig {
 
 
 
-    @Bean
+  /*  @Bean
     public AuthenticationManager authenticationManager(){
         return   new ProviderManager(authenticationProvider());
-    }
+    }*/
 
     @Bean
     AuthenticationProvider authenticationProvider () {
@@ -110,9 +110,9 @@ public class SecurityConfig {
         return   provider ;
     }
 
-
+/*
     @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-    }
+    }*/
 }

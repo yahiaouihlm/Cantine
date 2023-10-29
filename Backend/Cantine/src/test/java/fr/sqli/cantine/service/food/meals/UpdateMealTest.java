@@ -336,7 +336,7 @@ public class UpdateMealTest {
     @Test
     @DisplayName("Update Meal With TOO Short Description")
     void updateMealTestWithTooShortDescription() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
-        String tooshortString = "ta" +" ".repeat(10) + "ba";
+        String tooshortString = "ta" + " ".repeat(10) + "ba";
         this.mealDtoIn.setDescription(tooshortString);
 
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {

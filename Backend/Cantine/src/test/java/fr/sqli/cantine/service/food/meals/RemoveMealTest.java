@@ -116,7 +116,7 @@ class RemoveMealTest {
 
     @Test
     @DisplayName("Test  removeMeal method with positive id and meal not in  association with menu ")
-    void removeMealTestWithMealInAssociationWithOneMenuTest() throws  ImagePathException {
+    void removeMealTestWithMealInAssociationWithOneMenuTest() throws ImagePathException {
         this.mealEntity.setMenus(List.of(new MenuEntity())); //  add a menu to  meal
 
         Mockito.when(mealDao.findByUuid(this.mealEntity.getUuid())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
@@ -130,11 +130,10 @@ class RemoveMealTest {
     }
 
 
-
     @Test
     @DisplayName("Test  getMealWithUuid with Short ID ")
     void getMealByUuidWithShortUuid() {
-        String  uuidMeal = "a".repeat(19) ;
+        String uuidMeal = "a".repeat(19);
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.mealService.getMealByUUID(uuidMeal);
         });
@@ -145,7 +144,7 @@ class RemoveMealTest {
     @Test
     @DisplayName("Test  getMealWithUuid with Empty ID ")
     void getMealByUuidWithEmptyUuid() {
-        String  uuidMeal = "    " ;
+        String uuidMeal = "    ";
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.mealService.getMealByUUID(uuidMeal);
         });
@@ -162,15 +161,6 @@ class RemoveMealTest {
         Mockito.verify(mealDao, Mockito.times(0)).findByUuid(java.util.UUID.randomUUID().toString());
         Mockito.verify(mealDao, Mockito.times(0)).delete(Mockito.any(MealEntity.class));
     }
-
-
-
-
-
-
-
-
-
 
 
 }
