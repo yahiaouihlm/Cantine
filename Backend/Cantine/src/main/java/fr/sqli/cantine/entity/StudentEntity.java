@@ -22,7 +22,7 @@ public class StudentEntity  implements Serializable {
 
 
     @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid;
+    private String  uuid = java.util.UUID.randomUUID().toString();
     @Column(name = "firstname" , nullable=false , length = 99)
     private String firstname  ;
 
@@ -52,7 +52,7 @@ public class StudentEntity  implements Serializable {
 
 
     @Column(name = "registration_date" , nullable=false )
-    private LocalDate registrationDate ;
+    private LocalDate registrationDate =  java.time.LocalDate.now() ;
 
     @ManyToOne(cascade =  CascadeType.ALL)
     @JoinColumn(name="image_idimage", nullable=false)
@@ -68,6 +68,23 @@ public class StudentEntity  implements Serializable {
     @Check(constraints = "status IN (0,1)")
     private Integer status ;
 
+
+    public  StudentEntity (String firstname , String lastname , String email , String password , LocalDate birthdate , String town , String phone , LocalDate disableDate  , StudentClassEntity studentClass , Integer status , BigDecimal wallet,  ImageEntity image) {;
+        this.firstname = firstname.trim();
+        this.lastname = lastname.trim();
+        this.email = email.trim();
+        this.password = password;
+        this.birthdate = birthdate;
+        this.town = town;
+        this.phone = phone;
+        this.disableDate = disableDate;
+        this.image = image;
+        this.studentClass = studentClass;
+        this.status = status;
+        this.wallet = wallet;
+    }
+
+    public StudentEntity() {}
 
     public Integer getId() {
         return id;

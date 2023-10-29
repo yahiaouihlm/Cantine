@@ -6,10 +6,13 @@ CREATE TABLE IF NOT EXISTS tax (
 -- -----------------------------------------------------
 -- Table `cantiniere`.`image`
 -- -----------------------------------------------------
+
+
 CREATE TABLE IF NOT EXISTS image(
     idimage SERIAL PRIMARY KEY,
     imageName VARCHAR(400) NOT NULL
 );
+
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`class_id`
@@ -22,6 +25,7 @@ CREATE TABLE IF NOT EXISTS  "studentclass" (
     unique(name)
 
 );
+
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`function`
@@ -113,10 +117,10 @@ CREATE table  if NOT EXISTS  st_order(
      price DECIMAL(5,2) NOT NULL,
      status INT  NOT NULL DEFAULT 0   ,   /* 0 = disabled, 1 = enabled */
      isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
-    qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
+     qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
-    check (status IN (0,1)),
-    FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+     check (status IN (0,1)),
+     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 
 -- -----------------------------------------------------
@@ -128,7 +132,7 @@ CREATE TABLE IF NOT EXISTS meal(
     label  VARCHAR(100) NOT NULL,
     description   TEXT NOT NULL ,
     price  DECIMAL(5,2) NOT NULL,
-    category   VARCHAR(46) NOT NULL,
+    category   VARCHAR(101) NOT NULL,
     image_idimage  INT NOT NULL ,
     quantity   INT    DEFAULT 0 ,
     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */

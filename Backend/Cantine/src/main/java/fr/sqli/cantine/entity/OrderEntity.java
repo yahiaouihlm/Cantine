@@ -21,7 +21,7 @@ public class OrderEntity implements Serializable {
     private Integer id;
 
     @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid;
+    private String  uuid= java.util.UUID.randomUUID().toString();
 
     @Column(name = "creation_date", nullable=false)
     private LocalDate creationDate;
@@ -76,6 +76,14 @@ public class OrderEntity implements Serializable {
     )
     private List<MealEntity> meals;
 
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public Integer getId() {
         return id;

@@ -22,7 +22,7 @@ public class MealEntity implements Serializable {
     private Integer id;
 
     @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid ;
+    private String  uuid  = java.util.UUID.randomUUID().toString();
 
     @Column(nullable=false, length=100)
     private String label;
@@ -82,8 +82,7 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/
 
-    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {
-        this.uuid = java.util.UUID.randomUUID().toString();
+    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {;
         this.label = label.trim();
         this.category = category.trim();
         this.description = description.trim();

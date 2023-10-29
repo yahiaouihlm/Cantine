@@ -18,7 +18,7 @@ public class AdminEntity {
     @Column(unique=true, nullable=false )
     private Integer id;
     @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid;
+    private String  uuid = java.util.UUID.randomUUID().toString();
     @Column(name = "firstname" , nullable=false , length = 99)
     private String firstname  ;
 
@@ -71,6 +71,14 @@ public class AdminEntity {
 
     public Integer getId() {
         return id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public void setId(Integer id) {
