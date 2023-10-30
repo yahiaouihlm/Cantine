@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 public interface IMenuController {
 
     /*------------------ ENDPOINTS ------------------*/
-    String MENUS_BASIC_URL_ADMIN = "/cantine/api/admin/menus";
+    String MENUS_BASIC_URL_ADMIN = "/cantine/admin/api/menus";
 
     String  ENDPOINT_UPDATE_MENU_URL = "/update";
     String ENDPOINT_ADD_MENU_URL = "/add";
@@ -46,12 +46,12 @@ public interface IMenuController {
     public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, MenuNotFoundException, InvalidFoodInformationException;
 
 
-    public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")String idMenu) throws InvalidMenuInformationException, MealNotFoundException, MenuNotFoundException, ImagePathException;
+    public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")String idMenu) throws InvalidMenuInformationException, MealNotFoundException, MenuNotFoundException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
     ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
 
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
-    public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("idMenu") String idMenu) throws InvalidMenuInformationException, MealNotFoundException;
+    public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("idMenu") String idMenu) throws  InvalidFoodInformationException, MenuNotFoundException;
 
 }

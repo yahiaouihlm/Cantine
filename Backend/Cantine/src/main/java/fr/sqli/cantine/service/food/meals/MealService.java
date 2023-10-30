@@ -52,7 +52,7 @@ public class MealService implements IMealService {
             throw new InvalidFoodInformationException("THE MEAL CAN NOT BE NULL");
         }
 
-        IMealService.checkUuidValidity(mealDtoIn.getUuid());
+        IMealService.checkMealUuidValidity(mealDtoIn.getUuid());
 
         mealDtoIn.toMealEntityWithoutImage();
 
@@ -93,7 +93,7 @@ public class MealService implements IMealService {
     @Override
     public MealEntity deleteMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
 
-        IMealService.checkUuidValidity(uuid);
+        IMealService.checkMealUuidValidity(uuid);
 
         var meal = this.mealDao.findByUuid(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE removeMeal METHOD ", uuid);
@@ -160,7 +160,7 @@ public class MealService implements IMealService {
 
     @Override
     public MealEntity getMealEntityByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException {
-        IMealService.checkUuidValidity(uuid);
+        IMealService.checkMealUuidValidity(uuid);
 
         return this.mealDao.findByUuid(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE getMealEntityByUUID METHOD", uuid);

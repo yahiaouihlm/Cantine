@@ -24,7 +24,7 @@ public interface IMealService {
     static final Logger LOG = LogManager.getLogger();
 
 
-    static void checkUuidValidity(String uuid) throws InvalidFoodInformationException {
+    static void checkMealUuidValidity(String uuid) throws InvalidFoodInformationException {
 
         if (uuid == null || uuid.isEmpty() || uuid.isBlank() || uuid.length() < 20) {
             IMealService.LOG.debug("THE MEAL UUID CAN NOT BE NULL OR EMPTY OR LESS THAN 20 CHARACTERS ");

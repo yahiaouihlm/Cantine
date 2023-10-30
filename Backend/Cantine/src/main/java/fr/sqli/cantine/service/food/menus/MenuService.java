@@ -109,7 +109,7 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity removeMenu(String menuUuid) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException {
+    public MenuEntity removeMenu(String menuUuid) throws MenuNotFoundException, ImagePathException, InvalidFoodInformationException {
 
         IMenuService.checkMenuUuidValidity(menuUuid);
 
@@ -163,16 +163,19 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtOut getMenuById(String menuUuid) throws MealNotFoundException, InvalidMenuInformationException {
+    public MenuDtOut getMenuByUuId(String menuUuid) throws MenuNotFoundException, InvalidFoodInformationException {
+
         IMenuService.checkMenuUuidValidity(menuUuid);
-        var menu = this.menuDao.findByUuid(menuUuid);
-        if (menu.isPresent()) {
-            return new MenuDtOut(menu.get(), this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
-        }
+
+        var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
+            MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE getMenuByUuId METHOD ", menuUuid);
+            return new MenuNotFoundException("NO MENU WAS FOUND");
+        });
 
 
-        MenuService.LOG.debug("NO DISH WAS FOUND WITH AN UUID = {} IN THE getMealByID METHOD ", menuUuid);
-        throw new MealNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
+        return new MenuDtOut(menu, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
+
+
     }
 
     @Override
