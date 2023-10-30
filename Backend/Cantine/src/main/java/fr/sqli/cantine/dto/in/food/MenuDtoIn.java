@@ -13,20 +13,7 @@ import java.util.List;
 
 public class MenuDtoIn extends AbstractFoodDtoIn {
     private static final Logger LOG = LogManager.getLogger();
-    private String uuid; // id of the menu only used in the update method
 
-    private String label;
-
-
-    private String description;
-
-    private BigDecimal price;
-
-
-    private Integer status;
-
-    private Integer quantity;
-    private MultipartFile image;
 
     /**
      *  the client will send  only  the ids of the meals ( check the meals id validity in the service) and the service will fetch the meals from the database
