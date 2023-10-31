@@ -5,9 +5,10 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -82,7 +83,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID And Meal Found With Image")
-    void updateMealTestWithRightMealAndWithImage() throws ExistingMealException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException {
+    void updateMealTestWithRightMealAndWithImage() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
         //init
         this.mealDtoIn.setLabel("Meal 1 Updated");
         ImageEntity imageEntity = new ImageEntity();
@@ -112,7 +113,7 @@ public class UpdateMealTest {
 
     @Test
     @DisplayName("Update Meal With Valid ID And Meal Found  WithOut Image")
-    void updateMealTestWithRightMealAndWithOutImage() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MealNotFoundException, ExistingMealException, InvalidFoodInformationException {
+    void updateMealTestWithRightMealAndWithOutImage() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
         this.mealDtoIn.setLabel("Meal 1 Updated");
         this.mealDtoIn.setImage(null);
         Mockito.when(mealDao.findByUuid(this.mealDtoIn.getUuid())).thenReturn(Optional.of(mealEntity));
@@ -145,7 +146,7 @@ public class UpdateMealTest {
         }}));
 
         this.mealDtoIn.setUuid(this.mealEntity.getUuid());
-        Assertions.assertThrows(ExistingMealException.class, () -> {
+        Assertions.assertThrows(ExistingFoodException.class, () -> {
             this.mealService.updateMeal(mealDtoIn);
         });
         Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealEntity.getLabel(), mealEntity.getCategory(), mealEntity.getDescription());
@@ -162,7 +163,7 @@ public class UpdateMealTest {
         Mockito.when(mealDao.findByUuid(this.mealDtoIn.getUuid())).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(MealNotFoundException.class, () -> {
+        Assertions.assertThrows(FoodNotFoundException.class, () -> {
             mealService.updateMeal(mealDtoIn);
         });
 

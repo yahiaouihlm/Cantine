@@ -9,10 +9,8 @@ import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
 
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
 import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.qrcode.QrCodeGenerator;
@@ -109,7 +107,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, StudentNotFoundException, MealNotFoundException, MenuNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException {
         if (orderDtoIn == null)
             throw new InvalidOrderException("INVALID ORDER");
 
@@ -149,7 +147,7 @@ public class OrderService implements IOrderService {
                 var meal = this.mealDao.findById(mealId);
                 if (meal.isEmpty()) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " NOT FOUND");
-                    throw new MealNotFoundException("MEAL WITH  ID : " + mealId + " NOT FOUND");
+                    throw new FoodNotFoundException("MEAL WITH  ID : " + mealId + " NOT FOUND");
                 }
                 if (meal.get().getStatus() == 0) {
                     OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " IS NOT AVAILABLE");
@@ -166,7 +164,7 @@ public class OrderService implements IOrderService {
                 var menu = this.menuDao.findById(menuId);
                 if (menu.isEmpty()) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " NOT FOUND");
-                    throw new MenuNotFoundException("MENU WITH  ID: " + menuId + " NOT FOUND");
+                    throw new FoodNotFoundException("MENU WITH  ID: " + menuId + " NOT FOUND");
                 }
                 if (menu.get().getStatus() == 0) {
                     OrderService.LOG.error("MENU WITH  ID  = " + menuId + " IS NOT AVAILABLE");

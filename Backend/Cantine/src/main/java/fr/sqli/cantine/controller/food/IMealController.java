@@ -1,13 +1,12 @@
-package fr.sqli.cantine.controller.food.meals;
+package fr.sqli.cantine.controller.food;
 
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
+import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
+import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -36,18 +35,18 @@ public interface IMealController {
 
     /*------------------ METHODS ------------------*/
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
+    ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws FoodNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
-    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("uuidMeal") String uuidMeal) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException;
+    ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, RemoveFoodException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidMenuInformationException, InvalidFoodInformationException;
+    ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException;
 
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
-    ResponseEntity<MealDtOut> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws MealNotFoundException, InvalidFoodInformationException;
+    ResponseEntity<MealDtOut> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, InvalidFoodInformationException;
 
 
 }

@@ -3,7 +3,6 @@ package fr.sqli.cantine.dto.in.food;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,25 +20,8 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
 
     private List <String> mealUuids;
 
-    /**
-     * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid
-     * @return the MenuEntity object created from the MenuDtoIn object or throw an exception if the menu information is not valid
-     * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
-     */
-   /*  @JsonIgnore
-    public MenuEntity  toMenuEntity() throws InvalidMenuInformationException, InvalidMealInformationException {
-        this.checkMenuInformationValidity();
-        return this.createMenuEntity();
-    }
-
-    /**
-     * Convert the MenuDtoIn to a MenuEntity object and return it after checking if the menu information is valid except the image
-     * @return the MenuEntity object created from the MenuDtoIn object or throw an exception if the menu information is not valid
-     * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
-     * @throws InvalidMealInformationException it's never thrown because it's a menu
-     */
     @JsonIgnore
-     public  void  toMenuEntityWithoutImage() throws InvalidMenuInformationException,InvalidFoodInformationException {
+     public  void  toMenuEntityWithoutImage() throws InvalidFoodInformationException {
         super.CheckNullabilityAndEmptiness();
         if (description.length() > 1700) {
            throw new  InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");

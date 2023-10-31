@@ -4,8 +4,9 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
+import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -76,7 +77,7 @@ public class AddMealTest {
 
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingMealException {
+    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException {
 
         //  spaces  from  the  label  is   removed
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
@@ -111,7 +112,7 @@ public class AddMealTest {
 
         //  the spaces are  removed  from  the  label
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription())).thenReturn(Optional.of(this.mealEntity));
-        Assertions.assertThrows(ExistingMealException.class, () -> mealService.addMeal(mealDtoIn));
+        Assertions.assertThrows(ExistingFoodException.class, () -> mealService.addMeal(mealDtoIn));
 
         Mockito.verify(this.imageService, Mockito.times(0)).updateImage(Mockito.any(), Mockito.any(), Mockito.any());
         Mockito.verify(this.mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), this.mealDtoIn.getCategory(), this.mealDtoIn.getDescription());

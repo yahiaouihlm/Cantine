@@ -1,15 +1,17 @@
-package fr.sqli.cantine.service.food.meals;
+package fr.sqli.cantine.service.food.impl;
 
 import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.ExistingMealException;
 
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
+
+import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
+import fr.sqli.cantine.service.food.IMealService;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -45,7 +47,7 @@ public class MealService implements IMealService {
 
 
     @Override
-    public MealEntity updateMeal(MealDtoIn mealDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidFoodInformationException {
+    public MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
 
         if (mealDtoIn == null) {
             MealService.LOG.debug("THE MEAL_DTO_IN CAN NOT BE NULL IN THE updateMeal METHOD ");
@@ -58,7 +60,7 @@ public class MealService implements IMealService {
 
         var meal = this.mealDao.findByUuid(mealDtoIn.getUuid()).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getUuid());
-            return new MealNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
+            return new FoodNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
         });
 
 
@@ -75,7 +77,7 @@ public class MealService implements IMealService {
         if (mealEntity.isPresent()) {
             if (!mealEntity.get().getUuid().equals(meal.getUuid())) {
                 MealService.LOG.debug("THE MEAL WITH A LABEL = {} AND A CATEGORY = {} AND A DESCRIPTION = {} IS ALREADY PRESENT IN THE DATABASE", mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
-                throw new ExistingMealException("THE MEAL WITH A LABEL = " + mealDtoIn.getLabel() + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
+                throw new ExistingFoodException("THE MEAL WITH A LABEL = " + mealDtoIn.getLabel() + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
             }
         }
 
@@ -91,26 +93,26 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity deleteMeal(String uuid) throws MealNotFoundException, RemoveMealException, ImagePathException, InvalidFoodInformationException {
+    public MealEntity deleteMeal(String uuid) throws RemoveFoodException, ImagePathException, InvalidFoodInformationException, FoodNotFoundException {
 
         IMealService.checkMealUuidValidity(uuid);
 
         var meal = this.mealDao.findByUuid(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE removeMeal METHOD ", uuid);
-            return new MealNotFoundException("NO MEAL WAS FOUND");
+            return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
 
 
         // check  if  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         if (meal.getMenus() != null && meal.getMenus().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveMealException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)");
+            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)");
         }
 
         // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
         if (meal.getOrders() != null && meal.getOrders().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveMealException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)");
+            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)");
         }
 
 
@@ -122,7 +124,7 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMealException, InvalidFoodInformationException {
+    public MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException {
 
         if (mealDtoIn == null) {
             MealService.LOG.error("THE MEAL_DTO_IN CAN NOT BE NULL");
@@ -134,7 +136,7 @@ public class MealService implements IMealService {
         //  check if  the  meal  is  already  present  in  the  database
         if (this.getMealWithLabelAndCategoryAndDescription(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription()).isPresent()) {
             MealService.LOG.debug("THE MEAL WITH A LABEL = {} AND A CATEGORY = {} AND A DESCRIPTION = {} IS ALREADY PRESENT IN THE DATABASE", mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
-            throw new ExistingMealException("THE MEAL WITH A LABEL = " + mealDtoIn.getLabel() + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
+            throw new ExistingFoodException("THE MEAL WITH A LABEL = " + mealDtoIn.getLabel() + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
         }
 
         MultipartFile image = mealDtoIn.getImage();
@@ -154,17 +156,17 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public MealDtOut getMealByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException {
+    public MealDtOut getMealByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
         return new MealDtOut(getMealEntityByUUID(uuid), this.MEALS_IMAGES_URL);
     }
 
     @Override
-    public MealEntity getMealEntityByUUID(String uuid) throws MealNotFoundException, InvalidFoodInformationException {
+    public MealEntity getMealEntityByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
         IMealService.checkMealUuidValidity(uuid);
 
         return this.mealDao.findByUuid(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE getMealEntityByUUID METHOD", uuid);
-            return new MealNotFoundException("NO MEAL WAS FOUND");
+            return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
     }
 
