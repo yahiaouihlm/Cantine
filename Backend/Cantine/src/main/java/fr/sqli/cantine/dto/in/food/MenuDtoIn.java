@@ -54,27 +54,20 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
      */
 
 
-    /**
-     * Check if the menu information is valid or not and throw an exception if it is not valid ( if one of the arguments is null or empty or less than 0)
-     *       the image is also checked
-     * @throws InvalidMenuInformationException if the menu information is not valid ( if one of the arguments is null or empty or less than 0)
-     */
+
     @JsonIgnore
-    public  void checkMenuInformationValidity() throws InvalidMenuInformationException, InvalidFoodInformationException {
+    public  void checkMenuInformationValidity() throws  InvalidFoodInformationException {
         super.CheckNullabilityAndEmptiness();
-        if (description.length() > 1700) {
-            throw new  InvalidFoodInformationException("DESCRIPTION_IS_TOO_LONG");
-        }
         super.checkImageValidity(this.image);
         this.validateMealsUuids();
     }
 
 
 
-   private void validateMealsUuids ( ) throws InvalidMenuInformationException {
-        if (this.getMealUuids() == null || this.getMealUuids().isEmpty() || this.getMealUuids().size() == 0  ) {
-            MenuDtoIn.LOG.error("The menu doesn't contain any meal");
-            throw new InvalidMenuInformationException("THE MENU DOESN'T CONTAIN ANY MEAL");
+   private void validateMealsUuids ( ) throws InvalidFoodInformationException {
+        if (this.getMealUuids() == null ||  this.getMealUuids().size() == 0  ) {
+            MenuDtoIn.LOG.error(" THE MENU DOESN'T CONTAIN ANY MEAL ");
+            throw new InvalidFoodInformationException("THE MENU DOESN'T CONTAIN ANY MEAL");
         }
 
     }

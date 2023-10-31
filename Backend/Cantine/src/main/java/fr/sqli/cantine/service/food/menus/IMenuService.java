@@ -9,7 +9,7 @@ import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -38,7 +38,7 @@ public interface IMenuService {
   public MenuEntity removeMenu(String menuUuid) throws MenuNotFoundException, InvalidMenuInformationException, ImagePathException, InvalidFoodInformationException;
 
 
-  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
+  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableFoodException, InvalidFoodInformationException;
 
 
   public MenuDtOut getMenuByUuId(String menuUuid) throws MenuNotFoundException, InvalidFoodInformationException;
@@ -47,7 +47,7 @@ public interface IMenuService {
 
 
 
-  public Optional<MenuEntity> checkExistingMenu(String label, String description, BigDecimal price) throws ExistingMenuException ;
+  public Optional<MenuEntity> getMenuWithLabelAndDescriptionAndPrice(String label, String description, BigDecimal price) throws ExistingMenuException ;
 
 
 

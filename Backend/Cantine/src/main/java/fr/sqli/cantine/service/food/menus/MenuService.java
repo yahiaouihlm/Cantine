@@ -13,7 +13,7 @@ import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
@@ -27,9 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MenuService implements IMenuService {
@@ -56,14 +54,13 @@ public class MenuService implements IMenuService {
     @Override
     public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, MenuNotFoundException, ExistingMenuException, InvalidFoodInformationException {
 
-        if  (menuDtoIn == null) {
+        if (menuDtoIn == null) {
             MenuService.LOG.debug("THE MENU DTO CAN NOT BE NULL IN THE updateMenu METHOD ");
             throw new InvalidMenuInformationException("THE MENU DTO CAN NOT BE NULL");
         }
 
         IMenuService.checkMenuUuidValidity(menuDtoIn.getUuid());
         menuDtoIn.toMenuEntityWithoutImage();
-
 
 
         var menuToUpdate = this.menuDao.findByUuid(menuDtoIn.getUuid());
@@ -73,7 +70,7 @@ public class MenuService implements IMenuService {
         }
 
 
-        var menuUpdatedDoesExist = this.checkExistingMenu(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
+        var menuUpdatedDoesExist = this.getMenuWithLabelAndDescriptionAndPrice(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
 
         if (menuUpdatedDoesExist.isPresent()) {
             if (menuUpdatedDoesExist.get().getId() != menuToUpdate.get().getId()) {
@@ -89,9 +86,9 @@ public class MenuService implements IMenuService {
         menuEntity.setStatus(menuDtoIn.getStatus());
         menuEntity.setQuantity(menuDtoIn.getQuantity());
 
-        var  mealsUuids = menuDtoIn.getMealUuids();
+        var mealsUuids = menuDtoIn.getMealUuids();
         List<MealEntity> mealsInMenu = new ArrayList<>(); //  check  existing meals in the   database  and  add them to the menu
-        for (String mealUuid : mealsUuids ) {
+        for (String mealUuid : mealsUuids) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
             mealsInMenu.add(meal);
         }
@@ -127,26 +124,24 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException {
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableFoodException, InvalidFoodInformationException {
 
-         menuDtoIn.checkMenuInformationValidity();
+        menuDtoIn.checkMenuInformationValidity();
 
-
-        var menu = this.checkExistingMenu(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
-
-        if (menu.isPresent()) {
+        if (this.getMenuWithLabelAndDescriptionAndPrice(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice()).isPresent()) {
             MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
             throw new ExistingMenuException("THE MENU ALREADY EXISTS IN THE DATABASE");
         }
 
-        List<String> mealUuids = menuDtoIn.getMealUuids();
-        List<MealEntity> mealsInMenu = new ArrayList<>();
+        // use  the Set to  avoid  duplicate  meals in the  menu
+        Set<MealEntity> mealsInMenu = new HashSet<>();
 
-        for (String  mealUuid : mealUuids) {
+        for (String mealUuid : menuDtoIn.getMealUuids()) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
-            if (meal.getStatus() == 0 ){
-                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE ", mealUuid);
-                throw new UnavailableMealException(" LE PLAT  " + meal.getLabel() + " N'EST PAS DISPONIBLE ");
+
+            if (meal.getStatus() == 0) {
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE CAN NOT BE ADDED TO  MENU", mealUuid);
+                throw new UnavailableFoodException("THE UNAVAILABLE MEAL CAN NOT BE ADDED TO  MENU");
             }
             mealsInMenu.add(meal);
         }
@@ -156,7 +151,7 @@ public class MenuService implements IMenuService {
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(imageName);
 
-       MenuEntity menuEntity = new MenuEntity(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice(), menuDtoIn.getStatus(), menuDtoIn.getQuantity(), imageEntity, mealsInMenu);
+        var menuEntity = new MenuEntity(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice(), menuDtoIn.getStatus(), menuDtoIn.getQuantity(), imageEntity, mealsInMenu);
 
 
         return this.menuDao.save(menuEntity);
@@ -187,7 +182,7 @@ public class MenuService implements IMenuService {
 
 
     @Override
-    public Optional<MenuEntity> checkExistingMenu(String label, String description, BigDecimal price) {
+    public Optional<MenuEntity> getMenuWithLabelAndDescriptionAndPrice(String label, String description, BigDecimal price) {
         return this.menuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(label, description, price);
 
     }

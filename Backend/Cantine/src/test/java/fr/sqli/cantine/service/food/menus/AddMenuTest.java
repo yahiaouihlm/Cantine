@@ -7,10 +7,9 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.meals.IMealService;
 import fr.sqli.cantine.service.food.meals.MealService;
-import fr.sqli.cantine.service.food.menus.MenuService;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.food.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.images.IImageService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -91,7 +90,7 @@ public class AddMenuTest {
         /*TODO : modifier le  test pour qu'il passe */
       Mockito.when(this.iMealService.getMealEntityByUUID(java.util.UUID.randomUUID().toString())).thenReturn(meal);
 
-        Assertions.assertThrows(UnavailableMealException.class , () -> this.menuService.addMenu(this.menu));
+        Assertions.assertThrows(UnavailableFoodException.class , () -> this.menuService.addMenu(this.menu));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 

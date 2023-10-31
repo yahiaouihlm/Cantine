@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class MenuExceptionsHandler {
 
 
-    @ExceptionHandler(UnavailableMealException.class)
-    public ResponseEntity<ExceptionDtout> handleExistingMenu(UnavailableMealException e) {
+    @ExceptionHandler(UnavailableFoodException.class)
+    public ResponseEntity<ExceptionDtout> handleExistingMenu(UnavailableFoodException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 

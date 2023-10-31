@@ -8,7 +8,7 @@ import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -49,9 +49,9 @@ public interface IMenuController {
     public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")String idMenu) throws InvalidMenuInformationException, MealNotFoundException, MenuNotFoundException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
-    ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException;
+    ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws  MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableFoodException, InvalidFoodInformationException;
 
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
-    public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("idMenu") String idMenu) throws  InvalidFoodInformationException, MenuNotFoundException;
+    public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws  InvalidFoodInformationException, MenuNotFoundException;
 
 }

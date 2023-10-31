@@ -25,4 +25,32 @@ public abstract class AbstractFoodDtOut {
         this.image = foodUrlImage + foodImageEntity.getImagename();
 
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

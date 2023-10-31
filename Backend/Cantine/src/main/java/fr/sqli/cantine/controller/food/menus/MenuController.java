@@ -10,7 +10,7 @@ import fr.sqli.cantine.service.food.menus.MenuService;
 import fr.sqli.cantine.service.food.menus.exceptions.ExistingMenuException;
 import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.UnavailableMealException;
+import fr.sqli.cantine.service.food.menus.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -54,7 +54,7 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidMenuInformationException, MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableMealException, InvalidFoodInformationException {
+    public ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws MealNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingMenuException, UnavailableFoodException, InvalidFoodInformationException {
              this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(new ResponseDtout(MENU_ADDED_SUCCESSFULLY));
 
@@ -63,8 +63,8 @@ public class MenuController implements   IMenuController {
 
 
     @Override
-    public ResponseEntity<MenuDtOut> getMenuById(String idMenu) throws InvalidFoodInformationException, MenuNotFoundException {
-           return  ResponseEntity.ok(this.menuService.getMenuByUuId(idMenu));
+    public ResponseEntity<MenuDtOut> getMenuById(String uuidMenu) throws InvalidFoodInformationException, MenuNotFoundException {
+           return  ResponseEntity.ok(this.menuService.getMenuByUuId(uuidMenu));
     }
 
 

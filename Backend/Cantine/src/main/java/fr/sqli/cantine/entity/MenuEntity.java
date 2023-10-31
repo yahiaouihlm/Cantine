@@ -3,7 +3,10 @@ package fr.sqli.cantine.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -69,7 +72,7 @@ public class MenuEntity implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image , List<MealEntity> meals) {
+    public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image , Set<MealEntity> meals) {
         this.uuid = java.util.UUID.randomUUID().toString();
         this.label = label;
         this.description = description;
@@ -78,7 +81,7 @@ public class MenuEntity implements Serializable {
         this.status = status;
         this.quantity = quantity;
         this.image = image;
-        this.meals = meals;
+        this.meals = new ArrayList<>(meals);
     }
 
     public MenuEntity() {}
