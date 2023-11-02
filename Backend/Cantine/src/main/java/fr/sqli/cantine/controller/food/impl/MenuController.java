@@ -37,13 +37,13 @@ public class MenuController implements IMenuController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> update(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
+    public ResponseEntity<ResponseDtout> update(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException {
          this.menuService.updateMenu( menuDtoIn);
         return ResponseEntity.ok(new ResponseDtout(MENU_UPDATED_SUCCESSFULLY));
     }
 
 
-    @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
+
     @Override
     public ResponseEntity<String> deleteMenu(String idMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException {
         this.menuService.removeMenu(idMenu);

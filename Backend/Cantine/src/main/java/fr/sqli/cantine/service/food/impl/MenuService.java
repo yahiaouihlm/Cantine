@@ -51,34 +51,34 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException {
 
         if (menuDtoIn == null) {
             MenuService.LOG.debug("THE MENU DTO CAN NOT BE NULL IN THE updateMenu METHOD ");
-            throw new InvalidFoodInformationException("THE MENU DTO CAN NOT BE NULL");
+            throw new InvalidFoodInformationException("THE MENU CAN NOT BE NULL");
         }
 
         IMenuService.checkMenuUuidValidity(menuDtoIn.getUuid());
-        menuDtoIn.toMenuEntityWithoutImage();
+
+        menuDtoIn.checkMenuInformationsWithOutImage();
 
 
-        var menuToUpdate = this.menuDao.findByUuid(menuDtoIn.getUuid());
-        if (menuToUpdate.isEmpty()) {
+        var menuEntity = this.menuDao.findByUuid(menuDtoIn.getUuid()).orElseThrow(() -> {
             MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE updateMenu METHOD ", menuDtoIn.getUuid());
-            throw new FoodNotFoundException("NO MENU WAS FOUND");
-        }
+            return new FoodNotFoundException("NO MENU WAS FOUND");
+        });
 
 
         var menuUpdatedDoesExist = this.getMenuWithLabelAndDescriptionAndPrice(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
 
         if (menuUpdatedDoesExist.isPresent()) {
-            if (menuUpdatedDoesExist.get().getId() != menuToUpdate.get().getId()) {
+            if (menuUpdatedDoesExist.get().getId().intValue() != menuEntity.getId().intValue()) {
                 MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
-                throw new ExistingFoodException("THE MENU ALREADY EXISTS IN THE DATABASE");
+                throw new ExistingFoodException("THE MENU ALREADY EXISTS");
             }
         }
 
-        var menuEntity = menuToUpdate.get();
+
         menuEntity.setLabel(menuDtoIn.getLabel());
         menuEntity.setDescription(menuDtoIn.getDescription());
         menuEntity.setPrice(menuDtoIn.getPrice());
@@ -86,15 +86,27 @@ public class MenuService implements IMenuService {
         menuEntity.setQuantity(menuDtoIn.getQuantity());
 
         var mealsUuids = menuDtoIn.getMealUuids();
-        List<MealEntity> mealsInMenu = new ArrayList<>(); //  check  existing meals in the   database  and  add them to the menu
+
+        Set<MealEntity> mealsInMenu = new HashSet<>(); //  check  existing meals in the   database  and  add them to the menu
+
         for (String mealUuid : mealsUuids) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
+
+            if (meal.getStatus() == 0) {
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE CAN NOT BE ADDED TO  MENU", mealUuid);
+                throw new UnavailableFoodException("THE UNAVAILABLE MEAL CAN NOT BE ADDED TO  MENU");
+            }
             mealsInMenu.add(meal);
         }
+        // check  if  the  menu  contains  at  least  2 meals
+        if (mealsInMenu.size() < 2 ){
+            MenuService.LOG.error("THE MENU MUST CONTAIN AT LEAST 2 MEALS FOR THE UPDATE");
+            throw new InvalidFoodInformationException("FEW MEALS IN THE MENU");
+        }
 
-        menuEntity.setMeals(mealsInMenu);
+        menuEntity.setMeals(new ArrayList<>(mealsInMenu));
 
-        if (menuDtoIn.getImage() != null && !menuDtoIn.getImage().isEmpty()) {
+        if (menuDtoIn.getImage() != null && !menuDtoIn.getImage().isEmpty() && menuDtoIn.getImage().getSize() > 0) {
             var oldImageName = menuEntity.getImage().getImagename();
             var newImageName = this.imageService.updateImage(oldImageName, menuDtoIn.getImage(), this.MENUS_IMAGES_PATH);
             menuEntity.getImage().setImagename(newImageName);
@@ -127,7 +139,7 @@ public class MenuService implements IMenuService {
 
         if  (menuDtoIn == null) {
             MenuService.LOG.debug("THE MENU DTO CAN NOT BE NULL IN THE addMenu METHOD ");
-            throw new InvalidFoodInformationException("THE MENU NOT BE NULL");
+            throw new InvalidFoodInformationException("THE MENU CAN NOT BE NULL");
         }
         menuDtoIn.checkMenuInformationValidity();
 
@@ -148,7 +160,11 @@ public class MenuService implements IMenuService {
             }
             mealsInMenu.add(meal);
         }
-
+        // check  if  the  menu  contains  at  least  2 meals
+        if (mealsInMenu.size() < 2 ){
+            MenuService.LOG.error("THE MENU MUST CONTAIN AT LEAST 2 MEALS FOR THE UPDATE");
+            throw new InvalidFoodInformationException("FEW MEALS IN THE MENU");
+        }
         MultipartFile image = menuDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();
