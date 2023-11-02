@@ -5,11 +5,8 @@ import fr.sqli.cantine.controller.food.IMenuController;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
-import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
-import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
-import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.food.impl.MenuService;
-import fr.sqli.cantine.service.food.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -45,9 +42,9 @@ public class MenuController implements IMenuController {
 
 
     @Override
-    public ResponseEntity<String> deleteMenu(String idMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException {
-        this.menuService.removeMenu(idMenu);
-        return ResponseEntity.ok(MENU_DELETED_SUCCESSFULLY);
+    public ResponseEntity<ResponseDtout> deleteMenu(String uuidMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException {
+        this.menuService.removeMenu(uuidMenu);
+        return ResponseEntity.ok(new  ResponseDtout(MENU_DELETED_SUCCESSFULLY));
     }
 
 

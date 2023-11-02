@@ -7,11 +7,8 @@ import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
-import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
-import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
+import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.food.IMealService;
-import fr.sqli.cantine.service.food.exceptions.UnavailableFoodException;
 import fr.sqli.cantine.service.food.IMenuService;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
@@ -117,21 +114,28 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuEntity removeMenu(String menuUuid) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException {
+    public MenuEntity removeMenu(String menuUuid) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException {
 
         IMenuService.checkMenuUuidValidity(menuUuid);
 
-        var menu = this.menuDao.findByUuid(menuUuid);
+        var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
+            MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE removeMenu METHOD ", menuUuid);
+            return new FoodNotFoundException("MENU NOT FOUND");
+        });
 
-        if (menu.isEmpty()) {
-            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE removeMenu METHOD ", menuUuid);
-            throw new FoodNotFoundException("NO MENU WAS FOUND WITH THIS ID ");
+        // check that the menu is not used in the orders
+
+        if (menu.getOrders() != null && menu.getOrders().size() > 0)  {
+            MenuService.LOG.error("THE MENU WITH UUID = {} IS USED IN THE ORDERS CAN NOT BE DELETED", menuUuid);
+            throw new RemoveFoodException("THE MENU IS USED IN THE ORDERS CAN NOT BE DELETED");
         }
 
-        var imageName = menu.get().getImage().getImagename();
+
+
+        var imageName = menu.getImage().getImagename();
         this.imageService.deleteImage(imageName, this.MENUS_IMAGES_PATH);
-        this.menuDao.delete(menu.get());
-        return menu.get();
+        this.menuDao.delete(menu);
+        return menu;
     }
 
     @Override

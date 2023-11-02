@@ -3,10 +3,7 @@ package fr.sqli.cantine.controller.food;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
-import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
-import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
-import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.exceptions.UnavailableFoodException;
+import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -41,7 +38,7 @@ public interface IMenuController {
     public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
 
     @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
-    public ResponseEntity<String> deleteMenu(@RequestParam("idMenu")String idMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException;
+    public ResponseEntity<ResponseDtout> deleteMenu(@RequestParam("uuidMenu")String uuidMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException;
 
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
     ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;

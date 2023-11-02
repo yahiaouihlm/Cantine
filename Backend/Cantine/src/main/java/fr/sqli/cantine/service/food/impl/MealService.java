@@ -111,8 +111,8 @@ public class MealService implements IMealService {
 
         // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
         if (meal.getOrders() != null && meal.getOrders().size() > 0) {
-            MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)");
+            MealService.LOG.debug("THE MENU WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
+            throw new RemoveFoodException("THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)");
         }
 
 

@@ -3,10 +3,7 @@ package fr.sqli.cantine.service.food;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
-import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
-import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.exceptions.UnavailableFoodException;
+import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -32,7 +29,7 @@ public interface IMenuService {
   public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
 
 
-  public MenuEntity removeMenu(String menuUuid) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException;
+  public MenuEntity removeMenu(String menuUuid) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException;
 
 
   public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
