@@ -126,8 +126,11 @@ public class MenuService implements IMenuService {
         // check that the menu is not used in the orders
 
         if (menu.getOrders() != null && menu.getOrders().size() > 0)  {
+            menu.setStatus(3);
+            this.menuDao.save(menu);
             MenuService.LOG.error("THE MENU WITH UUID = {} IS USED IN THE ORDERS CAN NOT BE DELETED", menuUuid);
-            throw new RemoveFoodException("THE MENU IS USED IN THE ORDERS CAN NOT BE DELETED");
+            throw new RemoveFoodException("THE MENU IS USED IN THE ORDERS CAN NOT BE DELETED" +
+                    "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
         }
 
 
@@ -194,6 +197,13 @@ public class MenuService implements IMenuService {
         return new MenuDtOut(menu, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH);
 
 
+    }
+
+    @Override
+    public List<MenuDtOut> getAvailableMenu() {
+        return this.menuDao.getAvailableMenus().stream()
+                .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
+                .toList();
     }
 
     @Override

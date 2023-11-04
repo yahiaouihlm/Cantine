@@ -37,6 +37,8 @@ public interface IMenuService {
 
   public MenuDtOut getMenuByUuId(String menuUuid) throws InvalidFoodInformationException, FoodNotFoundException;
 
+
+  public  List<MenuDtOut> getAvailableMenu();
   public List<MenuDtOut> getAllMenus();
 
 

@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface IApi {
 
-    String  BASIC_API_URL = "/cantine/api" ;
+    String  BASIC_API_URL = "/cantine/api/getAll" ;
 
-    String ENDPOINT_GET_ALL_MEALS_URL = "meals/getAll";
-    String ENDPOINT_GET_ALL_MENUS_URL = "menus/getAll";
+    String ENDPOINT_GET_ALL_MEALS_URL = "/meals";
+    String ENDPOINT_GET_ALL_MENUS_URL = "/menus";
 
     @GetMapping(value = ENDPOINT_GET_ALL_MEALS_URL)
-     ResponseEntity<List<MealDtOut>> getAllMeals() ;
+     ResponseEntity<List<MealDtOut>> getOnlyAvailableMeals() ;
 
 
     @GetMapping(value = ENDPOINT_GET_ALL_MENUS_URL)

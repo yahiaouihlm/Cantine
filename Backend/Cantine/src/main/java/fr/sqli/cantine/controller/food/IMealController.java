@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -26,6 +27,7 @@ public interface IMealController {
     String ENDPOINT_GET_ONE_MEAL_URL = "/get";
     String ENDPOINT_UPDATE_MEAL_URL = "/update";
 
+    String  ENDPOINT_GET_ALL_MEAL =  "/getAll";
 
     /*------------------ MESSAGES ------------------*/
     String MEAL_ADDED_SUCCESSFULLY   = "MEAL ADDED SUCCESSFULLY";
@@ -35,7 +37,7 @@ public interface IMealController {
 
     /*------------------ METHODS ------------------*/
     @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws FoodNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
+    ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
 
     @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
@@ -44,6 +46,9 @@ public interface IMealController {
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException;
 
+
+    @GetMapping(value = ENDPOINT_GET_ALL_MEAL)
+    ResponseEntity<List<MealDtOut>> getAllMeal();
 
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
     ResponseEntity<MealDtOut> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, InvalidFoodInformationException;

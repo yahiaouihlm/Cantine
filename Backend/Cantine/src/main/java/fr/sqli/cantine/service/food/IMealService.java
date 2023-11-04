@@ -87,6 +87,8 @@ public interface IMealService {
      */
     List<MealDtOut> getAllMeals();
 
+
+    List<MealDtOut> getOnlyAvailableMeals();
     /**
      * Get a meal by its id from the database and return it as a MealDTO throw an exception if the meal is not found
      *

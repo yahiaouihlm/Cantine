@@ -44,7 +44,7 @@ public class MealEntity implements Serializable {
     private Integer quantity ;
 
     @Column(nullable=false)
-    @Check(constraints = "status IN (0,1)")
+    @Check(constraints = "status IN (0,1,2)")
     private Integer status;
 
     //bi-directional many-to-many association to MenuEntity

@@ -32,15 +32,14 @@ public class ApiController   implements IApi {
 
 
     @Override
-    public ResponseEntity<List<MealDtOut>> getAllMeals() {
-        var meals = this.mealService.getAllMeals();
-        return ResponseEntity.ok(meals);
+    public ResponseEntity<List<MealDtOut>> getOnlyAvailableMeals() {
+        return ResponseEntity.ok(this.mealService.getOnlyAvailableMeals());
     }
 
 
     @Override
     public ResponseEntity<List<MenuDtOut>> getAllMenus() {
-        return ResponseEntity.ok(this.menuService.getAllMenus());
+        return ResponseEntity.ok(this.menuService.getAvailableMenu());
     }
 
 }

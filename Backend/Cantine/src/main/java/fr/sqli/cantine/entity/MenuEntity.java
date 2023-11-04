@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name="menu", uniqueConstraints={
@@ -34,9 +35,11 @@ public class MenuEntity implements Serializable {
 
 
     @Column(nullable = false, precision = 5, scale = 2)
+    @Check(constraints = "price > 0")
     private BigDecimal price;
 
     @Column(nullable = false)
+    @Check(constraints = "status IN (0,1,2)")
     private Integer status;
 
     //bi-directional many-to-many association to CommandeEntity
@@ -70,6 +73,7 @@ public class MenuEntity implements Serializable {
 
 
     @Column(name = "quantity")
+    @Check(constraints = "quantity > 0")
     private Integer quantity;
 
     public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image , Set<MealEntity> meals) {

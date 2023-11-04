@@ -103,16 +103,21 @@ public class MealService implements IMealService {
         });
 
 
+        // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+        meal.setStatus(2);
+        this.mealDao.save(meal);
         // check  if  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         if (meal.getMenus() != null && meal.getMenus().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)");
+            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)" +
+                    "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
         }
 
         // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
         if (meal.getOrders() != null && meal.getOrders().size() > 0) {
             MealService.LOG.debug("THE MENU WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveFoodException("THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)");
+            throw new RemoveFoodException("THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)"
+            +"PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
         }
 
 
@@ -154,6 +159,14 @@ public class MealService implements IMealService {
     public List<MealDtOut> getAllMeals() {
         return this.mealDao.findAll().stream().map(meal -> new MealDtOut(meal, this.MEALS_IMAGES_URL)).toList();
     }
+
+    @Override
+    public List<MealDtOut> getOnlyAvailableMeals() {
+        return this.mealDao.getAvailableMeals().stream().map(
+                mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
+        ).toList();
+    }
+
 
     @Override
     public MealDtOut getMealByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static fr.sqli.cantine.controller.food.IMealController.MEALS_BASIC_URL_ADMIN;
 
@@ -54,6 +55,11 @@ public class MealController implements IMealController {
     public ResponseEntity<ResponseDtout> addMeal(MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException {
         this.mealService.addMeal(newMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_ADDED_SUCCESSFULLY));
+    }
+
+    @Override
+    public ResponseEntity<List<MealDtOut>> getAllMeal() {
+          return ResponseEntity.ok(this.mealService.getAllMeals());
     }
 
 
