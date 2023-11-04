@@ -89,9 +89,9 @@ public class MenuService implements IMenuService {
         for (String mealUuid : mealsUuids) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
 
-            if (meal.getStatus() == 0) {
-                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE CAN NOT BE ADDED TO  MENU", mealUuid);
-                throw new UnavailableFoodException("THE UNAVAILABLE MEAL CAN NOT BE ADDED TO  MENU");
+            if (meal.getStatus() != 1) {
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid , meal.getStatus());
+                throw new UnavailableFoodException("THE UNAVAILABLE  OR DELETED  MEAL CAN NOT BE ADDED TO  MENU");
             }
             mealsInMenu.add(meal);
         }
@@ -161,10 +161,12 @@ public class MenuService implements IMenuService {
         for (String mealUuid : menuDtoIn.getMealUuids()) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
 
-            if (meal.getStatus() == 0) {
-                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE CAN NOT BE ADDED TO  MENU", mealUuid);
-                throw new UnavailableFoodException("THE UNAVAILABLE MEAL CAN NOT BE ADDED TO  MENU");
+            if (meal.getStatus() != 1) {
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid , meal.getStatus());
+                throw new UnavailableFoodException("THE UNAVAILABLE OR DELETED  MEAL CAN NOT BE ADDED TO  MENU");
             }
+
+
             mealsInMenu.add(meal);
         }
         // check  if  the  menu  contains  at  least  2 meals
