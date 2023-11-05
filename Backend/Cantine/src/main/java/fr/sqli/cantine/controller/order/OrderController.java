@@ -5,10 +5,8 @@ import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
 import fr.sqli.cantine.service.order.OrderService;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
@@ -46,7 +44,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException {
+    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, TaxNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException {
         this.orderService.addOrder(orderDtoIn) ;
         return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }

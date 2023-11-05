@@ -121,7 +121,7 @@ CREATE table  if NOT EXISTS  st_order(
      unique(qr_code),
      check (status IN (0,1)),
      FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
+);
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`plat`
@@ -135,9 +135,9 @@ CREATE TABLE IF NOT EXISTS meal(
     category   VARCHAR(101) NOT NULL,
     image_idimage  INT NOT NULL ,
     quantity   INT    DEFAULT 0 ,
-    status INT  NOT NULL,   /* 0 = disabled, 1 = enabled */
+    status INT  NOT NULL,   /* 0 = disabled, 1 = enabled  , 2 =  to  delete  */
     PRIMARY KEY (id),
-    CHECK (status IN (0,1)),
+    CHECK (status IN (0,1,2)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
     unique (label, description, category),
@@ -150,12 +150,12 @@ CREATE TABLE IF NOT EXISTS menu (
     uuid VARCHAR(255) NOT NULL,
     label  VARCHAR(100) NOT NULL,
     description  TEXT NOT NULL,
-    status INT  NOT  NULL,  /* 0 = disabled, 1 = enabled */
+    status INT  NOT  NULL,  /* 0 = disabled, 1 = enabled , 3 =  to  delete */
     price  DECIMAL(5,2) NOT NULL,
     image_idimage  INT NOT NULL,
     creation_date  DATE NOT NULL,
     quantity INT NOT NULL ,
-    CHECK (status IN (0,1)),
+    CHECK (status IN (0,1 ,2)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
     unique (label, description, price),
@@ -199,3 +199,5 @@ CREATE TABLE "confirmation-token"(
             (admin_id IS NOT NULL AND student_id IS NULL)
         )
 );
+
+

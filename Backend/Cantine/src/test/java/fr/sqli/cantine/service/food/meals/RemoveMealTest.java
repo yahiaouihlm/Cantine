@@ -7,9 +7,10 @@ import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.meals.exceptions.RemoveMealException;
+import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
+import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import org.junit.jupiter.api.*;
@@ -24,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
-import static org.mockito.Mockito.times;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -79,7 +78,7 @@ class RemoveMealTest {
 
     @Test
     @DisplayName("Test  removeMeal method with  valid iformation")
-    void removeMealWithValidateInformationTest() throws ImagePathException, RemoveMealException, MealNotFoundException, InvalidFoodInformationException {
+    void removeMealWithValidateInformationTest() throws ImagePathException, RemoveFoodException, InvalidFoodInformationException, FoodNotFoundException {
 
         this.mealEntity.setMenus(List.of()); //  empty list of  menu
 
@@ -106,7 +105,7 @@ class RemoveMealTest {
 
         Mockito.when(mealDao.findByUuid(this.mealEntity.getUuid())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
-        Assertions.assertThrows(RemoveMealException.class,
+        Assertions.assertThrows(RemoveFoodException.class,
                 () -> mealService.deleteMeal(this.mealEntity.getUuid())); // the meal is in association with menu
 
         Mockito.verify(mealDao, Mockito.times(1)).findByUuid(this.mealEntity.getUuid());
@@ -121,7 +120,7 @@ class RemoveMealTest {
 
         Mockito.when(mealDao.findByUuid(this.mealEntity.getUuid())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
-        Assertions.assertThrows(RemoveMealException.class,
+        Assertions.assertThrows(RemoveFoodException.class,
                 () -> mealService.deleteMeal(this.mealEntity.getUuid())); // the meal is in association with menu
 
         Mockito.verify(mealDao, Mockito.times(1)).findByUuid(this.mealEntity.getUuid());

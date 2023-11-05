@@ -4,8 +4,9 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
+import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,7 +103,7 @@ class GetMealsTest {
     /******************************************* getMealByid methode *****************************************************/
     @Test
     @DisplayName("Test  getMealWithUuid with valid ID  return a Meal Instanced By Mockito ")
-    void geMealWithValidUUID() throws MealNotFoundException, InvalidFoodInformationException {
+    void geMealWithValidUUID() throws InvalidFoodInformationException, FoodNotFoundException {
         String uuidMealToFind = this.mealEntity.getUuid();
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
@@ -127,7 +128,7 @@ class GetMealsTest {
         Mockito.when(this.iMealDao.findByUuid(uuidMeal)).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(MealNotFoundException.class, () -> {
+        Assertions.assertThrows(FoodNotFoundException.class, () -> {
             this.iMealService.getMealByUUID(uuidMeal);
         });
 
