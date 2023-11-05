@@ -154,13 +154,12 @@ public class MenuService implements IMenuService {
             MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
             throw new ExistingFoodException("THE MENU ALREADY EXISTS IN THE DATABASE");
         }
-
+        //945b5e94-e694-4380-b8eb-24c3b0b59031
         // use  the Set to  avoid  duplicate  meals in the  menu
         Set<MealEntity> mealsInMenu = new HashSet<>();
 
         for (String mealUuid : menuDtoIn.getMealUuids()) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
-
             if (meal.getStatus() != 1) {
                 MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid , meal.getStatus());
                 throw new UnavailableFoodException("THE UNAVAILABLE OR DELETED  MEAL CAN NOT BE ADDED TO  MENU");

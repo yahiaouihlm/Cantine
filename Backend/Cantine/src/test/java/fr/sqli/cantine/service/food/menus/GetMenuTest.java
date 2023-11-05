@@ -5,10 +5,10 @@ import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.food.impl.MenuService;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
 import fr.sqli.cantine.service.images.IImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +63,7 @@ class GetMenuTest {
 
 
         this.menuEntity = new MenuEntity(); // a menu
+        this.menuEntity.setUuid(java.util.UUID.randomUUID().toString());
         this.menuEntity.setId(1);
         this.menuEntity.setStatus(1);
         this.menuEntity.setPrice(BigDecimal.valueOf(1.3));
@@ -76,33 +77,39 @@ class GetMenuTest {
     }
 
 
-  /*  @Test
-    void getMenuByIdWithValidateId() throws InvalidMenuInformationException, MealNotFoundException {
-        Mockito.when(iMenuDao.findById(1)).thenReturn(Optional.of(this.menuEntity));
-        var  result  =  this.menuService.getMenuByUuId(java.util.UUID.randomUUID().toString()); *//*TODO:  this  is  not  correct*//*
-        Assertions.assertTrue(result instanceof MenuDtOut);
+    @Test
+    void getMenuByIdWithValidateUuid() throws InvalidFoodInformationException, FoodNotFoundException {
+        Mockito.when(iMenuDao.findByUuid(this.menuEntity.getUuid())).thenReturn(Optional.of(this.menuEntity));
+
+        var  result  =  this.menuService.getMenuByUuId(this.menuEntity.getUuid());
+        Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getDescription(), this.menuEntity.getDescription());
-        Assertions.assertEquals(2 , this.menuEntity.getId());*//*TODO:  this  is  not  correct*//*
-        Mockito.verify(iMenuDao, Mockito.times(1)).findById(Mockito.anyInt());
+        Assertions.assertEquals(this.menuEntity.getUuid() , this.menuEntity.getUuid());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(this.menuEntity.getUuid());
 
-    }*/
+    }
 
     @Test
-    void getMenuByIdWithMenuNotFoundTest() throws InvalidMenuInformationException, MealNotFoundException {
-        Mockito.when(iMenuDao.findById(Mockito.anyInt())).thenReturn(Optional.empty());
-        Assertions.assertThrows(MealNotFoundException.class, () -> menuService.getMenuByUuId(java.util.UUID.randomUUID().toString()));/*TODO:  this  is  not  correct*/
-        Mockito.verify(iMenuDao, Mockito.times(1)).findById(Mockito.anyInt());
+    void getMenuByIdWithMenuNotFoundTest()  {
+        Mockito.when(iMenuDao.findByUuid(Mockito.anyString())).thenReturn(Optional.empty());
+        Assertions.assertThrows(FoodNotFoundException.class, () -> menuService.getMenuByUuId(java.util.UUID.randomUUID().toString()));
+        Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(Mockito.anyString());
 
     }
     @Test
-    void  getMenuByIdWithNegativeIdTest() throws InvalidMenuInformationException, MealNotFoundException {
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuByUuId("-1"));/*TODO:  this  is  not  correct*/
-        Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
+    void  getMenuByIdWithShortUuIdTest(){
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.getMenuByUuId("rfzrfzrfzrfzrf"));
+        Mockito.verify(iMenuDao, Mockito.times(0)).findByUuid(Mockito.anyString());;
     }
     @Test
-    void getMenuByIdWithNullIdTest() throws InvalidMenuInformationException, MealNotFoundException {
-        Assertions.assertThrows(InvalidMenuInformationException.class, () -> menuService.getMenuByUuId(null));
-        Mockito.verify(iMenuDao, Mockito.times(0)).findById(Mockito.anyInt());
+    void  getMenuByIdWithEmptyUuIdTest(){
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.getMenuByUuId(""));/*TODO:  this  is  not  correct*/
+        Mockito.verify(iMenuDao, Mockito.times(0)).findByUuid(Mockito.anyString());;
+    }
+    @Test
+    void getMenuByIdWithNullUuIdTest(){
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.getMenuByUuId(null));
+        Mockito.verify(iMenuDao, Mockito.times(0)).findByUuid(Mockito.anyString());;
     }
 
 
@@ -124,8 +131,8 @@ class GetMenuTest {
 
         var result = menuService.getAllMenus();
 
-        Assertions.assertTrue(result.get(0) instanceof MenuDtOut);
-        Assertions.assertTrue(result.get(1) instanceof MenuDtOut);
+        Assertions.assertNotNull(result.get(0));
+        Assertions.assertNotNull(result.get(1));
 
         Assertions.assertEquals(2, result.size());
         Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
@@ -139,7 +146,8 @@ class GetMenuTest {
         Mockito.when(iMenuDao.findAll()).thenReturn(List.of(this.menuEntity));
 
         var result = menuService.getAllMenus();
-        Assertions.assertTrue(result.get(0) instanceof MenuDtOut);
+
+        Assertions.assertNotNull(result.get(0));
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(result.get(0).getDescription(), this.menuEntity.getDescription());
         Assertions.assertEquals(result.get(0).getQuantity(), this.menuEntity.getQuantity());

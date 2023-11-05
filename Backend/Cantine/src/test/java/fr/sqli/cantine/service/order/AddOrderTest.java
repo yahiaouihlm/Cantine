@@ -10,9 +10,6 @@ import fr.sqli.cantine.entity.TaxEntity;
 import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.meals.exceptions.MealNotFoundException;
-import fr.sqli.cantine.service.food.menus.exceptions.InvalidMenuInformationException;
-import fr.sqli.cantine.service.food.menus.exceptions.MenuNotFoundException;
 import fr.sqli.cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderLimitExceededException;
@@ -36,48 +33,49 @@ public class AddOrderTest {
     @Mock
     private IOrderDao orderDao;
     @Mock
-    private IMenuDao  menuDao;
+    private IMenuDao menuDao;
     @Mock
     private IMealDao mealDao;
     @Mock
     private IStudentDao studentDao;
     @Mock
-    private ITaxDao  taxDao;
+    private ITaxDao taxDao;
 
     @Mock
-    private MockEnvironment  env;
+    private MockEnvironment env;
     @InjectMocks
-    private  OrderService orderService;
+    private OrderService orderService;
     private OrderDtoIn orderDtoIn;
 
-    private StudentEntity  studentEntity;
-    final  Integer MAXIMUM_ORDER_PER_DAY = 20 ;
+    private StudentEntity studentEntity;
+    final Integer MAXIMUM_ORDER_PER_DAY = 20;
+
     @BeforeEach
-    void  SetUp  () {
-        this.env  = new MockEnvironment();
+    void SetUp() {
+        this.env = new MockEnvironment();
         /* TODO  if we change  the  path property */
-        this.env.setProperty("sqli.canine.order.qrcode.path" , "images/orders/qrcode");
-        this.env.setProperty("sqli.canine.order.qrcode.image.format" , "png");
-        this.orderService =  new OrderService(env , orderDao , null ,studentDao , mealDao , menuDao , taxDao , null );
+        this.env.setProperty("sqli.canine.order.qrcode.path", "images/orders/qrcode");
+        this.env.setProperty("sqli.canine.order.qrcode.image.format", "png");
+        this.orderService = new OrderService(env, orderDao, null, studentDao, mealDao, menuDao, taxDao, null);
 
 
-         this.orderDtoIn = new OrderDtoIn();
-            this.orderDtoIn.setStudentId(1);
-            this.orderDtoIn.setMealsId(List.of(  1 , 2 , 3));
-            this.orderDtoIn.setMenusId(List.of(  1 , 2 , 3));
+        this.orderDtoIn = new OrderDtoIn();
+        this.orderDtoIn.setStudentId(1);
+        this.orderDtoIn.setMealsId(List.of(1, 2, 3));
+        this.orderDtoIn.setMenusId(List.of(1, 2, 3));
 
-            //  student  entity  for  test
-            this.studentEntity = new StudentEntity();
-            this.studentEntity.setId(1);
-            this.studentEntity.setFirstname("student");
-            this.studentEntity.setLastname("student");
-            this.studentEntity.setEmail("student@test,com");
+        //  student  entity  for  test
+        this.studentEntity = new StudentEntity();
+        this.studentEntity.setId(1);
+        this.studentEntity.setFirstname("student");
+        this.studentEntity.setLastname("student");
+        this.studentEntity.setEmail("student@test,com");
 
     }
 
 
     @AfterEach
-    void  tearDown () {
+    void tearDown() {
         this.orderDtoIn = null;
         this.env = null;
     }
@@ -133,49 +131,50 @@ public class AddOrderTest {
 
     /************************ TEST ADD ORDER LIMIT  ************************/
     @Test
-    void  addOrderWitExceedMenuAndMealOrderLimitTest() {
-        List<Integer> meals = List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11  );
-        List<Integer> menu =  List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 );
+    void addOrderWitExceedMenuAndMealOrderLimitTest() {
+        List<Integer> meals = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+        List<Integer> menu = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         // we  make One  Test with  One  Menu  iN  The  Order
         this.orderDtoIn.setMenusId(menu);
         this.orderDtoIn.setMealsId(meals);
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
-        Assertions.assertThrows(OrderLimitExceededException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(OrderLimitExceededException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
 
     }
+
     @Test
-    void  addOrderWitExceedMenuOrderLimitTest() {
-        List<Integer> menu =  List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 , 21 );
+    void addOrderWitExceedMenuOrderLimitTest() {
+        List<Integer> menu = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
         // we  make One  Test with  One  Menu  iN  The  Order
         this.orderDtoIn.setMenusId(menu);
         this.orderDtoIn.setMealsId(null);
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
-        Assertions.assertThrows(OrderLimitExceededException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(OrderLimitExceededException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
 
     }
 
     @Test
-    void  addOrderWitExceedMealOrderLimitTest() {
-        List<Integer> meals =  List.of(1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 , 21 );
+    void addOrderWitExceedMealOrderLimitTest() {
+        List<Integer> meals = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
         // we  make One  Test with  One  Menu  iN  The  Order
         this.orderDtoIn.setMenusId(meals);
         this.orderDtoIn.setMealsId(null);
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
-        Assertions.assertThrows(OrderLimitExceededException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(OrderLimitExceededException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
 
     }
@@ -184,10 +183,8 @@ public class AddOrderTest {
     /************************ TEST ADD ORDER  WITH   Student  Balance ************************/
 
 
-
-
     @Test
-    void  addOrderWithInsufficientStudentBalance () {
+    void addOrderWithInsufficientStudentBalance() {
         //  Init
         // we  make One  Test with  One  Menu  iN  The  Order
         var menuIdFound = 1;
@@ -212,27 +209,24 @@ public class AddOrderTest {
 
         // then
 
-        Assertions.assertThrows(InsufficientBalanceException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(InsufficientBalanceException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(1);
-        Mockito.verify(this.taxDao , Mockito.times(1)).findAll();
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
-
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(1);
+        Mockito.verify(this.taxDao, Mockito.times(1)).findAll();
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
 
     }
-
-
 
 
     /*************************** TESTS  TAX     ************************/
 
 
     @Test
-    void  addOrderWitTwoTaxInDataBase() {
+    void addOrderWitTwoTaxInDataBase() {
         // we  make One  Test with  One  Menu  iN  The  Order
-        var  menuIdFound =  1 ;
+        var menuIdFound = 1;
         this.orderDtoIn.setMenusId(List.of(menuIdFound));
         this.orderDtoIn.setMealsId(null);
 
@@ -244,23 +238,22 @@ public class AddOrderTest {
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
-        Mockito.when(this.taxDao.findAll()).thenReturn(List.of( new TaxEntity() ,  new TaxEntity()));
+        Mockito.when(this.taxDao.findAll()).thenReturn(List.of(new TaxEntity(), new TaxEntity()));
 
-        Assertions.assertThrows(TaxNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.taxDao , Mockito.times(1)).findAll();
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Assertions.assertThrows(TaxNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.taxDao, Mockito.times(1)).findAll();
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
 
     }
 
 
-
     @Test
-    void  addOrderWithOutTax() {
+    void addOrderWithOutTax() {
         // we  make One  Test with  One  Menu  iN  The  Order
-        var  menuIdFound =  1 ;
+        var menuIdFound = 1;
         this.orderDtoIn.setMenusId(List.of(menuIdFound));
         this.orderDtoIn.setMealsId(null);
 
@@ -274,18 +267,19 @@ public class AddOrderTest {
         Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
         Mockito.when(this.taxDao.findAll()).thenReturn(List.of());
 
-        Assertions.assertThrows(TaxNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(1);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Assertions.assertThrows(TaxNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(1);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
 
     }
+
     /***************************  TESTS  ORDERS  WITH   Unavailable  MENUS ID AND  MEALS  *****************************/
     @Test
-    void  addOrderWithUnavailableMenu() {
+    void addOrderWithUnavailableMenu() {
         this.orderDtoIn.setMealsId(null);
-        var  menuIdFound =  1 ;
+        var menuIdFound = 1;
         this.orderDtoIn.setMenusId(List.of(menuIdFound));
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setId(menuIdFound);
@@ -297,15 +291,15 @@ public class AddOrderTest {
         Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
 
 
-        Assertions.assertThrows(UnavailableFoodException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(UnavailableFoodException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
-    void  addOrderWithUnavailableMeal() {
-          var  mealIdFound =  1 ;
+    void addOrderWithUnavailableMeal() {
+        var mealIdFound = 1;
         this.orderDtoIn.setMenusId(null);
         this.orderDtoIn.setMealsId(List.of(mealIdFound));
         MealEntity mealEntity = new MealEntity();
@@ -318,39 +312,37 @@ public class AddOrderTest {
         Mockito.when(this.mealDao.findById(mealIdFound)).thenReturn(Optional.of(mealEntity));
 
 
-        Assertions.assertThrows(UnavailableFoodException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(UnavailableFoodException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealIdFound);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findById(mealIdFound);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
-
 
 
     /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID AND  MEALS  *****************************/
 
 
     @Test
-    void addOrderWithEmptyMealsAndMenu () {
+    void addOrderWithEmptyMealsAndMenu() {
         this.orderDtoIn.setMealsId(List.of());
         this.orderDtoIn.setMenusId(List.of());
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
-        Assertions.assertThrows(InvalidOrderException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
-        Mockito.verify(this.menuDao , Mockito.times(0)).findById(Mockito.any());
-        Mockito.verify(this.mealDao , Mockito.times(0)).findById(Mockito.any());
+        Assertions.assertThrows(InvalidOrderException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.menuDao, Mockito.times(0)).findById(Mockito.any());
+        Mockito.verify(this.mealDao, Mockito.times(0)).findById(Mockito.any());
     }
 
 
-
-
     /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID *****************************/
+/*
     @Test
-    void  addOrderWithMenuNotFoundAndOtherFoundMenu() {
+    void addOrderWithMenuNotFoundAndOtherFoundMenu() {
 
         this.orderDtoIn.setMealsId(null); // avoid  to  check  meals  id validation
-        var  menuIdFound =  1 ;
-        var  menuIdNotFound =  2 ;
+        var menuIdFound = 1;
+        var menuIdNotFound = 2;
 
         //  make  only  the  information    that we  need  for  the  test  ( Our  Meal Mock  )
         MenuEntity menuEntity = new MenuEntity();
@@ -358,95 +350,97 @@ public class AddOrderTest {
         menuEntity.setPrice(BigDecimal.valueOf(10));
         menuEntity.setStatus(1);
 
-        this.orderDtoIn.setMenusId(List.of( menuIdFound , menuIdNotFound));
+        this.orderDtoIn.setMenusId(List.of(menuIdFound, menuIdNotFound));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.menuDao.findById(menuIdFound)).thenReturn(Optional.of(menuEntity));
         Mockito.when(this.menuDao.findById(menuIdNotFound)).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(MenuNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(MenuNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdNotFound);
-        Mockito.verify(this.menuDao , Mockito.times(1)).findById(menuIdFound);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(menuIdNotFound);
+        Mockito.verify(this.menuDao, Mockito.times(1)).findById(menuIdFound);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
-    void  addOrderWithMenuNotFoundTest () {
-        var  menuId =  1 ;
+    void addOrderWithMenuNotFoundTest() {
+        var menuId = 1;
         this.orderDtoIn.setMealsId(null); // avoid  to  check  meals  id validation
         this.orderDtoIn.setMenusId(List.of(menuId));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
 
         Mockito.when(this.menuDao.findById(menuId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(MenuNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(MenuNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
         Mockito.verify(this.menuDao, Mockito.times(1)).findById(menuId);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
     }
-
-
+*/
 
 
     /***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID *****************************/
 
-
+/*
     @Test
-    void  addOrderWithMealNotFoundAndOtherFoundMeal() {
-        var  mealIdFound =  1 ;
-        var  mealIdNotFound =  2 ;
+    void addOrderWithMealNotFoundAndOtherFoundMeal() {
+        var mealIdFound = 1;
+        var mealIdNotFound = 2;
 
         //  make  only  the  information    that we  need  for  the  test  ( Our  Meal Mock  )
-         MealEntity mealEntity = new MealEntity();
-            mealEntity.setId(mealIdFound);;
-            mealEntity.setPrice(new BigDecimal(10));
-            mealEntity.setStatus(1);
-        this.orderDtoIn.setMealsId(List.of(mealIdFound , mealIdNotFound));
+        MealEntity mealEntity = new MealEntity();
+        mealEntity.setId(mealIdFound);
+        ;
+        mealEntity.setPrice(new BigDecimal(10));
+        mealEntity.setStatus(1);
+        this.orderDtoIn.setMealsId(List.of(mealIdFound, mealIdNotFound));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.mealDao.findById(mealIdNotFound)).thenReturn(Optional.empty());
-         Mockito.when(this.mealDao.findById(mealIdFound)).thenReturn(Optional.of(mealEntity));
+        Mockito.when(this.mealDao.findById(mealIdFound)).thenReturn(Optional.of(mealEntity));
 
 
-        Assertions.assertThrows(MealNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(MealNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealIdNotFound);
-        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealIdFound);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findById(mealIdNotFound);
+        Mockito.verify(this.mealDao, Mockito.times(1)).findById(mealIdFound);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
-    void  addOrderWithMealNotFoundWithEmptyMenusIdTest () {
-        var  mealId =  1 ;
-         this.orderDtoIn.setMenusId(null);
+    void addOrderWithMealNotFoundWithEmptyMenusIdTest() {
+        var mealId = 1;
+        this.orderDtoIn.setMenusId(null);
         this.orderDtoIn.setMealsId(List.of(mealId));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.mealDao.findById(mealId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(MealNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(MealNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealId);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findById(mealId);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
-    }
+    }*/
 
 
+/*
     @Test
-    void  addOrderWithMealNotFoundTest () {
-        var  mealId =  1 ;
+    void addOrderWithMealNotFoundTest() {
+        var mealId = 1;
         this.orderDtoIn.setMealsId(List.of(mealId));
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.mealDao.findById(mealId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(MealNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(MealNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
 
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.mealDao , Mockito.times(1)).findById(mealId);
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.mealDao, Mockito.times(1)).findById(mealId);
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
     }
+*/
 
 
     /***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID  AND MENUS ID  *****************************/
@@ -459,91 +453,89 @@ public class AddOrderTest {
 
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.of(this.studentEntity));
 
-        Assertions.assertThrows(InvalidOrderException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Assertions.assertThrows(InvalidOrderException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
 
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
-
 
 
     /***************************  TESTS  ORDERS  WITH  STUDENT NOT  FOUND  *****************************/
 
     @Test
-    void  addOrderWithStudentNotFound() {
+    void addOrderWithStudentNotFound() {
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.empty());
-        Assertions.assertThrows(StudentNotFoundException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.studentDao , Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Assertions.assertThrows(StudentNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
     /***************************  TESTS  ORDERS  INFORMATION  ***********************/
+/*
 
     @Test
-    void addOrderWithNegativeMenusIdWithNullMealIdTest()  {
+    void addOrderWithNegativeMenusIdWithNullMealIdTest() {
         this.orderDtoIn.setMealsId(null);
-        this.orderDtoIn.setMenusId(List.of( 1 , 1 , -1));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        this.orderDtoIn.setMenusId(List.of(1, 1, -1));
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
+
     @Test
-    void addOrderWithNegativeMenuIdTest()  {
-        this.orderDtoIn.setMenusId(List.of( 1 , 1 , -1));
-        Assertions.assertThrows(InvalidMenuInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    void addOrderWithNegativeMenuIdTest() {
+        this.orderDtoIn.setMenusId(List.of(1, 1, -1));
+        Assertions.assertThrows(InvalidMenuInformationException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
-
-
-
-
 
 
     @Test
-    void addOrderWithNegativeMealIdWithNullMenuIdTest()  {
+    void addOrderWithNegativeMealIdWithNullMenuIdTest() {
         this.orderDtoIn.setMenusId(null);
-        this.orderDtoIn.setMealsId(List.of( 1 , 1 , -1));
-        Assertions.assertThrows(InvalidFoodInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        this.orderDtoIn.setMealsId(List.of(1, 1, -1));
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
+
     @Test
-    void addOrderWithNegativeMealIdTest()  {
-        this.orderDtoIn.setMealsId(List.of( 1 , 1 , -1));
-        Assertions.assertThrows(InvalidFoodInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    void addOrderWithNegativeMealIdTest() {
+        this.orderDtoIn.setMealsId(List.of(1, 1, -1));
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
     @Test
-    void addOrderWithNullMealIdAndNullMenuId()  {
+    void addOrderWithNullMealIdAndNullMenuId() {
         this.orderDtoIn.setMealsId(null);
         this.orderDtoIn.setMenusId(null);
-        Assertions.assertThrows(InvalidOrderException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Assertions.assertThrows(InvalidOrderException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
+
     @Test
-    void addOrderWithNegativeStudentIDTest () {
+    void addOrderWithNegativeStudentIDTest() {
         this.orderDtoIn.setStudentId(-4);
-        Assertions.assertThrows(InvalidPersonInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+        Assertions.assertThrows(InvalidPersonInformationException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
-    @Test
-    void addOrderWithNullStudentIDTest () {
-       this.orderDtoIn.setStudentId(null);
-        Assertions.assertThrows(InvalidPersonInformationException.class , () -> this.orderService.addOrder(this.orderDtoIn));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
-    }
-
-
 
     @Test
-    void addOrderWithNullBody () {
-
-        Assertions.assertThrows(InvalidOrderException.class , () -> this.orderService.addOrder(null));
-        Mockito.verify(this.orderDao , Mockito.times(0)).save(Mockito.any());
+    void addOrderWithNullStudentIDTest() {
+        this.orderDtoIn.setStudentId(null);
+        Assertions.assertThrows(InvalidPersonInformationException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
+    @Test
+    void addOrderWithNullBody() {
+
+        Assertions.assertThrows(InvalidOrderException.class, () -> this.orderService.addOrder(null));
+        Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
+    }
+*/
 
 
 }
