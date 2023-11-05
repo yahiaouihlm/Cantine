@@ -3,11 +3,11 @@ package fr.sqli.cantine.service.admin.adminDashboard;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
-import fr.sqli.cantine.service.admin.account.AdminService;
-import fr.sqli.cantine.service.admin.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.admin.account.AdminService;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
 
 import org.apache.logging.log4j.LogManager;
@@ -85,13 +85,13 @@ class AddAdminTest {
     void addAdminInformationEmptyFunction()  {
 
         this.adminDtoIn.setFunction("");
-        assertThrows(InvalidPersonInformationException.class, () ->this.adminDtoIn.getFunction());
+        assertThrows(InvalidUserInformationException.class, () ->this.adminDtoIn.getFunction());
 
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
-    void addAdminInformationWithInvalidFunction() throws InvalidPersonInformationException {
+    void addAdminInformationWithInvalidFunction() throws InvalidUserInformationException {
 
         this.adminDtoIn.setFunction("invalidFunction");
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.empty());
@@ -106,7 +106,7 @@ class AddAdminTest {
 
         this.adminDtoIn.setFunction(null);
 
-        assertThrows(InvalidPersonInformationException.class, () ->this.adminDtoIn.getFunction());
+        assertThrows(InvalidUserInformationException.class, () ->this.adminDtoIn.getFunction());
 
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -115,23 +115,23 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongPhoneTest() throws IOException {
         this.adminDtoIn.setPhone("a".repeat(21));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
     }
 
     @Test
     void addAdminWithTooShortPhoneTest() throws IOException {
         this.adminDtoIn.setPhone("a".repeat(5));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
     }
     @Test
     void addAdminWithEmptyPhoneTest() throws IOException {
         this.adminDtoIn.setPhone("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
     }
     @Test
     void addAdminWithNullPhoneTest() throws IOException {
         this.adminDtoIn.setPhone(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
     }
 
 
@@ -145,7 +145,7 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongPasswordTest() throws IOException {
         this.adminDtoIn.setPassword("a".repeat(21));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -153,21 +153,21 @@ class AddAdminTest {
     @Test
     void addAdminWithTooShortPasswordTest() throws IOException {
         this.adminDtoIn.setPassword("a".repeat(5));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithEmptyPasswordTest() throws IOException {
         this.adminDtoIn.setPassword("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithNullPasswordTest() throws IOException {
         this.adminDtoIn.setPassword(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -187,7 +187,7 @@ class AddAdminTest {
     @Test
     void addAdminWithInvalidBirthdateAsStringFormatTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("18/07/2000");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -195,7 +195,7 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("a".repeat(2001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -203,21 +203,21 @@ class AddAdminTest {
     @Test
     void addAdminWithTooShortBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("ab");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithEmptyBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithNullBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -233,7 +233,7 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongAddressTest() throws IOException {
         this.adminDtoIn.setAddress("a".repeat(3001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -241,21 +241,21 @@ class AddAdminTest {
     @Test
     void addAdminWithTooShortAddressTest() throws IOException {
         this.adminDtoIn.setAddress("ab");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithEmptyAddressTest() throws IOException {
         this.adminDtoIn.setAddress("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithNullAddressTest() throws IOException {
         this.adminDtoIn.setAddress(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -271,7 +271,7 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongTownTest() throws IOException {
         this.adminDtoIn.setTown("a".repeat(2001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -279,21 +279,21 @@ class AddAdminTest {
     @Test
     void addAdminWithTooShortTownTest() throws IOException {
         this.adminDtoIn.setTown("nm");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithEmptyTownTest() throws IOException {
         this.adminDtoIn.setTown("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithNullTownTest() throws IOException {
         this.adminDtoIn.setTown(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -308,14 +308,14 @@ class AddAdminTest {
 
 
    @Test
-   void addAdminWithInvalidEmailTest() throws IOException, InvalidPersonInformationException {
+   void addAdminWithInvalidEmailTest() throws IOException, InvalidUserInformationException {
        this.adminDtoIn.setEmail("a".repeat(91));
 
          this.functionEntity.setName(this.adminDtoIn.getFunction());
 
        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(  Optional.of(functionEntity));
 
-       assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+       assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
 
 
        Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
@@ -326,7 +326,7 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongEmailTest() throws IOException {
         this.adminDtoIn.setEmail("a".repeat(1001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -335,14 +335,14 @@ class AddAdminTest {
     @Test
     void addAdminWithEmptyEmailTest() throws IOException {
         this.adminDtoIn.setEmail("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithNullEmailTest() throws IOException {
         this.adminDtoIn.setEmail(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -356,7 +356,7 @@ class AddAdminTest {
     @Test
     void addAdminWithTooLongLastNameTest() throws IOException {
         this.adminDtoIn.setLastname("a".repeat(91));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -364,21 +364,21 @@ class AddAdminTest {
     @Test
     void addAdminWithTooShortLastNameTest() throws IOException {
         this.adminDtoIn.setLastname("ab");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithEmptyLastNameTest() throws IOException {
         this.adminDtoIn.setLastname("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void addAdminWithNullLastNameTest() throws IOException {
         this.adminDtoIn.setLastname(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -388,7 +388,7 @@ class AddAdminTest {
    @Test
    void addAdminWithTooLongNameTest() throws IOException {
        this.adminDtoIn.setFirstname("a".repeat(91));
-       assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+       assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
    }
@@ -396,21 +396,21 @@ class AddAdminTest {
   @Test
    void addAdminWithTooShortNameTest() throws IOException {
        this.adminDtoIn.setFirstname("ab");
-      assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+      assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
       Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
       Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
    }
    @Test
    void addAdminWithEmptyNameTest() throws IOException {
        this.adminDtoIn.setFirstname("   ");
-       assertThrows(InvalidPersonInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
+       assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
        Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
    }
     @Test
     void addAdminWithNullNameTest() throws IOException {
         this.adminDtoIn.setFirstname(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -418,7 +418,7 @@ class AddAdminTest {
 
     @Test
     void addAdminWithNullRequest() throws IOException {
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.signUp( null ));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.signUp( null ));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }

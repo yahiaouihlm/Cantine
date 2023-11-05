@@ -4,9 +4,9 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
-import fr.sqli.cantine.service.admin.account.AdminService;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.admin.account.AdminService;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -63,7 +63,7 @@ public class DisableAccount {
     }
 
     @Test  /*** No Exception thrown  ***/
-    void  disabledAccountWithValidAdmin () throws InvalidPersonInformationException, AdminNotFound {
+    void  disabledAccountWithValidAdmin () throws InvalidUserInformationException, AdminNotFound {
         Integer idMenu = 1;
         Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.of(this.adminEntity));
         this.adminService.disableAdminAccount(idMenu);
@@ -97,7 +97,7 @@ public class DisableAccount {
     }
     @Test
     void disabledAccountWithNegativeID (){
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.disableAdminAccount( -1);
         });
 
@@ -105,7 +105,7 @@ public class DisableAccount {
     }
     @Test
     void disabledAccountWithNullID(){
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.disableAdminAccount( null);
         });
 

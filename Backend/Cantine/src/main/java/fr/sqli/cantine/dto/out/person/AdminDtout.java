@@ -7,7 +7,7 @@ public class AdminDtout extends AbstractPersonDtout{
    private  String function;
 
     public AdminDtout(AdminEntity adminEntity , String  imageUrl){
-            super.setId(adminEntity.getId());
+            super.setUuid(adminEntity.getUuid());
             super.setFirstname(adminEntity.getFirstname());
             super.setLastname(adminEntity.getLastname());
             super.setEmail(adminEntity.getEmail());

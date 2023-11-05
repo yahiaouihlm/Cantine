@@ -2,9 +2,9 @@ package fr.sqli.cantine.controller.forgottenPassword;
 
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.forgottenPassword.ForgottenPasswordService;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class ForgottenPasswordController implements IForgottenPasswordController
 
 
     @Override
-    public ResponseEntity<ResponseDtout> sendConfirmationTokenForPasswordForgotten(String email) throws InvalidPersonInformationException, MessagingException, StudentNotFoundException {
+    public ResponseEntity<ResponseDtout> sendConfirmationTokenForPasswordForgotten(String email) throws InvalidUserInformationException, MessagingException, StudentNotFoundException {
         this.forgottenPassword.sendConfirmationTokenForPasswordForgotten(email);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }

@@ -5,11 +5,9 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
-import fr.sqli.cantine.dto.in.person.Login;
+import fr.sqli.cantine.dto.in.users.Login;
 import fr.sqli.cantine.entity.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +19,6 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 
 @AutoConfigureMockMvc
 @SpringBootTest

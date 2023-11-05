@@ -7,9 +7,9 @@ import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
-import fr.sqli.cantine.service.admin.account.AdminService;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.admin.account.AdminService;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +50,7 @@ public class GetAdminTest {
 
 
     @Test
-    void  getAdminByIDTest () throws InvalidPersonInformationException, AdminNotFound {
+    void  getAdminByIDTest () throws InvalidUserInformationException, AdminNotFound {
         var id = 1 ;
         FunctionEntity functionEntity = new FunctionEntity();
         functionEntity.setId(1);
@@ -87,7 +87,7 @@ public class GetAdminTest {
     }
 
     @Test
-    void  getAdminByIdWithNotFoundAdmin () throws InvalidPersonInformationException {
+    void  getAdminByIdWithNotFoundAdmin () throws InvalidUserInformationException {
         Integer idAdmin = 1 ;
         Mockito.when(this.adminDao.findById(idAdmin)).thenReturn(Optional.empty());
         Assertions.assertThrows(AdminNotFound.class, () -> {
@@ -101,14 +101,14 @@ public class GetAdminTest {
     @Test
     void getAdminByIdWithNegativeID (){
         Integer idAdmin = -1;
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.getAdminById(idAdmin) ;
         });
     }
     @Test
     void getAdminByIdWithNullID (){
         Integer idAdmin = null;
-         assertThrows(InvalidPersonInformationException.class, () -> {
+         assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.getAdminById(idAdmin);
         });
     }

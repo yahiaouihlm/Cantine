@@ -9,7 +9,7 @@ import fr.sqli.cantine.dto.in.superAdmin.FunctionDtoIn;
 import fr.sqli.cantine.dto.in.superAdmin.TaxDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.TaxEntity;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingTax;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
 import fr.sqli.cantine.service.superAdmin.exception.InvalidTaxException;
@@ -34,11 +34,11 @@ public class SuperAdminService {
     }
 
 
-    public FunctionEntity  addFunction (FunctionDtoIn functionDtoIn) throws InvalidPersonInformationException {
+    public FunctionEntity  addFunction (FunctionDtoIn functionDtoIn) throws InvalidUserInformationException {
         var  functionName  =  functionDtoIn.getName();
         var  functionEntity = this.iFunctionDao.findByName(functionName);
         if  (functionEntity.isEmpty()) {
-            throw  new  InvalidPersonInformationException("FUNCTION NAME ALREADY EXISTS");
+            throw  new InvalidUserInformationException("FUNCTION NAME ALREADY EXISTS");
         }
         FunctionEntity newfunctionEntity = new FunctionEntity();
         newfunctionEntity.setName(functionDtoIn.getName());

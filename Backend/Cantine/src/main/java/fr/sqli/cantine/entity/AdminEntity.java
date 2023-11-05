@@ -69,7 +69,7 @@ public class AdminEntity {
     private FunctionEntity function;
 
 
-    public AdminEntity( String firstname ,  String lastname ,  String email ,  String password ,  LocalDate birthdate ,  String town ,  String address ,  String phone ,  Integer status  ,  ImageEntity image ,  LocalDate disableDate ,  Integer validation ,  FunctionEntity function ) {
+/*    public AdminEntity( String firstname ,  String lastname ,  String email ,  String password ,  LocalDate birthdate ,  String town ,  String address ,  String phone ,  Integer status  ,  ImageEntity image ,  LocalDate disableDate ,  Integer validation ,  FunctionEntity function ) {
         this.firstname = firstname ;
         this.lastname = lastname ;
         this.email = email ;
@@ -85,7 +85,7 @@ public class AdminEntity {
         this.validation = validation ;
         this.function = function ;
 
-    }
+    }*/
 
     public AdminEntity() {}
 

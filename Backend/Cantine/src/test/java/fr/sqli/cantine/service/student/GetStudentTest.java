@@ -3,9 +3,10 @@ package fr.sqli.cantine.service.student;
 
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.*;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.StudentService;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ public class GetStudentTest {
     }
 
     @Test
-    void  getAdminByIDTest () throws InvalidPersonInformationException, StudentNotFoundException {
+    void  getAdminByIDTest () throws InvalidUserInformationException, StudentNotFoundException {
         var id = 1 ;
        // this.environment.setProperty("sqli.cantine.images.url.student", "src/test/resources/imagesTests");
         Mockito.when(this.environment.getProperty("sqli.cantine.images.url.student")).thenReturn(this.IMAGE_URL);
@@ -81,7 +82,7 @@ public class GetStudentTest {
 
     }
     @Test
-    void  getAdminByIdWithNotFoundAdmin () throws InvalidPersonInformationException {
+    void  getAdminByIdWithNotFoundAdmin () throws InvalidUserInformationException {
         Integer idStudent = 1 ;
         Mockito.when(this.studentDao.findById(idStudent)).thenReturn(Optional.empty());
         Assertions.assertThrows(StudentNotFoundException.class, () -> {
@@ -95,14 +96,14 @@ public class GetStudentTest {
     @Test
     void getAdminByIdWithNegativeID (){
         Integer idStudent = -1;
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.studentService.getStudentByID(idStudent);
         });
     }
     @Test
     void getAdminByIdWithNullID (){
         Integer idStudent = null;
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.studentService.getStudentByID(idStudent);
         });
     }

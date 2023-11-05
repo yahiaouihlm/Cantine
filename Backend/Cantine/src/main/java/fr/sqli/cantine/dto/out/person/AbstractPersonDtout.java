@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public abstract  class AbstractPersonDtout {
 
-    private Integer  id  ;
+    private  String uuid ;
     private  String firstname;
     private  String lastname;
     private  String email;
@@ -17,12 +17,12 @@ public abstract  class AbstractPersonDtout {
     private String image;
 
 
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getFirstname() {

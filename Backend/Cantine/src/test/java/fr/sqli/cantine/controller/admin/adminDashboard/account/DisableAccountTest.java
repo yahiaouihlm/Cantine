@@ -1,7 +1,7 @@
 package fr.sqli.cantine.controller.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
-import fr.sqli.cantine.controller.admin.account.AdminController;
+import fr.sqli.cantine.controller.users.admin.account.AdminController;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;

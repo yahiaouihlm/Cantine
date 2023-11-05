@@ -5,11 +5,11 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.ExpiredToken;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.exceptions.InvalidTokenException;
-import fr.sqli.cantine.service.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.users.admin.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.admin.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,11 +47,11 @@ public class TokenSender  {
         this.CONFIRMATION_TOKEN_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
     }
 
-    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException {
+    public void sendToken(String email) throws AdminNotFound, InvalidUserInformationException, MessagingException, AccountAlreadyActivatedException {
 
         if (email == null || email.trim().isEmpty()) {
             TokenSender.LOG.error("email  is  not  valid");
-            throw new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
+            throw new InvalidUserInformationException("YOUR EMAIL IS NOT VALID");
         }
 
         // check  if there is  admin  with  this  email    or  just student

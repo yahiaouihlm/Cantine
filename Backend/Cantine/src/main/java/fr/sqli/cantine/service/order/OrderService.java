@@ -8,13 +8,13 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.OrderEntity;
 
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.qrcode.QrCodeGenerator;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
@@ -107,7 +107,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, StudentNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, StudentNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException {
         if (orderDtoIn == null)
             throw new InvalidOrderException("INVALID ORDER");
 
@@ -281,13 +281,13 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDtOut> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidPersonInformationException {
+    public List<OrderDtOut> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidUserInformationException {
         if (date == null) {
             OrderService.LOG.error("INVALID DATE");
             throw new InvalidOrderException("INVALID DATE");
         }
         var admin = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidPersonInformationException("INVALID ADMIN INFORMATION"));
+        this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidUserInformationException("INVALID ADMIN INFORMATION"));
 
 
         return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
@@ -296,7 +296,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException {
+    public List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidUserInformationException {
 
         var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -318,7 +318,7 @@ public class OrderService implements IOrderService {
 
         if (!student.get().getEmail().equals(username)) {
             OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " IS NOT THE OWNER OF THE ORDER");
-            throw new InvalidPersonInformationException("ERROR  STUDENT  ID");
+            throw new InvalidUserInformationException("ERROR  STUDENT  ID");
         }
 
 

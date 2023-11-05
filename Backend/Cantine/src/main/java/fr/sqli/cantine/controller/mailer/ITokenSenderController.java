@@ -1,11 +1,11 @@
 package fr.sqli.cantine.controller.mailer;
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.ExpiredToken;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.exceptions.InvalidTokenException;
-import fr.sqli.cantine.service.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.users.admin.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.admin.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public interface ITokenSenderController {
      String  TOKEN_VALID  =  "TOKEN VALID" ;
 
      @PostMapping(SEND_TOKEN_URL)
-     ResponseEntity<ResponseDtout> sendTokenStudent(@RequestParam("email") String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound;
+     ResponseEntity<ResponseDtout> sendTokenStudent(@RequestParam("email") String email) throws InvalidUserInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound;
 
 
      @GetMapping(CONFIRM_TOKEN_URL)

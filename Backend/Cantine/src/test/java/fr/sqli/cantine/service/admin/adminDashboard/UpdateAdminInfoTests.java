@@ -3,12 +3,12 @@ package fr.sqli.cantine.service.admin.adminDashboard;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dto.in.person.AdminDtoIn;
+import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
-import fr.sqli.cantine.service.admin.account.AdminService;
-import fr.sqli.cantine.service.admin.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.admin.account.AdminService;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,7 +92,7 @@ public class UpdateAdminInfoTests {
         this.adminDtoIn.setFunction("");
 
 
-        assertThrows(InvalidPersonInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn));
 
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -101,13 +101,13 @@ public class UpdateAdminInfoTests {
 
         this.adminDtoIn.setFunction(null);
 
-        assertThrows(InvalidPersonInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn));
 
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
-    void  updateAdminInformationWithInvalidFunction() throws InvalidPersonInformationException {
+    void  updateAdminInformationWithInvalidFunction() throws InvalidUserInformationException {
 
         this.adminDtoIn.setFunction("invalidFunction");
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.empty());
@@ -120,23 +120,23 @@ public class UpdateAdminInfoTests {
     void updateAdminInfoWithTooLongPhoneTest() throws IOException {
 
         this.adminDtoIn.setPhone("a".repeat(21));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
     }
 
     @Test
     void updateAdminInfoWithTooShortPhoneTest() throws IOException {
         this.adminDtoIn.setPhone("a".repeat(5));
-        assertThrows(InvalidPersonInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->this.adminService.updateAdminInfo( this.adminDtoIn));
     }
     @Test
     void updateAdminInfoWithEmptyPhoneTest() throws IOException {
         this.adminDtoIn.setPhone("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
     }
     @Test
     void updateAdminInfoWithNullPhoneTest() throws IOException {
         this.adminDtoIn.setPhone(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
     }
 
 
@@ -148,7 +148,7 @@ public class UpdateAdminInfoTests {
     @Test
     void updateAdminInfoWithInvalidBirthdateAsStringFormatTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("18/07/2000");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -156,7 +156,7 @@ public class UpdateAdminInfoTests {
     @Test
     void updateAdminInfoWithTooLongBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("a".repeat(2001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -164,21 +164,21 @@ public class UpdateAdminInfoTests {
     @Test
     void updateAdminInfoWithTooShortBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("ab");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void updateAdminInfoWithEmptyBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void updateAdminInfoWithNullBirthdateAsStringTest() throws IOException {
         this.adminDtoIn.setBirthdateAsString(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -191,7 +191,7 @@ public class UpdateAdminInfoTests {
     @Test
     void updateAdminInfoWithTooLongAddressTest() throws IOException {
         this.adminDtoIn.setAddress("a".repeat(3001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -199,14 +199,14 @@ public class UpdateAdminInfoTests {
     @Test
     void updateAdminInfoWithTooShortAddressTest() throws IOException {
         this.adminDtoIn.setAddress("ab");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void updateAdminInfoWithEmptyAddressTest() throws IOException {
         this.adminDtoIn.setAddress("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -214,7 +214,7 @@ public class UpdateAdminInfoTests {
     void addAdminWithNullAddressTest() throws IOException {
 
         this.adminDtoIn.setAddress(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -227,7 +227,7 @@ public class UpdateAdminInfoTests {
     @Test
     void updateAdminWithTooLongTownTest() throws IOException {
         this.adminDtoIn.setTown("a".repeat(2001));
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -236,21 +236,21 @@ public class UpdateAdminInfoTests {
     void updateAdminWithTooShortTownTest() throws IOException {
 
         this.adminDtoIn.setTown("nm");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void updateAdminWithEmptyTownTest() throws IOException {
         this.adminDtoIn.setTown("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void updateAdminWithNullTownTest() throws IOException {
         this.adminDtoIn.setTown(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn ));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn ));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -272,7 +272,7 @@ public class UpdateAdminInfoTests {
     void updateAdminWithPresenceOfEmail() throws IOException {
         this.adminDtoIn.setEmail("test");
 
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -280,7 +280,7 @@ public class UpdateAdminInfoTests {
     void updateAdminWithPresenceOfPassword() throws IOException {
         this.adminDtoIn.setPassword("test33");
 
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -293,7 +293,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithTooLongLastNameTest() throws IOException {
         this.adminDtoIn.setLastname("a".repeat(91));
 
-        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -302,7 +302,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithTooShortLastNameTest() throws IOException {
 
         this.adminDtoIn.setLastname("ab");
-        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -310,7 +310,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithEmptyLastNameTest() throws IOException {
 
         this.adminDtoIn.setLastname("   ");
-        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -318,7 +318,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithNullLastNameTest() throws IOException {
 
         this.adminDtoIn.setLastname(null);
-        assertThrows(InvalidPersonInformationException.class,()-> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()-> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -336,7 +336,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithTooLongNameTest() throws IOException {
 
         this.adminDtoIn.setFirstname("a".repeat(91));
-        assertThrows(InvalidPersonInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () ->  this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -345,7 +345,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithTooShortNameTest() throws IOException {
 
         this.adminDtoIn.setFirstname("ab");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -353,7 +353,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithEmptyNameTest() throws IOException {
 
         this.adminDtoIn.setFirstname("   ");
-        assertThrows(InvalidPersonInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class, () -> this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -361,7 +361,7 @@ public class UpdateAdminInfoTests {
     void updateAdminInformationWithNullNameTest() throws IOException {
 
         this.adminDtoIn.setFirstname(null);
-        assertThrows(InvalidPersonInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
+        assertThrows(InvalidUserInformationException.class,()->this.adminService.updateAdminInfo( this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
@@ -371,7 +371,7 @@ public class UpdateAdminInfoTests {
     /******************************** TESTS  ADMIN ID  ********************************/
 
  @Test
- void  updateAdminInformationWithNotFoundAdmin () throws InvalidPersonInformationException {
+ void  updateAdminInformationWithNotFoundAdmin () throws InvalidUserInformationException {
      Integer idMenu = 1 ;
      this.adminDtoIn.setId(1);
      FunctionEntity function = new FunctionEntity();
@@ -391,14 +391,14 @@ public class UpdateAdminInfoTests {
      @Test
    void updateAdminWithNegativeID (){
          this.adminDtoIn.setId(-1);
-         assertThrows(InvalidPersonInformationException.class, () -> {
+         assertThrows(InvalidUserInformationException.class, () -> {
               this.adminService.updateAdminInfo( this.adminDtoIn);
          });
   }
     @Test
      void updateAdminInfoWithNullID (){
         this.adminDtoIn.setId(null);
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.updateAdminInfo( this.adminDtoIn);
         });
     }
@@ -407,7 +407,7 @@ public class UpdateAdminInfoTests {
 
     @Test
     void updateAdminInfoWithNullRequest (){
-        assertThrows(InvalidPersonInformationException.class, () -> {
+        assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.updateAdminInfo(  null );
         });
     }

@@ -11,7 +11,7 @@ public class StudentDtout    extends AbstractPersonDtout{
 
 
     public StudentDtout( StudentEntity  student ,  String studentUrlImage) {
-        super.setId(student.getId());
+        super.setUuid(student.getUuid());
         super.setFirstname(student.getFirstname());
         super.setLastname(student.getLastname());
         super.setEmail(student.getEmail());

@@ -7,14 +7,12 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.TaxEntity;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
 
-import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderLimitExceededException;
 import fr.sqli.cantine.service.order.exception.UnavailableFoodException;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

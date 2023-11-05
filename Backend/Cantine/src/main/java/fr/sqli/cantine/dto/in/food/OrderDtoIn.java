@@ -1,7 +1,7 @@
 package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 
@@ -16,9 +16,9 @@ public class OrderDtoIn {
     private List<Integer> menusId;
 
     @JsonIgnore
-    public void checkOrderIDsValidity() throws InvalidPersonInformationException, InvalidOrderException, InvalidFoodInformationException {
+    public void checkOrderIDsValidity() throws InvalidUserInformationException, InvalidOrderException, InvalidFoodInformationException {
         if (this.studentId == null || this.studentId < 0) {
-            throw new InvalidPersonInformationException("STUDENT ID IS  REQUIRED");
+            throw new InvalidUserInformationException("STUDENT ID IS  REQUIRED");
         }
 
         if (this.mealsId == null && this.menusId == null) {

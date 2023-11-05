@@ -2,12 +2,12 @@ package fr.sqli.cantine.controller.mailer;
 
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.ExpiredToken;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+import fr.sqli.cantine.service.users.admin.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.admin.exceptions.InvalidTokenException;
 import fr.sqli.cantine.service.mailer.TokenSender;
-import fr.sqli.cantine.service.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class TokenSenderController implements ITokenSenderController {
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> sendTokenStudent(String email) throws InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound {
+    public ResponseEntity<ResponseDtout> sendTokenStudent(String email) throws InvalidUserInformationException, MessagingException, AccountAlreadyActivatedException, AdminNotFound {
         this.tokenSender.sendToken(email);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }

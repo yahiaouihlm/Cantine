@@ -3,11 +3,11 @@ package fr.sqli.cantine.service.order;
 import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.exception.*;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import jakarta.mail.MessagingException;
 
@@ -22,13 +22,13 @@ public interface IOrderService {
 
 
      void  submitOrder (Integer  orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException;
-     void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidPersonInformationException, StudentNotFoundException,TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException;
+     void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidUserInformationException, StudentNotFoundException,TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException;
 
       void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException;
 
 
-      List<OrderDtOut> getOrdersByDate(LocalDate date ) throws InvalidOrderException, InvalidPersonInformationException;
-      List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidPersonInformationException;
+      List<OrderDtOut> getOrdersByDate(LocalDate date ) throws InvalidOrderException, InvalidUserInformationException;
+      List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidUserInformationException;
 
 
 
