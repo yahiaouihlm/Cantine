@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public  abstract  class AbstractPersonDtoIn {
     private static final Logger LOG = LogManager.getLogger();
 
-    private  Integer id ;
+     private String  uuid ;
     private  String firstname;
     private  String lastname;
     private  String email;
@@ -23,6 +23,7 @@ public  abstract  class AbstractPersonDtoIn {
     private  String phone;
     private MultipartFile image;
 
+    @JsonIgnore
     protected   void ValidatePersonInformationWithOutPhone() throws InvalidPersonInformationException {
 
 
@@ -50,7 +51,7 @@ public  abstract  class AbstractPersonDtoIn {
             throw new InvalidPersonInformationException("PASSWORD MUST BE LESS THAN 20 CHARACTERS");
 
     }
-
+    @JsonIgnore
   protected  void  validateInformationWithOutEmailAndPassword() throws InvalidPersonInformationException {
       if  (this.firstname == null || this.firstname.isEmpty() || this.firstname.isBlank())
           throw new InvalidPersonInformationException("FIRSTNAME IS  REQUIRED");
@@ -86,7 +87,7 @@ public  abstract  class AbstractPersonDtoIn {
 
   }
 
-
+    @JsonIgnore
     private   void birthdateValidator () throws InvalidPersonInformationException {
         if (this.birthdateAsString == null || this.birthdateAsString.isEmpty() || this.birthdateAsString.isBlank())
               throw  new InvalidPersonInformationException("BIRTHDATE IS  REQUIRED");
@@ -98,6 +99,7 @@ public  abstract  class AbstractPersonDtoIn {
         }
     }
 
+    @JsonIgnore
     protected void phoneValidator () throws InvalidPersonInformationException {
 
         if (this.phone == null || this.phone.isEmpty() || this.phone.isBlank())
@@ -115,18 +117,17 @@ public  abstract  class AbstractPersonDtoIn {
     @JsonIgnore
     protected   String  camelCase(String  str){
         if (str == null || str.isEmpty()) {
-            return new String();
+            return "";
         }
         return  str.substring(0,1).toUpperCase()+str.substring(1).toLowerCase();
     }
 
-
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getFirstname() {

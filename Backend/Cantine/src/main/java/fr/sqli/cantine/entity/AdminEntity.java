@@ -18,7 +18,7 @@ public class AdminEntity {
     @Column(unique=true, nullable=false )
     private Integer id;
     @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid = java.util.UUID.randomUUID().toString();
+    private String  uuid  = java.util.UUID.randomUUID().toString();
     @Column(name = "firstname" , nullable=false , length = 99)
     private String firstname  ;
 
@@ -68,6 +68,26 @@ public class AdminEntity {
     @JoinColumn(name="function_id", nullable=false)
     private FunctionEntity function;
 
+
+    public AdminEntity( String firstname ,  String lastname ,  String email ,  String password ,  LocalDate birthdate ,  String town ,  String address ,  String phone ,  Integer status  ,  ImageEntity image ,  LocalDate disableDate ,  Integer validation ,  FunctionEntity function ) {
+        this.firstname = firstname ;
+        this.lastname = lastname ;
+        this.email = email ;
+        this.password = password ;
+        this.birthdate = birthdate ;
+        this.town = town ;
+        this.address = address ;
+        this.phone = phone ;
+        this.status = status ;
+        this.registrationDate = LocalDate.now() ;
+        this.image = image ;
+        this.disableDate = disableDate ;
+        this.validation = validation ;
+        this.function = function ;
+
+    }
+
+    public AdminEntity() {}
 
     public Integer getId() {
         return id;

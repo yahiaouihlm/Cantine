@@ -195,8 +195,11 @@ public class AdminService implements IAdminService {
 
         //check  function  validity
         var functionAdmin = adminDtoIn.getFunction();
+
         System.out.println(functionAdmin);
+
         var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
+
         if (functionAdminEntity.isEmpty()) {
             AdminService.LOG.error("function  is  not  found");
             throw new AdminFunctionNotFoundException("YOUR FUNCTIONALITY IS NOT FOUND");
