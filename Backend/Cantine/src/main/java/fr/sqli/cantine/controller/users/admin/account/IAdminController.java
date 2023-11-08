@@ -7,11 +7,12 @@ import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
 import fr.sqli.cantine.service.users.admin.exceptions.ExistingAdminException;
-import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +26,8 @@ public interface IAdminController {
 
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin";
 
+    String SEND_CONFIRMATION_LINK_ENDPOINT = "/sendConfirmationLink";
+    String CHECK_TOKEN_VALIDITY_ENDPOINT = "/checkTokenValidity";
    String  ADMIN_DASH_BOARD_CHECK_TOKEN_VALIDITY = "/checkTokenValidity";
    String ADMIN_DASH_BOARD_VALIDATE_EMAIL_ENDPOINT = "/sendToken";
     String ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT = "/getAdmin";
@@ -42,19 +45,31 @@ public interface IAdminController {
     String  TOKEN_VALID = "TOKEN VALID";
 
 
-   String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
+
+    String TOKEN_CHECKED_SUCCESSFULLY = "TOKEN CHECKED SUCCESSFULLY";
+    String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
 
    String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
    String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
 
+    String TOKEN_SENT_SUCCESSFULLY = "TOKEN SENT SUCCESSFULLY";
 
 
 
-   ResponseEntity<String> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
-   ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
+    @PostMapping(CHECK_TOKEN_VALIDITY_ENDPOINT)
+    ResponseEntity<ResponseDtout>checkLinkValidity(@RequestParam("token") String  token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException;
+
+    @PostMapping(SEND_CONFIRMATION_LINK_ENDPOINT)
+    ResponseEntity<ResponseDtout>sendConfirmationLinkForAdminEmail (@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
 
     @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
-    ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException, AdminFunctionNotFoundException, ExistingUserException;
+    ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingAdminException, AdminFunctionNotFoundException, ExistingUserException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
+
+
+
+    ResponseEntity<String> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
+
+   ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
 
     ResponseEntity<String> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException;
 

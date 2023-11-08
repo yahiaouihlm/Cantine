@@ -19,10 +19,7 @@ public class StudentExceptionHandler  {
     }
 
 
-    @ExceptionHandler(AccountAlreadyActivatedException.class)
-    public ResponseEntity<ExceptionDtout> handleAccountAlreadyActivated(AccountAlreadyActivatedException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
-    }
+
 
     @ExceptionHandler(ExistingStudentException.class)
   public ResponseEntity<ExceptionDtout> handleExistingStudent(ExistingStudentException e) {

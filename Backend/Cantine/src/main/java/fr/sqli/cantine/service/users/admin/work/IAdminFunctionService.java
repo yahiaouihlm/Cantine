@@ -2,6 +2,8 @@ package fr.sqli.cantine.service.users.admin.work;
 
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.InvalidTokenException;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.users.admin.exceptions.*;

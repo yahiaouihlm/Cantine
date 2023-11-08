@@ -4,7 +4,7 @@ package fr.sqli.cantine.controller.users.admin;
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 
 import fr.sqli.cantine.service.users.admin.exceptions.*;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,10 +16,6 @@ public class AdminExceptionHandler {
 
 
 
-    @ExceptionHandler(ExpiredToken.class)
-    public ResponseEntity<ExceptionDtout> handleExpiredToken(ExpiredToken e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDtout(e.getMessage()));
-    }
 
 
     @ExceptionHandler(StudentClassNotFoundException.class)
@@ -45,8 +41,5 @@ public class AdminExceptionHandler {
     }
 
 
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ExceptionDtout> handleInvalidToken(InvalidTokenException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
-    }
+
 }

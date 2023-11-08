@@ -8,11 +8,12 @@ import fr.sqli.cantine.service.users.admin.account.AdminService;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
 import fr.sqli.cantine.service.users.admin.exceptions.ExistingAdminException;
-import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +35,22 @@ public class AdminController  implements IAdminController {
         this.adminService = adminService;
     }
 
+    @Override
+    public ResponseEntity<ResponseDtout> checkLinkValidity(String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException {
+        this.adminService.checkLinkValidity(token);
+        return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
+    }
 
     @Override
     @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
-    public ResponseEntity<String> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException {
+    public ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException {
         this.adminService.disableAdminAccount(idAdmin);
-        return ResponseEntity.ok(ADMIN_DISABLED_SUCCESSFULLY);
+        return ResponseEntity.ok(new ResponseDtout (ADMIN_DISABLED_SUCCESSFULLY));
+    }
+    @Override
+    public ResponseEntity<ResponseDtout> signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, ExistingUserException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
+        this.adminService.signUp(adminDtoIn);
+        return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }
 
     @Override
@@ -55,10 +66,12 @@ public class AdminController  implements IAdminController {
             return ResponseEntity.ok(ADMIN_INFO_UPDATED_SUCCESSFULLY);
     }
 
+
+
     @Override
-    public ResponseEntity<ResponseDtout> signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, ExistingUserException {
-        this.adminService.signUp(adminDtoIn);
-        return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
+    public ResponseEntity<String> sendConfirmationLinkForAdminEmail(String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
+        this.adminService.sendConfirmationLink(email);
+        return ResponseEntity.ok(TOKEN_SENT_SUCCESSFULLY);
     }
 
     @Override

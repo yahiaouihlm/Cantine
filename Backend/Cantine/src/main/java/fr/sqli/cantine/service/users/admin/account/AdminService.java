@@ -8,17 +8,19 @@ import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.mailer.EmailSenderService;
-import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +39,8 @@ public class AdminService implements IAdminService {
     private static final Logger LOG = LogManager.getLogger();
     final String SERVER_ADDRESS;
     final String DEFAULT_ADMIN_IMAGE_NAME;
-    final  String  CONFIRMATION_TOKEN_URL;
-    final String ADMIN_IMAGE_URL    ;
+    final String CONFIRMATION_TOKEN_URL;
+    final String ADMIN_IMAGE_URL;
 
     final String ADMIN_IMAGE_PATH;  //  path  to  admin image  directory
     final String EMAIL_ADMIN_REGEX;
@@ -47,7 +49,7 @@ public class AdminService implements IAdminService {
     private IFunctionDao functionDao;
     private IAdminDao adminDao;
     private IConfirmationTokenDao confirmationTokenDao;
-    private EmailSenderService emailSenderService;
+    private SendUserConfirmationEmail sendUserConfirmationEmail;
     private Environment environment;
 
     @Autowired
@@ -55,9 +57,9 @@ public class AdminService implements IAdminService {
             , Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , IConfirmationTokenDao confirmationTokenDao
-            , EmailSenderService emailSenderService
+            , SendUserConfirmationEmail sendUserConfirmationEmail
     ) {
-        this.emailSenderService = emailSenderService;
+        this.sendUserConfirmationEmail = sendUserConfirmationEmail;
         this.confirmationTokenDao = confirmationTokenDao;
         this.imageService = imageService;
         this.adminDao = adminDao;
@@ -65,7 +67,7 @@ public class AdminService implements IAdminService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
-         this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
+        this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
         this.EMAIL_ADMIN_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
@@ -76,7 +78,83 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException {
+    public void  checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
+        if (token == null || token.trim().isEmpty()) {
+            AdminService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
+            throw new InvalidTokenException("INVALID TOKEN");
+        }
+
+        var confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(
+                () -> {
+                    AdminService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", token);
+                    return new TokenNotFoundException("INVALID TOKEN");
+                }); //  token  not  found
+
+        var adminEntity = confirmationTokenEntity.getAdmin();
+        if (adminEntity == null) {
+            AdminService.LOG.error("ADMIN  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+            throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
+        }
+
+
+        var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+        long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+        //  expired  token  ///
+        if (expiredTime > fiveMinutesInMillis) {
+            this.confirmationTokenDao.delete(confirmationTokenEntity);
+            AdminService.LOG.error("EXPIRED TOKEN  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+            throw new ExpiredToken("EXPIRED TOKEN");
+        }
+
+        var admin = this.adminDao.findById(adminEntity.getId()).orElseThrow(
+                () -> {
+                    AdminService.LOG.error("ADMIN  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+                    return new UserNotFoundException("ADMIN NOT FOUND");
+                }
+        );
+        //  change  admin  status  to  activated
+        admin.setStatus(1);
+        this.adminDao.save(admin);
+
+    }
+
+    @Override
+    public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
+        if (email == null || email.isEmpty() || email.isBlank()) {
+            AdminService.LOG.error("INVALID EMAIL TO SEND  CONFIRMATION LINK");
+            throw new UserNotFoundException("INVALID EMAIL");
+        }
+
+        var admin = this.adminDao.findByEmail(email).orElseThrow(() -> {
+            AdminService.LOG.error("ADMIN  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
+            return new UserNotFoundException("ADMIN NOT FOUND");
+        });
+
+        // account already  removed
+        if (admin.getDisableDate() != null) {
+            AdminService.LOG.error("ACCOUNT  ALREADY  REMOVED WITH  EMAIL  {} ", email);
+            throw new RemovedAccountException("ACCOUNT  ALREADY  REMOVED");
+        }
+        // account already  activated
+        if (admin.getStatus() == 1) {
+            AdminService.LOG.error("ACCOUNT  ALREADY  ACTIVATED WITH  EMAIL  {} ", email);
+            throw new AccountAlreadyActivatedException("ACCOUNT  ALREADY  ACTIVATED");
+        }
+
+        var confirmationTokenEntity = this.confirmationTokenDao.findByAdmin(admin);
+        confirmationTokenEntity.ifPresent(tokenEntity -> this.confirmationTokenDao.delete(tokenEntity));
+
+        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(admin);
+        this.confirmationTokenDao.save(confirmationToken);
+
+
+        var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
+
+        this.sendUserConfirmationEmail.sendConfirmationLink(admin, url);
+    }
+
+    @Override
+    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
 
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
@@ -87,16 +165,15 @@ public class AdminService implements IAdminService {
         var functionAdmin = adminDtoIn.getFunction();
 
 
-        var functionAdminEntity = this.functionDao.findByName(functionAdmin).orElseThrow(()->{
-            AdminService.LOG.error(" ADMIN  FUNCTION  {} IS  NOT  FOUND TO SIGN  UP" , functionAdmin);
-            return  new AdminFunctionNotFoundException("YOUR FUNCTIONALITY IS NOT FOUND");
+        var functionAdminEntity = this.functionDao.findByName(functionAdmin).orElseThrow(() -> {
+            AdminService.LOG.error(" ADMIN  FUNCTION  {} IS  NOT  FOUND TO SIGN  UP", functionAdmin);
+            return new AdminFunctionNotFoundException("YOUR FUNCTIONALITY IS NOT FOUND");
         });
-
 
 
         //check  email  validity
         if (!adminDtoIn.getEmail().matches(this.EMAIL_ADMIN_REGEX)) {
-            AdminService.LOG.error("INVALID EMAIL FORMAT TO SIGN  UP  : {}" , adminDtoIn.getEmail());
+            AdminService.LOG.error("INVALID EMAIL FORMAT TO SIGN  UP  : {}", adminDtoIn.getEmail());
             throw new InvalidUserInformationException("INVALID EMAIL");
         }
 
@@ -128,11 +205,11 @@ public class AdminService implements IAdminService {
         adminEntity.setImage(imageEntity);
         adminEntity.setRegistrationDate(LocalDate.now());
         adminEntity.setValidation(0);
-        this.adminDao.save(adminEntity);
+        String url = "http://localhost:4200/confirmAccount/";
+        //this.adminDao.save(adminEntity);
+        this.sendUserConfirmationEmail.sendConfirmationLink(adminEntity, url);
+        //  this.sendConfirmationLink(adminDtoIn.getEmail()); //  send  confirmation Link for  email
     }
-
-
-
 
 
     @Override
@@ -157,11 +234,11 @@ public class AdminService implements IAdminService {
                 () -> new AdminNotFound("ADMIN NOT FOUND")
         );
 
-        return new AdminDtout(adminEntity , this.ADMIN_IMAGE_URL );
+        return new AdminDtout(adminEntity, this.ADMIN_IMAGE_URL);
     }
 
     @Override
-    public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException,ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
+    public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
 
@@ -215,7 +292,6 @@ public class AdminService implements IAdminService {
         this.adminDao.save(adminEntity);
 
     }
-
 
 
     @Override

@@ -49,8 +49,8 @@ public class EmailSenderService {
             helper.setText(text, true);
 
 
-          ClassPathResource classPathResource = new ClassPathResource("/static/logo-aston.png");
-              helper.addInline("logo-aston", classPathResource);
+       /*   ClassPathResource classPathResource = new ClassPathResource("/static/logo-aston.png");
+              helper.addInline("logo-aston", classPathResource);*/
         this.sendEmail(message);
     }
 

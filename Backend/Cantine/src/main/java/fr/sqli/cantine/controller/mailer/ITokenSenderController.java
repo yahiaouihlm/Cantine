@@ -2,9 +2,9 @@ package fr.sqli.cantine.controller.mailer;
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.users.admin.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
-import fr.sqli.cantine.service.users.admin.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.users.exceptions.InvalidTokenException;
 import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
