@@ -67,7 +67,7 @@ public interface IAdminController {
 
 
 
-    ResponseEntity<String> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
+    ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
 
    ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException;
 

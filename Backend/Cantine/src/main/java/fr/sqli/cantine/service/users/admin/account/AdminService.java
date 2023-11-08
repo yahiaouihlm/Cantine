@@ -205,10 +205,8 @@ public class AdminService implements IAdminService {
         adminEntity.setImage(imageEntity);
         adminEntity.setRegistrationDate(LocalDate.now());
         adminEntity.setValidation(0);
-        String url = "http://localhost:4200/confirmAccount/";
-        //this.adminDao.save(adminEntity);
-        this.sendUserConfirmationEmail.sendConfirmationLink(adminEntity, url);
-        //  this.sendConfirmationLink(adminDtoIn.getEmail()); //  send  confirmation Link for  email
+        this.adminDao.save(adminEntity);
+        this.sendConfirmationLink(adminDtoIn.getEmail()); //  send  confirmation Link for  email
     }
 
 

@@ -41,17 +41,24 @@ public class AdminController  implements IAdminController {
         return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
     }
 
-    @Override
-    @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
-    public ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException {
-        this.adminService.disableAdminAccount(idAdmin);
-        return ResponseEntity.ok(new ResponseDtout (ADMIN_DISABLED_SUCCESSFULLY));
-    }
+
     @Override
     public ResponseEntity<ResponseDtout> signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, ExistingUserException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
         this.adminService.signUp(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }
+
+
+
+
+    @Override
+    public ResponseEntity<ResponseDtout> sendConfirmationLinkForAdminEmail(String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
+        this.adminService.sendConfirmationLink(email);
+        return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
+    }
+
+
+    /*------------------------------------------------ pas  encore  fait --------------------------------------------*/
 
     @Override
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
@@ -59,19 +66,12 @@ public class AdminController  implements IAdminController {
         return ResponseEntity.ok(this.adminService.getAdminById(idAdmin));
     }
 
+
     @Override
     @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     public ResponseEntity<String> updateAdminInfo(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
-       this.adminService.updateAdminInfo(adminDtoIn);
-            return ResponseEntity.ok(ADMIN_INFO_UPDATED_SUCCESSFULLY);
-    }
-
-
-
-    @Override
-    public ResponseEntity<String> sendConfirmationLinkForAdminEmail(String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
-        this.adminService.sendConfirmationLink(email);
-        return ResponseEntity.ok(TOKEN_SENT_SUCCESSFULLY);
+        this.adminService.updateAdminInfo(adminDtoIn);
+        return ResponseEntity.ok(ADMIN_INFO_UPDATED_SUCCESSFULLY);
     }
 
     @Override
@@ -79,5 +79,10 @@ public class AdminController  implements IAdminController {
         return ResponseEntity.ok(this.adminService.getAllAdminFunctions());
     }
 
-
+    @Override
+    @PutMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
+    public ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("idAdmin")  Integer idAdmin) throws AdminNotFound, InvalidUserInformationException {
+        this.adminService.disableAdminAccount(idAdmin);
+        return ResponseEntity.ok(new ResponseDtout (ADMIN_DISABLED_SUCCESSFULLY));
+    }
 }
