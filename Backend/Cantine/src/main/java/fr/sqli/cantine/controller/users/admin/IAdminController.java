@@ -29,7 +29,7 @@ public interface IAdminController {
 
     String  ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT = "/updateAdmin/info";
 
-    String  ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT = "/disableAdmin";
+    String  ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT = "/disableAccount";
 
     String  ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT ="/getAllAdminFunctions";
 
@@ -66,7 +66,8 @@ public interface IAdminController {
 
 
 
-    ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException;
+    @PostMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
+    ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
 
 

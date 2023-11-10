@@ -20,7 +20,7 @@ public interface IAdminService {
     AdminDtout getAdminByUuID(String  adminUuid) throws InvalidUserInformationException,  UserNotFoundException;
    void   checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException;
     void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException;
-     void disableAdminAccount(Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException;
+     void disableAdminAccount(String  adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
 
 

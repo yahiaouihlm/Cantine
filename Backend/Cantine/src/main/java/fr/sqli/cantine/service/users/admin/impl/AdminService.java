@@ -50,6 +50,7 @@ public class AdminService implements IAdminService {
     private final IAdminDao adminDao;
     private final IConfirmationTokenDao confirmationTokenDao;
     private final SendUserConfirmationEmail sendUserConfirmationEmail;
+
     @Autowired
     public AdminService(IAdminDao adminDao, IFunctionDao functionDao, ImageService imageService
             , Environment environment
@@ -76,7 +77,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void  checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
+    public void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
         if (token == null || token.trim().isEmpty()) {
             AdminService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
             throw new InvalidTokenException("INVALID TOKEN");
@@ -212,17 +213,20 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void disableAdminAccount(Integer idAdmin) throws UserNotFoundException {
+    public void disableAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
 
-      /*  IAdminService.checkIDValidity(idAdmin);*/ //  check  id  validity
+        IAdminService.checkUuIdValidity(adminUuid);
 
-        var adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
-                () -> new UserNotFoundException("ADMIN NOT FOUND")
+        var admin = this.adminDao.findByUuid(adminUuid).orElseThrow(
+                () -> {
+                    AdminService.LOG.error("ADMIN  NOT  FOUND  IN DISABLE  ADMIN  ACCOUNT  WITH  UUID = {}", adminUuid);
+                    return new UserNotFoundException("ADMIN NOT FOUND");
+                }
         );
 
-        adminEntity.setStatus(0);
-        adminEntity.setDisableDate(LocalDate.now());
-        this.adminDao.save(adminEntity);
+        admin.setStatus(0);
+        admin.setDisableDate(LocalDate.now());
+        this.adminDao.save(admin);
     }
 
     @Override
@@ -241,12 +245,12 @@ public class AdminService implements IAdminService {
 
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException {
-        if (adminDtoIn == null){
+        if (adminDtoIn == null) {
             AdminService.LOG.error("INVALID INFORMATION REQUEST adminDtoIn IS  NULL IN  updateAdminInfo");
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
         }
 
-        if (adminDtoIn.getEmail() != null || adminDtoIn.getPassword() != null){
+        if (adminDtoIn.getEmail() != null || adminDtoIn.getPassword() != null) {
             AdminService.LOG.error("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED IN  updateAdminInfo");
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
         }
@@ -302,8 +306,6 @@ public class AdminService implements IAdminService {
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());
     }
-
-
 
 
     @Override
