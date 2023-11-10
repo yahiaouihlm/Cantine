@@ -11,10 +11,7 @@ import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,6 +49,11 @@ public interface IAdminController {
     String TOKEN_SENT_SUCCESSFULLY = "TOKEN SENT SUCCESSFULLY";
 
 
+    @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
+    ResponseEntity<ResponseDtout> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException;
+
+    @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
+    ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid")  String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     @PostMapping(CHECK_TOKEN_VALIDITY_ENDPOINT)
     ResponseEntity<ResponseDtout>checkLinkValidity(@RequestParam("token") String  token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException;
@@ -66,9 +68,6 @@ public interface IAdminController {
 
     ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("idAdmin") Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException;
 
-   ResponseEntity<AdminDtout>getAdminById(@RequestParam("idAdmin")  Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException;
-
-    ResponseEntity<String> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException;
 
 
     @GetMapping(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)

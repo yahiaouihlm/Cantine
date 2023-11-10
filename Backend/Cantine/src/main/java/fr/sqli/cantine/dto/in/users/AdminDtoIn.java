@@ -41,7 +41,8 @@ public class AdminDtoIn  extends AbstractUsersDtoIn {
         super.phoneValidator();
         functionValidator();
         validateInformationWithOutEmailAndPassword();
-
+        super.setFirstname(super.camelCase(this.getFirstname().trim()));
+        super.setLastname(super.camelCase(this.getLastname().trim()));
     }
 
 

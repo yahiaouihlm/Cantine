@@ -71,7 +71,7 @@ public class GetAdminTest {
         adminEntity.setFunction(functionEntity);
         Mockito.when(this.adminDao.findById(adminEntity.getId())).thenReturn(Optional.of(adminEntity));
 
-        var  rsult =  this.adminService.getAdminById(id);
+        var  rsult =  this.adminService.getAdminByUuID(id);
 
         Assertions.assertEquals(rsult.getId(), adminEntity.getId());
         Assertions.assertEquals(rsult.getFirstname(), adminEntity.getFirstname());
@@ -91,7 +91,7 @@ public class GetAdminTest {
         Integer idAdmin = 1 ;
         Mockito.when(this.adminDao.findById(idAdmin)).thenReturn(Optional.empty());
         Assertions.assertThrows(AdminNotFound.class, () -> {
-            this.adminService.getAdminById(idAdmin)  ;
+            this.adminService.getAdminByUuID(idAdmin)  ;
         });
 
 
@@ -102,14 +102,14 @@ public class GetAdminTest {
     void getAdminByIdWithNegativeID (){
         Integer idAdmin = -1;
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.getAdminById(idAdmin) ;
+            this.adminService.getAdminByUuID(idAdmin) ;
         });
     }
     @Test
     void getAdminByIdWithNullID (){
         Integer idAdmin = null;
          assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.getAdminById(idAdmin);
+            this.adminService.getAdminByUuID(idAdmin);
         });
     }
 

@@ -44,14 +44,12 @@ public class AdminService implements IAdminService {
 
     final String ADMIN_IMAGE_PATH;  //  path  to  admin image  directory
     final String EMAIL_ADMIN_REGEX;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private ImageService imageService;
-    private IFunctionDao functionDao;
-    private IAdminDao adminDao;
-    private IConfirmationTokenDao confirmationTokenDao;
-    private SendUserConfirmationEmail sendUserConfirmationEmail;
-    private Environment environment;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ImageService imageService;
+    private final IFunctionDao functionDao;
+    private final IAdminDao adminDao;
+    private final IConfirmationTokenDao confirmationTokenDao;
+    private final SendUserConfirmationEmail sendUserConfirmationEmail;
     @Autowired
     public AdminService(IAdminDao adminDao, IFunctionDao functionDao, ImageService imageService
             , Environment environment
@@ -142,7 +140,7 @@ public class AdminService implements IAdminService {
         }
 
         var confirmationTokenEntity = this.confirmationTokenDao.findByAdmin(admin);
-        confirmationTokenEntity.ifPresent(tokenEntity -> this.confirmationTokenDao.delete(tokenEntity));
+        confirmationTokenEntity.ifPresent(this.confirmationTokenDao::delete);
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(admin);
         this.confirmationTokenDao.save(confirmationToken);
@@ -197,23 +195,26 @@ public class AdminService implements IAdminService {
         adminEntity.setBirthdate(adminDtoIn.getBirthdate());
         adminEntity.setEmail(adminDtoIn.getEmail());
         adminEntity.setPassword(this.bCryptPasswordEncoder.encode(adminDtoIn.getPassword()));
-        adminEntity.setAddress(adminDtoIn.getAddress());
-        adminEntity.setPhone(adminDtoIn.getPhone());
-        adminEntity.setTown(adminDtoIn.getTown());
+        adminEntity.setAddress(adminDtoIn.getAddress().trim());
+        adminEntity.setPhone(adminDtoIn.getPhone().trim());
+        adminEntity.setTown(adminDtoIn.getTown().trim());
         adminEntity.setFunction(functionAdminEntity);
         adminEntity.setStatus(0);
         adminEntity.setImage(imageEntity);
         adminEntity.setRegistrationDate(LocalDate.now());
         adminEntity.setValidation(0);
+
+        // save admin
         this.adminDao.save(adminEntity);
+
         this.sendConfirmationLink(adminDtoIn.getEmail()); //  send  confirmation Link for  email
     }
 
 
     @Override
-    public void disableAdminAccount(Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException {
+    public void disableAdminAccount(Integer idAdmin) throws UserNotFoundException {
 
-        IAdminService.checkIDValidity(idAdmin); //  check  id  validity
+      /*  IAdminService.checkIDValidity(idAdmin);*/ //  check  id  validity
 
         var adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
                 () -> new UserNotFoundException("ADMIN NOT FOUND")
@@ -225,26 +226,31 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public AdminDtout getAdminById(Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException {
-        IAdminService.checkIDValidity(idAdmin); //  check  id  validity
+    public AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
+        IAdminService.checkUuIdValidity(adminUuid);
 
-        var adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
-                () -> new UserNotFoundException("ADMIN NOT FOUND")
+        var admin = this.adminDao.findByUuid(adminUuid).orElseThrow(
+                () -> {
+                    AdminService.LOG.error("ADMIN  NOT  FOUND  IN GET  ADMIN  BY  UUID  WITH  UUID = {}", adminUuid);
+                    return new UserNotFoundException("ADMIN NOT FOUND");
+                }
         );
 
-        return new AdminDtout(adminEntity, this.ADMIN_IMAGE_URL);
+        return new AdminDtout(admin, this.ADMIN_IMAGE_URL);
     }
 
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException {
-        if (adminDtoIn == null)
+        if (adminDtoIn == null){
+            AdminService.LOG.error("INVALID INFORMATION REQUEST adminDtoIn IS  NULL IN  updateAdminInfo");
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
+        }
 
-        if (adminDtoIn.getEmail() != null || adminDtoIn.getPassword() != null)
+        if (adminDtoIn.getEmail() != null || adminDtoIn.getPassword() != null){
+            AdminService.LOG.error("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED IN  updateAdminInfo");
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
-       /* var idAdmin = adminDtoIn.getId();
-        IAdminService.checkIDValidity(idAdmin);
-*/
+        }
+
         adminDtoIn.checkInformationValidityExceptEmailAndPassword(); //  check  information  validity
         adminDtoIn.checkAddressValidity(); //  check  address  validity
         var functionAdmin = adminDtoIn.getFunction();
@@ -257,17 +263,17 @@ public class AdminService implements IAdminService {
         }
 
 
-        var adminEntity = this.adminDao.findById(0).orElseThrow(
+        var adminEntity = this.adminDao.findByUuid(adminDtoIn.getUuid()).orElseThrow(
                 () -> new UserNotFoundException("ADMIN NOT FOUND")
         );
-        adminEntity.setAddress(adminDtoIn.getAddress());
-        adminEntity.setFirstname(adminDtoIn.getFirstname());
+        adminEntity.setAddress(adminDtoIn.getAddress().trim());
+        adminEntity.setFirstname(adminDtoIn.getFirstname().trim());
         adminEntity.setBirthdate(adminDtoIn.getBirthdate());
-        adminEntity.setLastname(adminDtoIn.getLastname());
-        adminEntity.setPhone(adminDtoIn.getPhone());
+        adminEntity.setLastname(adminDtoIn.getLastname().trim());
+        adminEntity.setPhone(adminDtoIn.getPhone().trim());
         adminEntity.setFunction(functionAdminEntity.get());
-        adminEntity.setTown(adminDtoIn.getTown());
-        adminEntity.setAddress(adminDtoIn.getAddress());
+        adminEntity.setTown(adminDtoIn.getTown().trim());
+        adminEntity.setAddress(adminDtoIn.getAddress().trim());
 
 
         if (adminDtoIn.getImage() != null && !adminDtoIn.getImage().isEmpty()) {
@@ -298,9 +304,6 @@ public class AdminService implements IAdminService {
     }
 
 
-    public void tokenValidation(String token) throws InvalidUserInformationException {
-        IAdminService.validationArgument(token);
-    }
 
 
     @Override
