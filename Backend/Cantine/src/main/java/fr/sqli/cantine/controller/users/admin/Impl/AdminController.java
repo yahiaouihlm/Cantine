@@ -1,10 +1,11 @@
-package fr.sqli.cantine.controller.users.admin.account;
+package fr.sqli.cantine.controller.users.admin.Impl;
 
+import fr.sqli.cantine.controller.users.admin.IAdminController;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.cantine.service.users.admin.account.AdminService;
+import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-import static fr.sqli.cantine.controller.users.admin.account.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
+import static fr.sqli.cantine.controller.users.admin.IAdminController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)

@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.users.admin.account;
+package fr.sqli.cantine.service.users.admin;
 
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;

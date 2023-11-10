@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.users.admin.account;
+package fr.sqli.cantine.service.users.admin.impl;
 
 
 import fr.sqli.cantine.dao.IAdminDao;
@@ -12,6 +12,7 @@ import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
 
+import fr.sqli.cantine.service.users.admin.IAdminService;
 import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;

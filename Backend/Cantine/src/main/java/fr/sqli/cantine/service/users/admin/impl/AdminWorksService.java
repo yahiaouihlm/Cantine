@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.users.admin.work;
+package fr.sqli.cantine.service.users.admin.impl;
 
 import fr.sqli.cantine.dao.*;
 
@@ -8,6 +8,7 @@ import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.mailer.ConfirmationAddingAmountToStudent;
+import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;

@@ -1,10 +1,11 @@
-package fr.sqli.cantine.controller.users.admin.works;
+package fr.sqli.cantine.controller.users.admin.Impl;
 
 
+import fr.sqli.cantine.controller.users.admin.IAdminWorksController;
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
-import fr.sqli.cantine.service.users.admin.work.AdminWorksService;
+import fr.sqli.cantine.service.users.admin.impl.AdminWorksService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;

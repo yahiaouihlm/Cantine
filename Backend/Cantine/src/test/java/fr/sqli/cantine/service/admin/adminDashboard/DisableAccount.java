@@ -4,7 +4,7 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
-import fr.sqli.cantine.service.users.admin.account.AdminService;
+import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import org.apache.logging.log4j.LogManager;
