@@ -3,9 +3,7 @@ package fr.sqli.cantine.service.users.admin.account;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.users.admin.exceptions.ExistingAdminException;
+
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -23,14 +21,14 @@ public interface IAdminService {
 
    void   checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException;
     void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException;
-     void disableAdminAccount(Integer idAdmin) throws InvalidUserInformationException, AdminNotFound;
+     void disableAdminAccount(Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException;
 
-    AdminDtout getAdminById (Integer idAdmin) throws InvalidUserInformationException, AdminNotFound;
-     void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingAdminException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException;
+    AdminDtout getAdminById (Integer idAdmin) throws InvalidUserInformationException,  UserNotFoundException;
+     void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException;
      void signUp (AdminDtoIn  adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
     List<FunctionDtout> getAllAdminFunctions() ;
     //public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException;
-    void existingAdmin(String  adminEmail ) throws ExistingAdminException, ExistingUserException;
+    void existingAdmin(String  adminEmail ) throws  ExistingUserException;
 
     static   void  checkIDValidity(Integer idAdmin) throws InvalidUserInformationException {
         if (idAdmin == null   || idAdmin < 0) {
@@ -41,7 +39,7 @@ public interface IAdminService {
 
      static  void validationArgument(  String ... arg ) throws InvalidUserInformationException {
         for  (String  s : arg) {
-            if (s == null ||   s.isEmpty()  || s.length() <= 0  ){
+            if (s == null || s.isEmpty()){
                 throw new InvalidUserInformationException("INVALID ARGUMENT");
             }
         }

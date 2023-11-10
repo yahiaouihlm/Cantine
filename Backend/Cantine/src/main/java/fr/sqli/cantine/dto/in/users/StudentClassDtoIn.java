@@ -2,7 +2,7 @@ package fr.sqli.cantine.dto.in.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.StudentClassEntity;
-import fr.sqli.cantine.service.users.admin.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
 
 public class StudentClassDtoIn {
 

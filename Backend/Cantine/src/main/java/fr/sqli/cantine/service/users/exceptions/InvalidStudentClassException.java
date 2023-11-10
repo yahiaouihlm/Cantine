@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.users.admin.exceptions;
+package fr.sqli.cantine.service.users.exceptions;
 
 public class InvalidStudentClassException  extends   Exception{
 

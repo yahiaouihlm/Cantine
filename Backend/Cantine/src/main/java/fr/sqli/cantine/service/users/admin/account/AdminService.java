@@ -11,8 +11,7 @@ import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+
 import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;
@@ -211,12 +210,12 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void disableAdminAccount(Integer idAdmin) throws InvalidUserInformationException, AdminNotFound {
+    public void disableAdminAccount(Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException {
 
         IAdminService.checkIDValidity(idAdmin); //  check  id  validity
 
         var adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
-                () -> new AdminNotFound("ADMIN NOT FOUND")
+                () -> new UserNotFoundException("ADMIN NOT FOUND")
         );
 
         adminEntity.setStatus(0);
@@ -225,18 +224,18 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public AdminDtout getAdminById(Integer idAdmin) throws InvalidUserInformationException, AdminNotFound {
+    public AdminDtout getAdminById(Integer idAdmin) throws InvalidUserInformationException, UserNotFoundException {
         IAdminService.checkIDValidity(idAdmin); //  check  id  validity
 
         var adminEntity = this.adminDao.findById(idAdmin).orElseThrow(
-                () -> new AdminNotFound("ADMIN NOT FOUND")
+                () -> new UserNotFoundException("ADMIN NOT FOUND")
         );
 
         return new AdminDtout(adminEntity, this.ADMIN_IMAGE_URL);
     }
 
     @Override
-    public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminNotFound, AdminFunctionNotFoundException {
+    public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException {
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
 
@@ -258,7 +257,7 @@ public class AdminService implements IAdminService {
 
 
         var adminEntity = this.adminDao.findById(0).orElseThrow(
-                () -> new AdminNotFound("ADMIN NOT FOUND")
+                () -> new UserNotFoundException("ADMIN NOT FOUND")
         );
         adminEntity.setAddress(adminDtoIn.getAddress());
         adminEntity.setFirstname(adminDtoIn.getFirstname());

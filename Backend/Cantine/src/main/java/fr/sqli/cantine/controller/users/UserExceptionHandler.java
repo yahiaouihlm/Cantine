@@ -1,7 +1,6 @@
 package fr.sqli.cantine.controller.users;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
-import fr.sqli.cantine.service.users.admin.exceptions.*;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import org.springframework.http.HttpStatus;
