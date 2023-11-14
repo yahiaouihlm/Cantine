@@ -1,12 +1,14 @@
-package fr.sqli.cantine.service.admin.adminDashboard;
+package fr.sqli.cantine.service.admin;
 
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
+import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.AdminFunctionNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
 
@@ -78,6 +80,20 @@ class AddAdminTest {
         this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(), this.iConfirmationToken, null);
 
     }
+
+
+
+
+    @Test
+   void  addAdminWithExisingEmailTest() throws InvalidUserInformationException {
+        this.adminDtoIn.setEmail("yahiaouihlm@gmail.com");
+        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(  Optional.of(functionEntity));
+        Mockito.when(this.adminDao.findByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new AdminEntity()));
+
+        assertThrows(ExistingUserException.class, () ->this.adminService.signUp(this.adminDtoIn));
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+    }
+
 
 
     /****************************  TESTS FOR FUNCTIONS  ************************************/
@@ -269,7 +285,7 @@ class AddAdminTest {
 
     /****************************  TESTS FOR Town  ************************************/
     @Test
-    void addAdminWithTooLongTownTest() throws IOException {
+    void addAdminWithTooLongTownTest()  {
         this.adminDtoIn.setTown("a".repeat(2001));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -277,14 +293,14 @@ class AddAdminTest {
     }
 
     @Test
-    void addAdminWithTooShortTownTest() throws IOException {
+    void addAdminWithTooShortTownTest(){
         this.adminDtoIn.setTown("nm");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void addAdminWithEmptyTownTest() throws IOException {
+    void addAdminWithEmptyTownTest()  {
         this.adminDtoIn.setTown("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
@@ -308,7 +324,7 @@ class AddAdminTest {
 
 
    @Test
-   void addAdminWithInvalidEmailTest() throws IOException, InvalidUserInformationException {
+   void addAdminWithInvalidEmailTest() throws InvalidUserInformationException {
        this.adminDtoIn.setEmail("a".repeat(91));
 
          this.functionEntity.setName(this.adminDtoIn.getFunction());

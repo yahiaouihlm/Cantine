@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.admin.adminDashboard;
+package fr.sqli.cantine.service.admin;
 
 
 import fr.sqli.cantine.dao.IAdminDao;
@@ -8,9 +8,9 @@ import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public class GetAdminTest {
 
 
     @Test
-    void  getAdminByIDTest () throws InvalidUserInformationException, AdminNotFound {
+    void  getAdminByIDTest () throws InvalidUserInformationException, UserNotFoundException {
         var id = 1 ;
         FunctionEntity functionEntity = new FunctionEntity();
         functionEntity.setId(1);
@@ -71,9 +71,9 @@ public class GetAdminTest {
         adminEntity.setFunction(functionEntity);
         Mockito.when(this.adminDao.findById(adminEntity.getId())).thenReturn(Optional.of(adminEntity));
 
-        var  rsult =  this.adminService.getAdminByUuID(id);
+        var  rsult =  this.adminService.getAdminByUuID("id");
 
-        Assertions.assertEquals(rsult.getId(), adminEntity.getId());
+        Assertions.assertEquals(rsult.getUuid(), adminEntity.getUuid());
         Assertions.assertEquals(rsult.getFirstname(), adminEntity.getFirstname());
         Assertions.assertEquals(rsult.getLastname(), adminEntity.getLastname());
         Assertions.assertEquals(rsult.getEmail(), adminEntity.getEmail());
@@ -90,8 +90,8 @@ public class GetAdminTest {
     void  getAdminByIdWithNotFoundAdmin () throws InvalidUserInformationException {
         Integer idAdmin = 1 ;
         Mockito.when(this.adminDao.findById(idAdmin)).thenReturn(Optional.empty());
-        Assertions.assertThrows(AdminNotFound.class, () -> {
-            this.adminService.getAdminByUuID(idAdmin)  ;
+        Assertions.assertThrows(UserNotFoundException.class, () -> {
+            this.adminService.getAdminByUuID("idAdmin")  ;
         });
 
 
@@ -102,14 +102,14 @@ public class GetAdminTest {
     void getAdminByIdWithNegativeID (){
         Integer idAdmin = -1;
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.getAdminByUuID(idAdmin) ;
+            this.adminService.getAdminByUuID("idAdmin") ;
         });
     }
     @Test
     void getAdminByIdWithNullID (){
         Integer idAdmin = null;
          assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.getAdminByUuID(idAdmin);
+            this.adminService.getAdminByUuID("idAdmin");
         });
     }
 

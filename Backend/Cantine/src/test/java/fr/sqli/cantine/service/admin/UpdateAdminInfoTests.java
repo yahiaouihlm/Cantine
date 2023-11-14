@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.admin.adminDashboard;
+package fr.sqli.cantine.service.admin;
 
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
@@ -6,10 +6,11 @@ import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
+
+import fr.sqli.cantine.service.users.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -381,7 +382,7 @@ public class UpdateAdminInfoTests {
      Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
      Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(function));
 
-     Assertions.assertThrows(AdminNotFound.class, () -> {
+     Assertions.assertThrows(UserNotFoundException.class, () -> {
          this.adminService.updateAdminInfo( this.adminDtoIn);
      });
 

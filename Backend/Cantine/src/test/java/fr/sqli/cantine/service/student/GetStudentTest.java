@@ -70,7 +70,7 @@ public class GetStudentTest {
         var  rsult =  this.studentService.getStudentByID(id);
 
         System.out.println(rsult.getImage());
-        Assertions.assertEquals(rsult.getId(), student.getId());
+        Assertions.assertEquals(rsult.getUuid(), student.getUuid());
         Assertions.assertEquals(rsult.getFirstname(), student.getFirstname());
         Assertions.assertEquals(rsult.getLastname(), student.getLastname());
         Assertions.assertEquals(rsult.getEmail(), student.getEmail());

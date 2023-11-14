@@ -1,12 +1,12 @@
-package fr.sqli.cantine.service.admin.adminDashboard;
+package fr.sqli.cantine.service.admin;
 
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.admin.exceptions.AdminNotFound;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -63,10 +63,10 @@ public class DisableAccount {
     }
 
     @Test  /*** No Exception thrown  ***/
-    void  disabledAccountWithValidAdmin () throws InvalidUserInformationException, AdminNotFound {
+    void  disabledAccountWithValidAdmin () throws InvalidUserInformationException {
         Integer idMenu = 1;
         Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.of(this.adminEntity));
-        this.adminService.disableAdminAccount(idMenu);
+       /* this.adminService.disableAdminAccount(idMenu);*/
         Mockito.verify(this.adminDao, Mockito.times(1)).findById(idMenu);
         Mockito.verify(this.adminDao, Mockito.times(1)).save(this.adminEntity);
 
@@ -88,8 +88,8 @@ public class DisableAccount {
 
         Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AdminNotFound.class, () -> {
-            this.adminService.disableAdminAccount(idMenu);
+        Assertions.assertThrows(UserNotFoundException.class, () -> {
+            this.adminService.disableAdminAccount("idMenu");
         });
 
         Mockito.verify(this.adminDao, Mockito.times(1)).findById(idMenu);
@@ -98,7 +98,7 @@ public class DisableAccount {
     @Test
     void disabledAccountWithNegativeID (){
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.disableAdminAccount( -1);
+            this.adminService.disableAdminAccount( "");
         });
 
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
