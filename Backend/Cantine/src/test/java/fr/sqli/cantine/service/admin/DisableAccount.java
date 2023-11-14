@@ -104,7 +104,7 @@ public class DisableAccount {
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void disabledAccountWithNullID(){
+    void disabledAccountWithNullUuid(){
         assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.disableAdminAccount( null);
         });

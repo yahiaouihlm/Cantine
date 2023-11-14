@@ -50,14 +50,15 @@ public class GetAdminTest {
 
 
     @Test
-    void  getAdminByIDTest () throws InvalidUserInformationException, UserNotFoundException {
-        var id = 1 ;
+    void  getAdminByUuidTest () throws InvalidUserInformationException, UserNotFoundException {
+        var adminUuid = java.util.UUID.randomUUID().toString() ;
         FunctionEntity functionEntity = new FunctionEntity();
         functionEntity.setId(1);
         functionEntity.setName("test-function");
 
         AdminEntity adminEntity = new AdminEntity();
         adminEntity.setId(1);
+        adminEntity.setUuid(adminUuid);
         adminEntity.setFirstname("firstname");
         adminEntity.setLastname("lastname");
         adminEntity.setEmail("email@test.fr");
@@ -69,48 +70,53 @@ public class GetAdminTest {
         imageEntity.setImagename(IMAGE_TESTS_PATH);
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(functionEntity);
-        Mockito.when(this.adminDao.findById(adminEntity.getId())).thenReturn(Optional.of(adminEntity));
+        Mockito.when(this.adminDao.findByUuid(adminEntity.getUuid())).thenReturn(Optional.of(adminEntity));
 
-        var  rsult =  this.adminService.getAdminByUuID("id");
+        var  result =  this.adminService.getAdminByUuID(adminUuid);
 
-        Assertions.assertEquals(rsult.getUuid(), adminEntity.getUuid());
-        Assertions.assertEquals(rsult.getFirstname(), adminEntity.getFirstname());
-        Assertions.assertEquals(rsult.getLastname(), adminEntity.getLastname());
-        Assertions.assertEquals(rsult.getEmail(), adminEntity.getEmail());
-        Assertions.assertEquals(rsult.getBirthdate(), adminEntity.getBirthdate());
-        Assertions.assertEquals(rsult.getAddress(), adminEntity.getAddress());
-        Assertions.assertEquals(rsult.getTown(), adminEntity.getTown());
-        Assertions.assertEquals(rsult.getPhone(), adminEntity.getPhone());
-        Assertions.assertEquals(rsult.getImage(), adminEntity.getImage().getImagename());
+        Assertions.assertEquals(result.getUuid(), adminEntity.getUuid());
+        Assertions.assertEquals(result.getFirstname(), adminEntity.getFirstname());
+        Assertions.assertEquals(result.getLastname(), adminEntity.getLastname());
+        Assertions.assertEquals(result.getEmail(), adminEntity.getEmail());
+        Assertions.assertEquals(result.getBirthdate(), adminEntity.getBirthdate());
+        Assertions.assertEquals(result.getAddress(), adminEntity.getAddress());
+        Assertions.assertEquals(result.getTown(), adminEntity.getTown());
+        Assertions.assertEquals(result.getPhone(), adminEntity.getPhone());
+
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminEntity.getUuid());
 
 
     }
 
     @Test
-    void  getAdminByIdWithNotFoundAdmin () throws InvalidUserInformationException {
-        Integer idAdmin = 1 ;
-        Mockito.when(this.adminDao.findById(idAdmin)).thenReturn(Optional.empty());
+    void  getAdminByUuidWithNotFoundAdmin () throws InvalidUserInformationException {
+        String adminUuid = java.util.UUID.randomUUID().toString();
+        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
         Assertions.assertThrows(UserNotFoundException.class, () -> {
-            this.adminService.getAdminByUuID("idAdmin")  ;
+            this.adminService.getAdminByUuID(adminUuid)  ;
         });
 
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
 
     }
 
 
     @Test
-    void getAdminByIdWithNegativeID (){
-        Integer idAdmin = -1;
+    void getAdminByUuidWithShortUuId (){
+        String adminUuid = "izezedzedze*4zed4";
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.getAdminByUuID("idAdmin") ;
+            this.adminService.getAdminByUuID(adminUuid) ;
         });
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void getAdminByIdWithNullID (){
-        Integer idAdmin = null;
+    void getAdminByUuidWithNullUuid (){
          assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.getAdminByUuID("idAdmin");
+            this.adminService.getAdminByUuID(null);
         });
+
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
