@@ -62,7 +62,7 @@ public class UpdateAdminInfoTests {
         this.environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
         this.environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
         this.adminDtoIn = new AdminDtoIn();
-        this.adminDtoIn.setId(1);
+        this.adminDtoIn.setUuid(java.util.UUID.randomUUID().toString());
         this.adminDtoIn.setFirstname("firstName");
         this.adminDtoIn.setLastname("lastName");
         this.adminDtoIn.setFunction("function");
@@ -373,13 +373,13 @@ public class UpdateAdminInfoTests {
 
  @Test
  void  updateAdminInformationWithNotFoundAdmin () throws InvalidUserInformationException {
-     Integer idMenu = 1 ;
-     this.adminDtoIn.setId(1);
+     String adminUuid = java.util.UUID.randomUUID().toString();
+     this.adminDtoIn.setUuid(adminUuid);
      FunctionEntity function = new FunctionEntity();
         function.setId(1);
         function.setName(this.adminDtoIn.getFunction());
 
-     Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
+     Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
      Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(function));
 
      Assertions.assertThrows(UserNotFoundException.class, () -> {
@@ -390,15 +390,15 @@ public class UpdateAdminInfoTests {
 
  }
      @Test
-   void updateAdminWithNegativeID (){
-         this.adminDtoIn.setId(-1);
+   void updateAdminWithInvalidUuid (){
+         this.adminDtoIn.setUuid("ehbrerfrfr");
          assertThrows(InvalidUserInformationException.class, () -> {
               this.adminService.updateAdminInfo( this.adminDtoIn);
          });
   }
     @Test
-     void updateAdminInfoWithNullID (){
-        this.adminDtoIn.setId(null);
+     void updateAdminInfoWithNullUuid (){
+        this.adminDtoIn.setUuid(null);
         assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.updateAdminInfo( this.adminDtoIn);
         });

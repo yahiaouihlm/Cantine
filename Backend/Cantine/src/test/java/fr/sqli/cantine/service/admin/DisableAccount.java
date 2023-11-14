@@ -62,12 +62,12 @@ public class DisableAccount {
         adminEntity.setFunction(this.functionEntity);
     }
 
-    @Test  /*** No Exception thrown  ***/
-    void  disabledAccountWithValidAdmin () throws InvalidUserInformationException {
-        Integer idMenu = 1;
-        Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.of(this.adminEntity));
-       /* this.adminService.disableAdminAccount(idMenu);*/
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(idMenu);
+    @Test  /** No Exception thrown  **/
+    void  disabledAccountWithValidAdmin () throws UserNotFoundException, InvalidUserInformationException {
+        String  adminUuid =  java.util.UUID.randomUUID().toString() ;
+        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.of(this.adminEntity));
+        this.adminService.disableAdminAccount(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(1)).save(this.adminEntity);
 
     }
@@ -79,26 +79,26 @@ public class DisableAccount {
 
 
 
-    /******************************** TESTS  ADMIN ID  ********************************/
+    /******************************** TESTS  ADMIN UUID   ********************************/
 
     @Test
     void  disabledAccountWithNotFoundAdmin () {
-        Integer idMenu = 1 ;
+         String  adminUuid =  java.util.UUID.randomUUID().toString() ;
 
 
-        Mockito.when(this.adminDao.findById(idMenu)).thenReturn(Optional.empty());
+        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> {
-            this.adminService.disableAdminAccount("idMenu");
+            this.adminService.disableAdminAccount(adminUuid);
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(idMenu);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
-    void disabledAccountWithNegativeID (){
+    void disabledAccountWithInvalidUuid (){
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.adminService.disableAdminAccount( "");
+            this.adminService.disableAdminAccount( "aedaedaedadaz");
         });
 
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());

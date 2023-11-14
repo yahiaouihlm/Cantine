@@ -250,6 +250,8 @@ public class AdminService implements IAdminService {
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
         }
 
+        IAdminService.checkUuIdValidity(adminDtoIn.getUuid());
+
         if (adminDtoIn.getEmail() != null || adminDtoIn.getPassword() != null) {
             AdminService.LOG.error("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED IN  updateAdminInfo");
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED");
