@@ -8,7 +8,7 @@ import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderNotFoundException;
 import fr.sqli.cantine.service.order.exception.UnableToCancelOrderException;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

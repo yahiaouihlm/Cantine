@@ -5,9 +5,9 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.mailer.ForgotPasswordTokenSender;
-import fr.sqli.cantine.service.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,15 +40,15 @@ public class ForgottenPasswordService implements IForgottenPasswordService {
 
 
     @Override
-    public void sendConfirmationTokenForPasswordForgotten(String email) throws InvalidPersonInformationException, StudentNotFoundException, MessagingException {
+    public void sendConfirmationTokenForPasswordForgotten(String email) throws InvalidUserInformationException, StudentNotFoundException, MessagingException {
 
         if (email == null || email.isEmpty() || email.trim().isEmpty() || email.isBlank()) {
             ForgottenPasswordService.LOG.error("Email is required");
-            throw new InvalidPersonInformationException("Email is required");
+            throw new InvalidUserInformationException("Email is required");
         }
         if (!email.matches(this.EMAIL8_REGEX)) {
             ForgottenPasswordService.LOG.error("Email is not valid");
-            throw new InvalidPersonInformationException("Email is not valid");
+            throw new InvalidUserInformationException("Email is not valid");
         }
         var student = this.studentDao.findByEmail(email);
 

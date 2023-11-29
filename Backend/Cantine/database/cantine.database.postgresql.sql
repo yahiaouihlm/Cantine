@@ -82,7 +82,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       function_id INT NOT NULL,
       image_idimage INT NOT NULL,
       status INT  NOT NULL  DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
-      disable_date DATE DEFAULT NULL,
+      disable_date DATE DEFAULT NULL,   /*  if disable_date  is  not  null that  mean  it's   removed admin   */
       validation INT NOT NULL  DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
       unique(email),
       check (status IN (0,1)),

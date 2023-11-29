@@ -1,5 +1,6 @@
 package fr.sqli.cantine.dto.in.food;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ public abstract class AbstractFoodDtoIn {
     private Integer quantity;
     private MultipartFile image;
 
+    @JsonIgnore
     public void CheckNullabilityAndEmptiness() throws InvalidFoodInformationException {
 
         //------------- Label ----------------//
@@ -73,6 +75,8 @@ public abstract class AbstractFoodDtoIn {
      * @param str the string to remove the spaces
      * @return the string without spaces
      */
+
+    @JsonIgnore
     public String removeSpaces(String str) {
         if (str == null) {
             return "";
@@ -80,6 +84,7 @@ public abstract class AbstractFoodDtoIn {
         return str.replaceAll("\\s+", "");
     }
 
+    @JsonIgnore
     public void checkImageValidity() throws InvalidFoodInformationException {
         if (this.image == null || this.image.isEmpty() || this.image.getSize() == 0) {
             throw new InvalidFoodInformationException("IMAGE_IS_MANDATORY");

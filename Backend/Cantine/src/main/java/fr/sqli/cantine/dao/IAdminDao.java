@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface IAdminDao extends JpaRepository<AdminEntity, Integer> {
 
      public Optional <AdminEntity> findByEmail(String email);
+
+     public Optional <AdminEntity> findByUuid(String uuid);
 }

@@ -5,11 +5,11 @@ import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.cantine.service.admin.exceptions.AdminNotFound;
-import fr.sqli.cantine.service.admin.exceptions.ExpiredToken;
-import fr.sqli.cantine.service.admin.exceptions.InvalidPersonInformationException;
-import fr.sqli.cantine.service.admin.exceptions.InvalidTokenException;
-import fr.sqli.cantine.service.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.exceptions.ExpiredToken;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.InvalidTokenException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
+import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,11 +47,11 @@ public class TokenSender  {
         this.CONFIRMATION_TOKEN_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
     }
 
-    public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException {
+    public void sendToken(String email) throws UserNotFoundException, InvalidUserInformationException, MessagingException, AccountAlreadyActivatedException, UserNotFoundException {
 
         if (email == null || email.trim().isEmpty()) {
             TokenSender.LOG.error("email  is  not  valid");
-            throw new InvalidPersonInformationException("YOUR EMAIL IS NOT VALID");
+            throw new InvalidUserInformationException("YOUR EMAIL IS NOT VALID");
         }
 
         // check  if there is  admin  with  this  email    or  just student
@@ -149,12 +149,12 @@ public class TokenSender  {
 
 
         TokenSender.LOG.error("email  is  not  valid");
-        throw new AdminNotFound("EMAIl : "+ email + " is not  Found ");
+        throw new UserNotFoundException("EMAIl : "+ email + " is not  Found ");
 
     }
 
 
-    public  void  checkTokenValidity ( String   token ) throws InvalidTokenException, AccountAlreadyActivatedException, ExpiredToken,  AdminNotFound {
+    public  void  checkTokenValidity ( String   token ) throws InvalidTokenException, AccountAlreadyActivatedException, ExpiredToken, UserNotFoundException {
         if (token == null || token.trim().isEmpty())
             throw new InvalidTokenException("INVALID TOKEN");
 
@@ -191,7 +191,7 @@ public class TokenSender  {
             var  studentEntity =  this.studentDao.findById(student.getId()).orElseThrow(
                     () -> {
                         TokenSender.LOG.error("student  is  not  found but  the  token  is  valid and  not  expired");
-                         return   new AdminNotFound("INVALID TOKEN");
+                         return   new UserNotFoundException("INVALID TOKEN");
                     }
              );
 
@@ -223,7 +223,7 @@ public class TokenSender  {
                     () ->   {
                         TokenSender.LOG.error("  Not  admin  has been   found despite  the  validity  od  token ");
 
-                         return  new AdminNotFound("INVALID TOKEN");
+                         return  new UserNotFoundException("INVALID TOKEN");
                     }
             );
 
