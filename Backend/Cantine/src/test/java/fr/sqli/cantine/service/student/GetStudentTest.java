@@ -40,7 +40,7 @@ public class GetStudentTest {
 
     @BeforeEach
     void  setUp (){
-        this.studentService = new StudentService(studentDao, studentClassDao,  this.environment,  null ,  imageService,  null ,  null );
+        this.studentService = new StudentService(studentDao, studentClassDao,  this.environment,  null ,  imageService,  null ,  null, sendUserConfirmationEmail);
 
     }
 
