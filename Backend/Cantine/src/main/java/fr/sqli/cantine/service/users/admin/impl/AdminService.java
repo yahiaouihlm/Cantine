@@ -19,7 +19,7 @@ import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

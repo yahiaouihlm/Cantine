@@ -7,7 +7,7 @@ import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.mailer.ForgotPasswordTokenSender;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +40,7 @@ public class ForgottenPasswordService implements IForgottenPasswordService {
 
 
     @Override
-    public void sendConfirmationTokenForPasswordForgotten(String email) throws InvalidUserInformationException, StudentNotFoundException, MessagingException {
+    public void sendConfirmationTokenForPasswordForgotten(String email) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
 
         if (email == null || email.isEmpty() || email.trim().isEmpty() || email.isBlank()) {
             ForgottenPasswordService.LOG.error("Email is required");
@@ -70,7 +70,7 @@ public class ForgottenPasswordService implements IForgottenPasswordService {
                 return; //  end the  code  verry  important  to  the  end  of  the  code
             }
 
-         throw  new StudentNotFoundException(" user not found"); //  if  the  user  not  found  throw  exception
+         throw  new UserNotFoundException(" user not found"); //  if  the  user  not  found  throw  exception
     }
 
 

@@ -10,7 +10,7 @@ import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

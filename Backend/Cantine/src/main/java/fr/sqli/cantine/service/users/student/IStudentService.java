@@ -7,9 +7,7 @@ import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
-import fr.sqli.cantine.service.users.student.exceptions.ExistingStudentException;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
@@ -18,16 +16,23 @@ import java.util.List;
 public interface IStudentService {
 
 
+    void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException;
 
-     void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException;
     void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException;
 
-    void updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, StudentNotFoundException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException;
+    void updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException;
 
-    StudentDtout getStudentByID(Integer id) throws InvalidUserInformationException, StudentNotFoundException;
+    StudentDtout getStudentByUuid(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
-    void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingStudentException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
+    void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException, ExistingUserException;
 
-    void existingStudent(String adminEmail) throws ExistingStudentException;
+    void existingStudent(String adminEmail) throws ExistingUserException;
+
     List<StudentClassDtout> getAllStudentClass();
+
+    static void checkUuIdValidity(String studentUuid) throws InvalidUserInformationException {
+        if (studentUuid == null || studentUuid.isBlank() || studentUuid.length() < 20) {
+            throw new InvalidUserInformationException("INVALID UUID");
+        }
+    }
 }

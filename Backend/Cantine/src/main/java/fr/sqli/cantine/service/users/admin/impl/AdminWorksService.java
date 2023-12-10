@@ -10,7 +10,6 @@ import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.mailer.ConfirmationAddingAmountToStudent;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,7 +61,7 @@ public class AdminWorksService implements IAdminFunctionService {
 
 
     @Override
-    public void addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, StudentNotFoundException, ExpiredToken, InvalidTokenException {
+    public void addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException {
 
         if (studentId == null || validationCode == null || amount == null || amount < 10 || amount > 200) {
             AdminWorksService.LOG.error("INVALID  studentId Or validationCode or Amount CAN  NOT BE NULL ");
@@ -74,7 +73,7 @@ public class AdminWorksService implements IAdminFunctionService {
         var student = this.studentDao.findById(studentId).orElseThrow(
                 () -> {
                     AdminWorksService.LOG.error("STUDENT NOT  FOUND ");
-                    return new StudentNotFoundException("STUDENT NOT  FOUND");
+                    return new UserNotFoundException("STUDENT NOT  FOUND");
                 }
         );
 
@@ -123,13 +122,13 @@ public class AdminWorksService implements IAdminFunctionService {
     }
 
     @Override
-    public void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidUserInformationException, MessagingException {
+    public void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
         if (studentId == null || amount == null || amount < 10 || amount > 200) {
             throw new InvalidUserInformationException("INVALID  STUDENT ID OR AMOUNT");
         }
         var student = this.studentDao.findById(studentId);
         if (student.isEmpty()) {
-            throw new StudentNotFoundException("STUDENT NOT FOUND");
+            throw new UserNotFoundException("STUDENT NOT FOUND");
         }
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student.get());
@@ -142,7 +141,7 @@ public class AdminWorksService implements IAdminFunctionService {
     }
 
     @Override
-    public StudentDtout getStudentById(Integer studentID) throws InvalidUserInformationException, StudentNotFoundException {
+    public StudentDtout getStudentById(Integer studentID) throws InvalidUserInformationException, UserNotFoundException {
         if (studentID == null) {
             AdminWorksService.LOG.error("studentID IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID ");
@@ -150,7 +149,7 @@ public class AdminWorksService implements IAdminFunctionService {
         var student = this.studentDao.findById(studentID);
         if (student.isEmpty()) {
             AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentID + "  DOEST NOT EXISTS");
-            throw new StudentNotFoundException("STUDENT NOT  FOUND");
+            throw new UserNotFoundException("STUDENT NOT  FOUND");
         }
 
         return new StudentDtout(student.get(), this.STUDENT_IMAGE_URL);

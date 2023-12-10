@@ -8,10 +8,8 @@ import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.student.StudentService;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
-import fr.sqli.cantine.service.users.student.exceptions.ExistingStudentException;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.Impl.StudentService;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +48,9 @@ public class StudentController implements IStudentController {
 
 
     @Override
-    public ResponseEntity<StudentDtout> getStudentById(@RequestParam("idStudent") Integer id) throws StudentNotFoundException, InvalidUserInformationException {
+    public ResponseEntity<StudentDtout> getStudentByUuid( String studentUuid ) throws InvalidUserInformationException, UserNotFoundException {
 
-        var student = this.studentService.getStudentByID(id);
+        var student = this.studentService.getStudentByUuid(studentUuid);
         return ResponseEntity
                 .ok()
                 .body(student);
@@ -60,13 +58,13 @@ public class StudentController implements IStudentController {
 
     @Override
     @PutMapping(UPDATE_STUDENT_INFO_ENDPOINT)
-    public ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, StudentNotFoundException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException {
+    public ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException {
         this.studentService.updateStudentInformation(studentDtoIn);
         return ResponseEntity.ok(new ResponseDtout(STUDENT_INFO_UPDATED_SUCCESSFULLY));
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws UserNotFoundException, InvalidStudentClassException, MessagingException, InvalidFormatImageException, AccountAlreadyActivatedException, RemovedAccountException, InvalidImageException, InvalidUserInformationException, StudentClassNotFoundException, ImagePathException, IOException, ExistingStudentException {
+    public ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws UserNotFoundException, InvalidStudentClassException, MessagingException, InvalidFormatImageException, AccountAlreadyActivatedException, RemovedAccountException, InvalidImageException, InvalidUserInformationException, StudentClassNotFoundException, ImagePathException, IOException, ExistingUserException {
         this.studentService.signUpStudent(studentDtoIn);
         return ResponseEntity.ok(new ResponseDtout(STUDENT_SIGNED_UP_SUCCESSFULLY));
     }

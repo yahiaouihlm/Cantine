@@ -2,7 +2,7 @@ package fr.sqli.cantine.controller.users;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

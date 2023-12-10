@@ -5,7 +5,6 @@ import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +32,13 @@ public interface IAdminWorksController {
 
 
     @PostMapping(VALIDATE_STUDENT_AMOUNT_STUDENT)
-    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(@RequestParam("studentId") Integer studentId, @RequestParam("validationCode") Integer validationCode, @RequestParam("amount") Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, StudentNotFoundException;
+    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(@RequestParam("studentId") Integer studentId, @RequestParam("validationCode") Integer validationCode, @RequestParam("amount") Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException;
 
     @PutMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
-    ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentId") Integer studentId, @RequestParam("amount") Double amount) throws StudentNotFoundException, InvalidUserInformationException, MessagingException;
+    ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentId") Integer studentId, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
 
     @GetMapping(GET_STUDENT_BY_ID)
-    ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentId") Integer studentId) throws InvalidUserInformationException, StudentNotFoundException;
+    ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentId") Integer studentId) throws InvalidUserInformationException, UserNotFoundException;
 
     @GetMapping(GET_STUDENTS)
     ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String firstname, @RequestParam String Lastname, @RequestParam String birthdateAsString) throws InvalidUserInformationException;

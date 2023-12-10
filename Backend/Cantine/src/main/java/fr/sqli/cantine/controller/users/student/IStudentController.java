@@ -8,9 +8,7 @@ import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
-import fr.sqli.cantine.service.users.student.exceptions.ExistingStudentException;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,13 +45,13 @@ public interface IStudentController {
     ResponseEntity<ResponseDtout> sendStudentConfirmationLink(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
 
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
-    ResponseEntity<StudentDtout> getStudentById(Integer id) throws StudentNotFoundException, InvalidUserInformationException;
+    ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid")String  studentUuid) throws  InvalidUserInformationException, UserNotFoundException;
 
 
-    ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, StudentNotFoundException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException;
+    ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
 
     @PostMapping(STUDENT_SIGN_UP_ENDPOINT)
-    ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, ExistingStudentException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
+    ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException,UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException, ExistingUserException;
 
 
     @GetMapping(GET_ALL_STUDENT_CLASS)

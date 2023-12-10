@@ -5,8 +5,8 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.*;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
-import fr.sqli.cantine.service.users.student.StudentService;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.student.Impl.StudentService;
+import fr.sqli.cantine.service.users.student.Impl.StudentNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ public class GetStudentTest {
         student.setStudentClass(studentClass);
         Mockito.when(this.studentDao.findById(student.getId())).thenReturn(Optional.of(student));
 
-        var  rsult =  this.studentService.getStudentByID(id);
+        var  rsult =  this.studentService.getStudentByUuid(id);
 
         System.out.println(rsult.getImage());
         Assertions.assertEquals(rsult.getUuid(), student.getUuid());
@@ -86,7 +86,7 @@ public class GetStudentTest {
         Integer idStudent = 1 ;
         Mockito.when(this.studentDao.findById(idStudent)).thenReturn(Optional.empty());
         Assertions.assertThrows(StudentNotFoundException.class, () -> {
-            this.studentService.getStudentByID(idStudent);
+            this.studentService.getStudentByUuid(idStudent);
         });
 
 
@@ -97,14 +97,14 @@ public class GetStudentTest {
     void getAdminByIdWithNegativeID (){
         Integer idStudent = -1;
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.studentService.getStudentByID(idStudent);
+            this.studentService.getStudentByUuid(idStudent);
         });
     }
     @Test
     void getAdminByIdWithNullID (){
         Integer idStudent = null;
         assertThrows(InvalidUserInformationException.class, () -> {
-            this.studentService.getStudentByID(idStudent);
+            this.studentService.getStudentByUuid(idStudent);
         });
     }
 
