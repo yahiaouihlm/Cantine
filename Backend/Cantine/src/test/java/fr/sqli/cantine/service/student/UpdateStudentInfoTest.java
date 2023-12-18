@@ -8,8 +8,8 @@ import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.users.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.images.ImageService;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import fr.sqli.cantine.service.users.student.Impl.StudentService;
-import fr.sqli.cantine.service.users.student.Impl.StudentNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +57,7 @@ public class UpdateStudentInfoTest {
         this.environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
 
         this.studentDtoIn = new StudentDtoIn();
-        this.studentDtoIn.setId(1);
+        this.studentDtoIn.setUuid(java.util.UUID.randomUUID().toString());
         this.studentDtoIn.setFirstname("firstname");
         this.studentDtoIn.setLastname("lastname");
         this.studentDtoIn.setEmail("halim@social.aston-ecole.com") ;
@@ -72,7 +72,7 @@ public class UpdateStudentInfoTest {
                 "images/png",                    // type MIME
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
-        this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService ,    null ,  null, sendUserConfirmationEmail);
+        this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService ,    null ,  null);
 
     }
 
@@ -80,11 +80,11 @@ public class UpdateStudentInfoTest {
 
     @Test
     void  updateStudentWithStudentNotFound() {
-        Mockito.when(this.studentDao.findById(this.studentDtoIn.getId())).thenReturn(Optional.empty());
+        Mockito.when(this.studentDao.findByUuid(this.studentDtoIn.getUuid())).thenReturn(Optional.empty());
         Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
-        assertThrows(StudentNotFoundException.class, ()-> this.studentService.updateStudentInformation(this.studentDtoIn));
+        assertThrows(UserNotFoundException.class, ()-> this.studentService.updateStudentInformation(this.studentDtoIn));
 
-        Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.studentDtoIn.getId());
+        Mockito.verify(this.studentDao, Mockito.times(1)).findByUuid(this.studentDtoIn.getUuid());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
 
@@ -316,16 +316,10 @@ public class UpdateStudentInfoTest {
 
 
     /****************************  TESTS FOR ID  ************************************/
+
     @Test
-    void updateStudentWithLongID() throws IOException {
-        this.studentDtoIn.setId(Integer.MAX_VALUE + 15323 );
-        assertThrows(InvalidUserInformationException.class,()->this.studentService.updateStudentInformation(this.studentDtoIn));
-        Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
-    }
-    @Test
-    void updateStudentWithNegative() throws IOException {
-        this.studentDtoIn.setId(-5);
+    void updateStudentWithShortUuid() throws IOException {
+        this.studentDtoIn.setUuid("ajbajbzdjazdaz");
         assertThrows(InvalidUserInformationException.class,()->this.studentService.updateStudentInformation(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
@@ -333,8 +327,8 @@ public class UpdateStudentInfoTest {
 
 
     @Test
-    void updateStudentWithNullID() throws IOException {
-        this.studentDtoIn.setId(null);
+    void updateStudentWithNullUuID() throws IOException {
+        this.studentDtoIn.setUuid(null);
         assertThrows(InvalidUserInformationException.class,()->this.studentService.updateStudentInformation(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());

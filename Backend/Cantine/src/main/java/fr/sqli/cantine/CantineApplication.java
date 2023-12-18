@@ -12,13 +12,18 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 
-@SpringBootApplication (exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication (/*exclude = SecurityAutoConfiguration.class**/)
 public class CantineApplication {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -62,15 +67,15 @@ public class CantineApplication {
 		return  new BCryptPasswordEncoder();
 	}
 
-/*	@Bean
+	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+		configuration.setAllowedOrigins(List.of("http://localhost:4200"));
 		configuration.setAllowedMethods(Arrays.asList("GET","POST"));
 		configuration.setAllowedHeaders(Arrays.asList("Authorization" , "Content-Type"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
-	}*/
+	}
 
 }
