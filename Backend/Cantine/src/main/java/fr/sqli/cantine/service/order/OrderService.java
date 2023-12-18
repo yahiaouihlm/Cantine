@@ -14,8 +14,8 @@ import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.qrcode.QrCodeGenerator;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,7 +107,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, StudentNotFoundException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException {
+    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
         if (orderDtoIn == null)
             throw new InvalidOrderException("INVALID ORDER");
 
@@ -119,7 +119,7 @@ public class OrderService implements IOrderService {
         //  check Information  validity
 
         if (student.isEmpty())
-            throw new StudentNotFoundException("STUDENT NOT FOUND");
+            throw new UserNotFoundException("STUDENT NOT FOUND");
 
 
         if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && orderDtoIn.getMealsId().size() == 0 && orderDtoIn.getMenusId().size() == 0) {
@@ -237,7 +237,7 @@ public class OrderService implements IOrderService {
 
 
     @Override
-    public void cancelOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, StudentNotFoundException {
+    public void cancelOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException {
         if (orderId == null || orderId < 0) {
             OrderService.LOG.error("INVALID ORDER ID");
             throw new InvalidOrderException("INVALID ORDER ID");
@@ -263,7 +263,7 @@ public class OrderService implements IOrderService {
         var student = this.studentDao.findById(orderOpt.get().getStudent().getId());
         if (student.isEmpty()) {  // it can not   be happened
             OrderService.LOG.error("STUDENT WITH  ID  = " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
-            throw new StudentNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
+            throw new UserNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
         }
 
         var orderprice = orderOpt.get().getPrice(); //  get  the  price  of  the  order
@@ -296,7 +296,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, StudentNotFoundException, InvalidUserInformationException {
+    public List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, InvalidUserInformationException, UserNotFoundException {
 
         var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -313,7 +313,7 @@ public class OrderService implements IOrderService {
         var student = this.studentDao.findById(studentId);
         if (student.isEmpty()) {
             OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " NOT FOUND");
-            throw new StudentNotFoundException("STUDENT WITH : " + studentId + " NOT FOUND");
+            throw new UserNotFoundException("STUDENT WITH : " + studentId + " NOT FOUND");
         }
 
         if (!student.get().getEmail().equals(username)) {

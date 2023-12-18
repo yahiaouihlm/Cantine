@@ -9,8 +9,9 @@ import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.OrderService;
 import fr.sqli.cantine.service.order.exception.*;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +40,12 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, InvalidUserInformationException {
+    public ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentId,date));
     }
 
     @Override
-    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException {
+    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
         this.orderService.addOrder(orderDtoIn) ;
         return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }
@@ -55,7 +56,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<String> cancelOrder(@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, StudentNotFoundException {
+    public ResponseEntity<String> cancelOrder(@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException {
         this.orderService.cancelOrder(orderId);
         return ResponseEntity.ok( ORDER_CANCELLED_SUCCESSFULLY);
     }

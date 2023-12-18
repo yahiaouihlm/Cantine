@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public  abstract  class AbstractUsersDtoIn {
     private static final Logger LOG = LogManager.getLogger();
 
-    private  Integer id ;
+
      private String  uuid ;
     private  String firstname;
     private  String lastname;
@@ -25,13 +25,7 @@ public  abstract  class AbstractUsersDtoIn {
     private MultipartFile image;
 
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonIgnore
     protected   void ValidatePersonInformationWithOutPhone() throws InvalidUserInformationException {

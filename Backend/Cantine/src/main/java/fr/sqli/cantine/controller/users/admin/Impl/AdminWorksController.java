@@ -7,7 +7,6 @@ import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.service.users.admin.impl.AdminWorksService;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,19 +27,19 @@ public class AdminWorksController  implements  IAdminWorksController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, StudentNotFoundException {
+    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException {
          this.adminWorksService.addAmountToStudentAccountCodeValidation(studentId ,  validationCode , amount);
         return  ResponseEntity.ok(new ResponseDtout(STUDENT_VALIDATE_STUDENT_AMOUNT));
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws StudentNotFoundException, InvalidUserInformationException, MessagingException {
+    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
         this.adminWorksService.attemptAddAmountToStudentAccount(studentId , amount);
         return ResponseEntity.ok(new ResponseDtout(SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION));
     }
 
     @Override
-    public ResponseEntity<StudentDtout> getStudentById(Integer studentId) throws InvalidUserInformationException, StudentNotFoundException {
+    public ResponseEntity<StudentDtout> getStudentById(Integer studentId) throws InvalidUserInformationException, UserNotFoundException {
         return  ResponseEntity.ok(this.adminWorksService.getStudentById(studentId));
     }
 

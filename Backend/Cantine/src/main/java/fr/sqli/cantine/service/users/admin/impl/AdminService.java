@@ -19,7 +19,7 @@ import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.student.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,8 +83,7 @@ public class AdminService implements IAdminService {
             throw new InvalidTokenException("INVALID TOKEN");
         }
 
-        var confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(
-                () -> {
+        var confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(() -> {
                     AdminService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", token);
                     return new TokenNotFoundException("INVALID TOKEN");
                 }); //  token  not  found
@@ -105,8 +104,7 @@ public class AdminService implements IAdminService {
             throw new ExpiredToken("EXPIRED TOKEN");
         }
 
-        var admin = this.adminDao.findById(adminEntity.getId()).orElseThrow(
-                () -> {
+        var admin = this.adminDao.findById(adminEntity.getId()).orElseThrow(() -> {
                     AdminService.LOG.error("ADMIN  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
                     return new UserNotFoundException("ADMIN NOT FOUND");
                 }
@@ -149,7 +147,7 @@ public class AdminService implements IAdminService {
 
         var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
 
-        this.sendUserConfirmationEmail.sendConfirmationLink(admin, url);
+        this.sendUserConfirmationEmail.sendAdminConfirmationLink(admin, url);
     }
 
     @Override

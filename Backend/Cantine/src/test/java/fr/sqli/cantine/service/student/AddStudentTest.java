@@ -6,12 +6,12 @@ import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
 import fr.sqli.cantine.service.users.exceptions.StudentClassNotFoundException;
 import fr.sqli.cantine.service.images.ImageService;
-import fr.sqli.cantine.service.users.student.StudentService;
-import fr.sqli.cantine.service.users.student.exceptions.ExistingStudentException;
+import fr.sqli.cantine.service.users.student.Impl.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +74,7 @@ class AddStudentTest {
                  "images/png",                    // type MIME
                  new FileInputStream(IMAGE_TESTS_PATH)));
          ;  // contenu du fichier
-         this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService,  null , null );
+         this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService,  null , null);
 
      }
 
@@ -85,7 +85,7 @@ class AddStudentTest {
      void addStudentWithExistingEmailTest() throws IOException {
          Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
          Mockito.when(this.studentDao.findByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
-         assertThrows(ExistingStudentException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
+         assertThrows(ExistingUserException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
             Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
          Mockito.verify(this.studentDao, Mockito.times(1)).findByEmail(this.studentDtoIn.getEmail());
          Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
@@ -372,7 +372,7 @@ class AddStudentTest {
 
 
     @Test
-    void addStudentWithNullNameTest() throws IOException {
+    void addStudentWithNullNameTest() {
         this.studentDtoIn.setFirstname(null);
         assertThrows(InvalidUserInformationException.class,()->this.studentService.signUpStudent(this.studentDtoIn));
         Mockito.verify(this.iStudentClassDao, Mockito.times(0)).findByName(Mockito.anyString());

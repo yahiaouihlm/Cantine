@@ -8,7 +8,7 @@ import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderNotFoundException;
 import fr.sqli.cantine.service.order.exception.UnableToCancelOrderException;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ public class CancelOrderTest {
 
 
     @Test
-    void cancelOrderTest() throws OrderNotFoundException, InvalidOrderException, StudentNotFoundException, UnableToCancelOrderException {
+    void cancelOrderTest() throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException {
         var orderId = 3;
         var studentId = 1;
         OrderEntity orderEntity = new OrderEntity();
@@ -67,7 +67,7 @@ public class CancelOrderTest {
         this.orderService.cancelOrder(orderId);
 
 
-        Assertions.assertTrue(studentEntity.getWallet().compareTo(BigDecimal.TWO.add(BigDecimal.TEN)) == 0);
+        Assertions.assertEquals(0, studentEntity.getWallet().compareTo(BigDecimal.TWO.add(BigDecimal.TEN)));
 
 
         Mockito.verify(orderDao, Mockito.times(1)).findById(orderId);

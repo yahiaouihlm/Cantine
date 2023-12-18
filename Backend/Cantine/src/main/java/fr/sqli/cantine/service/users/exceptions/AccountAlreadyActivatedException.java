@@ -1,4 +1,4 @@
-package fr.sqli.cantine.service.users.student.exceptions;
+package fr.sqli.cantine.service.users.exceptions;
 
 public class AccountAlreadyActivatedException extends Exception{
 

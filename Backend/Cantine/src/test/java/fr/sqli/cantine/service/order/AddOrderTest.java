@@ -12,8 +12,9 @@ import fr.sqli.cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderLimitExceededException;
 import fr.sqli.cantine.service.order.exception.UnavailableFoodException;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -463,7 +464,7 @@ public class AddOrderTest {
     @Test
     void addOrderWithStudentNotFound() {
         Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentId())).thenReturn(Optional.empty());
-        Assertions.assertThrows(StudentNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
+        Assertions.assertThrows(UserNotFoundException.class, () -> this.orderService.addOrder(this.orderDtoIn));
         Mockito.verify(this.studentDao, Mockito.times(1)).findById(this.orderDtoIn.getStudentId());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }

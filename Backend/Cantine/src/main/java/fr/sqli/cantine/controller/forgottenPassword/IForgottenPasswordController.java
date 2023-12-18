@@ -2,7 +2,7 @@ package fr.sqli.cantine.controller.forgottenPassword;
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
-import fr.sqli.cantine.service.users.student.exceptions.StudentNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,5 +14,5 @@ public interface IForgottenPasswordController {
 
     String  TOKEN_SENT_SUCCESSFULLY = "TOKEN_SENT_SUCCESSFULLY";
     @PostMapping(SEND_CONFIRMATION_TOKEN_FOR_PASSWORD_FORGOTTEN)
-    ResponseEntity<ResponseDtout> sendConfirmationTokenForPasswordForgotten(@RequestParam("email") String email) throws InvalidUserInformationException, StudentNotFoundException, MessagingException;
+    ResponseEntity<ResponseDtout> sendConfirmationTokenForPasswordForgotten(@RequestParam("email") String email) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
 }
