@@ -47,11 +47,11 @@
                 <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
                     <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot de passe est requis</div>
                     <div *ngIf="f['password'].errors['maxlength']" class="center">
-                     Mot de passe est incorrecte
+                        Mot de passe est incorrecte
                     </div>
 
                     <div *ngIf="f['password'].errors['minlength']" class="center">
-                       Mot de passe est incorrecte
+                        Mot de passe est incorrecte
                     </div>
 
 
@@ -63,7 +63,7 @@
             <div class="account-state center"  *ngIf="!isLoading;  else loadingTemplate">
                 <div  *ngIf="disabled_account" class="disabled-account">
                     <p style=" color :  red "> Votre compte n'est pas Activer <br> <span style="color: #004a9f  ;  cursor:pointer"
-                    (click)="sendTokenToActivateAccount()">Cliquer  ici  pour activer </span>
+                                                                                         (click)="sendTokenToActivateAccount()">Cliquer  ici  pour activer </span>
                     </p>
 
                 </div>
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="center"  *ngIf="wrong_credentials" (click)="forgotPassword()">
-                      <p style="color: #004a9f"> Mot de passe oublié ! </p>
+                    <p style="color: #004a9f"> Mot de passe oublié ! </p>
                 </div>
 
                 <div class="validate-form center">
