@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 @Component({
     selector: 'app-authentication',
     templateUrl: './authentication.component.html',
-    styleUrls: ['../../../assets/styles/authentication.component.scss'],
+    styleUrls: ['../../../assets/styles/authentication.component.scss' , '../../../assets/styles/global.scss'],
     providers: [CoreCantineService, SharedService]
 })
 export class AuthenticationComponent {
@@ -51,11 +51,11 @@ export class AuthenticationComponent {
                     if  (response.role === "ROLE_ADMIN") {
                         this.router.navigate(['cantine/admin']).then(() => {
                             window.location.reload();
-                        });;
+                        });
                     }else {
                         this.router.navigate(['cantine/home']).then(() => {
                             window.location.reload();
-                        });;
+                        });
 
                     }
 
