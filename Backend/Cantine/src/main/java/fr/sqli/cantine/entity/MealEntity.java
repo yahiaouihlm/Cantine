@@ -65,6 +65,9 @@ public class MealEntity implements Serializable {
     @JoinColumn(name="image_idimage", nullable=false)
     private ImageEntity image;
 
+    @Enumerated(EnumType.STRING)
+    private MealTypeEnum mealType;
+
     //bi-directional many-to-many association to CommandeEntity
    @ManyToMany( fetch =  FetchType.LAZY)
     @JoinTable(
@@ -82,13 +85,14 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/
 
-    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {;
+    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status,MealTypeEnum mealTypeEnum ,ImageEntity image) {;
         this.label = label.trim();
         this.category = category.trim();
         this.description = description.trim();
         this.price = price;
         this.quantity = quantity;
         this.status = status;
+        this.mealType = mealTypeEnum;
         this.image = image;
     }
 
@@ -181,6 +185,15 @@ public class MealEntity implements Serializable {
     public void setOrders(List<OrderEntity> orders) {
         this.orders = orders;
     }
+
+    public MealTypeEnum getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(MealTypeEnum mealType) {
+        this.mealType = mealType;
+    }
+
 
     /* public List<OrderEntity> getCommandes() {
         return this.commandes;
