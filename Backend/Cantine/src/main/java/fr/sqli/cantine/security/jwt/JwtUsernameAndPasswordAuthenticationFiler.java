@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 
 
@@ -186,6 +189,8 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
 
     }
+
+
 
 
 }

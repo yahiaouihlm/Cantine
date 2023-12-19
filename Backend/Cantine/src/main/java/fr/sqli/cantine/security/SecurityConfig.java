@@ -16,6 +16,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,8 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-/*@Configuration
-@EnableWebSecurity*/
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
 
@@ -36,7 +37,7 @@ public class SecurityConfig {
     private CustomAccessDeniedHandler customAccessDeniedHandler ;
     private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new  StoneAuthenticationFailureHandler() ;
     private   ObjectMapper objectMapper ;
-/*
+
     public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,
                            CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder ,  JwtTokenVerifier jwtTokenVerifier){
 
@@ -47,13 +48,13 @@ public class SecurityConfig {
         this.customAccessDeniedHandler = customAccessDeniedHandler ;
 
     }
-*/
 
-  /*  @Bean
+
+    @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http   ) throws Exception {
 
         return  http
-                .csrf( csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
@@ -75,15 +76,16 @@ public class SecurityConfig {
             authorize.anyRequest().authenticated();
         })
                 .authenticationProvider(authenticationProvider())
-                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()  *//*this.objectMapper*//*))
+                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager() ))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
               .exceptionHandling()
                  .authenticationEntryPoint(this.customAuthenticationEntryPoint)
                 .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
                 .and()
-               .build() ;
+               .build();
 
-    }*/
+    }
+/*
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -95,12 +97,13 @@ public class SecurityConfig {
         return source;
     }
 
+*/
 
 
-  /*  @Bean
+    @Bean
     public AuthenticationManager authenticationManager(){
         return   new ProviderManager(authenticationProvider());
-    }*/
+    }
 
     @Bean
     AuthenticationProvider authenticationProvider () {
