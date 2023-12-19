@@ -3,10 +3,7 @@ package fr.sqli.cantine.service.food.meals;
 
 import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
-import fr.sqli.cantine.entity.ImageEntity;
-import fr.sqli.cantine.entity.MealEntity;
-import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.entity.OrderEntity;
+import fr.sqli.cantine.entity.*;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
@@ -51,8 +48,8 @@ class RemoveMealTest {
 
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("image-test");
-
-        this.mealEntity = new MealEntity("Meal 1", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, imageEntity);
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
+        this.mealEntity = new MealEntity("Meal 1", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1,mealTypeEnum, imageEntity);
         this.mealEntity.setId(1);
 
 
