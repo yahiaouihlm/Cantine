@@ -4,6 +4,7 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.impl.MealService;
@@ -50,7 +51,8 @@ class GetMealsTest {
         this.iMealService = new MealService(this.environment, this.iMealDao, this.imageService);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("image-test");
-        this.mealEntity = new MealEntity("Meal 1 ", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, imageEntity);
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
+        this.mealEntity = new MealEntity("Meal 1 ", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum,imageEntity);
         this.mealEntity.setId(1);
 
 
@@ -59,7 +61,8 @@ class GetMealsTest {
     @Test
     @DisplayName("Test getAllMeals() with list of 2 elements")
     void getAllMealsWithListOf2Elements() {
-        var meal2 = new MealEntity("Meal 2 ", "Frites", "firt Meal To  Test 2   ", BigDecimal.valueOf(1.3), 1, 1, new ImageEntity());
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
+        var meal2 = new MealEntity("Meal 2 ", "Frites", "firt Meal To  Test 2   ", BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum, new ImageEntity());
         ;
         meal2.setId(2);
 

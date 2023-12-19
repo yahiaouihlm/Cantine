@@ -4,6 +4,7 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.food.impl.MealService;
@@ -52,7 +53,8 @@ public class AddMealTest {
         mealService = new MealService(env, mealDao, imageService);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("image-test");
-        this.mealEntity = new MealEntity(mealLabel, categoryMeal, descriptionMeal, BigDecimal.valueOf(1.3), 1, 1, imageEntity);
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
+        this.mealEntity = new MealEntity(mealLabel, categoryMeal, descriptionMeal, BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum, imageEntity);
         this.mealEntity.setId(1);
 
 
@@ -61,6 +63,7 @@ public class AddMealTest {
         this.mealDtoIn.setCategory(categoryMeal);
         this.mealDtoIn.setDescription(descriptionMeal);
         this.mealDtoIn.setPrice(new BigDecimal("1.3"));
+        this.mealDtoIn.setMealType("ENTREE");
         this.mealDtoIn.setQuantity(1);
         this.mealDtoIn.setStatus(1);
         this.mealDtoIn.setImage(new MockMultipartFile("oldImage", "image.jpg", "text/plain", "Spring Framework".getBytes()));
@@ -163,9 +166,36 @@ public class AddMealTest {
         Mockito.verify(this.mealDao, Mockito.times(0)).save(this.mealEntity);
     }
 
+    @Test
+    public void AddMealWithInvalidMealType() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn.setMealType("TEST");
 
-    /********************************** Price  ************************************/
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> mealService.addMeal(mealDtoIn));
 
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).uploadImage(Mockito.any(), Mockito.any());
+    }
+    @Test
+    public void AddMealWithEmptyMealType() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn.setMealType("");
+
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> mealService.addMeal(mealDtoIn));
+
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).uploadImage(Mockito.any(), Mockito.any());
+    }
+    @Test
+    public void AddMealWithNullMealType() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
+        this.mealDtoIn.setMealType(null);
+
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> mealService.addMeal(mealDtoIn));
+
+
+        Mockito.verify(this.mealDao, Mockito.times(0)).save(Mockito.any(MealEntity.class));
+        Mockito.verify(this.imageService, Mockito.times(0)).uploadImage(Mockito.any(), Mockito.any());
+    }
     @Test
     @DisplayName("Test the addMeal method with status out of bound status = -1")
     public void AddMealWithStatusOutOfBoundTest1() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {

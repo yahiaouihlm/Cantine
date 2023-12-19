@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
+
 
 @SpringBootApplication ( exclude =  {SecurityAutoConfiguration.class} )
 public class CantineApplication {

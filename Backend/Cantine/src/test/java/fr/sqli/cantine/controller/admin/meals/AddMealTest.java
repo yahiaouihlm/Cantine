@@ -6,6 +6,7 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 
+import fr.sqli.cantine.entity.MealTypeEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -76,9 +77,9 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     public void initDataBase() {
         ImageEntity image = new ImageEntity();
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
-
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
-                , new BigDecimal("1.5"), 10, 1, image);
+                , new BigDecimal("1.5"), 10, 1, mealTypeEnum,image);
 
         this.mealDao.save(mealEntity);
     }
