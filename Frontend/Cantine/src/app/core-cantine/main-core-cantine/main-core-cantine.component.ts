@@ -1,12 +1,8 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatSidenav} from "@angular/material/sidenav";
-import {BreakpointObserver} from "@angular/cdk/layout";
+import {Component,OnInit} from '@angular/core';
 import {AuthObject} from "../../sharedmodule/models/authObject";
 import {Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
-import {HttpStatusCode} from "@angular/common/http";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-main-core-cantine',

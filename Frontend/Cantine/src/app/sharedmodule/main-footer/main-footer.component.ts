@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     `
        footer{
          font-size: 1rem;
-         background:  #002b5c ;
+         background-color: #7b7b78;
          i{
            margin-right: 8px;
          }

@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {AdminService} from "../../admin/dashbord/admin.service";
-import {normalizeExtraEntryPoints} from "@angular-devkit/build-angular/src/webpack/utils/helpers";
 import {HttpStatusCode} from "@angular/common/http";
 import {SharedService} from "../../sharedmodule/shared.service";
 

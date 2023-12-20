@@ -1,31 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Courgette&family=Satisfy&family=Sedgwick+Ave+Display&display=swap');
+
 $navbar-color: #002b5c; //  la couleur de la nav qui  sort depuis  la gauche
-$iconnav-color : rgb(188, 204, 209);
-$navprincipale-color: #004a9f ;  // la couleur de La Nav toutes en  haut qui  contient le titre
-$cantine-sqli-color : rgb(211, 222, 234) ; // l la couleur du  titre sqli dans la nav  principale
+$iconnav-color: rgb(188, 204, 209);
+$navprincipale-color: #7b7b78;// #004a9f; // la couleur de La Nav toutes en  haut qui  contient le titre
+$cantine-sqli-color: rgb(211, 222, 234); // l la couleur du  titre sqli dans la nav  principale
+$cantine-sqli-main-color:rgba(223, 215, 193, 0.53); // la couleur du  background de la page excetpion  nav /  footer
 
-
-mat-toolbar{
+mat-toolbar {
   //position: fixed;
-  background:$navprincipale-color ;
+  background: $navprincipale-color;
   color: white;
+
   .not-connect-login-small {
     display: none;
   }
-  img{
+
+  img {
     width: 60px;
     cursor: pointer;
-    border-radius:50% ;
+    border-radius: 50%;
   }
-   //z-index: 100;
+
+  //z-index: 100;
 }
 
-mat-sidenav{
+mat-sidenav {
   margin: 16px;
   width: 200px;
-  border-right:none ;
+  border-right: none;
   background: $navbar-color;
   color: white;
   border-radius: 15px;
@@ -47,8 +51,10 @@ mat-sidenav{
   color: lightgray;
   border: 10px;
 }
-mat-sidenav-container{
+
+mat-sidenav-container {
   height: calc(100vh - 65px);
+  background-color: $cantine-sqli-main-color;
 }
 
 .menu-button {
@@ -57,7 +63,7 @@ mat-sidenav-container{
   align-items: center;
   justify-content: flex-start;
   font-size: 1rem;
-  background-color: $navbar-color ;
+  background-color: $navbar-color;
   border: none;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -68,6 +74,7 @@ mat-sidenav-container{
     margin-bottom: 3px;
   }
 }
+
 .menu-button:hover {
   background-color: #fcfcfc;
   color: #000;
@@ -100,31 +107,34 @@ mat-divider {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.burgger{
-  background-color:$navprincipale-color ;
+.burgger {
+  background-color: $navprincipale-color;
   border: none;
-  color:$iconnav-color ;
+  color: $iconnav-color;
 }
 
-.badge{
+.badge {
   width: 8px;
 }
 
-.logo-container{
+.logo-container {
   width: 100%;
   display: flex;
   justify-content: center;
-  .sqli-div{
 
-    .bysqli{
+  .sqli-div {
+
+    .bysqli {
       margin-top: -10px;
-      .by{
+
+      .by {
         font-family: 'Sedgwick Ave Display', cursive;
 
         font-size: 1.6rem;
         margin-left: 15%;
       }
-      .sqli{
+
+      .sqli {
         margin-left: 10%;
         font-family: 'Courgette', cursive;
         font-family: 'Satisfy', cursive;
@@ -133,14 +143,17 @@ mat-divider {
       }
     }
   }
-  .cantière-span{
+
+  .cantière-span {
     font-family: 'Delicious Handrawn', cursive;
     font-size: 2.4rem;
   }
 
 }
-.connect{
+
+.connect {
   padding-top: 5px;
+
   button {
     width: 100%;
     display: flex;
@@ -153,11 +166,13 @@ mat-divider {
     padding-right: 17px;
     color: rgb(220, 226, 238);
     margin-right: 10px;
+
     mat-icon {
       margin-right: 5px;
       margin-bottom: 1px;
     }
   }
+
   button:hover {
     background-color: #fcfcfc;
     color: #000;
@@ -165,21 +180,29 @@ mat-divider {
   }
 
 }
-mat-sidenav-content{ // le  container principale
-  main{
+
+mat-sidenav-content { // le  container principale
+  main {
     width: 100%;
   }
 }
 
+.logo-cantine {
+  img {
+    max-width: 90%;
+    padding-bottom: 5px;
 
-  //  le  container principale
+  }
+}
+
+//  le  container principale
 
 /*.border-for-user {
     margin-left: 10px;
 }*/
 
-@media(max-width : 900px){
-  .container{
+@media(max-width: 900px) {
+  .container {
     width: 100%;
     background-color: red;
   }
@@ -188,28 +211,30 @@ mat-sidenav-content{ // le  container principale
       display: flex;
     }
   }
-  mat-toolbar{
-    img{
+  mat-toolbar {
+    img {
       width: 40px;
       cursor: pointer;
     }
   }
-  .connect{
+  .connect {
     display: none;
   }
-  .logo-container{
-    .sqli-div{
-      .bysqli{
-        .by{
+  .logo-container {
+    .sqli-div {
+      .bysqli {
+        .by {
           font-size: 1rem;
           margin-left: 8%;
         }
-        .sqli{
+
+        .sqli {
           font-size: 1rem;
         }
       }
     }
-    .cantière-span{
+
+    .cantière-span {
       font-size: 1.4rem;
     }
 
