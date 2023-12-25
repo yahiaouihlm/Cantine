@@ -33,8 +33,7 @@ public class AppUserService  implements UserDetailsService {
             throw  new UsernameNotFoundException("user not found");
 
         if (iAdminDao.findByEmail(username).isPresent()){
-             var user = new MyUserDaitls(iAdminDao.findByEmail(username).get()) ;
-             return   user   ;
+            return new MyUserDaitls(iAdminDao.findByEmail(username).get());
         }
         else  if (iStudentDao.findByEmail(username).isPresent()){
             return  new MyUserDaitls(iStudentDao.findByEmail(username).get());

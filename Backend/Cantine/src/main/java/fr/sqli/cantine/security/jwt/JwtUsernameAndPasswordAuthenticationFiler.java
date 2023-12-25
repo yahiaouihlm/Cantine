@@ -6,13 +6,12 @@ import fr.sqli.cantine.dto.in.users.Login;
 import fr.sqli.cantine.security.MyUserDaitls;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -35,7 +34,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
     private  static final Logger LOG = LogManager.getLogger();
     private AuthenticationManager authenticationManager ;
 
-
+    public static final String JWT_COOKIE_NAME = "JWT_TOKEN";
     public  JwtUsernameAndPasswordAuthenticationFiler (AuthenticationManager authenticationManager){
         this.authenticationManager= authenticationManager ;
 
@@ -176,16 +175,23 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
     /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();
-        idToken.put("Authorization", "Bearer " + jwtAccessToken);
+   //     idToken.put("Authorization", "Bearer " + jwtAccessToken);
         response.setContentType("application/json");
         idToken.put("status" , HttpStatus.OK.name());
         idToken.put("message" ,  "you are authenticated");
         idToken.put("Firstname" ,  user.getFirstname());
         idToken.put("LastName" ,  user.getLastname());
         idToken.put("email" , username);
-        idToken.put("id" ,  user.getId().toString()); /*TODO changer  le id  yo  UUID */
+        idToken.put("id" ,  user.getUuid()); /*TODO changer  le id  yo  UUID */
         idToken.put("image",  user.getImage() );
         idToken.put("role", role[0].toString()); // pas  une
+
+        String accessToken  =  "Bearer" + jwtAccessToken ;
+        Cookie cookie = new Cookie(JWT_COOKIE_NAME, accessToken);
+        cookie.setHttpOnly(true);
+
+        response.addCookie(cookie);
+
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
 
     }
