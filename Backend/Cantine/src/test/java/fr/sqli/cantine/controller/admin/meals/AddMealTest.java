@@ -1098,13 +1098,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
     @Test
-    void AddMealTestWithNullRequestData() throws Exception {
+    void addMealTestWithNullRequestData() throws Exception {
         // given :  remove label from formData
         // word  with  101  characters
         // when : call addMeal
-        System.out.println("dans le tess "+   super.getAdminBearerToken());
+
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
-                        .header("Authorization", super.getAdminBearerToken())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :

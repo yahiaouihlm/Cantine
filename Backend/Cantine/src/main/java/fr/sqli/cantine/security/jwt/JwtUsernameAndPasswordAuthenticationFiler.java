@@ -37,7 +37,6 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
 
     public  JwtUsernameAndPasswordAuthenticationFiler (AuthenticationManager authenticationManager){
-        JwtUsernameAndPasswordAuthenticationFiler.LOG.error(" passage dans JwtUsernameAndPasswordAuthenticationFiler");
         this.authenticationManager= authenticationManager ;
 
     }

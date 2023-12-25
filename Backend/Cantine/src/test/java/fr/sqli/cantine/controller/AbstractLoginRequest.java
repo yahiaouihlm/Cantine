@@ -20,8 +20,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+
 public class AbstractLoginRequest extends AbstractContainerConfig {
 
     private String studentBearerToken;
