@@ -6,8 +6,8 @@ import {SharedService} from "../../sharedmodule/shared.service";
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
-  styles: [
-  ], providers: [SharedService]
+  styleUrls:['../../../assets/styles/forgot-password.component.scss', '../../../assets/styles/global.scss'] ,
+    providers: [SharedService]
 })
 export class ForgotPasswordComponent {
 
