@@ -7,6 +7,7 @@ import {SharedService} from "../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
+import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
 
 @Component({
     selector: 'app-authentication',
@@ -16,9 +17,7 @@ import {Router} from "@angular/router";
 })
 export class AuthenticationComponent {
 
-    private USER_DISABLED_ACCOUNT = "DISABLED ACCOUNT";
-    private USER_WRONG_CREDENTIALS = "WRONG CREDENTIALS";
-    private ADMIN_INVALID_ACCOUNT = "INVALID ACCOUNT";
+
     submitted = false;
     disabled_account = false;
     wrong_credentials = false;
@@ -38,20 +37,22 @@ export class AuthenticationComponent {
             return;
         }
         this.isLoading = true;
-
+        console.log("invalid account");
         this.coreCantineService.userAuthentication(this.signIn.value).subscribe({
+
                 next: (response) => {
+                    console.log("well authenticated");
                     this.disabled_account = false;
                     this.wrong_credentials = false;
                     this.isLoading = false
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
-                    if (response.role === "ROLE_ADMIN") {
-                        this.router.navigate(['cantine/admin']).then(() => {
+                    if (response.role === IConstantsCoreCantine.ADMIN_ROLE) {
+                        this.router.navigate([IConstantsCoreCantine.ADMIN_URL]).then(() => {
                             window.location.reload();
                         });
                     } else {
-                        this.router.navigate(['cantine/home']).then(() => {
+                        this.router.navigate([IConstantsCoreCantine.HOME_URL]).then(() => {
                             window.location.reload();
                         });
 
@@ -59,13 +60,13 @@ export class AuthenticationComponent {
 
                 },
                 error: (error) => {
-                    if (error.status === HttpStatusCode.Forbidden && error.error.message === this.USER_DISABLED_ACCOUNT) {
+                    if (error.status === HttpStatusCode.Forbidden && error.error.message === IConstantsCoreCantine.USER_DISABLED_ACCOUNT) {
                         this.disabled_account = true;
                         this.wrong_credentials = false;
-                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === this.USER_WRONG_CREDENTIALS) {
+                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsCoreCantine.USER_WRONG_CREDENTIALS) {
                         this.wrong_credentials = true;
                         this.disabled_account = false;
-                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === this.ADMIN_INVALID_ACCOUNT) {
+                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsCoreCantine.ADMIN_INVALID_ACCOUNT) {
                         console.log("invalid account")
                         this.invalid_account = true;
                         this.disabled_account = false;

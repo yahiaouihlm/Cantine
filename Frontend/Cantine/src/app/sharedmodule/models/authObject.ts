@@ -1,17 +1,17 @@
 
 export  class  AuthObject  {
     id! : string;
-    Authorization! : string;
-    Firstname : string =  "user" ;
+    authorization! : string;
+    firstname! : string;
 
-    LastName : string = "user";
+    lastName!: string;
 
     email! : string;
 
 
     role! : string;
 
-     image : string="https://www.w3schools.com/howto/img_avatar.png";
+    image! : string;
 
 
 }
