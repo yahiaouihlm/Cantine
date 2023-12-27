@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../sharedmodule/functions/validation";
-import {HttpClient, HttpStatusCode} from "@angular/common/http";
+import {HttpStatusCode} from "@angular/common/http";
 import {CoreCantineService} from "../core-cantine.service";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 @Component({
     selector: 'app-authentication',
     templateUrl: './authentication.component.html',
-    styleUrls: ['../../../assets/styles/authentication.component.scss' , '../../../assets/styles/global.scss'],
+    styleUrls: ['../../../assets/styles/authentication.component.scss', '../../../assets/styles/global.scss'],
     providers: [CoreCantineService, SharedService]
 })
 export class AuthenticationComponent {
@@ -28,10 +28,8 @@ export class AuthenticationComponent {
         email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
         password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
     });
-   /*TODO
-      make  a  behvour when  there  we  go  to  the  sign  while  have  the  token in  the  local  storage
-    */
-    constructor(private coreCantineService: CoreCantineService, private sharedService: SharedService, private matDialog: MatDialog ,  private  router: Router) {
+
+    constructor(private coreCantineService: CoreCantineService, private sharedService: SharedService, private matDialog: MatDialog, private router: Router) {
     }
 
     singIn() {
@@ -48,11 +46,11 @@ export class AuthenticationComponent {
                     this.isLoading = false
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
-                    if  (response.role === "ROLE_ADMIN") {
+                    if (response.role === "ROLE_ADMIN") {
                         this.router.navigate(['cantine/admin']).then(() => {
                             window.location.reload();
                         });
-                    }else {
+                    } else {
                         this.router.navigate(['cantine/home']).then(() => {
                             window.location.reload();
                         });
@@ -67,8 +65,7 @@ export class AuthenticationComponent {
                     } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === this.USER_WRONG_CREDENTIALS) {
                         this.wrong_credentials = true;
                         this.disabled_account = false;
-                    }
-                    else if (error.status === HttpStatusCode.Unauthorized && error.error.message === this.ADMIN_INVALID_ACCOUNT) {
+                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === this.ADMIN_INVALID_ACCOUNT) {
                         console.log("invalid account")
                         this.invalid_account = true;
                         this.disabled_account = false;
@@ -88,11 +85,13 @@ export class AuthenticationComponent {
         this.isLoading = true;
         this.sharedService.sendToken(this.signIn.value.email).subscribe({
             next: (response) => {
-               let  dialogue =  this.matDialog.open(SuccessfulDialogComponent, {
+                let dialogue = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: "Un  Email  vous a éte  envoyer à   " + this.signIn.value.email + " pour  Activer    Votre  Compte  "},
                     width: '40%',
                 });
-               dialogue.afterClosed().subscribe(result => {window.location.reload();});
+                dialogue.afterClosed().subscribe(result => {
+                    window.location.reload();
+                });
 
                 this.isLoading = false;
             },
