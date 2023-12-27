@@ -29,7 +29,7 @@ public interface IAdminService {
      void signUp (AdminDtoIn  adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException;
     List<FunctionDtout> getAllAdminFunctions() ;
     //public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException;
-    void existingAdmin(String  adminEmail ) throws  ExistingUserException;
+    void existingEmail(String  adminEmail ) throws  ExistingUserException;
 
     static   void  checkUuIdValidity(String adminUuid) throws InvalidUserInformationException {
         if (adminUuid == null || adminUuid.isBlank() || adminUuid.length() < 20) {

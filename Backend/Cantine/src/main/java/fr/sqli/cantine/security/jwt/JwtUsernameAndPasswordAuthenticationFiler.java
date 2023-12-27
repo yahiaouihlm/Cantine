@@ -22,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -186,8 +188,8 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         idToken.put("image",  user.getImage() );
         idToken.put("role", role[0].toString()); // pas  une
 
-        String accessToken  =  "Bearer" + jwtAccessToken ;
-        Cookie cookie = new Cookie(JWT_COOKIE_NAME, accessToken);
+        String accessToken  =  "Bearer " + jwtAccessToken ;
+        Cookie cookie = new Cookie(JWT_COOKIE_NAME, URLEncoder.encode(accessToken, StandardCharsets.UTF_8));
         cookie.setHttpOnly(true);
 
         response.addCookie(cookie);

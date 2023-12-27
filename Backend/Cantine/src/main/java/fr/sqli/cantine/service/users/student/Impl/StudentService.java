@@ -1,6 +1,7 @@
 package fr.sqli.cantine.service.users.student.Impl;
 
 
+import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
@@ -21,6 +22,7 @@ import fr.sqli.cantine.service.users.student.IStudentService;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,7 @@ public class StudentService implements IStudentService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final IConfirmationTokenDao confirmationTokenDao;
 
+     private IAdminDao adminDao;
 
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService, IConfirmationTokenDao confirmationTokenDao, SendUserConfirmationEmail sendUserConfirmationEmail) {
@@ -236,7 +239,7 @@ public class StudentService implements IStudentService {
             throw new InvalidUserInformationException("YOUR EMAIL IS NOT VALID");
         }
 
-        this.existingStudent(studentEntity.getEmail());
+        this.existingEmail(studentEntity.getEmail());
 
         studentEntity.setStatus(0);
         studentEntity.setWallet(new BigDecimal(0));
@@ -263,13 +266,6 @@ public class StudentService implements IStudentService {
         this.sendConfirmationLink(studentEntity.getEmail());
     }
 
-    @Override
-    public void existingStudent(String adminEmail) throws ExistingUserException {
-        if (this.studentDao.findByEmail(adminEmail).isPresent()) {
-            StudentService.LOG.error("this student is already exists");
-            throw new ExistingUserException("THIS STUDENT IS ALREADY EXISTS");
-        }
-    }
 
 
     @Override
@@ -280,4 +276,18 @@ public class StudentService implements IStudentService {
                 .toList();
     }
 
+
+
+    public void existingEmail(String adminEmail) throws ExistingUserException {
+        if (this.studentDao.findByEmail(adminEmail).isPresent() || this.adminDao.findByEmail(adminEmail).isPresent()) {
+            StudentService.LOG.error("this student is already exists");
+            throw new ExistingUserException(" EMAIL IS ALREADY EXISTS");
+        }
+    }
+
+
+    @Autowired
+    public void  setAdminDao(IAdminDao adminDao){
+        this.adminDao = adminDao;
+    }
 }

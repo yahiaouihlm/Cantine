@@ -1,9 +1,11 @@
 package fr.sqli.cantine.service.student;
 
 
+import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
+import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
@@ -46,6 +48,9 @@ class AddStudentTest {
     private StudentService studentService;
     @Mock
     private MockEnvironment environment;
+
+    @Mock
+    private IAdminDao adminDao;
     private StudentClassEntity studentClassEntity;
     private StudentDtoIn studentDtoIn ;
 
@@ -78,6 +83,18 @@ class AddStudentTest {
 
      }
 
+    @Test
+    void addStudentWithExitingEmailInAdminTable()  {
+        this.adminDao = Mockito.mock(IAdminDao.class);
+        this.studentService.setAdminDao(this.adminDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
+        Mockito.when(this.adminDao.findByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new AdminEntity()));
+        Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
+        assertThrows(ExistingUserException.class, ()-> this.studentService.signUpStudent(this.studentDtoIn));
+
+        Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByEmail(this.studentDtoIn.getEmail());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
 
 
 
@@ -91,6 +108,7 @@ class AddStudentTest {
          Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
      }
     /****************************  TESTS FOR STUDENT CLASS  ************************************/
+
 
     @Test
     void addStudentInformationEmptyStudentClas()  {
@@ -121,6 +139,8 @@ class AddStudentTest {
 
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
+
+
 
     /****************************  TESTS FOR Phone  ************************************/
     @Test

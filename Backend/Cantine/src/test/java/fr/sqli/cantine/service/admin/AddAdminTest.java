@@ -3,9 +3,11 @@ package fr.sqli.cantine.service.admin;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
@@ -49,6 +51,9 @@ class AddAdminTest {
     private MockEnvironment environment;
     @InjectMocks
     private AdminService adminService;
+
+    @Mock
+    private IStudentDao studentDao;
     private  FunctionEntity functionEntity;
     private AdminDtoIn adminDtoIn;
 
@@ -94,7 +99,18 @@ class AddAdminTest {
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
 
+    @Test
+    void addAdminWithExitingEmailInStudentTable() throws InvalidUserInformationException {
+        this.studentDao = Mockito.mock(IStudentDao.class);
+        this.adminService.setStudentDao(this.studentDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
+        Mockito.when(this.studentDao.findByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
+        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(  Optional.of(functionEntity));
+        assertThrows(ExistingUserException.class, ()-> this.adminService.signUp(this.adminDtoIn));
 
+        Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByEmail(this.adminDtoIn.getEmail());
+        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
+    }
 
     /****************************  TESTS FOR FUNCTIONS  ************************************/
     @Test

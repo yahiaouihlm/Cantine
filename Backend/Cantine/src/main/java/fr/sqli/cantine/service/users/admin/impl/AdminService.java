@@ -4,6 +4,7 @@ package fr.sqli.cantine.service.users.admin.impl;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
@@ -50,6 +51,7 @@ public class AdminService implements IAdminService {
     private final IAdminDao adminDao;
     private final IConfirmationTokenDao confirmationTokenDao;
     private final SendUserConfirmationEmail sendUserConfirmationEmail;
+    private  IStudentDao studentDao;
 
     @Autowired
     public AdminService(IAdminDao adminDao, IFunctionDao functionDao, ImageService imageService
@@ -175,7 +177,7 @@ public class AdminService implements IAdminService {
         }
 
         //check  if  admin  is  already  existing by  email
-        this.existingAdmin(adminDtoIn.getEmail());
+        this.existingEmail(adminDtoIn.getEmail());
 
         ImageEntity imageEntity = new ImageEntity();
 
@@ -309,9 +311,16 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void existingAdmin(String adminEmail) throws ExistingUserException {
-        if (this.adminDao.findByEmail(adminEmail).isPresent()) {
-            throw new ExistingUserException("THIS ADMIN IS ALREADY EXISTS");
+    public void existingEmail(String adminEmail) throws ExistingUserException {
+        if (this.adminDao.findByEmail(adminEmail).isPresent() || this.studentDao.findByEmail(adminEmail).isPresent()){
+            throw new ExistingUserException("EMAIL IS ALREADY EXISTS");
         }
     }
+
+
+    @Autowired
+    public void setStudentDao(IStudentDao studentDao) {
+        this.studentDao = studentDao;
+    }
 }
+

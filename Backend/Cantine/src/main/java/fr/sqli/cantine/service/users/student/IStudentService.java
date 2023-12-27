@@ -26,7 +26,7 @@ public interface IStudentService {
 
     void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException, ExistingUserException;
 
-    void existingStudent(String adminEmail) throws ExistingUserException;
+    void existingEmail(String adminEmail) throws ExistingUserException;
 
     List<StudentClassDtout> getAllStudentClass();
 
