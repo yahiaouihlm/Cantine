@@ -25,13 +25,16 @@ export class AuthenticationComponent {
     isLoading = false;
     signIn: FormGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
-        password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
+        password: new FormControl('', [Validators.required]),
     });
 
     constructor(private coreCantineService: CoreCantineService, private sharedService: SharedService, private matDialog: MatDialog, private router: Router) {
     }
 
     singIn() {
+        this.disabled_account = false;
+        this.wrong_credentials = false;
+        this.invalid_account = false;
         this.submitted = true;
         if (this.signIn.invalid) {
             return;
@@ -39,7 +42,6 @@ export class AuthenticationComponent {
         this.isLoading = true;
         console.log("invalid account");
         this.coreCantineService.userAuthentication(this.signIn.value).subscribe({
-
                 next: (response) => {
                     console.log("well authenticated");
                     this.disabled_account = false;
@@ -67,7 +69,6 @@ export class AuthenticationComponent {
                         this.wrong_credentials = true;
                         this.disabled_account = false;
                     } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsCoreCantine.ADMIN_INVALID_ACCOUNT) {
-                        console.log("invalid account")
                         this.invalid_account = true;
                         this.disabled_account = false;
                         this.wrong_credentials = false;
@@ -79,6 +80,7 @@ export class AuthenticationComponent {
         );
 
     }
+    // Subscribe to value changes for the entire form
 
 
     sendTokenToActivateAccount() {
@@ -112,4 +114,5 @@ export class AuthenticationComponent {
     forgotPassword() {
         this.router.navigate(['cantine/user/forgot-password']);
     }
+
 }

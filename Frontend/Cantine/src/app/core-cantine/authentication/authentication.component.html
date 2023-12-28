@@ -44,15 +44,6 @@
                         <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot de passe est
                             requis
                         </div>
-                        <div *ngIf="f['password'].errors['maxlength']" class="center">
-                            Mot de passe est incorrecte
-                        </div>
-
-                        <div *ngIf="f['password'].errors['minlength']" class="center">
-                            Mot de passe est incorrecte
-                        </div>
-
-
                     </div>
                 </div>
 
@@ -71,8 +62,8 @@
                     </div>
 
                     <div *ngIf="invalid_account" class="wrong-auth">
-                        <h2 style="color: red"> Impossible de vous connecter, votre compte est en attente de
-                            validation par Administration de école ASTON .</h2>
+                        <p id="invalid_account"> Impossible de vous connecter, votre compte est en attente de
+                            validation par la Direction de école ASTON </p>
                     </div>
 
                     <div class="center" *ngIf="wrong_credentials" (click)="forgotPassword()">
