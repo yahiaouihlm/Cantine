@@ -101,19 +101,6 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                //  custom  exception  for  disabled  account
 
            }
-           catch (LockedException exp){
-               idToken.put("message" ,  "INVALID ACCOUNT  FOR  TEST ");
-               idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
-               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-               response.setContentType("application/json");
-               try {
-                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
-               } catch (IOException e) {
-                   throw new RuntimeException(e);
-               }
-
-           }
-
            catch (BadCredentialsException e) {
                response.setContentType("application/json");
                idToken.put("status" , HttpStatus.UNAUTHORIZED.name());
@@ -125,6 +112,20 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                    throw new RuntimeException(ex);
                }
            }
+           catch (LockedException exp){
+               idToken.put("message" ,  "INVALID ACCOUNT");
+               idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
+               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+               response.setContentType("application/json");
+               try {
+                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
+               } catch (IOException e) {
+                   throw new RuntimeException(e);
+               }
+
+           }
+
+
 
            catch (Exception e ) {
                    idToken.put("exceptionMessage" ,  " An error has occurred");
