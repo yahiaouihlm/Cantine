@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
+import jakarta.mail.MessagingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalHandlerException {
 
 
-  @ExceptionHandler(MailSendException.class)
-  public ResponseEntity<ExceptionDtout> handleMailSendException(MailSendException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout("A PROBLEM WAS OCCURRED THE CONFIRMATION EMAIL  CAN NOT BE  SENDED "));
-  }
+    @ExceptionHandler(MessagingException.class)
+    public ResponseEntity<ExceptionDtout> handleMailSendException(MessagingException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout("A PROBLEM WAS OCCURRED THE  EMAIL  CAN NOT BE  SENDED "));
+    }
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<ExceptionDtout> handleMailSendException(MailSendException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout("A PROBLEM WAS OCCURRED THE  EMAIL  CAN NOT BE  SENDED "));
+    }
+
     @ExceptionHandler(value = ExistingUserByEmail.class)
     public ResponseEntity<ExceptionDtout> handleExistingUserByEmailException(ExistingUserByEmail e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout("EMAIL ALREADY EXIST"));

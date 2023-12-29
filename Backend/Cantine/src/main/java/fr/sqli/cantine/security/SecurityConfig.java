@@ -31,58 +31,58 @@ public class SecurityConfig {
 
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private AppUserService   appUserService ;
-    private JwtTokenVerifier jwtTokenVerifier ;
-    private CustomAuthenticationEntryPoint  customAuthenticationEntryPoint ;
-    private CustomAccessDeniedHandler customAccessDeniedHandler ;
-    private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new  StoneAuthenticationFailureHandler() ;
-    private   ObjectMapper objectMapper ;
+    private AppUserService appUserService;
+    private JwtTokenVerifier jwtTokenVerifier;
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+    private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new StoneAuthenticationFailureHandler();
+    private ObjectMapper objectMapper;
 
-    public SecurityConfig (AppUserService appUserService ,CustomAccessDeniedHandler customAccessDeniedHandler ,
-                           CustomAuthenticationEntryPoint  customAuthenticationEntryPoint   , BCryptPasswordEncoder bCryptPasswordEncoder ,  JwtTokenVerifier jwtTokenVerifier){
+    public SecurityConfig(AppUserService appUserService, CustomAccessDeniedHandler customAccessDeniedHandler,
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenVerifier jwtTokenVerifier) {
 
-        this.appUserService = appUserService ;
+        this.appUserService = appUserService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtTokenVerifier = jwtTokenVerifier ;
-        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint ;
-        this.customAccessDeniedHandler = customAccessDeniedHandler ;
+        this.jwtTokenVerifier = jwtTokenVerifier;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
 
     }
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http   ) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return  http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
-               .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
-        authorize -> {
-            authorize.requestMatchers("cantine/api/**").permitAll();
-            authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
-            authorize.requestMatchers("/cantine/download/images/**" ,
-            "/cantine/download/images/**"  ).permitAll();
-            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions",
-            "/cantine/admin/adminDashboard/checkTokenValidity"
-                    , "/cantine/admin/adminDashboard/sendToken/**"
-                    ,"/cantine/admin/adminDashboard/signUp").permitAll();
-            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
-            authorize.requestMatchers("/cantine/student/getAllStudentClass"
-                    ,  "/cantine/student/signUp"
-                    ,"/cantine/user/v1/token-sender/**"
-                    ,"/cantine/user/resetPassword/**"
-            ).permitAll();
-            authorize.anyRequest().authenticated();
-        })
+                        authorize -> {
+                            authorize.requestMatchers("cantine/api/**").permitAll();
+                            authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
+                            authorize.requestMatchers("/cantine/download/images/**",
+                                    "/cantine/download/images/**").permitAll();
+                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions",
+                                    "/cantine/admin/adminDashboard/checkTokenValidity"
+                                    , "/cantine/admin/adminDashboard/sendToken/**"
+                                    , "/cantine/admin/adminDashboard/signUp").permitAll();
+                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
+                            authorize.requestMatchers("/cantine/student/getAllStudentClass"
+                                    , "/cantine/student/signUp"
+                                    , "/cantine/user/send-confirmation-link"
+                                    , "/cantine/user/resetPassword/**"
+                            ).permitAll();
+                            authorize.anyRequest().authenticated();
+                        })
                 .authenticationProvider(authenticationProvider())
-                .addFilter( new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager() ))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
-              .exceptionHandling()
-                 .authenticationEntryPoint(this.customAuthenticationEntryPoint)
+                .exceptionHandling()
+                .authenticationEntryPoint(this.customAuthenticationEntryPoint)
                 .accessDeniedHandler(this.stoneAuthenticationFailureHandler)
                 .and()
-               .build();
+                .build();
 
     }
 /*
@@ -101,16 +101,16 @@ public class SecurityConfig {
 
 
     @Bean
-    public AuthenticationManager authenticationManager(){
-        return   new ProviderManager(authenticationProvider());
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(authenticationProvider());
     }
 
     @Bean
-    AuthenticationProvider authenticationProvider () {
+    AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(appUserService);
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        return   provider ;
+        return provider;
     }
 
 /*
