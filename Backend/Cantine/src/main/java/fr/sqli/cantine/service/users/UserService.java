@@ -9,7 +9,6 @@ import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
-import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
 import fr.sqli.cantine.service.users.exceptions.RemovedAccountException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
@@ -60,18 +59,18 @@ public class UserService {
 
        var student  = this.iStudentDao.findByEmail(email);
         if (student.isPresent()) {
-            this.checkUserAccount(student.get());
+            this.checkUserAccountAndSendEmail(student.get());
         }else {
             var admin = this.iAdminDao.findByEmail(email).orElseThrow(() -> {
                 UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
                 return new UserNotFoundException("USER NOT FOUND");
             });
-            this.checkUserAccount(admin);
+            this.checkUserAccountAndSendEmail(admin);
         }
 
     }
 
-    private void checkUserAccount(UserEntity user) throws RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
+    private void checkUserAccountAndSendEmail(UserEntity user) throws RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
         // account already  removed
         if (user.getDisableDate() != null) {
             UserService.LOG.error("ACCOUNT  ALREADY  REMOVED WITH  EMAIL  {} ", user.getEmail());

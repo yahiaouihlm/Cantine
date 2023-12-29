@@ -11,7 +11,7 @@ public interface IUserController {
 
     String USER_BASIC_URL = "/cantine/user";
 
-    String USER_SEND_CONFIRMATION_LINK =  "/confirmation-link";
+    String USER_SEND_CONFIRMATION_LINK =  "/send-confirmation-link";
 
 
     @PostMapping(USER_SEND_CONFIRMATION_LINK)
