@@ -2,6 +2,7 @@ package fr.sqli.cantine.service.mailer;
 
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -22,6 +23,23 @@ public class SendUserConfirmationEmail {
         this.emailSenderService = emailSenderService;
         this.templateEngine = templateEngine;
         this.environment = environment;
+    }
+
+
+    public  void sendConfirmationLink(UserEntity user  , String  link ) throws MessagingException {
+
+        Context context = new Context();
+        context.setVariable("firstname", user.getFirstname());
+        context.setVariable("lastname", user.getLastname());
+        context.setVariable("confirmationLink", link);
+
+        context.setVariable("sqliImage", this.environment.getProperty("sqli.cantine.confirmation.email.sqli.image.url"));
+        context.setVariable("cantineLogo",  this.environment.getProperty("sqli.cantine.confirmation.email.cantiere.logo.url"));
+        context.setVariable("astonLogo", this.environment.getProperty("sqli.cantine.confirmation.email.aston.logo.url"));
+
+
+        String  body = templateEngine.process("confirmation-email-template", context);
+        this.emailSenderService.send(user.getEmail(), "Confirmation de votre compte", body);
     }
 
 
