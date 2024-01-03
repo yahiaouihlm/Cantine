@@ -15,11 +15,6 @@ import java.util.List;
 
 public interface IStudentService {
 
-
-    void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException;
-
-    void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException;
-
     void updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException;
 
     StudentDtout getStudentByUuid(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;

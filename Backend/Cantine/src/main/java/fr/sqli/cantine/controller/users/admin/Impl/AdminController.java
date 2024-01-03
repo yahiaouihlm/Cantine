@@ -52,12 +52,6 @@ public class AdminController implements IAdminController {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
     }
 
-    @Override
-    public ResponseEntity<ResponseDtout> checkLinkValidity(String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException {
-        this.adminService.checkLinkValidity(token);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
-    }
-
 
     @Override
     public ResponseEntity<ResponseDtout> signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException, AdminFunctionNotFoundException {
@@ -66,11 +60,6 @@ public class AdminController implements IAdminController {
     }
 
 
-    @Override
-    public ResponseEntity<ResponseDtout> sendConfirmationLinkForAdminEmail(String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
-        this.adminService.sendConfirmationLink(email);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
-    }
 
 
     /*------------------------------------------------ pas  encore  fait --------------------------------------------*/

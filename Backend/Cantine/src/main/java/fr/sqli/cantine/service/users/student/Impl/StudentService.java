@@ -12,6 +12,7 @@ import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
+import fr.sqli.cantine.service.users.UserService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
@@ -44,20 +45,19 @@ public class StudentService implements IStudentService {
     private final IStudentDao studentDao;
     private final IStudentClassDao iStudentClassDao;
     private final Environment environment;
-
-    private final SendUserConfirmationEmail sendUserConfirmationEmail;
+    private final UserService userService;
     private final ImageService imageService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final IConfirmationTokenDao confirmationTokenDao;
+
 
      private IAdminDao adminDao;
 
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
-            , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService, IConfirmationTokenDao confirmationTokenDao, SendUserConfirmationEmail sendUserConfirmationEmail) {
+            , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService, UserService userService) {
         this.iStudentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
-        this.sendUserConfirmationEmail = sendUserConfirmationEmail;
+        this.userService = userService;
         this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
         this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
         this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
@@ -66,7 +66,6 @@ public class StudentService implements IStudentService {
         //"^[a-zA-Z0-9._-]+@" + EMAIL_STUDENT_DOMAIN + "$";
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.imageService = imageService;
-        this.confirmationTokenDao = confirmationTokenDao;
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
         var port = environment.getProperty("sali.cantine.server.port");
@@ -75,82 +74,7 @@ public class StudentService implements IStudentService {
     }
 
 
-    /* TODO  ;  make  the  Tests */
-
-
-    @Override
-    public void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
-        if (token == null || token.trim().isEmpty()) {
-            StudentService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
-            throw new InvalidTokenException("INVALID TOKEN");
-        }
-        var confirmationTokenEntity = this.confirmationTokenDao.findByToken(token).orElseThrow(() -> {
-            StudentService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", token);
-            return new TokenNotFoundException("INVALID TOKEN");
-        }); //  token  not  found
-
-        var studentEntity = confirmationTokenEntity.getStudent();
-        if (studentEntity == null) {
-            StudentService.LOG.error("STUDENT  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-            throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
-        }
-
-
-        var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
-
-        long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
-        //  expired  token  ///
-        if (expiredTime > fiveMinutesInMillis) {
-            this.confirmationTokenDao.delete(confirmationTokenEntity);
-            StudentService.LOG.error("EXPIRED TOKEN  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-            throw new ExpiredToken("EXPIRED TOKEN");
-        }
-
-        var student = this.studentDao.findById(studentEntity.getId()).orElseThrow(() -> {
-                    StudentService.LOG.error("STUDENT  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-                    return new UserNotFoundException("STUDENT NOT FOUND");
-                }
-        );
-
-        student.setStatus(1);
-        this.studentDao.save(student);
-    }
-
-    @Override
-    public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
-
-        if (email == null || email.isEmpty() || email.isBlank()) {
-            StudentService.LOG.error("INVALID EMAIL TO SEND  CONFIRMATION LINK");
-            throw new UserNotFoundException("INVALID EMAIL");
-        }
-
-        var student = this.studentDao.findByEmail(email).orElseThrow(() -> {
-            StudentService.LOG.error("STUDENT WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
-            return new UserNotFoundException("STUDENT NOT FOUND");
-        });
-
-        if (student.getDisableDate() != null) {
-            StudentService.LOG.error("ACCOUNT  ALREADY  REMOVED WITH  EMAIL  {} ", email);
-            throw new RemovedAccountException("ACCOUNT  ALREADY  REMOVED");
-        }
-
-        if (student.getStatus() == 1) {
-            StudentService.LOG.error("ACCOUNT  ALREADY  ACTIVATED WITH  EMAIL  {} ", email);
-            throw new AccountAlreadyActivatedException("ACCOUNT  ALREADY  ACTIVATED");
-        }
-
-        var confirmationTokenEntity = this.confirmationTokenDao.findByStudent(student);
-        confirmationTokenEntity.ifPresent(this.confirmationTokenDao::delete);
-
-
-        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student);
-        this.confirmationTokenDao.save(confirmationToken);
-
-        var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
-
-        this.sendUserConfirmationEmail.sendStudentConfirmationLink(student, url);
-
-    }
+    /*TODO  ;  REMOVE   checkLinkValidity AND sendConfirmationLink */
 
     @Override
     public void updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException {
@@ -263,7 +187,7 @@ public class StudentService implements IStudentService {
 
 
         this.studentDao.save(studentEntity);
-        this.sendConfirmationLink(studentEntity.getEmail());
+        this.userService.sendConfirmationLink(studentEntity.getEmail());
     }
 
 

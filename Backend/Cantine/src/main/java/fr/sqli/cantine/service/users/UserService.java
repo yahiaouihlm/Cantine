@@ -9,9 +9,8 @@ import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
-import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
-import fr.sqli.cantine.service.users.exceptions.RemovedAccountException;
-import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.*;
+import fr.sqli.cantine.service.users.student.Impl.StudentService;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,6 +69,58 @@ public class UserService {
 
     }
 
+
+
+     public  void  checkLinkValidity(String  token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
+
+         if (token == null || token.trim().isEmpty()) {
+             UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
+             throw new InvalidTokenException("INVALID TOKEN");
+         }
+
+         var confirmationTokenEntity = this.iConfirmationTokenDao.findByToken(token).orElseThrow(() -> {
+             UserService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", token);
+             return new TokenNotFoundException("INVALID TOKEN");
+         });
+
+         UserEntity user = (confirmationTokenEntity.getStudent() != null) ? confirmationTokenEntity.getStudent() : confirmationTokenEntity.getAdmin();
+
+         if (user == null) {
+             UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+             throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
+         }
+
+         var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+
+         long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+         //  expired  token  ///
+         if (expiredTime > fiveMinutesInMillis) {
+             this.iConfirmationTokenDao.delete(confirmationTokenEntity);
+             UserService.LOG.error("EXPIRED TOKEN  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+             throw new ExpiredToken("EXPIRED TOKEN");
+         }
+
+         UserEntity userEntity =  null ;
+         var student =  this.iStudentDao.findById(user.getId());
+            if (student.isPresent()) {
+                userEntity = student.get();
+            }else {
+                userEntity = this.iAdminDao.findById(user.getId()).orElseThrow(() -> {
+                    UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+                    return new UserNotFoundException("USER NOT FOUND");
+                });
+            }
+
+            userEntity.setStatus(1);
+            if  (userEntity instanceof  StudentEntity) {
+                this.iStudentDao.save((StudentEntity) userEntity);
+            }else {
+                this.iAdminDao.save((AdminEntity) userEntity);
+            }
+     }
+
+
+
     private void checkUserAccountAndSendEmail(UserEntity user) throws RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
         // account already  removed
         if (user.getDisableDate() != null) {
@@ -104,6 +155,8 @@ public class UserService {
 
 
     }
+
+
 
 
 }

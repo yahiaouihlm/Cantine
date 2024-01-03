@@ -31,22 +31,6 @@ public class StudentController implements IStudentController {
 
     /* TODO  :    change  get Student  Image  URl  */
 
-
-
-
-    @Override
-    public ResponseEntity<ResponseDtout> checkLinkValidity(String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException {
-        this.studentService.checkLinkValidity(token);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
-    }
-
-    @Override
-    public ResponseEntity<ResponseDtout> sendStudentConfirmationLink(String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
-        this.studentService.sendConfirmationLink(email);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
-    }
-
-
     @Override
     public ResponseEntity<StudentDtout> getStudentByUuid( String studentUuid ) throws InvalidUserInformationException, UserNotFoundException {
 
