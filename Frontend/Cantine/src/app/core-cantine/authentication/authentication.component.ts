@@ -40,16 +40,16 @@ export class AuthenticationComponent {
             return;
         }
         this.isLoading = true;
-        console.log("invalid account");
+
         this.coreCantineService.userAuthentication(this.signIn.value).subscribe({
                 next: (response) => {
-                    console.log("well authenticated");
                     this.disabled_account = false;
                     this.wrong_credentials = false;
                     this.isLoading = false
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
-                    if (response.role === IConstantsCoreCantine.ADMIN_ROLE) {
+                    console.log("response", response)
+                   if (response.role === IConstantsCoreCantine.ADMIN_ROLE) {
                         this.router.navigate([IConstantsCoreCantine.ADMIN_URL]).then(() => {
                             window.location.reload();
                         });
@@ -80,11 +80,11 @@ export class AuthenticationComponent {
         );
 
     }
+
     // Subscribe to value changes for the entire form
 
 
     sendTokenToActivateAccount() {
-
         this.isLoading = true;
         this.sharedService.sendToken(this.signIn.value.email).subscribe({
             next: (response) => {
@@ -112,7 +112,7 @@ export class AuthenticationComponent {
 
 
     forgotPassword() {
-        this.router.navigate(['cantine/user/forgot-password']);
+        this.router.navigate(['cantine/user/forgot-password']).then(r => window.location.reload());
     }
 
 }

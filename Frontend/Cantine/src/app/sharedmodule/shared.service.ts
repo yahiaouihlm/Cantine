@@ -19,12 +19,12 @@ export class SharedService {
     constructor(private httpClient: HttpClient, private matDialog: MatDialog , private router : Router) {
     }
 
-    private BASIC_ENDPOINT = "http://localhost:8080/cantine/";
-    private CHECK_EXISTENCE_OF_EMAIL = this.BASIC_ENDPOINT + "superAdmin/ExistingEmail";
+    private BASIC_ENDPOINT = "http://localhost:8080/cantine/user/";
+    private CHECK_EXISTENCE_OF_EMAIL = this.BASIC_ENDPOINT + "existing-email";
 
-    private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + 'user/v1/token-sender/send-token';
+    private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + 'send-confirmation-link';
 
-    private CHECK_TOKEN_VALIDITY = this.BASIC_ENDPOINT + 'user/v1/token-sender/confirm-token';
+    private CHECK_TOKEN_VALIDITY = this.BASIC_ENDPOINT + 'check-confirmation-token';
 
     private GET_STUDENT_BY_ID = this.BASIC_ENDPOINT + 'student/getStudent';
 

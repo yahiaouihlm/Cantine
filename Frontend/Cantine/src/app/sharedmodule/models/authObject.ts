@@ -8,7 +8,6 @@ export  class  AuthObject  {
 
     email! : string;
 
-
     role! : string;
 
     image! : string;
