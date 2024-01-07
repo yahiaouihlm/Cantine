@@ -65,6 +65,7 @@ public class SecurityConfig {
                                     "/cantine/download/images/**").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions"
                                     ,"/cantine/user/check-confirmation-token/**"
+                                    ,"/cantine/user/existing-email"
                                     , "/cantine/admin/adminDashboard/signUp").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                             authorize.requestMatchers("/cantine/student/getAllStudentClass"

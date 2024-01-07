@@ -28,11 +28,18 @@ public class UserController implements IUserController {
         this.userService = userService;
     }
 
+    @Override
+    public ResponseEntity<ResponseDtout> existingEmail(String email) throws ExistingEmailException {
+        this.userService.existingEmail(email);
+        return ResponseEntity.ok(new ResponseDtout(EMAIL_DOES_NOT_EXISTS));
+    }
 
     public ResponseEntity<ResponseDtout> checkConfirmationToken(@RequestParam("token") String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException {
         this.userService.checkLinkValidity(token);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
     }
+
+
 
     public ResponseEntity<ResponseDtout> sendEmailConfirmationToken(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
         this.userService.sendConfirmationLink(email);

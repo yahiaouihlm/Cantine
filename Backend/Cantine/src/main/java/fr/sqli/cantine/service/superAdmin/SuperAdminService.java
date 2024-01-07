@@ -1,9 +1,7 @@
 package fr.sqli.cantine.service.superAdmin;
 
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dao.ITaxDao;
 import fr.sqli.cantine.dto.in.superAdmin.FunctionDtoIn;
 import fr.sqli.cantine.dto.in.superAdmin.TaxDtoIn;
@@ -11,7 +9,6 @@ import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.TaxEntity;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingTax;
-import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
 import fr.sqli.cantine.service.superAdmin.exception.InvalidTaxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,16 +18,14 @@ import java.math.BigDecimal;
 @Service
 public class SuperAdminService {
 
-    private IAdminDao  iAdminDao;
-    private IStudentDao iStudentDao;
+
     private IFunctionDao iFunctionDao;
     private ITaxDao iTaxDao;
     @Autowired
-    public  SuperAdminService(IFunctionDao iFunctionDao , ITaxDao iTaxDao ,  IAdminDao iAdminDao , IStudentDao iStudentDao) {
+    public  SuperAdminService(IFunctionDao iFunctionDao , ITaxDao iTaxDao ) {
         this.iFunctionDao = iFunctionDao;
         this.iTaxDao = iTaxDao;
-        this.iAdminDao = iAdminDao;
-        this.iStudentDao = iStudentDao;
+
     }
 
 
@@ -60,14 +55,4 @@ public class SuperAdminService {
     }
 
 
-    public void ExistingEmail(String email) throws ExistingUserByEmail {
-
-        if (email == null || email.isEmpty()) {
-            throw new ExistingUserByEmail("EMAIL ALREADY EXISTS");
-        }
-        if (this.iAdminDao.findByEmail(email).isPresent() || this.iStudentDao.findByEmail(email).isPresent()) {
-            throw new ExistingUserByEmail("EMAIL ALREADY EXISTS");
-        }
-
-    }
 }

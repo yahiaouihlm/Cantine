@@ -2,7 +2,7 @@ package fr.sqli.cantine.controller;
 
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
-import fr.sqli.cantine.service.superAdmin.exception.ExistingUserByEmail;
+import fr.sqli.cantine.service.users.exceptions.ExistingEmailException;
 import jakarta.mail.MessagingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -29,8 +29,8 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout("A PROBLEM WAS OCCURRED THE  EMAIL  CAN NOT BE  SENDED "));
     }
 
-    @ExceptionHandler(value = ExistingUserByEmail.class)
-    public ResponseEntity<ExceptionDtout> handleExistingUserByEmailException(ExistingUserByEmail e) {
+    @ExceptionHandler(value = ExistingEmailException.class)
+    public ResponseEntity<ExceptionDtout> handleExistingUserByEmailException(ExistingEmailException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout("EMAIL ALREADY EXIST"));
     }
     //  can  not   read  json  format  exception

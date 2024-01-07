@@ -9,8 +9,8 @@ import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
+import fr.sqli.cantine.service.users.exceptions.ExistingEmailException;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.student.Impl.StudentService;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,20 +26,20 @@ public class UserService {
     final String SERVER_ADDRESS;
 
     final String CONFIRMATION_TOKEN_URL;
-    private final Environment environment ;
-    private final IStudentDao iStudentDao ;
-    private  final  IAdminDao iAdminDao ;
-    private  final  IConfirmationTokenDao iConfirmationTokenDao;
+    private final Environment environment;
+    private final IStudentDao iStudentDao;
+    private final IAdminDao iAdminDao;
+    private final IConfirmationTokenDao iConfirmationTokenDao;
 
     private final SendUserConfirmationEmail sendUserConfirmationEmail;
 
 
-    public  UserService (Environment environment, IStudentDao iStudentDao , IAdminDao iAdminDao , IConfirmationTokenDao iConfirmationTokenDao, SendUserConfirmationEmail sendUserConfirmationEmail) {
+    public UserService(Environment environment, IStudentDao iStudentDao, IAdminDao iAdminDao, IConfirmationTokenDao iConfirmationTokenDao, SendUserConfirmationEmail sendUserConfirmationEmail) {
         this.iAdminDao = iAdminDao;
         this.iStudentDao = iStudentDao;
         this.environment = environment;
         this.iConfirmationTokenDao = iConfirmationTokenDao;
-        this.sendUserConfirmationEmail= sendUserConfirmationEmail;
+        this.sendUserConfirmationEmail = sendUserConfirmationEmail;
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
         var port = environment.getProperty("sali.cantine.server.port");
@@ -49,6 +49,21 @@ public class UserService {
     }
 
 
+
+    public void existingEmail(String email) throws ExistingEmailException {
+
+        if (email == null || email.isEmpty()) {
+            UserService.LOG.error("INVALID EMAIL  IN EXISTING EMAIL");
+            throw new ExistingEmailException("EMAIL ALREADY EXISTS");
+        }
+        if (this.iAdminDao.findByEmail(email).isPresent() || this.iStudentDao.findByEmail(email).isPresent()) {
+            UserService.LOG.error("EMAIL  {} ALREADY  EXISTS ", email);
+            throw new ExistingEmailException("EMAIL ALREADY EXISTS");
+        }
+    }
+
+
+
     public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
 
         if (email == null || email.isEmpty() || email.isBlank()) {
@@ -56,10 +71,10 @@ public class UserService {
             throw new UserNotFoundException("INVALID EMAIL");
         }
 
-       var student  = this.iStudentDao.findByEmail(email);
+        var student = this.iStudentDao.findByEmail(email);
         if (student.isPresent()) {
             this.checkUserAccountAndSendEmail(student.get());
-        }else {
+        } else {
             var admin = this.iAdminDao.findByEmail(email).orElseThrow(() -> {
                 UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
                 return new UserNotFoundException("USER NOT FOUND");
@@ -70,55 +85,53 @@ public class UserService {
     }
 
 
+    public void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
 
-     public  void  checkLinkValidity(String  token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
+        if (token == null || token.trim().isEmpty()) {
+            UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
+            throw new InvalidTokenException("INVALID TOKEN");
+        }
 
-         if (token == null || token.trim().isEmpty()) {
-             UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
-             throw new InvalidTokenException("INVALID TOKEN");
-         }
+        var confirmationTokenEntity = this.iConfirmationTokenDao.findByToken(token).orElseThrow(() -> {
+            UserService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", token);
+            return new TokenNotFoundException("INVALID TOKEN");
+        });
 
-         var confirmationTokenEntity = this.iConfirmationTokenDao.findByToken(token).orElseThrow(() -> {
-             UserService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", token);
-             return new TokenNotFoundException("INVALID TOKEN");
-         });
+        UserEntity user = (confirmationTokenEntity.getStudent() != null) ? confirmationTokenEntity.getStudent() : confirmationTokenEntity.getAdmin();
 
-         UserEntity user = (confirmationTokenEntity.getStudent() != null) ? confirmationTokenEntity.getStudent() : confirmationTokenEntity.getAdmin();
+        if (user == null) {
+            UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+            throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
+        }
 
-         if (user == null) {
-             UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-             throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
-         }
+        var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
 
-         var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+        long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+        //  expired  token  ///
+        if (expiredTime > fiveMinutesInMillis) {
+            this.iConfirmationTokenDao.delete(confirmationTokenEntity);
+            UserService.LOG.error("EXPIRED TOKEN  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+            throw new ExpiredToken("EXPIRED TOKEN");
+        }
 
-         long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
-         //  expired  token  ///
-         if (expiredTime > fiveMinutesInMillis) {
-             this.iConfirmationTokenDao.delete(confirmationTokenEntity);
-             UserService.LOG.error("EXPIRED TOKEN  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-             throw new ExpiredToken("EXPIRED TOKEN");
-         }
+        UserEntity userEntity = null;
+        var student = this.iStudentDao.findById(user.getId());
+        if (student.isPresent()) {
+            userEntity = student.get();
+        } else {
+            userEntity = this.iAdminDao.findById(user.getId()).orElseThrow(() -> {
+                UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+                return new UserNotFoundException("USER NOT FOUND");
+            });
+        }
 
-         UserEntity userEntity =  null ;
-         var student =  this.iStudentDao.findById(user.getId());
-            if (student.isPresent()) {
-                userEntity = student.get();
-            }else {
-                userEntity = this.iAdminDao.findById(user.getId()).orElseThrow(() -> {
-                    UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-                    return new UserNotFoundException("USER NOT FOUND");
-                });
-            }
-
-            userEntity.setStatus(1);
-            if  (userEntity instanceof  StudentEntity) {
-                this.iStudentDao.save((StudentEntity) userEntity);
-            }else {
-                this.iAdminDao.save((AdminEntity) userEntity);
-            }
-     }
-
+        userEntity.setStatus(1);
+        if (userEntity instanceof StudentEntity) {
+            this.iStudentDao.save((StudentEntity) userEntity);
+        } else {
+            this.iAdminDao.save((AdminEntity) userEntity);
+        }
+    }
 
 
     private void checkUserAccountAndSendEmail(UserEntity user) throws RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
@@ -155,8 +168,6 @@ public class UserService {
 
 
     }
-
-
 
 
 }
