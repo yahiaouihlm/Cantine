@@ -29,6 +29,12 @@ public class UserController implements IUserController {
     }
 
     @Override
+    public ResponseEntity<ResponseDtout> resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
+        this.userService.resetPasswordLink(email);
+        return  ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
+    }
+
+    @Override
     public ResponseEntity<ResponseDtout> existingEmail(String email) throws ExistingEmailException {
         this.userService.existingEmail(email);
         return ResponseEntity.ok(new ResponseDtout(EMAIL_DOES_NOT_EXISTS));
@@ -41,7 +47,7 @@ public class UserController implements IUserController {
 
 
 
-    public ResponseEntity<ResponseDtout> sendEmailConfirmationToken(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountAlreadyActivatedException, RemovedAccountException {
+    public ResponseEntity<ResponseDtout> sendEmailConfirmationToken(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         this.userService.sendConfirmationLink(email);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_SENT_SUCCESSFULLY));
     }

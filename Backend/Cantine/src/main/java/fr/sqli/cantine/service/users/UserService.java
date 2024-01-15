@@ -8,7 +8,7 @@ import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
-import fr.sqli.cantine.service.mailer.SendUserConfirmationEmail;
+import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.exceptions.ExistingEmailException;
 import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
@@ -31,10 +31,10 @@ public class UserService {
     private final IAdminDao iAdminDao;
     private final IConfirmationTokenDao iConfirmationTokenDao;
 
-    private final SendUserConfirmationEmail sendUserConfirmationEmail;
+    private final UserEmailSender sendUserConfirmationEmail;
 
 
-    public UserService(Environment environment, IStudentDao iStudentDao, IAdminDao iAdminDao, IConfirmationTokenDao iConfirmationTokenDao, SendUserConfirmationEmail sendUserConfirmationEmail) {
+    public UserService(Environment environment, IStudentDao iStudentDao, IAdminDao iAdminDao, IConfirmationTokenDao iConfirmationTokenDao, UserEmailSender sendUserConfirmationEmail) {
         this.iAdminDao = iAdminDao;
         this.iStudentDao = iStudentDao;
         this.environment = environment;
@@ -49,6 +49,24 @@ public class UserService {
     }
 
 
+    public void resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
+
+        if (email == null || email.isEmpty() || email.isBlank()) {
+            UserService.LOG.error("INVALID EMAIL TO SEND  CONFIRMATION LINK");
+            throw new UserNotFoundException("INVALID EMAIL");
+        }
+        var student = this.iStudentDao.findByEmail(email);
+        if (student.isPresent()) {
+            this.checkUserStatusAndSendTokenForResetPassword(student.get());
+        } else {
+            var admin = this.iAdminDao.findByEmail(email).orElseThrow(() -> {
+                UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
+                return new UserNotFoundException("USER NOT FOUND");
+            });
+            this.checkUserStatusAndSendTokenForResetPassword(admin);
+        }
+
+    }
 
     public void existingEmail(String email) throws ExistingEmailException {
 
@@ -62,9 +80,7 @@ public class UserService {
         }
     }
 
-
-
-    public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
+    public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountActivatedException, MessagingException {
 
         if (email == null || email.isEmpty() || email.isBlank()) {
             UserService.LOG.error("INVALID EMAIL TO SEND  CONFIRMATION LINK");
@@ -73,13 +89,13 @@ public class UserService {
 
         var student = this.iStudentDao.findByEmail(email);
         if (student.isPresent()) {
-            this.checkUserAccountAndSendEmail(student.get());
+            this.checkUserStatusAndSendTokenForConfirmationEmail(student.get());
         } else {
             var admin = this.iAdminDao.findByEmail(email).orElseThrow(() -> {
                 UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
                 return new UserNotFoundException("USER NOT FOUND");
             });
-            this.checkUserAccountAndSendEmail(admin);
+            this.checkUserStatusAndSendTokenForConfirmationEmail(admin);
         }
 
     }
@@ -106,7 +122,7 @@ public class UserService {
 
         var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
 
-        long fiveMinutesInMillis = 5 * 60 * 1000; // 5 minutes en millisecondes
+        long fiveMinutesInMillis = 50 * 60 * 1000; // 5 minutes en millisecondes
         //  expired  token  ///
         if (expiredTime > fiveMinutesInMillis) {
             this.iConfirmationTokenDao.delete(confirmationTokenEntity);
@@ -134,7 +150,7 @@ public class UserService {
     }
 
 
-    private void checkUserAccountAndSendEmail(UserEntity user) throws RemovedAccountException, AccountAlreadyActivatedException, MessagingException {
+    private void checkUserStatusAndSendTokenForConfirmationEmail(UserEntity user) throws RemovedAccountException, AccountActivatedException, MessagingException {
         // account already  removed
         if (user.getDisableDate() != null) {
             UserService.LOG.error("ACCOUNT  ALREADY  REMOVED WITH  EMAIL  {} ", user.getEmail());
@@ -143,7 +159,7 @@ public class UserService {
         // account already  activated
         if (user.getStatus() == 1) {
             UserService.LOG.error("ACCOUNT  ALREADY  ACTIVATED WITH  EMAIL  {} ", user.getEmail());
-            throw new AccountAlreadyActivatedException("ACCOUNT  ALREADY  ACTIVATED");
+            throw new AccountActivatedException("ACCOUNT  ALREADY  ACTIVATED");
         }
         ConfirmationTokenEntity confirmationToken = null;
         Optional<ConfirmationTokenEntity> confirmationTokenEntity;
@@ -164,10 +180,43 @@ public class UserService {
         this.iConfirmationTokenDao.save(confirmationToken);
 
         var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
-        this.sendUserConfirmationEmail.sendConfirmationLink(user, url);
 
-
+        this.sendUserConfirmationEmail.sendLinkToResetPassword(user, url);
     }
 
+
+    private void checkUserStatusAndSendTokenForResetPassword(UserEntity user) throws RemovedAccountException, AccountActivatedException, MessagingException {
+        // account already  removed
+        if (user.getDisableDate() != null) {
+            UserService.LOG.error("ACCOUNT  ALREADY  REMOVED WITH  EMAIL  {} ", user.getEmail());
+            throw new RemovedAccountException("ACCOUNT  ALREADY  REMOVED");
+        }
+        // account already  activated
+        if (user.getStatus() == 0) {
+            UserService.LOG.error("ACCOUNT  NOT  ACTIVATED WITH  EMAIL  {} ", user.getEmail());
+            throw new AccountActivatedException("ACCOUNT NOT ACTIVATED");
+        }
+        ConfirmationTokenEntity confirmationToken = null;
+        Optional<ConfirmationTokenEntity> confirmationTokenEntity;
+
+        if (user instanceof AdminEntity) {
+            confirmationTokenEntity = this.iConfirmationTokenDao.findByAdmin((AdminEntity) user);
+            confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
+
+            confirmationToken = new ConfirmationTokenEntity((AdminEntity) user);
+
+        } else {
+            confirmationTokenEntity = this.iConfirmationTokenDao.findByStudent((StudentEntity) user);
+            confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
+
+            confirmationToken = new ConfirmationTokenEntity((StudentEntity) user);
+
+        }
+        this.iConfirmationTokenDao.save(confirmationToken);
+
+        var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
+
+        this.sendUserConfirmationEmail.sendLinkToResetPassword(user, url);
+    }
 
 }
