@@ -9,6 +9,7 @@ import {User} from "./models/user";
 import {AuthObject} from "./models/authObject";
 import {Router} from "@angular/router";
 import Malfunctions from "./functions/malfunctions";
+import {DialogErrors} from "./functions/dialogueErrors";
 
 
 @Injectable({
@@ -28,7 +29,9 @@ export class SharedService {
 
     private GET_STUDENT_BY_ID = this.BASIC_ENDPOINT + 'student/getStudent';
 
+    private  SEND_CONFIRMATION_TOKEN_FORGOT_PASSWORD_ENDPOINT = this.BASIC_ENDPOINT + 'send-reset-password-link';
 
+    private  dialog =   new DialogErrors(this.matDialog);
     getStudentById(id: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
       const headers = new HttpHeaders().set('Authorization', token);
@@ -41,6 +44,12 @@ export class SharedService {
 
     }
 
+    sendTokenForgotPassword(email: string) {
+        const params = new HttpParams().set('email', email);
+        return this.httpClient.post<NormalResponse>(this.SEND_CONFIRMATION_TOKEN_FORGOT_PASSWORD_ENDPOINT, params).pipe(
+            catchError((error) => this.handleError(error))
+        );
+    }
 
     checkExistenceOfEmail(email: string) {
         const params = new HttpParams().set('email', email);
@@ -67,7 +76,7 @@ export class SharedService {
 
         } else {
             localStorage.clear();
-            this.openDialog("Unkwon Error   has  been occured  ", error.status);
+            this.dialog.openDialog("Unkwon Error   has  been occured  ", error.status)
             this.router.navigate(['cantine/home']).then(error => console.log("redirected to login page"));
         }
 
@@ -87,12 +96,17 @@ export class SharedService {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
 
-
-        if (error.status == HttpStatusCode.InternalServerError) {
-            this.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation", error.status);
+        if (error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Forbidden) {
+            this.dialog.openDialog("Utilisateur  n'existe  pas", error.status);
+        }
+        else if (error.status == HttpStatusCode.Conflict ) {
+            this.dialog.openDialog("Compte Utilisateur n'est  pas  activé", error.status);
+        }
+        else  if (error.status == HttpStatusCode.InternalServerError) {
+            this.dialog.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation", error.status)
         } else {
             console.log(error.message)
-            this.openDialog(errorMessage, error.status);
+            this.dialog.openDialog(errorMessage, error.status)
         }
 
         return throwError(() => new Error(errorMessage));
@@ -100,6 +114,7 @@ export class SharedService {
     }
 
 
+/*
     private openDialog(message: string, httpError: HttpStatusCode): void {
         const result = this.matDialog.open(ExceptionDialogComponent, {
             data: {message: message},
@@ -112,13 +127,14 @@ export class SharedService {
                 console.log("je suis  la  dans  le  if  ")
             } else {
                 console.log("je suis  la ")
-                /* TODO  remove THE  Token  */
+                /!* TODO  remove THE  Token  *!/
                 //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
             }
 
         });
 
     }
+*/
 
 
 

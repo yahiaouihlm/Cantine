@@ -19,7 +19,6 @@ export class CoreCantineService {
 
 
 
-
     userAuthentication(login:Login) {
         return this.httpClient.post<AuthObject>(this.USER_AUTHENTICATION_ENDPOINT, login );
     }
