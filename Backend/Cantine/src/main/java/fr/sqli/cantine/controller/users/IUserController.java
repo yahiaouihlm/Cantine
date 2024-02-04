@@ -16,13 +16,15 @@ public interface IUserController {
     String CHECK_CONFIRMATION_TOKEN_URL = "/check-confirmation-token";
 
     String  SEND_RESET_PASSWORD_LINK_URL = "/send-reset-password-link";
-
+    String  RESET_PASSWORD_URL = "/reset-password";
 
     String TOKEN_SENT_SUCCESSFULLY= "TOKEN_SENT_SUCCESSFULLY" ;
     String TOKEN_CHECKED_SUCCESSFULLY = "TOKEN_CHECKED_SUCCESSFULLY";
     String EMAIL_DOES_NOT_EXISTS = "EMAIL_DOES_NOT_EXISTS";
+    String PASSWORD_RESET_SUCCESSFULLY = "PASSWORD_RESET_SUCCESSFULLY";
 
-
+    @PostMapping(RESET_PASSWORD_URL)
+    ResponseEntity<ResponseDtout> resetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String password) throws UserNotFoundException, InvalidTokenException, ExpiredToken, InvalidUserInformationException, TokenNotFoundException;
     @PostMapping(SEND_RESET_PASSWORD_LINK_URL)
     ResponseEntity<ResponseDtout> resetPasswordLink(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException;
 

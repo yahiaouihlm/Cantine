@@ -3,11 +3,11 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import Validation from "../../sharedmodule/functions/validation";
 
 @Component({
-    selector: 'app-change-password',
-    templateUrl: './change-password.component.html',
+    selector: 'app-reset-password',
+    templateUrl: './reset-password.component.html',
     styleUrls: ['../../../assets/styles/global.scss']
 })
-export class ChangePasswordComponent {
+export class ResetPasswordComponent {
 
     submitted = false;
     isLoadingPage = false;
@@ -21,7 +21,10 @@ export class ChangePasswordComponent {
     )
 
     OnSubmit(): void {
-
+        this.submitted = true;
+        if (this.newPasswordForm.invalid) {
+            return;
+        }
     }
 
     get f(): { [key: string]: AbstractControl } {

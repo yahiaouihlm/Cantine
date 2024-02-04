@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,29 +26,82 @@ public class UserService {
     private static final Logger LOG = LogManager.getLogger();
     final String SERVER_ADDRESS;
 
-    final String CONFIRMATION_TOKEN_URL;
+    final String RESET_PASSWORD_URL;
     private final Environment environment;
     private final IStudentDao iStudentDao;
     private final IAdminDao iAdminDao;
     private final IConfirmationTokenDao iConfirmationTokenDao;
 
     private final UserEmailSender sendUserConfirmationEmail;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public UserService(Environment environment, IStudentDao iStudentDao, IAdminDao iAdminDao, IConfirmationTokenDao iConfirmationTokenDao, UserEmailSender sendUserConfirmationEmail) {
+    public UserService(Environment environment, IStudentDao iStudentDao, IAdminDao iAdminDao, IConfirmationTokenDao iConfirmationTokenDao, UserEmailSender sendUserConfirmationEmail, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.iAdminDao = iAdminDao;
         this.iStudentDao = iStudentDao;
         this.environment = environment;
         this.iConfirmationTokenDao = iConfirmationTokenDao;
         this.sendUserConfirmationEmail = sendUserConfirmationEmail;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
         var host = environment.getProperty("sqli.cantine.server.ip.address");
         var port = environment.getProperty("sali.cantine.server.port");
         this.SERVER_ADDRESS = protocol + host + ":" + port;
-        this.CONFIRMATION_TOKEN_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
+        this.RESET_PASSWORD_URL = environment.getProperty("sqli.canine.server.reset.password.url");
 
     }
 
+    public void resetPassword(String userToken, String newPassword) throws InvalidTokenException, InvalidUserInformationException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
+        if (userToken == null || userToken.trim().isEmpty()) {
+            UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
+            throw new InvalidTokenException("INVALID TOKEN");
+        }
+        if (newPassword == null || newPassword.trim().isEmpty() || newPassword.length() < 6 || newPassword.length() > 20) {
+            UserService.LOG.error("INVALID PASSWORD  IN CHANGE  PASSWORD");
+            throw new InvalidUserInformationException("INVALID PASSWORD");
+        }
+
+        var confirmationTokenEntity = this.iConfirmationTokenDao.findByToken(userToken).orElseThrow(() -> {
+            UserService.LOG.error("TOKEN  NOT  FOUND  IN CHECK  LINK  VALIDITY : token = {}", userToken);
+            return new TokenNotFoundException("INVALID TOKEN");
+        });
+
+        UserEntity user = (confirmationTokenEntity.getStudent() != null) ? confirmationTokenEntity.getStudent() : confirmationTokenEntity.getAdmin();
+
+        if (user == null) {
+            UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", userToken);
+            throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
+        }
+
+        var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
+
+        long fiveMinutesInMillis = 50 * 60 * 1000; // 5 minutes en millisecondes
+        //  expired  token  ///
+        if (expiredTime > fiveMinutesInMillis) {
+            this.iConfirmationTokenDao.delete(confirmationTokenEntity);
+            UserService.LOG.error("EXPIRED TOKEN  IN CHECK  LINK  VALIDITY WITH  token = {}", userToken);
+            throw new ExpiredToken("EXPIRED TOKEN");
+        }
+
+        UserEntity userEntity = null;
+        var student = this.iStudentDao.findById(user.getId());
+        if (student.isPresent()) {
+            userEntity = student.get();
+        } else {
+            userEntity = this.iAdminDao.findById(user.getId()).orElseThrow(() -> {
+                UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", userToken);
+                return new UserNotFoundException("USER NOT FOUND");
+            });
+        }
+
+        userEntity.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
+        if (userEntity instanceof StudentEntity) {
+            this.iStudentDao.save((StudentEntity) userEntity);
+        } else {
+            this.iAdminDao.save((AdminEntity) userEntity);
+        }
+
+    }
 
     public void resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
 
@@ -179,7 +233,7 @@ public class UserService {
         }
         this.iConfirmationTokenDao.save(confirmationToken);
 
-        var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
+        var url = this.SERVER_ADDRESS + this.RESET_PASSWORD_URL + confirmationToken.getToken();
 
         this.sendUserConfirmationEmail.sendLinkToResetPassword(user, url);
     }
@@ -214,7 +268,7 @@ public class UserService {
         }
         this.iConfirmationTokenDao.save(confirmationToken);
 
-        var url = this.SERVER_ADDRESS + this.CONFIRMATION_TOKEN_URL + confirmationToken.getToken();
+        var url = this.SERVER_ADDRESS + this.RESET_PASSWORD_URL + confirmationToken.getToken();
 
         this.sendUserConfirmationEmail.sendLinkToResetPassword(user, url);
     }

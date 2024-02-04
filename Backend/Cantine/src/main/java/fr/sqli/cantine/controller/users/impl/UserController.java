@@ -28,6 +28,13 @@ public class UserController implements IUserController {
         this.userService = userService;
     }
 
+
+    @Override
+    public ResponseEntity<ResponseDtout> resetPassword(String token, String password) throws UserNotFoundException, InvalidTokenException, ExpiredToken, InvalidUserInformationException, TokenNotFoundException {
+        this.userService.resetPassword(token, password);
+        return ResponseEntity.ok(new ResponseDtout(PASSWORD_RESET_SUCCESSFULLY));
+    }
+
     @Override
     public ResponseEntity<ResponseDtout> resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         this.userService.resetPasswordLink(email);
