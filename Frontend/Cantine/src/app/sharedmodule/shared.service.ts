@@ -69,7 +69,7 @@ export class SharedService {
         );
     }
 
-    checkTokenValidityAdmin(token: string) {
+    checkUserTokenValidity(token: string) {
         const params = new HttpParams().set('token', token);
         return this.httpClient.get<NormalResponse>(this.CHECK_TOKEN_VALIDITY, {params});
     }
@@ -144,6 +144,8 @@ export class SharedService {
         return throwError(() => new Error(errorMessage));
 
     }
+
+
 
     /*
         private openDialog(message: string, httpError: HttpStatusCode): void {

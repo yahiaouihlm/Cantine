@@ -4,6 +4,7 @@ import {Meal} from "../../sharedmodule/models/meal";
 import {Observable, of} from "rxjs";
 import {Router} from "@angular/router";
 import {Order} from "../../sharedmodule/models/order";
+import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
 
 @Component({
   selector: 'app-meals',
@@ -28,7 +29,7 @@ export class MealsComponent  implements  OnInit{
     }
     else {
         localStorage.clear();
-        this.router.navigate(['cantine/signIn']).then(r => console.log("it  works"));
+        this.router.navigate([IConstantsCoreCantine.SIGN_IN_URL]).then(r => console.log("it  works"));
     }
   }
 

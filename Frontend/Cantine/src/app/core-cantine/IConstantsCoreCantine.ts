@@ -6,4 +6,7 @@ export module IConstantsCoreCantine {
 
     export const ADMIN_URL = "cantine/admin";
     export const HOME_URL = "cantine/home";
+    export const  FORGOT_PASSWORD_URL = "cantine/user/forgot-password";
+
+    export const SIGN_IN_URL = "cantine/signIn";
 }

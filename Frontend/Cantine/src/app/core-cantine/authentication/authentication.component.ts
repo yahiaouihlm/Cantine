@@ -49,7 +49,7 @@ export class AuthenticationComponent {
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
                     console.log("response", response)
-                   if (response.role === IConstantsCoreCantine.ADMIN_ROLE) {
+                    if (response.role === IConstantsCoreCantine.ADMIN_ROLE) {
                         this.router.navigate([IConstantsCoreCantine.ADMIN_URL]).then(() => {
                             window.location.reload();
                         });
@@ -112,7 +112,7 @@ export class AuthenticationComponent {
 
 
     forgotPassword() {
-        this.router.navigate(['cantine/user/forgot-password']).then(r => window.location.reload());
+        this.router.navigate([IConstantsCoreCantine.FORGOT_PASSWORD_URL]).then(r => window.location.reload());
     }
 
 }
