@@ -17,10 +17,12 @@ import {DialogErrors} from "./functions/dialogueErrors";
 })
 export class SharedService {
 
-    constructor(private httpClient: HttpClient, private matDialog: MatDialog , private router : Router) {
+    constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
     private BASIC_ENDPOINT = "http://localhost:8080/cantine/user/";
+
+    private RESET_PASSWORD_UER_ENDPOINT = this.BASIC_ENDPOINT + 'reset-password';
     private CHECK_EXISTENCE_OF_EMAIL = this.BASIC_ENDPOINT + "existing-email";
 
     private SEND_CONFIRMATION_TOKEN = this.BASIC_ENDPOINT + 'send-confirmation-link';
@@ -29,12 +31,21 @@ export class SharedService {
 
     private GET_STUDENT_BY_ID = this.BASIC_ENDPOINT + 'student/getStudent';
 
-    private  SEND_CONFIRMATION_TOKEN_FORGOT_PASSWORD_ENDPOINT = this.BASIC_ENDPOINT + 'send-reset-password-link';
+    private SEND_CONFIRMATION_TOKEN_FORGOT_PASSWORD_ENDPOINT = this.BASIC_ENDPOINT + 'send-reset-password-link';
 
-    private  dialog =   new DialogErrors(this.matDialog);
+    private dialog = new DialogErrors(this.matDialog);
+
+
+    resetPassword(token: string, password: string) {
+        const params = new HttpParams().set('token', token).set('newPassword', password);
+        return this.httpClient.post<NormalResponse>(this.RESET_PASSWORD_UER_ENDPOINT, params).pipe(
+            catchError((error) => this.handleRestPasswordErrors(error))
+        );
+    }
+
     getStudentById(id: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
-      const headers = new HttpHeaders().set('Authorization', token);
+        const headers = new HttpHeaders().set('Authorization', token);
         const params = new HttpParams().set('idStudent', id);
         return this.httpClient.get<User>(this.GET_STUDENT_BY_ID, {
                 headers: headers,
@@ -98,11 +109,9 @@ export class SharedService {
 
         if (error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Forbidden) {
             this.dialog.openDialog("Utilisateur  n'existe  pas", error.status);
-        }
-        else if (error.status == HttpStatusCode.Conflict ) {
+        } else if (error.status == HttpStatusCode.Conflict) {
             this.dialog.openDialog("Compte Utilisateur n'est  pas  activé", error.status);
-        }
-        else  if (error.status == HttpStatusCode.InternalServerError) {
+        } else if (error.status == HttpStatusCode.InternalServerError) {
             this.dialog.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation", error.status)
         } else {
             console.log(error.message)
@@ -113,31 +122,50 @@ export class SharedService {
 
     }
 
+    private handleRestPasswordErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+        let dialog;
+        if (error.status == HttpStatusCode.BadRequest) {
+            dialog = this.dialog.openDialog("Les  Informations  Transmises Sont  invalides", error.status);
+        } else if (error.status == HttpStatusCode.NotFound) {
+            dialog = this.dialog.openDialog("Impossible  de modifier  le  mot  de passe  Token ou  utilisateur est  Introuvable", error.status);
+        } else if (error.status == HttpStatusCode.Unauthorized) {
+            dialog = this.dialog.openDialog("Le Token est  Expiré", error.status);
+        } else if (error.status == HttpStatusCode.InternalServerError) {
+            dialog = this.dialog.openDialog(" Une erreur serveur s'est produite ", error.status)
+        } else {
+            dialog = this.dialog.openDialog(" Une erreur Inconnue s'est produite ", error.status)
+        }
 
-/*
-    private openDialog(message: string, httpError: HttpStatusCode): void {
-        const result = this.matDialog.open(ExceptionDialogComponent, {
-            data: {message: message},
-            width: '40%',
+        dialog.afterClosed().subscribe(result => {
+            this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
         });
-
-        result.afterClosed().subscribe((confirmed: boolean) => {
-            if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError == HttpStatusCode.Conflict || httpError == HttpStatusCode.NotFound) {
-                //  this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
-                console.log("je suis  la  dans  le  if  ")
-            } else {
-                console.log("je suis  la ")
-                /!* TODO  remove THE  Token  *!/
-                //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
-            }
-
-        });
+        return throwError(() => new Error(errorMessage));
 
     }
-*/
 
+    /*
+        private openDialog(message: string, httpError: HttpStatusCode): void {
+            const result = this.matDialog.open(ExceptionDialogComponent, {
+                data: {message: message},
+                width: '40%',
+            });
 
+            result.afterClosed().subscribe((confirmed: boolean) => {
+                if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError == HttpStatusCode.Conflict || httpError == HttpStatusCode.NotFound) {
+                    //  this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
+                    console.log("je suis  la  dans  le  if  ")
+                } else {
+                    console.log("je suis  la ")
+                    /!* TODO  remove THE  Token  *!/
+                    //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
+                }
 
+            });
+
+        }
+    */
 
 
 }

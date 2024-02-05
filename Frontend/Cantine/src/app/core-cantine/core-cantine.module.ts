@@ -11,7 +11,7 @@ import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { ConfirmationTokenComponent } from './confirmation-token/confirmation-token.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 
@@ -30,7 +30,7 @@ const routes: Routes = [
       {path: 'menus', component: MenuComponent},
       {path: 'user/confirmation-token/:token', component: ConfirmationTokenComponent},
       {path: 'user/forgot-password', component: ForgotPasswordComponent},
-      {path: 'user/change-password', component: ChangePasswordComponent}
+      {path: 'user/reset-password', component: ResetPasswordComponent}
     ]
   },
 
@@ -45,7 +45,7 @@ const routes: Routes = [
     AuthenticationComponent,
     ConfirmationTokenComponent,
     ForgotPasswordComponent,
-    ChangePasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     CommonModule,
