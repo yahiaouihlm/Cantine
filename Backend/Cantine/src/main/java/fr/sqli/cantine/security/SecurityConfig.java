@@ -60,14 +60,13 @@ public class SecurityConfig {
                 .authorizeRequests(
                         authorize -> {
                             authorize.requestMatchers("cantine/api/**").permitAll();
-                            authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
                             authorize.requestMatchers("/cantine/download/images/**",
                                     "/cantine/download/images/**").permitAll();
                             authorize.requestMatchers("/cantine/admin/getAllAdminFunctions"
                                     ,"/cantine/user/check-confirmation-token/**"
                                     ,"/cantine/user/existing-email"
                                     ,"/cantine/user/send-reset-password-link/**"
-                                    , "/cantine/admin/adminDashboard/signUp").permitAll();
+                                    , "/cantine/admin/register").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                             authorize.requestMatchers("/cantine/student/getAllStudentClass"
                                     , "/cantine/student/signUp"

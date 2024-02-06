@@ -74,7 +74,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
+    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, RemovedAccountException, AccountActivatedException {
 
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
@@ -127,10 +127,10 @@ public class AdminService implements IAdminService {
         adminEntity.setValidation(0);
 
         // save admin
-        this.adminDao.save(adminEntity);
+       // this.adminDao.save(adminEntity);
 
 
-        this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
+       // this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
     }
 
 

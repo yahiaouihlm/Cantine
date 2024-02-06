@@ -119,28 +119,32 @@ export class SignUpComponent implements OnInit {
             formData.append('image', this.image);
 
 
-        this.adminService.signUpAdmin(formData).subscribe((data) => {
-            if (data != undefined && data.message === IConstantsMessages.ADMIN_ADDED_SUCCESSFULLY) {
+        this.adminService.signUpAdmin(formData).subscribe({
+            next: (response) => {
+                if (response != undefined && response.message === IConstantsMessages.ADMIN_ADDED_SUCCESSFULLY) {
+                    this.isLoading = false;
+                    this.openDialogOfSuccessFullRegistration();
+                }
+            },
+            error: (error) => {
                 this.isLoading = false;
-             //   this.sendConfirmationToken();
             }
         });
+
     }
 
 
-    sendConfirmationToken() {
-        this.sharedService.sendToken(this.adminForm.value.email).subscribe((data) => {
-            const result = this.matDialog.open(SuccessfulDialogComponent, {
-                data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
-                width: '40%',
-            });
-            result.afterClosed().subscribe((result) => {
-                this.router.navigate([IConstantsURL.SIGN_IN_URL]).then();
-            });
+    openDialogOfSuccessFullRegistration() {
+        const result = this.matDialog.open(SuccessfulDialogComponent, {
+            data: {message: "Votre Inscription est prise en compte , un Email vous a éte envoyer pour vérifier votre Adresse "},
+            width: '40%',
+        });
 
-
+        result.afterClosed().subscribe((result) => {
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then();
         });
     }
+
 
 
     onChange = ($event: Event) => {

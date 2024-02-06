@@ -15,11 +15,8 @@ export class AdminService {
 
     private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin';
 
-    private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/signUp';
+    private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/register';
     private GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
-
-
-
 
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
@@ -43,6 +40,8 @@ export class AdminService {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
         let dialog;
+        console.log("error status is ", error.status);
+        console.log("error message is ", errorMessage);
         if (error.status == HttpStatusCode.BadRequest) {
             dialog = this.dialog.openDialog("Certains champs sont invalides");
         } else if (error.status == HttpStatusCode.NotFound) {
@@ -52,15 +51,14 @@ export class AdminService {
         } else if (error.status == HttpStatusCode.NotAcceptable) {
             dialog = this.dialog.openDialog(" Image  invalide Il ne  pas etre  pris en  charge");
 
-        }
-        if (error.status == HttpStatusCode.InternalServerError) {
+        } else  if (error.status == HttpStatusCode.InternalServerError) {
             dialog = this.dialog.openDialog("Une erreur serveur est survenue lors de l'ajout de l'administrateur");
         } else {
             dialog = this.dialog.openDialog("Une erreur est inconnue survenue lors de l'ajout de l'administrateur");
         }
 
         dialog.afterClosed().subscribe((confirmed: boolean) => {
-            this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
+           // this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
         });
         return throwError(() => new Error(errorMessage));
 
