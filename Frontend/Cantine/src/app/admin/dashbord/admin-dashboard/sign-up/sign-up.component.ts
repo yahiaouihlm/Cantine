@@ -14,6 +14,8 @@ import {Router} from "@angular/router";
 import Malfunctions from "../../../../sharedmodule/functions/malfunctions";
 import {HttpStatusCode} from "@angular/common/http";
 import {DialogErrors} from "../../../../sharedmodule/functions/dialogueErrors";
+import {IConstantsMessages} from "../../../../sharedmodule/constants/IConstantsMessages";
+import {IConstantsURL} from "../../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-sign-up',
@@ -53,10 +55,8 @@ export class SignUpComponent implements OnInit {
     );
 
     ngOnInit(): void {
-
         Malfunctions.checkUserConnection(this.router);
         this.adminfunction$ = this.adminService.getAdminFunctionS();
-
     }
 
     onSubmit() {
@@ -69,8 +69,7 @@ export class SignUpComponent implements OnInit {
 
         this.sharedService.checkExistenceOfEmail(this.adminForm.value.email).subscribe({
                 next: (data) => {
-                    //  inscrit  l'admin
-                    this.isLoading = false;
+                    this.adminRegistration();
                 },
                 error: (error) => {
                     if (error.status == HttpStatusCode.Conflict) {
@@ -79,7 +78,7 @@ export class SignUpComponent implements OnInit {
                         return;
                     } else {
                         const dialog = new DialogErrors(this.matDialog);
-                        dialog.openDialog("Une  erreur inconnue  est survenu  pendant la  vérification de  email \n veuillez  rasseyez ultérieurement", error.status);
+                        dialog.openDialog("Une  erreur inconnue  est survenu  pendant la  vérification de  email \n veuillez  rasseyez ultérieurement");
                         /*TODO  redirection    to  error  page  */
                     }
                 },
@@ -121,9 +120,9 @@ export class SignUpComponent implements OnInit {
 
 
         this.adminService.signUpAdmin(formData).subscribe((data) => {
-            if (data != undefined && data.message === "ADMIN ADDED SUCCESSFULLY") {
+            if (data != undefined && data.message === IConstantsMessages.ADMIN_ADDED_SUCCESSFULLY) {
                 this.isLoading = false;
-                this.sendConfirmationToken();
+             //   this.sendConfirmationToken();
             }
         });
     }
@@ -136,7 +135,7 @@ export class SignUpComponent implements OnInit {
                 width: '40%',
             });
             result.afterClosed().subscribe((result) => {
-                this.router.navigate(['cantine/signIn']).then();
+                this.router.navigate([IConstantsURL.SIGN_IN_URL]).then();
             });
 
 

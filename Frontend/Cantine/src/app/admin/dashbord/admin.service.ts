@@ -7,6 +7,7 @@ import {catchError, throwError} from "rxjs";
 import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
 import {Adminfunction} from "../../sharedmodule/models/adminfunction";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
+import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
 
 @Injectable()
 export class AdminService {
@@ -24,12 +25,12 @@ export class AdminService {
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
-
+    private dialog = new DialogErrors(this.matDialog);
 
 
     signUpAdmin(admin: FormData) {
         return this.httpClient.post<NormalResponse>(this.ADMIN_SIGN_UP_URL, admin).pipe(
-            catchError((error) => this.handleError(error))
+            catchError((error) => this.handleSignUpAdminErrors(error))
         );
     }
 
@@ -38,19 +39,29 @@ export class AdminService {
     }
 
 
-
-
-    private handleError(error: HttpErrorResponse) {
+    private handleSignUpAdminErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
+        let dialog;
+        if (error.status == HttpStatusCode.BadRequest) {
+            dialog = this.dialog.openDialog("Certains champs sont invalides");
+        } else if (error.status == HttpStatusCode.NotFound) {
+            dialog = this.dialog.openDialog(" Votre  fonction au  sien de  Ecole  aston    est introuvable");
+        } else if (error.status == HttpStatusCode.Conflict) {
+            dialog = this.dialog.openDialog("L'adresse mail que vous avez saisie est déjà utilisée");
+        } else if (error.status == HttpStatusCode.NotAcceptable) {
+            dialog = this.dialog.openDialog(" Image  invalide Il ne  pas etre  pris en  charge");
 
-
+        }
         if (error.status == HttpStatusCode.InternalServerError) {
-            this.openDialog("Unkwon Error   has  been occured  ", error.status);
+            dialog = this.dialog.openDialog("Une erreur serveur est survenue lors de l'ajout de l'administrateur");
         } else {
-            this.openDialog(errorMessage, error.status);
+            dialog = this.dialog.openDialog("Une erreur est inconnue survenue lors de l'ajout de l'administrateur");
         }
 
+        dialog.afterClosed().subscribe((confirmed: boolean) => {
+            this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
+        });
         return throwError(() => new Error(errorMessage));
 
     }

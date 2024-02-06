@@ -1,10 +1,9 @@
 import {AuthObject} from "../models/authObject";
 import {Router} from "@angular/router";
 import {SharedService} from "../shared.service";
-import {HttpStatusCode} from "@angular/common/http";
-import {ExceptionDialogComponent} from "../dialogs/exception-dialog/exception-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {IConstantsCoreCantine} from "../../core-cantine/IConstantsCoreCantine";
+import {IConstantsURL} from "../constants/IConstantsURL";
+import {IConstantsMessages} from "../constants/IConstantsMessages";
+
 
 export  default class Malfunctions {
 
@@ -18,12 +17,12 @@ export  default class Malfunctions {
         let authObj = localStorage.getItem('authObject');
         if (authObj) {
             let authObject = JSON.parse(authObj);
-            if (authObject.role === IConstantsCoreCantine.ADMIN_ROLE) {
-                 router.navigate([IConstantsCoreCantine.ADMIN_HOME_URL]).then(() => {
+            if (authObject.role === IConstantsMessages.ADMIN_ROLE) {
+                 router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(() => {
                     window.location.reload();
                 });
-            } else if (authObject.role === IConstantsCoreCantine.STUDENT_ROLE) {
-                 router.navigate([IConstantsCoreCantine.STUDENT_HOME_URL]).then(() => {
+            } else if (authObject.role === IConstantsMessages.STUDENT_ROLE) {
+                 router.navigate([IConstantsURL.STUDENT_HOME_URL]).then(() => {
                     window.location.reload();
                 });
             }

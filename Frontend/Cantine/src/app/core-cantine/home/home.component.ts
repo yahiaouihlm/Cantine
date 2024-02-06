@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
-import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

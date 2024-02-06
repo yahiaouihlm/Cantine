@@ -5,7 +5,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
+import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+
 
 @Component({
     selector: 'app-reset-password',
@@ -54,7 +55,7 @@ export class ResetPasswordComponent implements OnInit {
                 width: '40%',
             });
             dialogue.afterClosed().subscribe(result => {
-                this.router.navigate([IConstantsCoreCantine.SIGN_IN_URL]).then(r => console.log("redirected to login page"));
+                this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(r => console.log("redirected to login page"));
             });
         });
     }

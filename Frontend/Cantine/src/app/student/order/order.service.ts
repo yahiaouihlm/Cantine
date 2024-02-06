@@ -40,9 +40,9 @@ export class OrderService {
 
         if (error.status == HttpStatusCode.InternalServerError) {
             errorMessage = "Une  erreur    est  survenue  !"
-            new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
+            new DialogErrors(this.matDialog).openDialog(errorMessage);
         } else {
-            new DialogErrors(this.matDialog).openDialog(errorMessage, error.status);
+            new DialogErrors(this.matDialog).openDialog(errorMessage);
         }
         return throwError(() => new Error(errorMessage));
 

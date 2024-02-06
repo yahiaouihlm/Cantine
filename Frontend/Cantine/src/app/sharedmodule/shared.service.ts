@@ -10,6 +10,8 @@ import {AuthObject} from "./models/authObject";
 import {Router} from "@angular/router";
 import Malfunctions from "./functions/malfunctions";
 import {DialogErrors} from "./functions/dialogueErrors";
+import {IConstantsURL} from "./constants/IConstantsURL";
+
 
 
 @Injectable({
@@ -85,7 +87,7 @@ export class SharedService {
 
         } else {
             localStorage.clear();
-            this.dialog.openDialog("Unkwon Error   has  been occured  ", error.status)
+            this.dialog.openDialog("Unkwon Error   has  been occured  ")
             this.router.navigate(['cantine/home']).then(error => console.log("redirected to login page"));
         }
 
@@ -106,14 +108,14 @@ export class SharedService {
         let errorMessage = errorObject.exceptionMessage;
 
         if (error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Forbidden) {
-            this.dialog.openDialog("Utilisateur  n'existe  pas", error.status);
+            this.dialog.openDialog("Utilisateur  n'existe  pas");
         } else if (error.status == HttpStatusCode.Conflict) {
-            this.dialog.openDialog("Compte Utilisateur n'est  pas  activé", error.status);
+            this.dialog.openDialog("Compte Utilisateur n'est  pas  activé");
         } else if (error.status == HttpStatusCode.InternalServerError) {
-            this.dialog.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation", error.status)
+            this.dialog.openDialog(" Une erreur s'est produite pendant l'envoi de l'email de confirmation")
         } else {
             console.log(error.message)
-            this.dialog.openDialog(errorMessage, error.status)
+            this.dialog.openDialog(errorMessage)
         }
 
         return throwError(() => new Error(errorMessage));
@@ -125,19 +127,19 @@ export class SharedService {
         let errorMessage = errorObject.exceptionMessage;
         let dialog;
         if (error.status == HttpStatusCode.BadRequest) {
-            dialog = this.dialog.openDialog("Les  Informations  Transmises Sont  invalides", error.status);
+            dialog = this.dialog.openDialog("Les  Informations  Transmises Sont  invalides");
         } else if (error.status == HttpStatusCode.NotFound) {
-            dialog = this.dialog.openDialog("Impossible  de modifier  le  mot  de passe  Token ou  utilisateur est  Introuvable", error.status);
+            dialog = this.dialog.openDialog("Impossible  de modifier  le  mot  de passe  Token ou  utilisateur est  Introuvable");
         } else if (error.status == HttpStatusCode.Unauthorized) {
-            dialog = this.dialog.openDialog("Le Token est  Expiré", error.status);
+            dialog = this.dialog.openDialog("Le Token est  Expiré");
         } else if (error.status == HttpStatusCode.InternalServerError) {
-            dialog = this.dialog.openDialog(" Une erreur serveur s'est produite ", error.status)
+            dialog = this.dialog.openDialog(" Une erreur serveur s'est produite ")
         } else {
-            dialog = this.dialog.openDialog(" Une erreur Inconnue s'est produite ", error.status)
+            dialog = this.dialog.openDialog(" Une erreur Inconnue s'est produite ")
         }
 
         dialog.afterClosed().subscribe(result => {
-            this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(error => console.log("redirected to login page"));
         });
         return throwError(() => new Error(errorMessage));
 

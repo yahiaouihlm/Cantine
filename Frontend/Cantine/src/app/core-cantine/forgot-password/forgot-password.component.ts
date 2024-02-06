@@ -5,7 +5,8 @@ import {SharedService} from "../../sharedmodule/shared.service";
 import {MatDialog} from "@angular/material/dialog";
 import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {Router} from "@angular/router";
-import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
+import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+
 
 @Component({
   selector: 'app-forgot-password',
@@ -44,7 +45,7 @@ export class ForgotPasswordComponent {
                     width: '40%',
                 });
                 result.afterClosed().subscribe(() => {
-                    this.router.navigate([IConstantsCoreCantine.SIGN_IN_URL]).then(window.location.reload);
+                    this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
                 });
                 this.isLoadingPage = false;
 
