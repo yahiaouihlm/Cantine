@@ -64,9 +64,7 @@ export class SharedService {
 
     checkExistenceOfEmail(email: string) {
         const params = new HttpParams().set('email', email);
-        return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params}).pipe(
-            catchError((error) => this.handleErrors(error))
-        );
+        return this.httpClient.get<NormalResponse>(this.CHECK_EXISTENCE_OF_EMAIL, {params});
     }
 
     checkUserTokenValidity(token: string) {

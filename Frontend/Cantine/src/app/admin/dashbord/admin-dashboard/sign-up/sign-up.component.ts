@@ -4,7 +4,6 @@ import Validation from "../../../../sharedmodule/functions/validation";
 import {Adminfunction} from "../../../../sharedmodule/models/adminfunction";
 import {AdminService} from "../../admin.service";
 import {Observable, of} from "rxjs";
-import {Menu} from "../../../../sharedmodule/models/menu";
 import {
     SuccessfulDialogComponent
 } from "../../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
@@ -12,6 +11,9 @@ import {ValidatorDialogComponent} from "../../../../sharedmodule/dialogs/validat
 import {MatDialog} from "@angular/material/dialog";
 import {SharedService} from "../../../../sharedmodule/shared.service";
 import {Router} from "@angular/router";
+import Malfunctions from "../../../../sharedmodule/functions/malfunctions";
+import {HttpStatusCode} from "@angular/common/http";
+import {DialogErrors} from "../../../../sharedmodule/functions/dialogueErrors";
 
 @Component({
     selector: 'app-sign-up',
@@ -25,11 +27,10 @@ export class SignUpComponent implements OnInit {
     private WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vous inscrire ?";
     submitted = false;
     image!: File;
-    isLoaded = false;
-    existEmail = false;
+    isLoading = false;
     adminfunction$: Observable<Adminfunction[]> = of([]);
 
-    constructor(private adminService: AdminService, private matDialog: MatDialog , private sharedService: SharedService,  private  router: Router) {
+    constructor(private adminService: AdminService, private matDialog: MatDialog, private sharedService: SharedService, private router: Router) {
     }
 
     adminForm: FormGroup = new FormGroup({
@@ -52,45 +53,55 @@ export class SignUpComponent implements OnInit {
     );
 
     ngOnInit(): void {
+
+        Malfunctions.checkUserConnection(this.router);
         this.adminfunction$ = this.adminService.getAdminFunctionS();
+
     }
 
     onSubmit() {
 
         this.submitted = true;
-        this.isLoaded = true;
-        this.existEmail = false;
         if (this.adminForm.invalid) {
             return;
         }
-        // check if email exist   /*TODO  corriger la  fonction  retour .. ect  */
-        this.sharedService.checkExistenceOfEmail(this.adminForm.value.email).subscribe( {
-            next: (data) => {
-                this.existEmail =  false;
-               this.inscription();
-            } ,
-            error: (error) => {
-                this.existEmail =  true;
-            },
-        }
-    );
+        this.isLoading = true;
+
+        this.sharedService.checkExistenceOfEmail(this.adminForm.value.email).subscribe({
+                next: (data) => {
+                    //  inscrit  l'admin
+                    this.isLoading = false;
+                },
+                error: (error) => {
+                    if (error.status == HttpStatusCode.Conflict) {
+                        this.adminForm.controls['email'].setErrors({existingEmail: true});
+                        this.isLoading = false;
+                        return;
+                    } else {
+                        const dialog = new DialogErrors(this.matDialog);
+                        dialog.openDialog("Une  erreur inconnue  est survenu  pendant la  vérification de  email \n veuillez  rasseyez ultérieurement", error.status);
+                        /*TODO  redirection    to  error  page  */
+                    }
+                },
+            }
+        );
 
 
     }
 
-     inscription() {
-         const result = this.matDialog.open(ValidatorDialogComponent, {
-             data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
-             width: '40%',
-         });
-         result.afterClosed().subscribe((result) => {
-             if (result != undefined && result == true) {
-                 this.signUp();
-             } else {
-                 return;
-             }
-         });
-     }
+    adminRegistration() {
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_SIGN_UP},
+            width: '40%',
+        });
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                this.signUp();
+            } else {
+                return;
+            }
+        });
+    }
 
     signUp() {
         const formData = new FormData();
@@ -111,7 +122,7 @@ export class SignUpComponent implements OnInit {
 
         this.adminService.signUpAdmin(formData).subscribe((data) => {
             if (data != undefined && data.message === "ADMIN ADDED SUCCESSFULLY") {
-                this.isLoaded = false;
+                this.isLoading = false;
                 this.sendConfirmationToken();
             }
         });
@@ -120,13 +131,13 @@ export class SignUpComponent implements OnInit {
 
     sendConfirmationToken() {
         this.sharedService.sendToken(this.adminForm.value.email).subscribe((data) => {
-                const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
-                    width: '40%',
-                });
-                result.afterClosed().subscribe((result) => {
-                    this.router.navigate(['cantine/signIn']).then();
-                });
+            const result = this.matDialog.open(SuccessfulDialogComponent, {
+                data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
+                width: '40%',
+            });
+            result.afterClosed().subscribe((result) => {
+                this.router.navigate(['cantine/signIn']).then();
+            });
 
 
         });
@@ -135,8 +146,7 @@ export class SignUpComponent implements OnInit {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
     get f(): { [key: string]: AbstractControl } {

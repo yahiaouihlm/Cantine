@@ -59,12 +59,6 @@ public class AdminController implements IAdminController {
         return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }
 
-
-
-
-    /*------------------------------------------------ pas  encore  fait --------------------------------------------*/
-
-
     @Override
     public ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() {
         return ResponseEntity.ok(this.adminService.getAllAdminFunctions());

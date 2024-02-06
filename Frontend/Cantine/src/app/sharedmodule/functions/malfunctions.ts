@@ -4,8 +4,32 @@ import {SharedService} from "../shared.service";
 import {HttpStatusCode} from "@angular/common/http";
 import {ExceptionDialogComponent} from "../dialogs/exception-dialog/exception-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {IConstantsCoreCantine} from "../../core-cantine/IConstantsCoreCantine";
 
 export  default class Malfunctions {
+
+
+    /**
+     * @doc this function is used to check if the user is connected by checking the authObject is  in local storage redirect to the  home page of the user
+     * @param router
+     */
+
+    public  static  checkUserConnection(router  : Router) {
+        let authObj = localStorage.getItem('authObject');
+        if (authObj) {
+            let authObject = JSON.parse(authObj);
+            if (authObject.role === IConstantsCoreCantine.ADMIN_ROLE) {
+                 router.navigate([IConstantsCoreCantine.ADMIN_HOME_URL]).then(() => {
+                    window.location.reload();
+                });
+            } else if (authObject.role === IConstantsCoreCantine.STUDENT_ROLE) {
+                 router.navigate([IConstantsCoreCantine.STUDENT_HOME_URL]).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+        console.log("user  is connected");
+    }
 
 
 

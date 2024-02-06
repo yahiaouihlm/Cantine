@@ -147,6 +147,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
 
 
+     /*TODO change  the  place of  key to application.properties */
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String  key  =  "sqli.cantine.jwt.secret" ;
@@ -178,14 +179,14 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
     /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();
-   //     idToken.put("Authorization", "Bearer " + jwtAccessToken);
         response.setContentType("application/json");
+        idToken.put("Authorization", "Bearer " + jwtAccessToken);
         idToken.put("status" , HttpStatus.OK.name());
         idToken.put("message" ,  "you are authenticated");
         idToken.put("Firstname" ,  user.getFirstname());
         idToken.put("LastName" ,  user.getLastname());
         idToken.put("email" , username);
-        idToken.put("id" ,  user.getUuid()); /*TODO changer  le id  yo  UUID */
+        idToken.put("id" ,  user.getUuid());
         idToken.put("image",  user.getImage() );
         idToken.put("role", role[0].toString()); // pas  une
 

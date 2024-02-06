@@ -12,7 +12,7 @@ import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 export class AdminService {
 
 
-    private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin/adminDashboard';
+    private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin';
 
     private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/signUp';
     private GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';

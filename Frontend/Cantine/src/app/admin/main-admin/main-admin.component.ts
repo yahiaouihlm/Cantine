@@ -18,6 +18,7 @@ export class MainAdminComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log("hello world from main admin component");
         let adminId = Malfunctions.getUserIdFromLocalStorage();
         console.log("admin  Id = " + adminId);
         /*if (adminId === '') {

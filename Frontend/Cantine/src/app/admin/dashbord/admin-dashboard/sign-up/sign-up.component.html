@@ -9,14 +9,14 @@
                 </div>
 
                 <div class="center">
-                      <h2>Je m'inscris en tant qu'Administrateur</h2>
+                    <h2>Je m'inscris en tant qu'Administrateur</h2>
                 </div>
 
                 <form [formGroup]="adminForm">
 
                     <!---------------------- Name --------------------------->
                     <div class="form-group ">
-                        <label for="firstName"> Prénom :  </label>
+                        <label for="firstName"> Prénom : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
                                formControlName="firstName"
                                placeholder="  Votre Prénom "
@@ -26,19 +26,18 @@
                         <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
                             <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
                             <div *ngIf="f['firstName'].errors['maxlength']" class="center">
-                                votre Prénom  ne doit pas dépasser 60 charctéres
+                                votre Prénom ne doit pas dépasser 60 charctéres
                             </div>
                             <div *ngIf="f['firstName'].errors['minlength']" class="center">
-                                votre Prénom    doit avoir au minimum de 3 charctéres
+                                votre Prénom doit avoir au minimum de 3 charctéres
                             </div>
                         </div>
                     </div>
 
 
-
                     <!---------------------- Name --------------------------->
                     <div class="form-group ">
-                        <label for="lastName"> Nom :  </label>
+                        <label for="lastName"> Nom : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
                                formControlName="lastName"
                                placeholder="  Votre Nom "
@@ -48,22 +47,18 @@
                         <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
                             <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
                             <div *ngIf="f['lastName'].errors['maxlength']" class="center">
-                                votre Nom  ne doit pas dépasser 60 charctéres
+                                votre Nom ne doit pas dépasser 60 charctéres
                             </div>
                             <div *ngIf="f['lastName'].errors['minlength']" class="center">
-                                votre Nom  doit avoir au minimum de 3 charctéres
+                                votre Nom doit avoir au minimum de 3 charctéres
                             </div>
                         </div>
                     </div>
 
 
-
-
-
-
                     <!---------------------- Email --------------------------->
                     <div class="form-group ">
-                        <label for="email"> Email :  </label>
+                        <label for="email"> Email : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
                                formControlName="email"
                                placeholder="  Votre Email "
@@ -73,27 +68,26 @@
                         <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
                             <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
                             <div *ngIf="f['email'].errors['maxlength']" class="center">
-                                votre Nom  ne doit pas dépasser 1000 charctéres
+                                votre Nom ne doit pas dépasser 1000 charctéres
                             </div>
                             <div *ngIf="f['email'].errors['email']" class="center">
-                                Format  Email  incorrect
+                                Format Email incorrect
                             </div>
 
                             <div *ngIf="f['email'].errors['pattern']" class="center">
-                                Format  Email  incorrect pattern
+                                Format Email incorrect pattern
+                            </div>
+
+                            <div *ngIf="f['email'].errors['existingEmail']" class="center">
+                                 email  existe  déja
                             </div>
                         </div>
-
-                        <div *ngIf="submitted && existEmail && !f['email'].errors " class="center">
-                            Email  existe déja
-                        </div>
-
                     </div>
 
 
                     <!---------------------- Birthdate--------------------------->
                     <div class="form-group ">
-                        <label for="birthDate"> Date De  Naissance   :  </label>
+                        <label for="birthDate"> Date De Naissance : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
                                formControlName="birthDate"
                                placeholder="Votre  Date  De  Naissance "
@@ -101,21 +95,17 @@
                                id="birthDate"
                         />
                         <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
-                            <div *ngIf="f['birthDate'].errors['required']" class="center"> La  date  de  naissance  est requise     </div>
+                            <div *ngIf="f['birthDate'].errors['required']" class="center"> La date de naissance est
+                                requise
+                            </div>
 
                         </div>
                     </div>
 
 
-
-
-
-
-
-
                     <!---------------------- Password --------------------------->
                     <div class="form-group ">
-                        <label for="password"> Mot  de passe  :  </label>
+                        <label for="password"> Mot de passe : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" class="form-control"
                                formControlName="password"
                                placeholder="  Votre Mot  de passe "
@@ -123,13 +113,15 @@
                                id="password"
                         />
                         <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
-                            <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot  de  passe  est requis</div>
+                            <div *ngIf="f['password'].errors['required']" class="center"> Votre Mot de passe est
+                                requis
+                            </div>
                             <div *ngIf="f['password'].errors['maxlength']" class="center">
-                                votre Mot De passe  ne doit pas dépasser   20 charctéres
+                                votre Mot De passe ne doit pas dépasser 20 charctéres
                             </div>
 
                             <div *ngIf="f['password'].errors['minlength']" class="center">
-                                votre Mot de passe   doit avoir au minimum de 6 charctéres
+                                votre Mot de passe doit avoir au minimum de 6 charctéres
                             </div>
 
 
@@ -137,18 +129,20 @@
                     </div>
 
 
-
                     <!---------------------- Password Confirmation--------------------------->
                     <div class="form-group ">
-                        <label for="confirmPassword">  Confirmation Mot  de passe  :  </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" class="form-control"
+                        <label for="confirmPassword"> Confirmation Mot de passe : </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }"
+                               class="form-control"
                                formControlName="confirmPassword"
                                placeholder="  Confirmation  Mot  de passe "
                                type="password"
                                id="confirmPassword"
                         />
                         <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
-                            <div *ngIf="f['confirmPassword'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
+                            <div *ngIf="f['confirmPassword'].errors['required']" class="center"> confirmation Mot de
+                                passe est requis
+                            </div>
                             <div *ngIf="f['confirmPassword'].errors['matching']" class="center">
                                 Les deux mots de passe ne sont pas identiques
                             </div>
@@ -159,7 +153,7 @@
 
                     <!---------------------- adress --------------------------->
                     <div class="form-group ">
-                        <label for="address"> votre  adresse :  </label>
+                        <label for="address"> votre adresse : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['address'].errors }" class="form-control"
                                formControlName="address"
                                placeholder=" votre  adresse "
@@ -167,13 +161,13 @@
                                id="address"
                         />
                         <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
-                            <div *ngIf="f['address'].errors['required']" class="center"> le  champs  est  obligatoire </div>
+                            <div *ngIf="f['address'].errors['required']" class="center"> le champs est obligatoire</div>
                             <div *ngIf="f['address'].errors['maxlength']" class="center">
-                                Le nom de    de votre  adresse  ne doit pas dépasser   3000 charctéres
+                                Le nom de de votre adresse ne doit pas dépasser 3000 charctéres
                             </div>
 
                             <div *ngIf="f['address'].errors['minlength']" class="center">
-                                Le  nom  de votre  adresse   doit avoir au minimum de 3 charctéres
+                                Le nom de votre adresse doit avoir au minimum de 3 charctéres
                             </div>
 
 
@@ -181,10 +175,9 @@
                     </div>
 
 
-
                     <!---------------------- Town --------------------------->
                     <div class="form-group ">
-                        <label for="town"> Ville :  </label>
+                        <label for="town"> Ville : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['town'].errors }" class="form-control"
                                formControlName="town"
                                placeholder="La ville "
@@ -192,13 +185,13 @@
                                id="town"
                         />
                         <div *ngIf="submitted && f['town'].errors" class="invalid-feedback">
-                            <div *ngIf="f['town'].errors['required']" class="center"> le  champs  est  obligatoire </div>
+                            <div *ngIf="f['town'].errors['required']" class="center"> le champs est obligatoire</div>
                             <div *ngIf="f['town'].errors['maxlength']" class="center">
-                                Le nom de   la ville  ne doit pas dépasser   1000 charctéres
+                                Le nom de la ville ne doit pas dépasser 1000 charctéres
                             </div>
 
                             <div *ngIf="f['town'].errors['minlength']" class="center">
-                                Le  nom  de  la ville    doit avoir au minimum de 3 charctéres
+                                Le nom de la ville doit avoir au minimum de 3 charctéres
                             </div>
 
 
@@ -206,11 +199,9 @@
                     </div>
 
 
-
-
                     <!---------------------- Phone Number--------------------------->
                     <div class="form-group ">
-                        <label for="phoneNumber">  Numéro Tél  :  </label>
+                        <label for="phoneNumber"> Numéro Tél : </label>
                         <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
                                formControlName="phoneNumber"
                                placeholder="  Votre  Numéro Télephone "
@@ -218,47 +209,41 @@
                                id="phoneNumber"
                         />
                         <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
-                            <div *ngIf="f['phoneNumber'].errors['required']" class="center">  confirmation Mot  de  passe  est requis</div>
+                            <div *ngIf="f['phoneNumber'].errors['required']" class="center"> confirmation Mot de passe
+                                est requis
+                            </div>
                             <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
-                                Format  Numéro  Téléphone est   incorrect
+                                Format Numéro Téléphone est incorrect
                             </div>
 
                         </div>
                     </div>
 
 
-
-
-
-
                     <!---------------------- Function  --------------------------->
 
                     <div class="form-group">
-                        <label for="adminFunction"> Votre  poste   </label>
+                        <label for="adminFunction"> Votre poste </label>
                         <select formControlName="adminFunction" class="form-control" id="adminFunction"
-                                [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }" name="adminFunction">
-                            <option value="" disabled>-- Votre  travail --</option>
+                                [ngClass]="{ 'is-invalid': submitted && f['adminFunction'].errors }"
+                                name="adminFunction">
+                            <option value="" disabled>-- Votre travail --</option>
                             <ng-container *ngFor="let job of adminfunction$ | async ">
                                 <option [value]="job.name">{{ job.name }}</option>
                             </ng-container>
                         </select>
                         <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
-                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre  travail est
+                            <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre travail
+                                est
                                 requise
                             </div>
                         </div>
                     </div>
 
 
-
-
-
-
-
-
                     <!---------------------- Image --------------------------->
                     <div class="form-group">
-                        <label for="image"> Choisissez une  image  de  profile   </label>
+                        <label for="image"> Choisissez une image de profile </label>
 
                         <input class="input-group-prepend"
                                [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
@@ -273,12 +258,9 @@
                     </div>
 
 
-
-
-
-
                     <div class="validate-form center">
-                        <button class="center btn" (click)="onSubmit()">
+
+                        <button class="center btn" (click)="onSubmit()" *ngIf="!isLoading;  else loadingTemplate">
                             <span>
                                 <i class="fa fa-check"></i>
                             </span>
@@ -296,13 +278,10 @@
 </div>
 
 
-
-<ng-template #loadingTemplate >
-    &lt;!&ndash; Afficher le spinner ici pendant le chargement &ndash;&gt;
+<ng-template #loadingTemplate>
     <div class="spinner-container">
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
-
 </ng-template>
 
 <style>
