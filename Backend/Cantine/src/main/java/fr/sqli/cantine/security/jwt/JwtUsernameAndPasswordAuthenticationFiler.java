@@ -6,6 +6,7 @@ import fr.sqli.cantine.dto.in.users.Login;
 import fr.sqli.cantine.security.MyUserDaitls;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -21,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +31,12 @@ import java.util.stream.Collectors;
 
 
 
+
 public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePasswordAuthenticationFilter {
     private  static final Logger LOG = LogManager.getLogger();
     private AuthenticationManager authenticationManager ;
 
-
+    public static final String JWT_COOKIE_NAME = "JWT_TOKEN";
     public  JwtUsernameAndPasswordAuthenticationFiler (AuthenticationManager authenticationManager){
         this.authenticationManager= authenticationManager ;
 
@@ -97,19 +101,6 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                //  custom  exception  for  disabled  account
 
            }
-           catch (LockedException exp){
-               idToken.put("message" ,  "INVALID ACCOUNT  FOR  TEST ");
-               idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
-               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-               response.setContentType("application/json");
-               try {
-                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
-               } catch (IOException e) {
-                   throw new RuntimeException(e);
-               }
-
-           }
-
            catch (BadCredentialsException e) {
                response.setContentType("application/json");
                idToken.put("status" , HttpStatus.UNAUTHORIZED.name());
@@ -121,6 +112,20 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                    throw new RuntimeException(ex);
                }
            }
+           catch (LockedException exp){
+               idToken.put("message" ,  "INVALID ACCOUNT");
+               idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
+               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+               response.setContentType("application/json");
+               try {
+                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
+               } catch (IOException e) {
+                   throw new RuntimeException(e);
+               }
+
+           }
+
+
 
            catch (Exception e ) {
                    idToken.put("exceptionMessage" ,  " An error has occurred");
@@ -173,19 +178,28 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
 
     /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();
-        idToken.put("Authorization", "Bearer " + jwtAccessToken);
+   //     idToken.put("Authorization", "Bearer " + jwtAccessToken);
         response.setContentType("application/json");
         idToken.put("status" , HttpStatus.OK.name());
         idToken.put("message" ,  "you are authenticated");
         idToken.put("Firstname" ,  user.getFirstname());
         idToken.put("LastName" ,  user.getLastname());
         idToken.put("email" , username);
-        idToken.put("id" ,  user.getId().toString()); /*TODO changer  le id  yo  UUID */
+        idToken.put("id" ,  user.getUuid()); /*TODO changer  le id  yo  UUID */
         idToken.put("image",  user.getImage() );
         idToken.put("role", role[0].toString()); // pas  une
+
+        String accessToken  =  "Bearer " + jwtAccessToken ;
+        Cookie cookie = new Cookie(JWT_COOKIE_NAME, URLEncoder.encode(accessToken, StandardCharsets.UTF_8));
+        cookie.setHttpOnly(true);
+
+        response.addCookie(cookie);
+
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
 
     }
+
+
 
 
 }

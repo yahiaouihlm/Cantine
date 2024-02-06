@@ -5,6 +5,7 @@ import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -65,11 +66,11 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         ImageEntity image1 = new ImageEntity();
         image1.setImagename(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
-
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         List<MealEntity> meals =
                 List.of(
-                        new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1, 1, image),
-                        new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1, 1, image1)
+                        new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1, 1, mealTypeEnum , image),
+                        new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1, 1,mealTypeEnum ,  image1)
                 );
         this.mealDao.saveAll(meals);
 

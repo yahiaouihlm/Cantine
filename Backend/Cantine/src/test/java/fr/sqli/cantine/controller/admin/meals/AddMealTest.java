@@ -6,6 +6,7 @@ import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 
+import fr.sqli.cantine.entity.MealTypeEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -76,9 +77,9 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     public void initDataBase() {
         ImageEntity image = new ImageEntity();
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
-
+        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
-                , new BigDecimal("1.5"), 10, 1, image);
+                , new BigDecimal("1.5"), 10, 1, mealTypeEnum,image);
 
         this.mealDao.save(mealEntity);
     }
@@ -1097,13 +1098,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
     @Test
-    void AddMealTestWithNullRequestData() throws Exception {
+    void addMealTestWithNullRequestData() throws Exception {
         // given :  remove label from formData
         // word  with  101  characters
         // when : call addMeal
-        System.out.println("dans le tess "+   super.getAdminBearerToken());
+
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
-                        .header("Authorization", super.getAdminBearerToken())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :

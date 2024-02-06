@@ -126,6 +126,10 @@ CREATE table  if NOT EXISTS  st_order(
 -- -----------------------------------------------------
 -- Table `cantiniere`.`plat`
 -- -----------------------------------------------------
+
+CREATE TYPE mealType AS ENUM ('ENTREE', 'PLAT', 'DESSERT', 'BOISSON', 'ACCOMPAGNEMENT', 'AUTRE');
+
+
 CREATE TABLE IF NOT EXISTS meal(
     id  SERIAL ,
     uuid VARCHAR(255) NOT NULL,
@@ -136,13 +140,17 @@ CREATE TABLE IF NOT EXISTS meal(
     image_idimage  INT NOT NULL ,
     quantity   INT    DEFAULT 0 ,
     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled  , 2 =  to  delete  */
+    meal_type mealType NOT NULL,
     PRIMARY KEY (id),
     CHECK (status IN (0,1,2)),
     CHECK (quantity >= 0),
     CHECK (price >= 0),
     unique (label, description, category),
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
+    FOREIGN KEY (meal_type) REFERENCES mealType(id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
+
+
 
 
 CREATE TABLE IF NOT EXISTS menu (

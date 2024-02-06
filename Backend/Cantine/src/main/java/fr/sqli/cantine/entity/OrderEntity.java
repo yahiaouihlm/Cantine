@@ -12,16 +12,8 @@ import org.hibernate.annotations.Check;
 @Table(name = "st_order", uniqueConstraints={
         @UniqueConstraint(columnNames={"qr_code"})
 })
-public class OrderEntity implements Serializable {
+public class OrderEntity extends AbstractEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer id;
-
-    @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid= java.util.UUID.randomUUID().toString();
 
     @Column(name = "creation_date", nullable=false)
     private LocalDate creationDate;
@@ -75,23 +67,6 @@ public class OrderEntity implements Serializable {
     }
     )
     private List<MealEntity> meals;
-
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public LocalDate getCreationDate() {
         return creationDate;

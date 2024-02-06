@@ -13,16 +13,9 @@ import org.hibernate.annotations.Check;
         @UniqueConstraint(columnNames={"label", "description", "category"})
 
 })
-public class MealEntity implements Serializable {
+public class MealEntity  extends AbstractEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer id;
-
-    @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid  = java.util.UUID.randomUUID().toString();
 
     @Column(nullable=false, length=100)
     private String label;
@@ -65,6 +58,9 @@ public class MealEntity implements Serializable {
     @JoinColumn(name="image_idimage", nullable=false)
     private ImageEntity image;
 
+    @Enumerated(EnumType.STRING)
+    private MealTypeEnum mealType;
+
     //bi-directional many-to-many association to CommandeEntity
    @ManyToMany( fetch =  FetchType.LAZY)
     @JoinTable(
@@ -82,34 +78,20 @@ public class MealEntity implements Serializable {
     @OneToMany(mappedBy="plat")
     private List<QuantiteEntity> quantites;*/
 
-    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity image) {;
+    public MealEntity(String label,String category, String description, BigDecimal price, Integer quantity, Integer status,MealTypeEnum mealTypeEnum ,ImageEntity image) {;
         this.label = label.trim();
         this.category = category.trim();
         this.description = description.trim();
         this.price = price;
         this.quantity = quantity;
         this.status = status;
+        this.mealType = mealTypeEnum;
         this.image = image;
     }
 
-    public MealEntity() {}
-
-    public Integer getId() {
-        return id;
+    public MealEntity() {
+        super();
     }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -181,6 +163,15 @@ public class MealEntity implements Serializable {
     public void setOrders(List<OrderEntity> orders) {
         this.orders = orders;
     }
+
+    public MealTypeEnum getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(MealTypeEnum mealType) {
+        this.mealType = mealType;
+    }
+
 
     /* public List<OrderEntity> getCommandes() {
         return this.commandes;

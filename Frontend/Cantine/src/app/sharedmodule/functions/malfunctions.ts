@@ -43,7 +43,7 @@ export  default class Malfunctions {
             return '';
         }
         let authObject = JSON.parse(authObj) as AuthObject;
-        return authObject.Authorization;
+        return authObject.authorization;
     }
 
 

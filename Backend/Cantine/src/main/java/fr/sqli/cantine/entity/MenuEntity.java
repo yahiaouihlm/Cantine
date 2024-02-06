@@ -15,16 +15,9 @@ import org.hibernate.annotations.Check;
         @UniqueConstraint(columnNames={"label", "description", "price"})
 
 })
-public class MenuEntity implements Serializable {
+public class MenuEntity extends AbstractEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
-    private Integer id;
-
-    @Column(name = "uuid" , nullable=false , length = 254)
-    private String  uuid;
     @Column(nullable = false, length = 100)
     private String label;
 
@@ -77,7 +70,7 @@ public class MenuEntity implements Serializable {
     private Integer quantity;
 
     public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image , Set<MealEntity> meals) {
-        this.uuid = java.util.UUID.randomUUID().toString();
+        super();
         this.label = label;
         this.description = description;
         this.createdDate = LocalDate.now();
@@ -89,21 +82,6 @@ public class MenuEntity implements Serializable {
     }
 
     public MenuEntity() {}
-    public Integer getId() {
-        return id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getLabel() {
         return label;

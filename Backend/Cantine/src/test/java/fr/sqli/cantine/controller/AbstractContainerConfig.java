@@ -1,13 +1,19 @@
 package fr.sqli.cantine.controller;
 
-import com.auth0.jwt.JWT;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Date;
 import java.util.stream.Collectors;
+@AutoConfigureMockMvc
+@SpringBootTest
+/*TODO CHECK  LE  COMMENT BELLOW */
+//@Transactional @Rollback  ==>  supprimer les mofications apportées par les tests dans la base de données et la rendre  telqu'elle était avant les tests
 
 public class AbstractContainerConfig {
 

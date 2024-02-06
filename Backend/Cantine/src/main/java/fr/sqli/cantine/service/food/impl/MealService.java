@@ -70,6 +70,7 @@ public class MealService implements IMealService {
         meal.setPrice(mealDtoIn.getPrice());
         meal.setQuantity(mealDtoIn.getQuantity());
         meal.setStatus(mealDtoIn.getStatus());
+        meal.setMealType(mealDtoIn.getMealTypeEnum());
 
         //check  if the  meal  is  already  present  in  the  database despite  the  update
         Optional<MealEntity> mealEntity = this.getMealWithLabelAndCategoryAndDescription(meal.getLabel(), meal.getCategory(), meal.getDescription());
@@ -149,7 +150,7 @@ public class MealService implements IMealService {
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename(imageName);
 
-        MealEntity meal = new MealEntity(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription(), mealDtoIn.getPrice(), mealDtoIn.getQuantity(), mealDtoIn.getStatus(), imageEntity);
+        MealEntity meal = new MealEntity(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription(), mealDtoIn.getPrice(), mealDtoIn.getQuantity(), mealDtoIn.getStatus(),mealDtoIn.getMealTypeEnum() ,imageEntity);
 
 
         return this.mealDao.save(meal);

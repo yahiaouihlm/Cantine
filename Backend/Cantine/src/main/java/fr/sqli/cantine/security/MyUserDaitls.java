@@ -48,9 +48,7 @@ public class MyUserDaitls  implements  org.springframework.security.core.userdet
     @Override
     public boolean isAccountNonLocked() {
         if (this.admin != null) {
-            if (admin.getValidation() == 0){
-                 return false ;
-            }
+            return admin.getValidation() != 0;
         }
         return   true ;
 
@@ -91,10 +89,10 @@ public class MyUserDaitls  implements  org.springframework.security.core.userdet
 
     }
 
-    public Integer getId() {
+    public String getUuid() {
         if (this.admin != null) {
-            return admin.getId();
+            return admin.getUuid();
         }
-        return student.getId();
+        return student.getUuid();
     }
 }

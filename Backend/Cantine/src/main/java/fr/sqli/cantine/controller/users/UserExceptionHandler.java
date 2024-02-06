@@ -2,7 +2,7 @@ package fr.sqli.cantine.controller.users;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.exceptions.AccountAlreadyActivatedException;
+import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,8 +30,8 @@ public class UserExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
     }
 
-    @ExceptionHandler(AccountAlreadyActivatedException.class)
-    public ResponseEntity<ExceptionDtout> handleAccountAlreadyActivated(AccountAlreadyActivatedException e) {
+    @ExceptionHandler(AccountActivatedException.class)
+    public ResponseEntity<ExceptionDtout> handleAccountAlreadyActivated(AccountActivatedException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
     @ExceptionHandler(InvalidUserInformationException.class)
