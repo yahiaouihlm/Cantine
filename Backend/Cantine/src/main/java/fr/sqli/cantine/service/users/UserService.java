@@ -4,6 +4,7 @@ package fr.sqli.cantine.service.users;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentEntity;
@@ -156,7 +157,7 @@ public class UserService {
     }
 
 
-    public void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException {
+    public ResponseDtout checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException {
 
         if (token == null || token.trim().isEmpty()) {
             UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
@@ -174,7 +175,7 @@ public class UserService {
             UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
             throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
         }
-        if (user.getStatus() != 1) {
+        if (user.getStatus() == 1) {
             UserService.LOG.error("ACCOUNT  ALREADY  ACTIVATED WITH  EMAIL  {} ", user.getEmail());
             throw new AccountActivatedException("ACCOUNT  ALREADY  ACTIVATED");
         }
@@ -203,8 +204,10 @@ public class UserService {
         userEntity.setStatus(1);
         if (userEntity instanceof StudentEntity) {
             this.iStudentDao.save((StudentEntity) userEntity);
+            return  new ResponseDtout("STUDENT_TOKEN_CHECKED_SUCCESSFULLY");
         } else {
             this.iAdminDao.save((AdminEntity) userEntity);
+            return  new ResponseDtout("ADMIN_TOKEN_CHECKED_SUCCESSFULLY");
         }
     }
 

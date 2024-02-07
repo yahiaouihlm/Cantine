@@ -30,138 +30,128 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-
-
-public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePasswordAuthenticationFilter {
-    private  static final Logger LOG = LogManager.getLogger();
-    private AuthenticationManager authenticationManager ;
+public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordAuthenticationFilter {
+    private static final Logger LOG = LogManager.getLogger();
+    private AuthenticationManager authenticationManager;
 
     public static final String JWT_COOKIE_NAME = "JWT_TOKEN";
-    public  JwtUsernameAndPasswordAuthenticationFiler (AuthenticationManager authenticationManager){
-        this.authenticationManager= authenticationManager ;
+
+    public JwtUsernameAndPasswordAuthenticationFiler(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
 
     }
 
 
     @Override
-    public Authentication  attemptAuthentication(HttpServletRequest request, HttpServletResponse response)  throws AuthenticationException {
-          Map<String, String> idToken = new HashMap<>();
-           try  {
-               var  username =  request.getParameter("email");
-               var passsword  = request.getParameter("password");
-               if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(passsword) ) {
-                   JwtUsernameAndPasswordAuthenticationFiler.LOG
-                           .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as Json in Body");
-                   String body  = null ;
-                   try {
-                       body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-                       var mapper = new ObjectMapper();
-                       var login  = mapper.readValue(body ,  Login.class);
-                       username =  login.getEmail();
-                       passsword =  login.getPassword() ;
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        Map<String, String> idToken = new HashMap<>();
+        try {
+            var username = request.getParameter("email");
+            var passsword = request.getParameter("password");
+            if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(passsword)) {
+                JwtUsernameAndPasswordAuthenticationFiler.LOG
+                        .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as Json in Body");
+                String body = null;
+                try {
+                    body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+                    var mapper = new ObjectMapper();
+                    var login = mapper.readValue(body, Login.class);
+                    username = login.getEmail();
+                    passsword = login.getPassword();
 
 
-                   } catch (IOException lExp) {
-                       JwtUsernameAndPasswordAuthenticationFiler.LOG.error(
-                               "--> JwtAuthenticationFilter.attemptAuthentication - Error, your JSon is not right!, found {}, should be something like {\"email\":\"toto@gmail.com\",\"password\":\"bonjour\"}. DO NOT use simple quote!",
-                               body, lExp);
-                   }
+                } catch (IOException lExp) {
+                    JwtUsernameAndPasswordAuthenticationFiler.LOG.error(
+                            "--> JwtAuthenticationFilter.attemptAuthentication - Error, your JSon is not right!, found {}, should be something like {\"email\":\"toto@gmail.com\",\"password\":\"bonjour\"}. DO NOT use simple quote!",
+                            body, lExp);
+                }
 
-               } else {
-                   JwtUsernameAndPasswordAuthenticationFiler.LOG
-                           .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as parameter");
+            } else {
+                JwtUsernameAndPasswordAuthenticationFiler.LOG
+                        .debug("--> JwtAuthenticationFilter.attemptAuthentication(email, password) as parameter");
 
-               }
-               JwtUsernameAndPasswordAuthenticationFiler.LOG.debug("--> JwtAuthenticationFilter.attemptAuthentication({}, [PROTECTED])",
-                       username);
+            }
+            JwtUsernameAndPasswordAuthenticationFiler.LOG.debug("--> JwtAuthenticationFilter.attemptAuthentication({}, [PROTECTED])",
+                    username);
 
-               Authentication  authentication =  new UsernamePasswordAuthenticationToken(username , passsword );
+            Authentication authentication = new UsernamePasswordAuthenticationToken(username, passsword);
 
-               var  result  =  this.authenticationManager.authenticate(authentication) ;
+            var result = this.authenticationManager.authenticate(authentication);
 
-               System.out.println( "username   =  " + username   +  "password   =  " + passsword  +  "  authentication  " +  result.getPrincipal()   + "  <  " + result.getCredentials()  );
-
-
-               return  result ;
+            System.out.println("username   =  " + username + "password   =  " + passsword + "  authentication  " + result.getPrincipal() + "  <  " + result.getCredentials());
 
 
-           }catch (DisabledException e ) {
-
-               System.out.println(e.getMessage());
-               response.setContentType("application/json");
-               idToken.put("status" , HttpStatus.FORBIDDEN.name() );
-               idToken.put("message" ,  "DISABLED ACCOUNT");
-               response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-               try {
-                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
-               } catch (IOException ex) {
-                   throw new RuntimeException(ex);
-               }
-
-               //  custom  exception  for  disabled  account
-
-           }
-           catch (BadCredentialsException e) {
-               response.setContentType("application/json");
-               idToken.put("status" , HttpStatus.UNAUTHORIZED.name());
-               idToken.put("message" ,  "WRONG CREDENTIALS");
-               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-               try {
-                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
-               } catch (IOException ex) {
-                   throw new RuntimeException(ex);
-               }
-           }
-           catch (LockedException exp){
-               idToken.put("message" ,  "INVALID ACCOUNT");
-               idToken.put("status" , HttpStatus.UNAUTHORIZED.name() );
-               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-               response.setContentType("application/json");
-               try {
-                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
-               } catch (IOException e) {
-                   throw new RuntimeException(e);
-               }
-
-           }
+            return result;
 
 
+        } catch (DisabledException e) {
 
-           catch (Exception e ) {
-                   idToken.put("exceptionMessage" ,  " An error has occurred");
-                   idToken.put("status" , HttpStatus.NOT_FOUND.name() );
-                  response.setContentType("application/json");
+            System.out.println(e.getMessage());
+            response.setContentType("application/json");
+            idToken.put("status", HttpStatus.FORBIDDEN.name());
+            idToken.put("message", "DISABLED ACCOUNT");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), idToken);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
 
-               try {
-                   new ObjectMapper().writeValue( response.getOutputStream(), idToken);
-               } catch (IOException ex) {
-                   throw new RuntimeException(ex);
-               }
-           }
+            //  custom  exception  for  disabled  account
+
+        } catch (BadCredentialsException e) {
+            response.setContentType("application/json");
+            idToken.put("status", HttpStatus.UNAUTHORIZED.name());
+            idToken.put("message", "WRONG CREDENTIALS");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), idToken);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } catch (LockedException exp) {
+            idToken.put("message", "INVALID ACCOUNT");
+            idToken.put("status", HttpStatus.UNAUTHORIZED.name());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), idToken);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        } catch (Exception e) {
+            idToken.put("exceptionMessage", " An error has occurred");
+            idToken.put("status", HttpStatus.NOT_FOUND.name());
+            response.setContentType("application/json");
+
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), idToken);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
 
 
-             return  null ;
-     }
+        return null;
+    }
 
 
-
-
-
-     /*TODO change  the  place of  key to application.properties */
+    /*TODO change  the  place of  key to application.properties */
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String  key  =  "sqli.cantine.jwt.secret" ;
-        Algorithm algorithm =  Algorithm.HMAC256(key.getBytes());
+        String key = "sqli.cantine.jwt.secret";
+        Algorithm algorithm = Algorithm.HMAC256(key.getBytes());
 
-        String jwtAccessToken  = JWT.create()
+        String jwtAccessToken = JWT.create()
                 .withSubject(authResult.getName())   //  600=> 60 (in first of application)     ('+5 * 6000 *1000')
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 6000 *10000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 6000 * 10000))
                 .withIssuer(request.getRequestURI())
-                .withClaim("roles" , authResult.getAuthorities().stream().map(GrantedAuthority:: getAuthority).collect(Collectors.toList()))
+                .withClaim("roles", authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
 
-        var  context  =  SecurityContextHolder.getContext() ;
+        var context = SecurityContextHolder.getContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
 
@@ -172,25 +162,25 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
                 .sign(algorithm);*/
 
         var username = context.getAuthentication().getName();
-        var  role  =  context.getAuthentication().getAuthorities().toArray();
+        var role = context.getAuthentication().getAuthorities().toArray();
 
 
-        var  user  =   (myUserDetails) authResult.getPrincipal() ;
+        var user = (myUserDetails) authResult.getPrincipal();
 
-    /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
+        /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();
         response.setContentType("application/json");
         idToken.put("Authorization", "Bearer " + jwtAccessToken);
-        idToken.put("status" , HttpStatus.OK.name());
-        idToken.put("message" ,  "you are authenticated");
-        idToken.put("Firstname" ,  user.getFirstname());
-        idToken.put("LastName" ,  user.getLastname());
-        idToken.put("email" , username);
-        idToken.put("id" ,  user.getUuid());
-        idToken.put("image",  user.getImage() );
+        idToken.put("status", HttpStatus.OK.name());
+        idToken.put("message", "you are authenticated");
+        idToken.put("Firstname", user.getFirstname());
+        idToken.put("LastName", user.getLastname());
+        idToken.put("email", username);
+        idToken.put("id", user.getUuid());
+        idToken.put("image", user.getImage());
         idToken.put("role", role[0].toString()); // pas  une
 
-        String accessToken  =  "Bearer " + jwtAccessToken ;
+        String accessToken = "Bearer " + jwtAccessToken;
         Cookie cookie = new Cookie(JWT_COOKIE_NAME, URLEncoder.encode(accessToken, StandardCharsets.UTF_8));
         cookie.setHttpOnly(true);
 
@@ -199,8 +189,6 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         new ObjectMapper().writeValue(response.getOutputStream(), idToken);
 
     }
-
-
 
 
 }
