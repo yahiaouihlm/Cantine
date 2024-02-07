@@ -25,8 +25,8 @@ import {IConstantsURL} from "../../../../sharedmodule/constants/IConstantsURL";
 })
 export class SignUpComponent implements OnInit {
 
-    private ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
-    private WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vous inscrire ?";
+    private WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vraiment vous inscrire ?";
+    private EMAIL_SEND_SUCCESSFULLY = "Votre Inscription est prise en compte , un Email vous a éte envoyer pour vérifier votre Adresse ";
     submitted = false;
     image!: File;
     isLoading = false;
@@ -97,6 +97,7 @@ export class SignUpComponent implements OnInit {
             if (result != undefined && result == true) {
                 this.signUp();
             } else {
+                this.isLoading = false;
                 return;
             }
         });
@@ -136,7 +137,7 @@ export class SignUpComponent implements OnInit {
 
     openDialogOfSuccessFullRegistration() {
         const result = this.matDialog.open(SuccessfulDialogComponent, {
-            data: {message: "Votre Inscription est prise en compte , un Email vous a éte envoyer pour vérifier votre Adresse "},
+            data: {message: this.EMAIL_SEND_SUCCESSFULLY},
             width: '40%',
         });
 
@@ -144,7 +145,6 @@ export class SignUpComponent implements OnInit {
             this.router.navigate([IConstantsURL.SIGN_IN_URL]).then();
         });
     }
-
 
 
     onChange = ($event: Event) => {

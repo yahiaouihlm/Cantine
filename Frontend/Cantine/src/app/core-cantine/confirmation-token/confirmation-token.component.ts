@@ -17,6 +17,7 @@ export class ConfirmationTokenComponent implements OnInit {
     activated: boolean = false;
 
     token: string = '';
+    isAdministrator: boolean = false;
 
     constructor(private route: ActivatedRoute, private sharedService: SharedService, private router: Router) {
     }
@@ -38,10 +39,11 @@ export class ConfirmationTokenComponent implements OnInit {
     checkUserTokenValidity(token: string) {
         this.sharedService.checkUserTokenValidity(token).subscribe({
             next: (response) => {
-                if (response.message == "TOKEN VALID") {
-                    this.serverResponse = "Votre compte a été activé avec succès";
-                    this.activated = true;
+                if (response.message == "ADMIN_TOKEN_CHECKED_SUCCESSFULLY") {
+                    this.isAdministrator = true;
                 }
+                this.serverResponse = "Votre compte a été activé avec succès";
+                this.activated = true;
 
             },
             error: (error) => {
