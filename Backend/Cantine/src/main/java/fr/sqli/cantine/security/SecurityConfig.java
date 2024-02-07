@@ -17,6 +17,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -85,6 +86,11 @@ public class SecurityConfig {
                 .build();
 
     }
+
+    @Bean
+    public UserDetailsChecker customUserDetailsChecker() {
+        return new CustomUserDetailsChecker();
+    }
 /*
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -110,6 +116,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(appUserService);
         provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setPreAuthenticationChecks( customUserDetailsChecker());
         return provider;
     }
 

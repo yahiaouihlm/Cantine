@@ -8,16 +8,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 
-public class MyUserDaitls  implements  org.springframework.security.core.userdetails.UserDetails{
+public class myUserDetails implements  org.springframework.security.core.userdetails.UserDetails{
 
 
     AdminEntity  admin ;
-    public  MyUserDaitls (AdminEntity admin){
+    public myUserDetails(AdminEntity admin){
         this.admin = admin ;
     }
 
     StudentEntity student ;
-    public  MyUserDaitls (StudentEntity student){
+    public myUserDetails(StudentEntity student){
         this.student = student ;
     }
 
@@ -53,6 +53,7 @@ public class MyUserDaitls  implements  org.springframework.security.core.userdet
         return   true ;
 
     }
+
 
     @Override
     public boolean isCredentialsNonExpired() {

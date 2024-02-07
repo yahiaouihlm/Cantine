@@ -3,7 +3,7 @@ package fr.sqli.cantine.security.jwt;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.cantine.dto.in.users.Login;
-import fr.sqli.cantine.security.MyUserDaitls;
+import fr.sqli.cantine.security.myUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -175,7 +175,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends  UsernamePassword
         var  role  =  context.getAuthentication().getAuthorities().toArray();
 
 
-        var  user  =   (MyUserDaitls) authResult.getPrincipal() ;
+        var  user  =   (myUserDetails) authResult.getPrincipal() ;
 
     /*TODO :  remove  all  the  information  that  we  don't  need  to  send  to  the  client  */
         Map<String, String> idToken = new HashMap<>();

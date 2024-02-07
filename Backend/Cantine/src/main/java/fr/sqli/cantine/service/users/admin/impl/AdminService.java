@@ -131,7 +131,7 @@ public class AdminService implements IAdminService {
         adminEntity.setValidation(0);
 
         // save admin
-       // this.adminDao.save(adminEntity);
+        this.adminDao.save(adminEntity);
 
        String URL =  this.SERVER_ADDRESS + "/cantine/superAdmin/newAdmins";
        this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
