@@ -10,6 +10,7 @@ import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 
+import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.UserService;
 import fr.sqli.cantine.service.users.admin.IAdminService;
 import fr.sqli.cantine.service.users.exceptions.*;
@@ -48,12 +49,14 @@ public class AdminService implements IAdminService {
     private final IAdminDao adminDao;
     private final UserService userService;
     private IStudentDao studentDao;
+    private UserEmailSender userEmailSender;
 
     @Autowired
     public AdminService(IAdminDao adminDao, IFunctionDao functionDao, ImageService imageService
             , Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , UserService userService
+            , UserEmailSender userEmailSender
     ) {
 
         this.imageService = imageService;
@@ -61,6 +64,7 @@ public class AdminService implements IAdminService {
         this.functionDao = functionDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
+        this.userEmailSender = userEmailSender;
         this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
         this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
@@ -129,8 +133,9 @@ public class AdminService implements IAdminService {
         // save admin
        // this.adminDao.save(adminEntity);
 
-
-       // this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
+       String URL =  this.SERVER_ADDRESS + "/cantine/superAdmin/newAdmins";
+       this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
+        this.userEmailSender.sendNotificationToSuperAdminAboutAdminRegistration(adminEntity, URL);
     }
 
 
@@ -225,12 +230,10 @@ public class AdminService implements IAdminService {
 
     }
 
-
     @Override
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());
     }
-
 
     @Override
     public void existingEmail(String adminEmail) throws ExistingUserException {
@@ -239,10 +242,13 @@ public class AdminService implements IAdminService {
         }
     }
 
-
     @Autowired
     public void setStudentDao(IStudentDao studentDao) {
         this.studentDao = studentDao;
     }
+
+
+
+
 }
 

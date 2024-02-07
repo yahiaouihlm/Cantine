@@ -48,7 +48,7 @@ public class UserController implements IUserController {
     }
 
     public ResponseEntity<ResponseDtout> checkConfirmationToken(@RequestParam("token") String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException {
-        this.userService.checkLinkValidity(token);
+            this.userService.checkLinkValidity(token);
         return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
     }
 
