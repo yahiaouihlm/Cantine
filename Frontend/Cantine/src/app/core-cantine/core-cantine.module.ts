@@ -28,7 +28,7 @@ const routes: Routes = [
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
       {path: 'menus', component: MenuComponent},
-      {path: 'user/confirmation-token/:token', component: ConfirmationTokenComponent},
+      {path: 'user/confirmation-token', component: ConfirmationTokenComponent},
       {path: 'user/forgot-password', component: ForgotPasswordComponent},
       {path: 'user/reset-password', component: ResetPasswordComponent}
     ]

@@ -31,10 +31,12 @@ export class ResetPasswordComponent implements OnInit {
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {
             this.token = params['token'];
+
+            if (!this.token) {  /*TODO redirect to ERROR page */
+                this.router.navigate(['cantine/signIn']).then(r => console.log("redirected to login page"));
+            }
         });
-        if (!this.token) {  /*TODO redirect to ERROR page */
-            this.router.navigate(['cantine/signIn']).then(r => console.log("redirected to login page"));
-        }
+
     }
 
 

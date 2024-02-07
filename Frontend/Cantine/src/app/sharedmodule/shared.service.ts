@@ -71,7 +71,7 @@ export class SharedService {
 
     checkUserTokenValidity(token: string) {
         const params = new HttpParams().set('token', token);
-        return this.httpClient.get<NormalResponse>(this.CHECK_TOKEN_VALIDITY, {params});
+        return this.httpClient.post<NormalResponse>(this.CHECK_TOKEN_VALIDITY, params);
     }
 
 
