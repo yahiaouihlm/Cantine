@@ -3,8 +3,7 @@ import Malfunctions from "../../sharedmodule/functions/malfunctions";
 import {GlobalAdminService} from "../global-admin.service";
 import {User} from "../../sharedmodule/models/user";
 import {Router} from "@angular/router";
-import {AuthObject} from "../../sharedmodule/models/authObject";
-import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+import { IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-main-admin',
@@ -18,7 +17,6 @@ export class MainAdminComponent implements OnInit {
      admin = new User();
     constructor(private router: Router , private globalAdminService: GlobalAdminService) {
     }
-
     ngOnInit(): void {
         let adminId = Malfunctions.getUserIdFromLocalStorage();
         console.log(adminId)
@@ -32,15 +30,12 @@ export class MainAdminComponent implements OnInit {
         });
     }
 
-    getAdminById() {
-
-    }
     goToStudents() : void  {
-        this.router.navigate(['cantine/admin/students']).then();
+        this.router.navigate([IConstantsURL.ADMIN_STUDENTS_URL]).then();
     }
 
     goToOrders() {
-        this.router.navigate(['cantine/admin/orders']).then();
+        this.router.navigate([IConstantsURL.ADMIN_ORDERS_URL]).then();
     }
 
     logout(): void {

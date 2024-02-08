@@ -24,7 +24,6 @@ export class GlobalAdminService {
 
     getAdminById(adminUuid: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
-        console.log('token', token);
         const headers = new HttpHeaders().set('Authorization', token);
         const params = new HttpParams().set('adminUuid', adminUuid);
         return this.httpClient.get <User>(this.GET_ADMIN_BY_ID, {
@@ -37,8 +36,15 @@ export class GlobalAdminService {
 
 
     private handleErrorOfGetAdminById(error: HttpErrorResponse) {
-        const errorObject = error.error;
+        const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
+
+        if  (errorMessage == undefined){
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+
 
         if (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Unauthorized) {
             localStorage.clear();
