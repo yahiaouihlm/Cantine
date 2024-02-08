@@ -17,6 +17,7 @@ export class MainAdminComponent implements OnInit {
      admin = new User();
     constructor(private router: Router , private globalAdminService: GlobalAdminService) {
     }
+
     ngOnInit(): void {
         let adminId = Malfunctions.getUserIdFromLocalStorage();
         console.log(adminId)

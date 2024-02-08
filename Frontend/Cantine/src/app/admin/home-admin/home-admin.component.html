@@ -1,4 +1,32 @@
-<div class="center">
-       <button  (click)="gotoMeals()" class="btn"> toward  Meals  </button>
-       <button  (click)="goto()" class="btn">  toward Menus  </button>
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card  text-center">
+                <div class="card-header">
+                    <div style="font-weight: bold"> Les Plats</div>
+                </div>
+                <img class="card-img-top" src="../../../assets/images/meal2.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Modifier les plats et ajouter de nouveaux à l'affichage..</p>
+                    <div class="btn btn-primary btn-no-uppercase"  style="text-transform: none" (click)="gotoMeals()">Vers les Plats</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <div style="font-weight: bold"> Les Menus</div>
+                </div>
+                <img class="card-img-top" src="../../../assets/images/menu2.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Modifier les Menus et ajouter de nouveaux à l'affichage..</p>
+                    <div class="btn btn-primary" (click)="gotoMenus()" style="text-transform: none"> vers les Menu </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>
