@@ -133,8 +133,8 @@ public class AdminService implements IAdminService {
         // save admin
         this.adminDao.save(adminEntity);
 
-       String URL =  this.SERVER_ADDRESS + "/cantine/superAdmin/newAdmins";
-       this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
+        String URL = this.SERVER_ADDRESS + "/cantine/superAdmin/newAdmins";
+        this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
         this.userEmailSender.sendNotificationToSuperAdminAboutAdminRegistration(adminEntity, URL);
     }
 
@@ -166,7 +166,10 @@ public class AdminService implements IAdminService {
                     return new UserNotFoundException("ADMIN NOT FOUND");
                 }
         );
-
+        if (admin.getStatus() != 1 || admin.getValidation() != 1) {
+            AdminService.LOG.error("ADMIN FOUND BUT NOT  ACTIVE  OR  NOT  VALIDATED GET  ADMIN  BY  UUID  WITH  UUID = {} CAN  NOT  BE  EXECUTED", adminUuid);
+            throw new InvalidUserInformationException("INVALID USER");
+        }
         return new AdminDtout(admin, this.ADMIN_IMAGE_URL);
     }
 
@@ -246,8 +249,6 @@ public class AdminService implements IAdminService {
     public void setStudentDao(IStudentDao studentDao) {
         this.studentDao = studentDao;
     }
-
-
 
 
 }
