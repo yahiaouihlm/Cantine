@@ -7,59 +7,50 @@ import {catchError, throwError} from "rxjs";
 import {ExceptionDialogComponent} from "../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
+import {DialogErrors} from "../sharedmodule/functions/dialogueErrors";
+import {IConstantsURL} from "../sharedmodule/constants/IConstantsURL";
 
 @Injectable()
 export class GlobalAdminService {
 
-    private BASIC_ADMIN_URL = "http://localhost:8080/cantine/admin/adminDashboard"
+    private BASIC_ADMIN_URL = "http://localhost:8080/cantine/admin"
 
     private GET_ADMIN_BY_ID = this.BASIC_ADMIN_URL + "/getAdmin"
 
     constructor(private httpClient: HttpClient, private router: Router, private matDialog: MatDialog) {
     }
 
+    private dialog = new DialogErrors(this.matDialog);
 
-    getAdminById(idAdmin: string) {
+    getAdminById(adminUuid: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
+        console.log('token', token);
         const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('idAdmin', idAdmin);
-        return this.httpClient.get <User>(this.GET_ADMIN_BY_ID,   {
+        const params = new HttpParams().set('adminUuid', adminUuid);
+        return this.httpClient.get <User>(this.GET_ADMIN_BY_ID, {
             headers: headers,
             params: params
         }).pipe(
-            catchError((error) => this.handleError(error))
+            catchError((error) => this.handleErrorOfGetAdminById(error))
         );
     }
 
 
-    private handleError(error: HttpErrorResponse) {
-        const errorObject = error.error as ErrorResponse;
+    private handleErrorOfGetAdminById(error: HttpErrorResponse) {
+        const errorObject = error.error;
         let errorMessage = errorObject.exceptionMessage;
 
-        if (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotAcceptable || error.status == HttpStatusCode.Conflict || error.status == HttpStatusCode.NotFound) {
-            this.openDialog(errorMessage, error.status);
+        if (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
         } else {
-            this.openDialog(" Une  Erreur  Inconnue  c'est produite ", error.status);
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
         }
 
-        localStorage.clear();
-        this.router.navigate(['cantine/home']).then();
-
         return throwError(() => new Error(errorMessage));
-
     }
 
-    private openDialog(message: string, httpError: HttpStatusCode): void {
-        const result = this.matDialog.open(ExceptionDialogComponent, {
-            data: {message: message},
-            width: '40%',
-        });
 
-        result.afterClosed().subscribe(() => {
-           //  localStorage.clear();
-               this.router.navigate(['cantine/home']);
-
-        });
-
-    }
 }

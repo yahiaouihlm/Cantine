@@ -22,7 +22,7 @@ export  default class Malfunctions {
                     window.location.reload();
                 });
             } else if (authObject.role === IConstantsMessages.STUDENT_ROLE) {
-                 router.navigate([IConstantsURL.STUDENT_HOME_URL]).then(() => {
+                 router.navigate([IConstantsURL.HOME_URL]).then(() => {
                     window.location.reload();
                 });
             }
@@ -30,13 +30,12 @@ export  default class Malfunctions {
         console.log("user  is connected");
     }
 
-
-
     public static checkStudentConnectivity(router: Router ,  sharedService : SharedService)  {
         let  interdiction  = () => {
             localStorage.clear();
             router.navigate(['cantine/signIn']).then(r =>
-                window.location.reload());
+                window.location.reload()
+            );
         }
 
         let authObj = localStorage.getItem('authObject');
@@ -62,13 +61,13 @@ export  default class Malfunctions {
     }
     public  static getTokenFromLocalStorage() :  string {
         let authObj = localStorage.getItem('authObject')
+
         if (!authObj) {
             return '';
         }
         let authObject = JSON.parse(authObj) as AuthObject;
-        return authObject.authorization;
+        return authObject.Authorization;
     }
-
 
     public  static  getUserIdFromLocalStorage() :  string {
         let authObj = localStorage.getItem('authObject')
@@ -76,6 +75,9 @@ export  default class Malfunctions {
             return '';
         }
         let authObject = JSON.parse(authObj) as AuthObject;
+        if  (authObject== null  || authObject.id == null){
+            return '';
+        }
         return authObject.id;
     }
 

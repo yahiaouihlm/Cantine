@@ -1,7 +1,7 @@
 
 export  class  AuthObject  {
     id! : string;
-    authorization! : string;
+    Authorization! : string;
     firstname! : string;
 
     lastName!: string;

@@ -60,7 +60,7 @@ export class AuthenticationComponent  implements  OnInit{
                             window.location.reload();
                         });
                     } else if (response.role === IConstantsMessages.STUDENT_ROLE) {
-                        this.router.navigate([IConstantsURL.STUDENT_HOME_URL]).then(() => {
+                        this.router.navigate([IConstantsURL.HOME_URL]).then(() => {
                             window.location.reload();
                         });
 

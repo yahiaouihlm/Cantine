@@ -3,6 +3,8 @@ import Malfunctions from "../../sharedmodule/functions/malfunctions";
 import {GlobalAdminService} from "../global-admin.service";
 import {User} from "../../sharedmodule/models/user";
 import {Router} from "@angular/router";
+import {AuthObject} from "../../sharedmodule/models/authObject";
+import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-main-admin',
@@ -11,35 +13,31 @@ import {Router} from "@angular/router";
     providers: [GlobalAdminService]
 })
 export class MainAdminComponent implements OnInit {
-    isconnected = false;
-    admin = new User();
+    isConnected = false;
 
-    constructor(private globalAdminService: GlobalAdminService, private router: Router) {
+     admin = new User();
+    constructor(private router: Router , private globalAdminService: GlobalAdminService) {
     }
 
     ngOnInit(): void {
-        console.log("hello world from main admin component");
         let adminId = Malfunctions.getUserIdFromLocalStorage();
-        console.log("admin  Id = " + adminId);
-        /*if (adminId === '') {
-            this.isconnected = false;
-            this.router.navigate(['cantine/home']).then();
-
-        }*/
-        this.getAdminById(adminId);
-
-    }
-
-    goToStudents() : void  {
-        this.router.navigate(['cantine/admin/students']).then();
-    }
-    getAdminById(adminId: string) {
-        this.globalAdminService.getAdminById(adminId).subscribe((response) => {
-            this.admin = response;
-            this.isconnected = true;
+        console.log(adminId)
+        if (adminId == "") {
+            this.logout();
+        }
+      this.globalAdminService.getAdminById(adminId).subscribe((admin) => {
+            console.log(admin)
+            this.admin = admin;
+            this.isConnected = true;
         });
     }
 
+    getAdminById() {
+
+    }
+    goToStudents() : void  {
+        this.router.navigate(['cantine/admin/students']).then();
+    }
 
     goToOrders() {
         this.router.navigate(['cantine/admin/orders']).then();
@@ -47,6 +45,6 @@ export class MainAdminComponent implements OnInit {
 
     logout(): void {
         localStorage.clear();
-        this.router.navigate(["cantine/home"]).then();
+        this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
     }
 }

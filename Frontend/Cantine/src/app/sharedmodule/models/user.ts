@@ -10,7 +10,6 @@ export  class  User  {
     image!: string;
     function!: string;
     studentClass!: string;
-
     wallet! : number
 
 }

@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <button (click)="sidenav.toggle()" *ngIf="isconnected" class="burgger" mat-icon-button>
+    <button (click)="sidenav.toggle()" *ngIf="isConnected" class="burgger" mat-icon-button>
         <div *ngIf="!sidenav.opened">
             <img alt="cantière-logo"  src="{{admin.image}}">
         </div>
@@ -7,7 +7,7 @@
             <img alt="cantière-logo"   src="{{admin.image}}" >
         </div>
     </button>
-    <div *ngIf="!isconnected">
+    <div *ngIf="!isConnected">
      <img alt="cantière-logo" src="../../assets/logo.png">
     </div>
 
@@ -25,10 +25,10 @@
 
 
 
-    <div *ngIf="isconnected" class="not-connect-login-small">
+    <div *ngIf="isConnected" class="not-connect-login-small">
         <mat-icon>logout</mat-icon>
     </div>
-    <div *ngIf="!isconnected" class="not-connect-login-small">
+    <div *ngIf="!isConnected" class="not-connect-login-small">
         <mat-icon>login</mat-icon>
     </div>
 </mat-toolbar>
@@ -38,7 +38,7 @@
         <img class="avatar mat-elevation-z8" src="{{admin.image}}"/>
 
         <h4 class="name">{{admin.firstname}}  {{admin.lastname}}</h4>
-        <p class="designation"> {{admin.function}} </p>
+        <p class="designation"> Manager </p>
 
         <p class="designation"> Aston Administrator 😇 </p>
 
