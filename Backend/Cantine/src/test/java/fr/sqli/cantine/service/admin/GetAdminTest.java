@@ -44,7 +44,7 @@ public class GetAdminTest {
 
     @BeforeEach
     void  setUp (){
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(), this.iConfirmationToken,  null);
+        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),null ,  null);
 
     }
 
@@ -85,6 +85,74 @@ public class GetAdminTest {
 
         Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminEntity.getUuid());
 
+
+    }
+
+    @Test
+    void  getAdminByUuidWithInvalideAdmin() throws InvalidUserInformationException {
+        var adminUuid = java.util.UUID.randomUUID().toString() ;
+        FunctionEntity functionEntity = new FunctionEntity();
+        functionEntity.setId(1);
+        functionEntity.setName("test-function");
+
+        AdminEntity adminEntity = new AdminEntity();
+        adminEntity.setId(1);
+        adminEntity.setUuid(adminUuid);
+        adminEntity.setFirstname("firstname");
+        adminEntity.setLastname("lastname");
+        adminEntity.setEmail("email@test.fr");
+        adminEntity.setBirthdate(LocalDate.now());
+        adminEntity.setAddress("address");
+        adminEntity.setTown("town");
+        adminEntity.setPhone("0631990180");
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename(IMAGE_TESTS_PATH);
+        adminEntity.setImage(imageEntity);
+        adminEntity.setFunction(functionEntity);
+        adminEntity.setStatus(1);
+        adminEntity.setValidation(0);
+
+        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.of(adminEntity));
+        Assertions.assertThrows(InvalidUserInformationException.class, () -> {
+            this.adminService.getAdminByUuID(adminUuid)  ;
+        });
+
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+
+    }
+
+    @Test
+    void  getAdminByUuidWithInvalidAdminStatus () throws InvalidUserInformationException {
+        var adminUuid = java.util.UUID.randomUUID().toString() ;
+        FunctionEntity functionEntity = new FunctionEntity();
+        functionEntity.setId(1);
+        functionEntity.setName("test-function");
+
+        AdminEntity adminEntity = new AdminEntity();
+        adminEntity.setId(1);
+        adminEntity.setUuid(adminUuid);
+        adminEntity.setFirstname("firstname");
+        adminEntity.setLastname("lastname");
+        adminEntity.setEmail("email@test.fr");
+        adminEntity.setBirthdate(LocalDate.now());
+        adminEntity.setAddress("address");
+        adminEntity.setTown("town");
+        adminEntity.setPhone("0631990180");
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename(IMAGE_TESTS_PATH);
+        adminEntity.setImage(imageEntity);
+        adminEntity.setFunction(functionEntity);
+        adminEntity.setStatus(0);
+        adminEntity.setValidation(1);
+
+        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.of(adminEntity));
+        Assertions.assertThrows(InvalidUserInformationException.class, () -> {
+            this.adminService.getAdminByUuID(adminUuid)  ;
+        });
+
+        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
 
     }
 
