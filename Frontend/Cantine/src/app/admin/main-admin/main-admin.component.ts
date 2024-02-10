@@ -26,7 +26,6 @@ export class MainAdminComponent implements OnInit {
             return
         }
       this.globalAdminService.getAdminById(adminId).subscribe((admin) => {
-            console.log(admin)
             this.admin = admin;
             this.isConnected = true;
         });

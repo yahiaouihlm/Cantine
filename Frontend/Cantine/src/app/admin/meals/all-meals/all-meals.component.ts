@@ -21,8 +21,9 @@ export class AllMealsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        Malfunctions.checkAdminConnectivity(this.router);
-        this.meals$ =this.mealService.getAllMeals();
+        if  (Malfunctions.checkAdminConnectivity(this.router)){
+            this.meals$ =this.mealService.getAllMeals();
+        }
     }
 
     gotoNewMeal(): void {
@@ -30,7 +31,7 @@ export class AllMealsComponent implements OnInit {
     }
 
     updateMeal(id: number): void {
-        this.router.navigate(['/admin/meals/update', id]);
+        this.router.navigate([IConstantsURL.ADMIN_UPDATE_MEAL_URL, id]).then(r => window.location.reload());
     }
 
     mealAvailableToString(mealAvailable: number): string {
