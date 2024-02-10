@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 //import {environment} from "../../../environments/environment";
-import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {catchError, throwError} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
@@ -10,17 +10,20 @@ import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dia
 import {ErrorResponse} from  "../../sharedmodule/models/ErrorResponse"
 import {Meal} from "../../sharedmodule/models/meal";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
+import Malfunctions from "../../sharedmodule/functions/malfunctions";
+import {User} from "../../sharedmodule/models/user";
 @Injectable()
 export class MealsService {
  // private apiUrl = environment.apiUrl;
 
-  private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'api/admin/meals';
+  private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin/api/meals';
 
 
   private  ADD_MEAL_URL = this.BASIC_ENDPOINT  + '/add';
   private  GET_MEAL_BY_ID_URL = this.BASIC_ENDPOINT  + '/get';
   private  UPDATE_MEAL_URL = this.BASIC_ENDPOINT + "/update" ;
   private  DELETE_MEAL_URL = this.BASIC_ENDPOINT + "/delete" ;
+    private  GET_ALL_MEALS_URL = this.BASIC_ENDPOINT + "/getAll" ;
   constructor(private httpClient: HttpClient , private matDialog: MatDialog , private  router : Router) { }
 
 
@@ -52,6 +55,16 @@ export class MealsService {
          catchError( (error) => this.handleError(error))
     );
   }
+
+
+     getAllMeals() {
+         let token = Malfunctions.getTokenFromLocalStorage();
+         const headers = new HttpHeaders().set('Authorization', token);
+         return this.httpClient.get <Meal[]>(this.GET_ALL_MEALS_URL, {
+             headers: headers,
+         });
+     }
+
 
 
 

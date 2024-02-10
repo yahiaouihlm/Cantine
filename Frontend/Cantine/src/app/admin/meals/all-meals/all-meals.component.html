@@ -31,6 +31,15 @@
     </div>
 </div>
 
+<div *ngIf="!meals$">
+      <div class="center">
+            <h1> Aucun plat disponible</h1>
+        </div>
+</div>
+
+
+
+
 <style>
     .mealCardUnavailable {
         border: solid 3px #e0586d;

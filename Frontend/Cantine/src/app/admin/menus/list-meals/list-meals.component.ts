@@ -19,7 +19,7 @@ export class ListMealsComponent implements  OnInit{
     }
 
     ngOnInit(): void {
-        this.meals$ = this.coreCantineService.getAllMeals();
+        this.meals$ = this.coreCantineService.getAllAvailableMeals();
 
     }
 

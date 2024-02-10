@@ -22,7 +22,7 @@ export class CoreCantineService {
         return this.httpClient.post<AuthObject>(this.USER_AUTHENTICATION_ENDPOINT, login);
     }
 
-    getAllMeals() {
+    getAllAvailableMeals() {
         return this.httpClient.get<Meal[]>(this.GET_ALL_MEALS_ENDPOINT)
     }
 

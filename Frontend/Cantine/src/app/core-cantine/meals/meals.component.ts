@@ -19,7 +19,7 @@ export class MealsComponent  implements  OnInit{
   constructor( private  coreCantineService :CoreCantineService ,  private router :  Router ) {}
 
   ngOnInit(): void {
-    this.meals$ = this.coreCantineService.getAllMeals();
+    this.meals$ = this.coreCantineService.getAllAvailableMeals();
   }
 
   addToOrder(   meal:  Meal) {
