@@ -20,9 +20,10 @@ export class MainAdminComponent implements OnInit {
 
     ngOnInit(): void {
         let adminId = Malfunctions.getUserIdFromLocalStorage();
-        console.log(adminId)
+
         if (adminId == "") {
             this.logout();
+            return
         }
       this.globalAdminService.getAdminById(adminId).subscribe((admin) => {
             console.log(admin)

@@ -181,7 +181,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordA
 
         idToken.put("role", role[0].toString()); // pas  une
 /*
-        String accessToken = "Bearer " + jwtAccessToken;
+        String accessToken = "Bearer " + jwtAccessT oken;
         Cookie cookie = new Cookie(JWT_COOKIE_NAME, URLEncoder.encode(accessToken, StandardCharsets.UTF_8));
         cookie.setHttpOnly(true);
 
