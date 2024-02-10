@@ -4,6 +4,7 @@ export  class  Meal {
     description! :  string;
     category! :  string;
     price! :  number;
+    mealType! :  string;
 
     quantity! :  number;
 

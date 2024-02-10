@@ -5,6 +5,7 @@ import {Observable, of} from "rxjs";
 import {Meal} from "../../../sharedmodule/models/meal";
 import {MealsService} from "../meals.service";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-all-meals',
@@ -21,11 +22,11 @@ export class AllMealsComponent implements OnInit {
 
     ngOnInit(): void {
         Malfunctions.checkAdminConnectivity(this.router);
-        this.meals$ = this.mealService.getAllMeals();
+        this.meals$ =this.mealService.getAllMeals();
     }
 
     gotoNewMeal(): void {
-        this.router.navigate(['/admin/meals/new']);
+        this.router.navigate([IConstantsURL.ADMIN_NEW_MEAL_URL]).then(r => window.location.reload());
     }
 
     updateMeal(id: number): void {
