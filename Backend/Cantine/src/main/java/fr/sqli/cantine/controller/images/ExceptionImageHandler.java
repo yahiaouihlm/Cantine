@@ -51,7 +51,7 @@ public class ExceptionImageHandler {
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity <ExceptionDtout> exceptionHandler (IOException exception){
-        return new ResponseEntity<ExceptionDtout>(new ExceptionDtout(" A PROBLEM WAS APPEARED IN TRYING TO SAVE YOUR IMAGE "   ) , HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ExceptionDtout(" A PROBLEM WAS APPEARED IN TRYING TO SAVE YOUR IMAGE "), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
