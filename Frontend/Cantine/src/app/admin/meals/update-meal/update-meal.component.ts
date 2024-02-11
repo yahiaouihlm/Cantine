@@ -8,11 +8,12 @@ import {MatDialog} from "@angular/material/dialog";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-update-meal',
     templateUrl: './update-meal.component.html',
-        styleUrls: ["../../../../assets/styles/new-meal.component.scss"],
+    styleUrls: ["../../../../assets/styles/new-meal.component.scss"],
     providers: [MealsService]
 })
 export class UpdateMealComponent implements OnInit {
@@ -29,12 +30,14 @@ export class UpdateMealComponent implements OnInit {
     meal: Meal = new Meal();
     submitted!: boolean;
     image!: File
+    isLoading: boolean = false;
     updatedMeal: FormGroup = new FormGroup({
         label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
         description: new FormControl('', [Validators.required, Validators.maxLength(1600), Validators.minLength(5)]),
         category: new FormControl('', [Validators.required, Validators.maxLength(44), Validators.minLength(3)]),
         price: new FormControl('', [Validators.required, Validators.min(0.01), Validators.max(999.99)]),
         quantity: new FormControl('', [Validators.required, Validators.min(0), Validators.max(2147483501), Validators.pattern("^[0-9]+$")]),
+        mealType: new FormControl('', [Validators.required]),
         image: new FormControl(''),
         status: new FormControl('', [Validators.required])
     });
@@ -44,8 +47,8 @@ export class UpdateMealComponent implements OnInit {
 
     ngOnInit(): void {
 
-        if  (!Malfunctions.checkAdminConnectivity(this.router)){
-             return;
+        if (!Malfunctions.checkAdminConnectivity(this.router)) {
+            return;
         }
         const param = this.route.snapshot.paramMap.get('id');
         if (param) {
@@ -67,7 +70,7 @@ export class UpdateMealComponent implements OnInit {
         if (this.updatedMeal.controls["price"].value > 50) {
             alert(this.ATTENTION_MEAL_PRICE)
         }
-
+        this.isLoading = true;
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL},
             width: '40%',
@@ -77,49 +80,11 @@ export class UpdateMealComponent implements OnInit {
             if (result != undefined && result == true) {
                 this.editMeal();
             } else {
+                this.isLoading = false;
                 return;
             }
         });
 
-
-    }
-
-
-    editMeal(): void {
-        const formData = new FormData();
-        formData.append('id', this.meal.uuid.toString());
-        formData.append('label', this.updatedMeal.controls['label'].value);
-        formData.append('description', this.updatedMeal.controls['description'].value);
-        formData.append('category', this.updatedMeal.controls['category'].value);
-        formData.append('price', this.updatedMeal.controls['price'].value);
-        formData.append('quantity', this.updatedMeal.controls['quantity'].value);
-
-        if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
-            formData.append('image', this.image);
-
-        if (this.updatedMeal.controls['status'].value == "available") {
-            formData.append('status', "1");
-        } else {
-            formData.append('status', "0");
-        }
-
-        this.mealServiceService.editMeal(formData).subscribe((data) => {
-            if (data.message == "MEAL UPDATED SUCCESSFULLY") {
-
-                const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: this.MEAL_UPDATED_SUCCESSFULLY},
-                    width: '40%',
-                });
-                result.afterClosed().subscribe((result) => {
-                    this.router.navigate(['/admin/meals'], {queryParams: {reload: 'true'}})
-                });
-
-            } else {
-                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MEAL);
-                /*TODO    Remove  Token   */
-            }
-
-        });
 
     }
 
@@ -140,6 +105,7 @@ export class UpdateMealComponent implements OnInit {
 
 
     }
+
 
     removeMealSendReq(): void {
         this.mealServiceService.deleteMeal(this.meal.uuid).subscribe((data) => {
@@ -163,10 +129,9 @@ export class UpdateMealComponent implements OnInit {
 
     }
 
-
     matchFormsValue() {
-        function getStatusFromNumber(pstatus: number): string {
-            if (pstatus == 1) {
+        function getStatusFromNumber(status: number): string {
+            if (status == 1) {
                 return "available"
             } else {
                 return "unavailable"
@@ -179,8 +144,48 @@ export class UpdateMealComponent implements OnInit {
             price: this.meal.price,
             quantity: this.meal.quantity,
             category: this.meal.category,
+            mealType: this.meal.mealType,
             status: getStatusFromNumber(this.meal.status)
         });
+    }
+
+
+    editMeal(): void {
+        const formData = new FormData();
+        formData.append('uuid', this.meal.uuid.toString());
+        formData.append('label', this.updatedMeal.controls['label'].value);
+        formData.append('description', this.updatedMeal.controls['description'].value);
+        formData.append('category', this.updatedMeal.controls['category'].value);
+        formData.append('price', this.updatedMeal.controls['price'].value);
+        formData.append('quantity', this.updatedMeal.controls['quantity'].value);
+        formData.append('mealType', this.updatedMeal.controls['mealType'].value);
+
+        if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
+            formData.append('image', this.image);
+
+        if (this.updatedMeal.controls['status'].value == "available") {
+            formData.append('status', "1");
+        } else {
+            formData.append('status', "0");
+        }
+
+        this.mealServiceService.editMeal(formData).subscribe({
+
+            next: (data) => {
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: this.MEAL_UPDATED_SUCCESSFULLY},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    this.router.navigate([IConstantsURL.ADMIN_MEALS_URL],).then(r => window.location.reload());
+                });
+            },
+            error: (error) => {
+                this.isLoading = false;
+            }
+
+        });
+
     }
 
     get f(): { [key: string]: AbstractControl } {
@@ -189,13 +194,12 @@ export class UpdateMealComponent implements OnInit {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
 
-    goback(): void {
-        this.router.navigate(['/admin/meals']);
+    goBack(): void {
+        this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(window.location.reload);
     }
 
 

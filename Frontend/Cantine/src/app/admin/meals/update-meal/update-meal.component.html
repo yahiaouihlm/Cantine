@@ -107,9 +107,37 @@
                             </div>
                         </div>
 
+                        <!---------------------- Catégorie --------------------------->
 
                         <div class="form-group">
+                            <label for="mealType"> type Du Plat </label>
+                            <select formControlName="mealType" class="form-control" id="mealType"
+                                    [ngClass]="{ 'is-invalid': submitted && f['mealType'].errors }" name="mealType">
+                                <option value="" disabled>-- type Du Plat --</option>
+                                <option value="ENTREE">ENTREE</option>
+                                <option value="PLAT">PLAT</option>
+                                <option value="DESSERT">DESSERT</option>
+                                <option value="BOISSON">BOISSON</option>
+                                <option value="ACCOMPAGNEMENT">ACCOMPAGNEMENT</option>
+                                <option value="Poulets">AUTRE</option>
+                            </select>
+                            <div *ngIf="submitted && f['mealType'].errors" class="invalid-feedback">
+                                <div *ngIf="f['mealType'].errors['required']" class="center"> le type du plat est
+                                    requise
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <!---------------------- category --------------------------->
+                        <div class="form-group">
                             <label for="category"> Catégorie </label>
+
                             <select formControlName="category" class="form-control" id="category"
                                     [ngClass]="{ 'is-invalid': submitted && f['category'].errors }" name="category">
                                 <option value="" disabled>-- Catégorie Du Plat --</option>
@@ -173,13 +201,13 @@
                         </div>
 
 
-                        <div class="btns">
+                        <div class="btns" *ngIf="!isLoading ;  else loadingTemplate">
                             <!---->
                             <div class="btn-save center">
                                 <button (click)="onSubmit()" class="btn"> Valider </button>
                             </div>
                             <!--(click)="goback()"-->
-                            <span (click)="goback()"><mat-icon>arrow_back</mat-icon></span>
+                            <span (click)="goBack()"><mat-icon>arrow_back</mat-icon></span>
 
                             <div class="btn-save right">
                                 <button (click)="delete()" class="btn"> supprimer </button>
@@ -200,3 +228,10 @@
 </div>
 
 
+<ng-template #loadingTemplate>
+    <!-- Afficher le spinner ici pendant le chargement -->
+    <div style="margin-left: 18vw; margin-top: 5%" class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+</ng-template>

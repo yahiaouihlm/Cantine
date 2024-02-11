@@ -36,14 +36,16 @@ export class MealsService {
     deleteMeal(id: string) {
         const params = new HttpParams().set('idMeal', id);
         return this.httpClient.delete <NormalResponse>(this.DELETE_MEAL_URL, {params: params}).pipe(
-            catchError((error) => this.handleAddMealErrors(error))
+            catchError((error) => this.handleAddAndUpdateMealErrors(error))
         );
 
     }
 
     editMeal(meal: FormData) {
-        return this.httpClient.put <NormalResponse>(this.UPDATE_MEAL_URL, meal).pipe(
-            catchError((error) => this.handleAddMealErrors(error))
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.post <NormalResponse>(this.UPDATE_MEAL_URL, meal, {headers: headers}).pipe(
+            catchError((error) => this.handleAddAndUpdateMealErrors(error))
         );
     }
 
@@ -62,7 +64,7 @@ export class MealsService {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         return this.httpClient.post <NormalResponse>(this.ADD_MEAL_URL, meal, {headers: headers}).pipe(
-            catchError((error) => this.handleAddMealErrors(error))
+            catchError((error) => this.handleAddAndUpdateMealErrors(error))
         );
     }
 
@@ -76,14 +78,15 @@ export class MealsService {
     }
 
 
-    private handleAddMealErrors(error: HttpErrorResponse) {
+    private handleAddAndUpdateMealErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
 
         if (errorMessage == undefined) {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
-            this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
         }
         if (error.status == HttpStatusCode.BadRequest) {
             errorMessage = "Veuillez  vérifier  les  données  saisies  !"
@@ -101,12 +104,10 @@ export class MealsService {
         } else if (error.status == HttpStatusCode.InternalServerError) {
             errorMessage = "Une  erreur  serveur  est  survenue  !"
             this.dialog.openDialog(errorMessage);
-        }
-        /*   else if  (error.status == HttpStatusCode.NotFound){
-                errorMessage =  "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
-                this.openDialog(errorMessage, error.status);
-            }*/
-        else {
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
+            this.dialog.openDialog(errorMessage);
+        } else {
             errorMessage = "Une  erreur  est  survenue  !"
             this.dialog.openDialog(errorMessage);
             localStorage.clear();
@@ -125,6 +126,8 @@ export class MealsService {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
             this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            console.log("error  message  is  undefined")
+            return throwError(() => new Error(errorMessage));
         }
         if (error.status == HttpStatusCode.BadRequest) {
             errorMessage = "Veuillez  vérifier  les  données  saisies  !"
