@@ -33,7 +33,7 @@ export class MealsService {
 
     private dialog = new DialogErrors(this.matDialog);
 
-    deleteMeal(id: number) {
+    deleteMeal(id: string) {
         const params = new HttpParams().set('idMeal', id);
         return this.httpClient.delete <NormalResponse>(this.DELETE_MEAL_URL, {params: params}).pipe(
             catchError((error) => this.handleAddMealErrors(error))

@@ -30,7 +30,7 @@ export class AllMealsComponent implements OnInit {
         this.router.navigate([IConstantsURL.ADMIN_NEW_MEAL_URL]).then(r => window.location.reload());
     }
 
-    updateMeal(id: number): void {
+    updateMeal(id: string): void {
         this.router.navigate([IConstantsURL.ADMIN_UPDATE_MEAL_URL, id]).then(r => window.location.reload());
     }
 

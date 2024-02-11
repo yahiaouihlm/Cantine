@@ -83,7 +83,7 @@ export class UpdateMenuComponent implements OnInit {
 
 
     editMenu() {
-        let mealsIds: number[] = []
+        let mealsIds: string[] = []
         this.mealsContainMenu.forEach((meal) => {
             mealsIds.push(meal.id);
         });

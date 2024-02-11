@@ -15,7 +15,7 @@ export class Order {
     creationTime!: Date;
     isCancelled!: boolean;
     status!: number;
-    mealsId: number[] = [];
+    mealsId: string[] = [];
     menusId: number[] = [];
     studentOrder!: User;
     public static getOrderFromLocalStorage() {
@@ -131,7 +131,7 @@ export class Order {
     }
 
 
-    getMealsIds(): number[] {
+    getMealsIds(): string[] {
         return this.meals.map(meal => meal.id);
     }
 

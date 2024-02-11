@@ -75,7 +75,7 @@ export class NewMenuComponent {
 
 
     sendNewMenu(): void {
-        let mealsIds: number[] = []
+        let mealsIds: string[] = []
 
         this.mealsContainMenu.forEach((meal) => {
             mealsIds.push(meal.id);
