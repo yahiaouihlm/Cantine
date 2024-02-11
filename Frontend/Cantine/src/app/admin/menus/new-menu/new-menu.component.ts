@@ -78,7 +78,7 @@ export class NewMenuComponent {
         let mealsIds: string[] = []
 
         this.mealsContainMenu.forEach((meal) => {
-            mealsIds.push(meal.id);
+            mealsIds.push(meal.uuid);
         });
 
         const formData = new FormData();

@@ -1,5 +1,5 @@
 export  class  Meal {
-    id! :  string;
+    uuid! :  string;
     label! :  string;
     description! :  string;
     category! :  string;

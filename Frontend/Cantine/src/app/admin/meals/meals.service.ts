@@ -48,10 +48,12 @@ export class MealsService {
     }
 
 
-    getMealById(id: number) {
-        const params = new HttpParams().set('idMeal', id);
-        return this.httpClient.get <Meal>(this.GET_MEAL_BY_ID_URL, {params: params}).pipe(
-            catchError((error) => this.handleAddMealErrors(error))
+    getMealByUuId(id: string) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        const params = new HttpParams().set('uuidMeal', id);
+        return this.httpClient.get <Meal>(this.GET_MEAL_BY_ID_URL, {params: params, headers: headers}).pipe(
+            catchError((error) => this.handleGetMealErrors(error))
         );
     }
 
@@ -81,7 +83,7 @@ export class MealsService {
         if (errorMessage == undefined) {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
-            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
         }
         if (error.status == HttpStatusCode.BadRequest) {
             errorMessage = "Veuillez  vérifier  les  données  saisies  !"
@@ -115,22 +117,33 @@ export class MealsService {
     }
 
 
-    private openDialog(message: string, httpError: HttpStatusCode): void {
-        const result = this.matDialog.open(ExceptionDialogComponent, {
-            data: {message: message},
-            width: '40%',
-        });
+    private handleGetMealErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
 
-        result.afterClosed().subscribe((confirmed: boolean) => {
-            if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError == HttpStatusCode.Conflict || httpError == HttpStatusCode.NotFound) {
-                this.router.navigate(['/admin/meals'], {queryParams: {reload: 'true'}});
-            } else {
-                /* TODO  remove THE  Token  */
-                //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
-            }
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Veuillez  vérifier  les  données  saisies  !"
+            this.dialog.openDialog(errorMessage);
+        } else if (error.status == HttpStatusCode.Unauthorized) { //  expired  token
+            localStorage.clear()
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Ce  plat  n'existe  pas  ! , il ce peut qu'il a été supprimé  !"
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+        } else {
+            errorMessage = "Une  erreur  est  survenue  !"
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
 
-        });
-
+        return throwError(() => new Error(errorMessage));
     }
 
 

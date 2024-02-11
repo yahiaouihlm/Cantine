@@ -79,7 +79,7 @@ export class Order {
         if (order) {
             let index = -1;
             for (let counter = 0; counter < order.meals.length; counter++)
-                if (order.meals[counter].id === meal.id) {
+                if (order.meals[counter].uuid === meal.uuid) {
                     index = counter;
                     break;
                 }
@@ -132,7 +132,7 @@ export class Order {
 
 
     getMealsIds(): string[] {
-        return this.meals.map(meal => meal.id);
+        return this.meals.map(meal => meal.uuid);
     }
 
     public getMenusIds(): number[] {

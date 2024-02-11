@@ -31,6 +31,7 @@ export class AllMealsComponent implements OnInit {
     }
 
     updateMeal(id: string): void {
+        console.log("update meal  id  : ", id)
         this.router.navigate([IConstantsURL.ADMIN_UPDATE_MEAL_URL, id]).then(r => window.location.reload());
     }
 

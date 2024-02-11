@@ -8,6 +8,7 @@ import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dia
 import {Adminfunction} from "../../sharedmodule/models/adminfunction";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
+import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 
 @Injectable()
 export class AdminService {
@@ -40,8 +41,12 @@ export class AdminService {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
         let dialog;
-        console.log("error status is ", error.status);
-        console.log("error message is ", errorMessage);
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+
         if (error.status == HttpStatusCode.BadRequest) {
             dialog = this.dialog.openDialog("Certains champs sont invalides");
         } else if (error.status == HttpStatusCode.NotFound) {
@@ -57,6 +62,7 @@ export class AdminService {
             dialog = this.dialog.openDialog("Une erreur est inconnue survenue lors de l'ajout de l'administrateur");
         }
 
+        /** TODO :    REVOIR  CECI */
         dialog.afterClosed().subscribe((confirmed: boolean) => {
            // this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
         });

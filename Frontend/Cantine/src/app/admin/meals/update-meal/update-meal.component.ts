@@ -7,6 +7,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import {MatDialog} from "@angular/material/dialog";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 
 @Component({
     selector: 'app-update-meal',
@@ -43,13 +44,14 @@ export class UpdateMealComponent implements OnInit {
 
     ngOnInit(): void {
 
+        if  (!Malfunctions.checkAdminConnectivity(this.router)){
+             return;
+        }
         const param = this.route.snapshot.paramMap.get('id');
         if (param) {
-            const id = +param;
-            this.mealServiceService.getMealById(id).subscribe(data => {
+            this.mealServiceService.getMealByUuId(param).subscribe(data => {
                 this.meal = data;
                 this.matchFormsValue()
-                console.log(this.meal.category)
             });
 
         }
@@ -58,8 +60,6 @@ export class UpdateMealComponent implements OnInit {
 
 
     onSubmit() {
-        console.log("onSubmit")
-
         this.submitted = true
         if (this.updatedMeal.invalid) {
             return;
@@ -87,7 +87,7 @@ export class UpdateMealComponent implements OnInit {
 
     editMeal(): void {
         const formData = new FormData();
-        formData.append('id', this.meal.id.toString());
+        formData.append('id', this.meal.uuid.toString());
         formData.append('label', this.updatedMeal.controls['label'].value);
         formData.append('description', this.updatedMeal.controls['description'].value);
         formData.append('category', this.updatedMeal.controls['category'].value);
@@ -142,7 +142,7 @@ export class UpdateMealComponent implements OnInit {
     }
 
     removeMealSendReq(): void {
-        this.mealServiceService.deleteMeal(this.meal.id).subscribe((data) => {
+        this.mealServiceService.deleteMeal(this.meal.uuid).subscribe((data) => {
             if (data.message == "MEAL DELETED SUCCESSFULLY") {
 
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
