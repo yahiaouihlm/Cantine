@@ -14,7 +14,7 @@ import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
     providers: [CoreCantineService]
 })
 export class AllMealsComponent implements OnInit {
-
+    /** TODO :  revoir  le reponsive avec plusieur  plat */
     meals$: Observable<Meal[]> = of([]);
 
     constructor(private router: Router, private mealService: MealsService) {
