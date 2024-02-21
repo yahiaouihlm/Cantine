@@ -163,8 +163,8 @@
                                              [ngClass]="{ 'is-invalid': submitted && f['status'].errors }"
                                              class="form-control" formControlName="status">
                                 <mat-radio-button value="available"><span> Plat Disponible </span></mat-radio-button>
-                                <mat-radio-button value="unavailable"><span> Plat n'est  Disponible </span>
-                                </mat-radio-button>
+                                <mat-radio-button value="unavailable"><span> Plat n'est  Disponible </span></mat-radio-button>
+                                <mat-radio-button value="toRemove"><span> A supprimé </span></mat-radio-button>
                             </mat-radio-group>
                             <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
                                 <div *ngIf="f['status'].errors['required']" class="center"> le status du plat est

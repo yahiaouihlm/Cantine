@@ -9,6 +9,8 @@ import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {NormalResponse} from "../../../sharedmodule/models/NormalResponse";
 
 @Component({
     selector: 'app-update-meal',
@@ -20,7 +22,6 @@ export class UpdateMealComponent implements OnInit {
 
     private MEAL_UPDATED_SUCCESSFULLY = "Le plat a été modifié avec succès !";
     private MEAL_DELETED_SUCCESSFULLY = "Le plat a été supprimé avec succès !";
-    private ERROR_OCCURRED_WHILE_UPDATING_MEAL = "Une erreur est survenue lors de la modification du plat !";
     private WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL = "Voulez-vous vraiment Modifier  ce plat ?";
 
     private WOULD_YOU_LIKE_TO_DELETE_THIS_MEAL = "Voulez-vous vraiment supprimer ce plat ?";
@@ -67,10 +68,15 @@ export class UpdateMealComponent implements OnInit {
         if (this.updatedMeal.invalid) {
             return;
         }
+        if (this.meal.status == 2 && this.updatedMeal.controls["status"].value == "toRemove") {
+            alert("Vous ne pouvez pas modifier un plat supprimé !");
+            return;
+        }
+
+        this.isLoading = true;
         if (this.updatedMeal.controls["price"].value > 50) {
             alert(this.ATTENTION_MEAL_PRICE)
         }
-        this.isLoading = true;
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_UPDATE_THIS_MEAL},
             width: '40%',
@@ -90,6 +96,7 @@ export class UpdateMealComponent implements OnInit {
 
 
     delete(): void {
+        this.isLoading = true;
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_DELETE_THIS_MEAL},
             width: '40%',
@@ -99,6 +106,7 @@ export class UpdateMealComponent implements OnInit {
             if (result != undefined && result == true) {
                 this.removeMealSendReq();
             } else {
+                this.isLoading = false;
                 return;
             }
         });
@@ -108,24 +116,27 @@ export class UpdateMealComponent implements OnInit {
 
 
     removeMealSendReq(): void {
-        this.mealServiceService.deleteMeal(this.meal.uuid).subscribe((data) => {
-            if (data.message == "MEAL DELETED SUCCESSFULLY") {
+        this.mealServiceService.deleteMeal(this.meal.uuid).subscribe( {
+               next : (data) => {
+                     this.isLoading = false;
+                     const result = this.matDialog.open(SuccessfulDialogComponent, {
+                          data: {message: this.MEAL_DELETED_SUCCESSFULLY},
+                          width: '40%',
+                     });
+                     result.afterClosed().subscribe((result) => {
+                          this.router.navigate([IConstantsURL.ADMIN_MEALS_URL],).then(r => window.location.reload());
+                     });
 
-                const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: this.MEAL_DELETED_SUCCESSFULLY},
-                    width: '40%',
-                });
-                result.afterClosed().subscribe((result) => {
-                    this.router.navigate(['/admin/meals'], {queryParams: {reload: 'true'}})
-                });
+               },
 
-            } else {
-                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MEAL);
-                /*TODO    Remove  Token   */
+               error : (error) => {
+                   this.isLoading = false;
+                   return;
+               }
+
+
             }
-
-        });
-
+        )
 
     }
 
@@ -133,8 +144,10 @@ export class UpdateMealComponent implements OnInit {
         function getStatusFromNumber(status: number): string {
             if (status == 1) {
                 return "available"
-            } else {
+            } else if (status == 0) {
                 return "unavailable"
+            } else {
+                return "toRemove"
             }
         }
 

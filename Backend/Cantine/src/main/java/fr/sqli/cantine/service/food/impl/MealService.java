@@ -104,20 +104,31 @@ public class MealService implements IMealService {
             return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
 
+        if (meal.getStatus() == 2) {
+            MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS IN PROCESS OF DELETION", uuid);
+            throw new RemoveFoodException("THE MEAL WITH AN UUID = " + uuid + "IS IN PROCESS OF DELETION");
+        }
 
-        // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
-        meal.setStatus(2);
-        this.mealDao.save(meal);
         // check  if  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         if (meal.getMenus() != null && meal.getMenus().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)" +
-                    "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
+
+            // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+            meal.setStatus(2);
+            this.mealDao.save(meal);
+
+            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S) PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
+
         }
 
         // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
         if (meal.getOrders() != null && meal.getOrders().size() > 0) {
             MealService.LOG.debug("THE MENU WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
+
+            // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+            meal.setStatus(2);
+            this.mealDao.save(meal);
+
             throw new RemoveFoodException("THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)"
             +"PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
         }

@@ -33,10 +33,12 @@ export class MealsService {
 
     private dialog = new DialogErrors(this.matDialog);
 
-    deleteMeal(id: string) {
-        const params = new HttpParams().set('idMeal', id);
-        return this.httpClient.delete <NormalResponse>(this.DELETE_MEAL_URL, {params: params}).pipe(
-            catchError((error) => this.handleAddAndUpdateMealErrors(error))
+    deleteMeal(mealUuid: string) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const params = new HttpParams().set('uuidMeal', mealUuid);
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.delete <NormalResponse>(this.DELETE_MEAL_URL, {params: params, headers: headers}).pipe(
+            catchError((error) => this.handleDeleteMealErrors(error))
         );
 
     }
@@ -78,6 +80,48 @@ export class MealsService {
     }
 
 
+    private handleDeleteMealErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
+
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Veuillez  vérifier  les  données  saisies  !"
+            localStorage.clear()
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.InternalServerError) {
+            errorMessage = "Une  erreur  serveur  est  survenue  !"
+            localStorage.clear()
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.Unauthorized) { //  expired  token
+            localStorage.clear()
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Le plat  ne  peut  pas  être  directement supprimé ! , il est  lié  à  une  commande ou  un menu !,il sera  supprimé  automatiquement  lors  de traitement  batch !"
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(window.location.reload);
+        } else {
+            errorMessage = "Une  erreur  est  survenue  !"
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        return throwError(() => new Error(errorMessage));
+
+    }
+
     private handleAddAndUpdateMealErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
@@ -90,7 +134,9 @@ export class MealsService {
         }
         if (error.status == HttpStatusCode.BadRequest) {
             errorMessage = "Veuillez  vérifier  les  données  saisies  !"
+            localStorage.clear()
             this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
         } else if (error.status == HttpStatusCode.Unauthorized) { //  expired  token
             localStorage.clear()
             this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
@@ -101,9 +147,12 @@ export class MealsService {
         } else if (error.status == HttpStatusCode.Conflict) {
             errorMessage = "Ce  plat  existe  déjà  !"
             this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(window.location.reload);
         } else if (error.status == HttpStatusCode.InternalServerError) {
             errorMessage = "Une  erreur  serveur  est  survenue  !"
+            localStorage.clear()
             this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
         } else if (error.status == HttpStatusCode.NotFound) {
             errorMessage = "Ce  plat  n'existe  pas  ! \n  il ce peut qu'il a été supprimé  !"
             this.dialog.openDialog(errorMessage);
@@ -130,8 +179,10 @@ export class MealsService {
             return throwError(() => new Error(errorMessage));
         }
         if (error.status == HttpStatusCode.BadRequest) {
+            localStorage.clear();
             errorMessage = "Veuillez  vérifier  les  données  saisies  !"
             this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
         } else if (error.status == HttpStatusCode.Unauthorized) { //  expired  token
             localStorage.clear()
             this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
