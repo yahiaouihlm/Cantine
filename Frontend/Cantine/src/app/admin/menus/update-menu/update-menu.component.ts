@@ -88,7 +88,7 @@ export class UpdateMenuComponent implements OnInit {
             mealsIds.push(meal.uuid);
         });
         const menu = new FormData();
-        menu.append("menuId", this.menu.id.toString());
+        menu.append("menuUuid", this.menu.uuid);
         menu.append('label', this.updatedMenu.controls["label"].value);
         menu.append('description', this.updatedMenu.controls["description"].value);
         menu.append('price', this.updatedMenu.controls["price"].value);

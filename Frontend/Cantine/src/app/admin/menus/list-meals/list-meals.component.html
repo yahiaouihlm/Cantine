@@ -4,7 +4,7 @@
         <div *ngFor="let meal of meals$ | async " class="col m4 s12">
             <div>
                 <div class="card horizontal ">
-                    <div class="center" class="{{ mealAvailableToString(meal.status) | foodAvailable }}">
+                    <div class="center">
                         <img [src]="meal.image" height="190px" width="40%"/>
 
                         <div class="card-stacked">
@@ -13,34 +13,29 @@
                                 <p> catégorie :  {{meal.category}}</p>
                                 <p> description : {{meal.description}}</p>
                                 <p> prix : {{meal.price | euroSymbol }}  </p>
-                                <p><span *ngIf="meal.status == 1">  Disponible  </span><span *ngIf="meal.status == 0 ">  Pas  Disponible  </span>
-                                </p>
                             </div>
                         </div>
 
 
-                            <div  *ngIf="!isInMealsList(meal)"  class="center">
-                                <button  [disabled]="meal.status == 0" class="btn"   (click) =  "addToListToLinkMealToMenu(meal)"> Ajouter Le Plat</button>
-                            </div>
-
-
-                            <div  *ngIf="isInMealsList(meal)"  class="center">
-                                <p   style="color: green ;"> Séléctionné </p>
-                            </div>
-
-                        <!--<div *ngIf="meal.status == 0">
+                        <div *ngIf="!isInMealsList(meal)" class="center">
+                            <button [disabled]="meal.status == 0" class="btn" (click)="addToListToLinkMealToMenu(meal)">
+                                Ajouter Le Plat
+                            </button>
                         </div>
-                        <button disabled class="btn" *ngIf="meal.status == 0"> Ajouter Le Plat</button>-->
 
 
+                        <div *ngIf="isInMealsList(meal)" class="center">
+                            <p style="color: green ;"> Séléctionné </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="validate-btn center">
             <div>
-                <button  class="btn"  (click)="validate()">Valider</button>
-                <p *ngIf="submitted && chosenMeals.length < 2  "  style="color: crimson">Vous deverriez  absolument Choisir au moins   deux Plats  pour un  menu </p>
+                <button class="btn" (click)="validate()">Valider</button>
+                <p *ngIf="submitted && chosenMeals.length < 2  " style="color: crimson">Vous deverriez absolument
+                    Choisir au moins deux Plats pour un menu </p>
 
             </div>
             <div class="btn" *ngIf="chosenMeals.length>0" (click)="resetMealsList()">reset</div>
