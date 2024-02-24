@@ -37,7 +37,7 @@ export class MealsService {
         let token = Malfunctions.getTokenFromLocalStorage();
         const params = new HttpParams().set('uuidMeal', mealUuid);
         const headers = new HttpHeaders().set('Authorization', token);
-        return this.httpClient.delete <NormalResponse>(this.DELETE_MEAL_URL, {params: params, headers: headers}).pipe(
+        return this.httpClient.post <NormalResponse>(this.DELETE_MEAL_URL, null ,{params: params, headers: headers}).pipe(
             catchError((error) => this.handleDeleteMealErrors(error))
         );
 

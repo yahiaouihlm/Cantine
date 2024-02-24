@@ -41,7 +41,7 @@ public interface IMealController {
     ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
 
-    @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
+    @PostMapping(value = ENDPOINT_DELETE_MEAL_URL)
     ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, RemoveFoodException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)

@@ -57,9 +57,7 @@ export class UpdateMealComponent implements OnInit {
                 this.meal = data;
                 this.matchFormsValue()
             });
-
         }
-
     }
 
 
@@ -116,23 +114,21 @@ export class UpdateMealComponent implements OnInit {
 
 
     removeMealSendReq(): void {
-        this.mealServiceService.deleteMeal(this.meal.uuid).subscribe( {
-               next : (data) => {
-                     this.isLoading = false;
-                     const result = this.matDialog.open(SuccessfulDialogComponent, {
-                          data: {message: this.MEAL_DELETED_SUCCESSFULLY},
-                          width: '40%',
-                     });
-                     result.afterClosed().subscribe((result) => {
-                          this.router.navigate([IConstantsURL.ADMIN_MEALS_URL],).then(r => window.location.reload());
-                     });
-
-               },
-
-               error : (error) => {
-                   this.isLoading = false;
-                   return;
-               }
+        this.mealServiceService.deleteMeal(this.meal.uuid).subscribe({
+                next: (data) => {
+                    this.isLoading = false;
+                    const result = this.matDialog.open(SuccessfulDialogComponent, {
+                        data: {message: this.MEAL_DELETED_SUCCESSFULLY},
+                        width: '40%',
+                    });
+                    result.afterClosed().subscribe((result) => {
+                        this.router.navigate([IConstantsURL.ADMIN_MEALS_URL],).then(r => window.location.reload());
+                    });
+                },
+                error: (error) => {
+                    this.isLoading = false;
+                    return;
+                }
 
 
             }
