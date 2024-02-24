@@ -25,7 +25,7 @@ export class StudentsManagementService {
     }
 
 
-    sendStudentCode(studentId: number, amount: number, validationCode: number) {
+    sendStudentCode(studentId: string, amount: number, validationCode: number) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         const params = new HttpParams().set('studentId', studentId.toString())
@@ -37,7 +37,7 @@ export class StudentsManagementService {
             )
     }
 
-    sendStudentWallet(studentId: number, amount: number) {
+    sendStudentWallet(studentId: string, amount: number) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         const params = new HttpParams().set('studentId', studentId.toString())

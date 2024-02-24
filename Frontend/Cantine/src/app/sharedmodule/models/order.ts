@@ -15,7 +15,7 @@ export class Order {
     creationTime!: Date;
     isCancelled!: boolean;
     status!: number;
-    mealsId: number[] = [];
+    mealsId: string[] = [];
     menusId: number[] = [];
     studentOrder!: User;
     public static getOrderFromLocalStorage() {
@@ -79,7 +79,7 @@ export class Order {
         if (order) {
             let index = -1;
             for (let counter = 0; counter < order.meals.length; counter++)
-                if (order.meals[counter].id === meal.id) {
+                if (order.meals[counter].uuid === meal.uuid) {
                     index = counter;
                     break;
                 }
@@ -131,8 +131,8 @@ export class Order {
     }
 
 
-    getMealsIds(): number[] {
-        return this.meals.map(meal => meal.id);
+    getMealsIds(): string[] {
+        return this.meals.map(meal => meal.uuid);
     }
 
     public getMenusIds(): number[] {

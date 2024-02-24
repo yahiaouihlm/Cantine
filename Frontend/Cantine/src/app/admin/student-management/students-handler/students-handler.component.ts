@@ -46,7 +46,7 @@ export class StudentsHandlerComponent {
 
   }
 
-  goToStudentProfile(studentId :  number) {
+  goToStudentProfile(studentId :  string) {
     const navigationExtras: NavigationExtras = {
       queryParams: { studentId: studentId }
     };

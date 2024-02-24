@@ -16,7 +16,7 @@ export class MainCoreCantineComponent  implements OnInit{
     constructor (private  router : Router,   private sharedService: SharedService) {}
 
     ngOnInit(): void {
-        let  authObj = localStorage.getItem('authObject');
+     /*   let  authObj = localStorage.getItem('authObject');
         if (authObj) {
             this.disconnected = true;
             this.authObj = JSON.parse(authObj);
@@ -25,7 +25,7 @@ export class MainCoreCantineComponent  implements OnInit{
         else {
             this.disconnected = false;
         }
-
+*/
 
     }
 

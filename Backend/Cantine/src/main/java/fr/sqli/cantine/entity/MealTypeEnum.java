@@ -5,7 +5,7 @@ public enum MealTypeEnum {
     PLAT,
     DESSERT,
     BOISSON,
-    ACCOPAGNEMENT,
+    ACCOMPAGNEMENT,
     AUTRE;
 
 

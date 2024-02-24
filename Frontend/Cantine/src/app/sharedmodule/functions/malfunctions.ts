@@ -30,6 +30,23 @@ export  default class Malfunctions {
         console.log("user  is connected");
     }
 
+    public static checkAdminConnectivity(router: Router)  : boolean  {
+        let  interdiction  = () => {
+            localStorage.clear();
+            router.navigate([IConstantsURL.SIGN_IN_URL]).then(r =>
+                window.location.reload()
+            );
+        }
+
+        let authObj = localStorage.getItem('authObject');
+        if (!authObj || JSON.parse(authObj).role !== IConstantsMessages.ADMIN_ROLE) {
+            interdiction();
+            return  false;
+        }
+
+        /**TODO : search  if  we need a request  to  the  server  to   getAdmin */
+        return  true;
+    }
     public static checkStudentConnectivity(router: Router ,  sharedService : SharedService)  {
         let  interdiction  = () => {
             localStorage.clear();

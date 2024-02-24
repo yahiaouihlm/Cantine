@@ -1,47 +1,52 @@
 <div class="center" style="margin: 20px">
     <button class="btn" (click)="gotoNewMeal()">Ajouter un Plat</button>
 </div>
+<!--
 
+<ng-container *ngIf="(meals$ | async) as meals; else noMeals">
+    <div *ngIf="meals.length > 0; else noMeals"></div>
+</ng-container>
+-->
 
 <div class="container">
     <div class="row">
-        <div *ngFor="let meal of meals$ | async " class="col m4 s12">
-            <div>
-                <div class="card horizontal ">
-                    <div class="center"  class="{{ mealAvailableToString(meal.status) | foodAvailable }}">
-                        <img [src]="meal.image" height="190px" width="40%"/>
+        <div *ngFor="let meal of meals$ | async " class="col-md-4">
+            <div class="card horizontal ">
+                <div class="center {{ mealAvailableToString(meal.status) | foodAvailable }}">
+                    <img [src]="meal.image" height="190px" width="40%" alt=""/>
 
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <p> plat :   {{meal.label}}</p>
-                                <p> catégorie :  {{meal.category}}</p>
-                                <p> description : {{meal.description}}</p>
-                                <p> prix : {{meal.price | euroSymbol }}  </p>
-                                 <p><span *ngIf="meal.status == 1">  Disponible  </span><span *ngIf="meal.status == 0 ">  Pas  Disponible  </span>
-                                </p>
-                            </div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <p><span class="meal-title">{{meal.label}}</span></p>
+                            <p> catégorie :  {{meal.category}}</p>
+                            <p> type : {{meal.mealType}}</p>
+                            <p> prix : {{meal.price | euroSymbol }}  </p>
+                            <p>quantity : {{meal.quantity}} </p>
+                            <p> description : {{meal.description}}</p>
+                            <p><span *ngIf="meal.status == 1">  Disponible  </span><span
+                                    *ngIf="meal.status == 0 ">  Pas  Disponible  </span>
+                            </p>
                         </div>
-                        <div>
-                            <button class="btn" (click)="updateMeal(meal.id)"> Modifier Le Plat</button>
-                        </div>
+                    </div>
+                    <div style="margin: 15px">
+                        <button class="btn" (click)="updateMeal(meal.uuid)"> Modifier Le Plat</button>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
+<ng-template #noMeals>
+    <div class="center" style=" padding: 12%; height: 50%;">
+        <h2> Aucun plat disponible</h2>
+    </div>
+</ng-template>
 <style>
-    .mealCardUnavailable {
-        border: solid 3px #e0586d;
-    }
-    .mealCardUnavailable:hover {
-        opacity: 0.65;
-        transition: all ease-in-out 0.4s;
-    }
-    .mealCardAvailable {
-        border: solid 3px green;
+    .meal-title {
+        font-size: 20px;
+        font-weight: bold;
     }
 </style>
-
 

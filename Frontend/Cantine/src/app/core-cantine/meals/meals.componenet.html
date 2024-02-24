@@ -1,37 +1,35 @@
-
-    <div class="center" style="width: 50%; transform: translateX(50%);  ">
-
+<div class="center" style="width: 50%; transform: translateX(50%);  ">
 
 
-        <h1 class="center"> Nos  Plats   </h1>
+    <h1 class="center"> Nos Plats </h1>
 
-           <div  class="container-fluid red" >
-             <div class="row">
-                 <div *ngFor="let meal of meals$ |async " class="col m4 s12" >
-                      <div class="card horizontal">
-                          <div class="center">
-                              <img  [src]="meal.image" height="40%" width="40%"   />
-                          </div>
+    <div class="container-fluid red">
+        <div class="row">
+            <div *ngFor="let meal of meals$ |async " class="col m4 s12">
+                <div class="card horizontal">
+                    <div class="center">
+                        <img [src]="meal.image" height="40%" width="40%"/>
+                    </div>
 
-                             <div class="card-stacked">
-                                 <div class="card-content">
-                                     <p> plat :   {{meal.label}}</p>
-                                     <p> catégorie :  {{meal.category}}</p>
-                                     <p> description  : {{meal.description}}</p>
-                                 </div>
-                             </div>
-                            <div>
-                                <button class="btn"  (click)="addToOrder(meal)"> Ajouter Le Plat </button>
-                            </div>
-                      </div>
-                 </div>
-             </div>
-           </div>
-
-
-
-        <div  class="center btn"  (click)="goback()">
-            <mat-icon>arrow_back</mat-icon> retour
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <p> plat :   {{meal.label}}</p>
+                            <p> catégorie :  {{meal.category}}</p>
+                            <p> description : {{meal.description}}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn" (click)="addToOrder(meal)"> Ajouter Le Plat</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
+
+
+    <div class="center btn" (click)="goback()">
+        <mat-icon>arrow_back</mat-icon>
+        retour
+    </div>
+
+</div>

@@ -19,12 +19,12 @@ export class ListMealsComponent implements  OnInit{
     }
 
     ngOnInit(): void {
-        this.meals$ = this.coreCantineService.getAllMeals();
+        this.meals$ = this.coreCantineService.getAllAvailableMeals();
 
     }
 
     isInMealsList(meal : Meal) : boolean {
-        return !!this.chosenMeals.find(pmeal => pmeal.id === meal.id);
+        return !!this.chosenMeals.find(pmeal => pmeal.uuid === meal.uuid);
     }
 
     addToListToLinkMealToMenu(meal : Meal) {
