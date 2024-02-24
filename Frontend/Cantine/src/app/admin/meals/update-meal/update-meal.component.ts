@@ -9,8 +9,7 @@ import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
-import {error} from "@angular/compiler-cli/src/transformers/util";
-import {NormalResponse} from "../../../sharedmodule/models/NormalResponse";
+
 
 @Component({
     selector: 'app-update-meal',
