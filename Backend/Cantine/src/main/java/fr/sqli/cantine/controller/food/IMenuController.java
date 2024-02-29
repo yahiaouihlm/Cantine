@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -22,7 +23,7 @@ public interface IMenuController {
     String  ENDPOINT_UPDATE_MENU_URL = "/update";
     String ENDPOINT_ADD_MENU_URL = "/add";
     String ENDPOINT_DELETE_MENU_URL = "/delete";
-
+    String  ENDPOINT_GET_ALL_MENU =  "/getAll";
 
     String ENDPOINT_GET_ONE_MENU_URL = "/get";
 
@@ -46,4 +47,6 @@ public interface IMenuController {
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws InvalidFoodInformationException, FoodNotFoundException;
 
+    @GetMapping(value = ENDPOINT_GET_ALL_MENU)
+    public  ResponseEntity<List<MenuDtOut>> getAllMenu();
 }
