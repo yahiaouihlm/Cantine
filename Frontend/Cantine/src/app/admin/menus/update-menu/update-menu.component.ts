@@ -9,6 +9,7 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 import {Meal} from "../../../sharedmodule/models/meal";
 import {ListMealsComponent} from "../list-meals/list-meals.component";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-update-menu',
@@ -19,8 +20,7 @@ import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 export class UpdateMenuComponent implements OnInit {
 
     private WOULD_YOU_LIKE_TO_UPDATE_THIS_MENU = "Voulez-vous  enregistrer  ce  menu ?"
-    private MEAL_UPDATED_SUCCESSFULLY = "Le plat a été modifié avec succès !";
-    private ERROR_OCCURRED_WHILE_UPDATING_MEAL = "Une erreur est survenue lors de la modification du plat !";
+
     private MENU_ADDED_SUCCESSFULLY = "Le Menu a été ajouté avec succès !"
     private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  prix  supérieur à 80€  pour ce  menu  !"
     private ERROR_OCCURRED_WHILE_UPDATING_MENU = "Voulez-vous  enregistrer  ce  menu ?"
@@ -29,6 +29,7 @@ export class UpdateMenuComponent implements OnInit {
     menu: Menu = new Menu()
     mealsContainMenu: Meal[] = []
     closedDialog = false;
+    isLoading: boolean = false;
     updatedMenu: FormGroup = new FormGroup({
         label: new FormControl('', [Validators.required, Validators.maxLength(60), Validators.minLength(3)]),
         description: new FormControl('', [Validators.required, Validators.maxLength(1700), Validators.minLength(5)]),
@@ -61,13 +62,18 @@ export class UpdateMenuComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true
-        if (this.updatedMenu.invalid ||  this.mealsContainMenu.length < 2) {
+        if (this.updatedMenu.invalid || this.mealsContainMenu.length < 2) {
             return;
         }
         if (this.updatedMenu.controls["price"].value > 50) {
             alert(this.ATTENTION_MENU_PRICE)
         }
 
+        if (this.menu.status == 2 && this.updatedMenu.controls["status"].value == "toRemove") {
+            alert("Vous ne pouvez pas modifier un plat supprimé !");
+            return;
+        }
+        this.isLoading = true;
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_UPDATE_THIS_MENU},
             width: '40%',
@@ -77,6 +83,7 @@ export class UpdateMenuComponent implements OnInit {
             if (result != undefined && result == true) {
                 this.editMenu();
             } else {
+                this.isLoading = false;
                 return;
             }
         });
@@ -106,22 +113,20 @@ export class UpdateMenuComponent implements OnInit {
             menu.append('status', "0");
         }
 
-        this.menuService.updateMenu(menu).subscribe((data) => {
-            if (data.message == "MENU UPDATED SUCCESSFULLY") {
-
+        this.menuService.updateMenu(menu).subscribe({
+            next: (data) => {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: this.MENU_ADDED_SUCCESSFULLY},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                    this.router.navigate(['/admin/menus'], {queryParams: {reload: 'true'}})
+                    this.goBack();
                 });
-
-            } else {
-                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MENU);
-                /*TODO    Remove  Token   */
+                this.isLoading = false;
+            },
+            error: (error) => {
+                this.isLoading = false;
             }
-
         });
 
 
@@ -149,8 +154,10 @@ export class UpdateMenuComponent implements OnInit {
         function getStatusFromNumber(pstatus: number): string {
             if (pstatus == 1) {
                 return "available"
-            } else {
+            } else if (pstatus == 0) {
                 return "unavailable"
+            } else {
+                return "toRemove"
             }
         }
 
@@ -176,4 +183,7 @@ export class UpdateMenuComponent implements OnInit {
     }
 
 
+    goBack() {
+        this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(r => window.location.reload());
+    }
 }
