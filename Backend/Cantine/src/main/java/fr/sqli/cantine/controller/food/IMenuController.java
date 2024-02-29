@@ -35,7 +35,7 @@ public interface IMenuController {
     String MENU_DELETED_SUCCESSFULLY = "MENU DELETED SUCCESSFULLY";
 
     /*------------------ METHODS ------------------*/
-    @PutMapping(value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
 
     @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
