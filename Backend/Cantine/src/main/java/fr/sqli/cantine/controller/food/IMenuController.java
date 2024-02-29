@@ -38,7 +38,7 @@ public interface IMenuController {
     @PostMapping(value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
 
-    @DeleteMapping(value = ENDPOINT_DELETE_MENU_URL)
+    @PostMapping(value = ENDPOINT_DELETE_MENU_URL)
     public ResponseEntity<ResponseDtout> deleteMenu(@RequestParam("uuidMenu")String uuidMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException;
 
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
