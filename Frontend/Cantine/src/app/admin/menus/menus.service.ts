@@ -20,9 +20,19 @@ export class MenusService {
     private GET_ONE_MENU_URL = this.BASIC_ENDPOINT + '/get';
     private UPDATE_MENU_URL = this.BASIC_ENDPOINT + '/update';
     private GET_ALL_MENUS_URL = this.BASIC_ENDPOINT + '/getAll';
+    private  DELETE_MENU_URL = this.BASIC_ENDPOINT + '/delete';
     private dialog = new DialogErrors(this.matDialog);
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
+    }
+
+    removeMenu(menuId: string) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        const params = new HttpParams().set('uuidMenu', menuId);
+        return this.httpClient.post<NormalResponse>(this.DELETE_MENU_URL, null ,{headers : headers, params : params}).pipe(
+            catchError((error) => this.handleRemoveMenusError(error))
+        );
     }
 
     updateMenu(menu: FormData) {
@@ -58,6 +68,47 @@ export class MenusService {
         });
     }
 
+
+    private  handleRemoveMenusError(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Invalid  Menu Id";
+            this.dialog.openDialog(errorMessage);
+             this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Ce menu n'existe pas ! ou il a été supprimé";
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        }else  if (error.status == HttpStatusCode.Conflict) {
+            errorMessage = "Le Menu  ne  peut  pas  être  directement supprimé ! , il est  lié  à  une  commande  !,il sera  supprimé  automatiquement  lors  de traitement  batch !"
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(window.location.reload);
+        }else if (error.status == HttpStatusCode.InternalServerError) {
+            errorMessage = "Une  erreur  serveur  est  survenue  !"
+            localStorage.clear()
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        else {
+            errorMessage = "Une erreur est survenue";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+
+        return throwError(() => new Error(errorMessage));
+    }
     private handleAddAndUpdateMenuErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
@@ -105,7 +156,6 @@ export class MenusService {
         }
         return throwError(() => new Error(errorMessage));
     }
-
 
     private handleGetMenuByUuidError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;

@@ -23,7 +23,8 @@ export class UpdateMenuComponent implements OnInit {
 
     private MENU_ADDED_SUCCESSFULLY = "Le Menu a été ajouté avec succès !"
     private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  prix  supérieur à 80€  pour ce  menu  !"
-    private ERROR_OCCURRED_WHILE_UPDATING_MENU = "Voulez-vous  enregistrer  ce  menu ?"
+    private  MENU_REMOVED_SUCCESSFULLY = "Le menu a été supprimé avec succès !"
+    private  WOULD_YOU_LIKE_TO_DELETE_THIS_MENU = "Voulez-vous vraiment supprimer ce menu ?"
     submitted = false;
     image!: File;
     menu: Menu = new Menu()
@@ -98,12 +99,12 @@ export class UpdateMenuComponent implements OnInit {
             mealsIds.push(meal.uuid);
         });
         const menu = new FormData();
-        menu.append("menuUuid", this.menu.uuid);
+        menu.append("uuid", this.menu.uuid);
         menu.append('label', this.updatedMenu.controls["label"].value);
         menu.append('description', this.updatedMenu.controls["description"].value);
         menu.append('price', this.updatedMenu.controls["price"].value);
         menu.append('quantity', this.updatedMenu.controls["quantity"].value);
-        menu.append("mealIDs", JSON.stringify(mealsIds));
+        menu.append("listOfMealsAsString", JSON.stringify(mealsIds));
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             menu.append('image', this.image);
 
@@ -112,6 +113,7 @@ export class UpdateMenuComponent implements OnInit {
         } else {
             menu.append('status', "0");
         }
+        console.log(menu.get("listOfMealsAsString"))
 
         this.menuService.updateMenu(menu).subscribe({
             next: (data) => {
@@ -178,12 +180,47 @@ export class UpdateMenuComponent implements OnInit {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
 
     goBack() {
         this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(r => window.location.reload());
+    }
+
+    deleteMenu () {
+        this.menuService.removeMenu(this.menu.uuid).subscribe({
+            next: (data) => {
+                const result = this.matDialog.open(SuccessfulDialogComponent, {
+                    data: {message: this.MENU_REMOVED_SUCCESSFULLY},
+                    width: '40%',
+                });
+                result.afterClosed().subscribe((result) => {
+                    this.goBack();
+                });
+                this.isLoading = false;
+            },
+            error: (error) => {
+                this.isLoading = false;
+            }
+        });
+    }
+
+    removeMenu() {
+        this.isLoading = true;
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_DELETE_THIS_MENU},
+            width: '40%',
+        });
+
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                this.deleteMenu();
+            } else {
+                this.isLoading = false;
+                return;
+            }
+        });
+
     }
 }

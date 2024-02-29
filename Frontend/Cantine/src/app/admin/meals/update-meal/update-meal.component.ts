@@ -186,7 +186,7 @@ export class UpdateMealComponent implements OnInit {
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                    this.router.navigate([IConstantsURL.ADMIN_MEALS_URL],).then(r => window.location.reload());
+                      this.goBack();
                 });
             },
             error: (error) => {
