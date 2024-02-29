@@ -127,7 +127,7 @@
                             </div>
                         </div>
 
-                        <div class="center">
+                        <div class="center addMeals-btn" >
                              <button   class="btn" (click)="onOpenListMealDialog()">Ajouter  La List Des plats</button>
                              <p *ngIf="(closedDialog && mealsContainMenu.length < 2) || ( submitted && mealsContainMenu.length < 2) " style="color: crimson"> Vous Devez choisir impérativement  au moins 2 plats pour former un menu  </p>
 
@@ -166,7 +166,7 @@
                                     <button  class="btn" (click)="onSubmit()"> Enregistrer</button>
                                 </div>
                             </div>
-                            <span><mat-icon>arrow_back</mat-icon></span>
+                            <span  (click)="goBack()"><mat-icon>arrow_back</mat-icon></span>
                         </div>
 
                     </form>
@@ -197,6 +197,9 @@
         justify-content: center;
         align-items: center;
         height: 15vh;
+    }
+    .addMeals-btn{
+        margin-top: 4vh;
     }
 </style>
 

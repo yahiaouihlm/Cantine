@@ -2,7 +2,6 @@
 <div class="container" *ngIf="(meals$ | async) as meal; else loadingTemplate">
     <div class="row">
         <div *ngFor="let meal of meals$ | async " class="col m4 s12">
-            <div>
                 <div class="card horizontal ">
                     <div class="center">
                         <img [src]="meal.image" height="190px" width="40%"/>
@@ -17,7 +16,7 @@
                         </div>
 
 
-                        <div *ngIf="!isInMealsList(meal)" class="center">
+                        <div *ngIf="!isInMealsList(meal)" class="addMeal-btn" >
                             <button [disabled]="meal.status == 0" class="btn" (click)="addToListToLinkMealToMenu(meal)">
                                 Ajouter Le Plat
                             </button>
@@ -30,19 +29,16 @@
                     </div>
                 </div>
             </div>
-        </div>
         <div class="validate-btn center">
             <div>
                 <button class="btn" (click)="validate()">Valider</button>
-                <p *ngIf="submitted && chosenMeals.length < 2  " style="color: crimson">Vous deverriez absolument
+                <p *ngIf="submitted && chosenMeals.length < 2  " style="color: crimson">Vous deveriez absolument
                     Choisir au moins deux Plats pour un menu </p>
 
             </div>
             <div class="btn" *ngIf="chosenMeals.length>0" (click)="resetMealsList()">reset</div>
         </div>
     </div>
-
-
 </div>
 
 <ng-template #loadingTemplate>
@@ -54,11 +50,17 @@
 </ng-template>
 
 <style>
+    h2 {
+        margin-top: 20px;
+    }
     .spinner-container {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 15vh;
+    }
+    .addMeal-btn{
+        margin-bottom: 10px;
     }
 </style>
 

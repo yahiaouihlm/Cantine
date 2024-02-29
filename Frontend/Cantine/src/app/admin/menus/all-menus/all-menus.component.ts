@@ -5,25 +5,25 @@ import {Menu} from "../../../sharedmodule/models/menu";
 import {Router} from "@angular/router";
 import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
+import {MenusService} from "../menus.service";
 
 @Component({
     selector: 'app-all-menus',
     templateUrl: './all-menus.component.html',
     styles: [],
-    providers: [CoreCantineService]
+    providers: [MenusService]
 })
 export class AllMenusComponent implements OnInit {
 
-    constructor(private coreCantineService: CoreCantineService, private router: Router) {
+    constructor(private menusService: MenusService, private router: Router) {
     }
 
     menus$: Observable<Menu[]> = of([]);
 
     ngOnInit(): void {
         if (Malfunctions.checkAdminConnectivity(this.router)) {
-            this.menus$ = this.coreCantineService.getAllMenus();
+            this.menus$ = this.menusService.getAllMenus();
         }
-
     }
 
 
