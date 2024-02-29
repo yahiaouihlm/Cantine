@@ -51,6 +51,7 @@ export class UpdateMealComponent implements OnInit {
             return;
         }
         const param = this.route.snapshot.paramMap.get('id');
+        console.log(param)
         if (param) {
             this.mealServiceService.getMealByUuId(param).subscribe(data => {
                 this.meal = data;

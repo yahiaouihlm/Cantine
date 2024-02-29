@@ -3,7 +3,7 @@ import {CoreCantineService} from "../../../core-cantine/core-cantine.service";
 import {Observable, of} from "rxjs";
 import {Menu} from "../../../sharedmodule/models/menu";
 import {Router} from "@angular/router";
-import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
+import { IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 import {MenusService} from "../menus.service";
 
@@ -28,8 +28,7 @@ export class AllMenusComponent implements OnInit {
 
 
     updateMenu(id: string) {
-        console.log(id)
-        this.router.navigate(['/admin/menus/update', id]);
+        this.router.navigate([IConstantsURL.ADMIN_UPDATE_MENU_URL, id]).then(r => window.location.reload());
     }
 
 

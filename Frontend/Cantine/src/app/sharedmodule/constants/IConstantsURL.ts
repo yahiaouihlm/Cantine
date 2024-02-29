@@ -10,7 +10,7 @@ export module IConstantsURL {
     /* Menus  URLS */
     export const ADMIN_MENUS_URL = "cantine/admin/menus";
     export  const ADMIN_NEW_MENU_URL = "cantine/admin/menus/new";
-
+    export const ADMIN_UPDATE_MENU_URL = "cantine/admin/menus/update";
 
     export const HOME_URL = "cantine/home";
     export const  FORGOT_PASSWORD_URL = "cantine/user/forgot-password";

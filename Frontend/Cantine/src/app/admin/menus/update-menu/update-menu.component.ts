@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {Meal} from "../../../sharedmodule/models/meal";
 import {ListMealsComponent} from "../list-meals/list-meals.component";
+import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 
 @Component({
     selector: 'app-update-menu',
@@ -42,10 +43,12 @@ export class UpdateMenuComponent implements OnInit {
 
     ngOnInit(): void {
 
+        if (!Malfunctions.checkAdminConnectivity(this.router)) {
+            return;
+        }
         const param = this.route.snapshot.paramMap.get('id');
         if (param) {
-            const id = +param;
-            this.menuService.getMenuById(id).subscribe(data => {
+            this.menuService.getMenuById(param).subscribe(data => {
                 this.menu = data;
                 this.matchFormsValue();
                 this.mealsContainMenu = this.menu.meals;
