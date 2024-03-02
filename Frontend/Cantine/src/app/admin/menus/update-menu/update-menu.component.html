@@ -165,8 +165,8 @@
 
                             <h3 *ngIf="mealsContainMenu.length >= 2"> Les plat choisis </h3>
                             <div *ngFor="let meal of  mealsContainMenu">
-                                <p> Label : {{meal.label}}  , Catégoey :  {{meal.category}} , prix
-                                    : {{meal.price}}  </p>
+                                <p> {{meal.label}} : {{meal.category}} :
+                                    : {{meal.price}} €    <span *ngIf="meal.status != 1" style="color: red"> ( indisponible | supprimé ) </span></p>
                             </div>
                             <button class="btn" (click)="onOpenListMealDialog()">Modifier La List Des plats</button>
                         </div>

@@ -83,7 +83,6 @@ export class MealsService {
     private handleDeleteMealErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
-        console.log(errorMessage);
         if (errorMessage == undefined) {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
@@ -125,7 +124,7 @@ export class MealsService {
     private handleAddAndUpdateMealErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
-
+        console.log(errorMessage);
         if (errorMessage == undefined) {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");

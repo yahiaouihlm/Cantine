@@ -1,6 +1,7 @@
 package fr.sqli.cantine.service.food.impl;
 
 import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
@@ -33,15 +34,17 @@ import java.util.Optional;
 public class MealService implements IMealService {
     private static final Logger LOG = LogManager.getLogger();
     private final IMealDao mealDao;
+    private final IMenuDao menuDao;
     private final String MEALS_IMAGES_URL;
     private final String MEALS_IMAGES_PATH;
     private final IImageService imageService;
 
 
     @Autowired
-    public MealService(Environment env, IMealDao mealDao, IImageService imageService) {
+    public MealService(Environment env, IMealDao mealDao, IImageService imageService ,  IMenuDao menuDao) {
         this.mealDao = mealDao;
         this.imageService = imageService;
+        this.menuDao = menuDao;
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
         this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.meals.path");
     }
@@ -116,6 +119,12 @@ public class MealService implements IMealService {
             // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
             meal.setStatus(2);
             this.mealDao.save(meal);
+
+         // make all  menu  have the  status 0  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+            for (var menu  : meal.getMenus()){
+                menu.setStatus(0);
+                this.menuDao.save(menu);
+            }
 
             throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S) PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
 
