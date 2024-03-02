@@ -49,7 +49,7 @@ export class OrderDashboardComponent implements OnInit {
             }
             this.order.studentId = +studentId;
             this.order.mealsId = this.order.meals.map(meal => meal.uuid);
-            this.order.menusId = this.order.menus.map(menu => menu.id);
+            this.order.menusId = this.order.menus.map(menu => menu.uuid);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
                     let dialogue =  this.matDialog.open(SuccessfulDialogComponent, {

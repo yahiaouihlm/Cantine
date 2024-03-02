@@ -43,4 +43,16 @@ export class MainAdminComponent implements OnInit {
         localStorage.clear();
         this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
     }
+
+    goToMeals() {
+        this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(window.location.reload);
+    }
+
+    goToMenus() {
+        this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(window.location.reload);
+    }
+
+    goToHome() {
+        this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+    }
 }

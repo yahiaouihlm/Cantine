@@ -44,7 +44,7 @@
 
         <mat-divider></mat-divider>
 
-        <button class="menu-button" mat-button>
+        <button class="menu-button">
             <mat-icon>person</mat-icon>
             <span>Profile</span>
         </button>
@@ -62,12 +62,16 @@
 
 
         <mat-divider></mat-divider>
+        <button class="menu-button" mat-button (click)="goToHome()">
+            <mat-icon> home</mat-icon>
+            <span>Home</span>
+        </button>
 
-        <button class="menu-button" mat-button>
+        <button class="menu-button" mat-button (click)="goToMenus()">
             <mat-icon> restaurant_menu</mat-icon>
             <span>Menus</span>
         </button>
-        <button class="menu-button" mat-button>
+        <button class="menu-button" mat-button (click)="goToMeals()">
             <mat-icon>lunch_dining</mat-icon>
             <span>Plats</span>
         </button>

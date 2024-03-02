@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static fr.sqli.cantine.controller.food.IMenuController.MENUS_BASIC_URL_ADMIN;
 
@@ -63,7 +64,10 @@ public class MenuController implements IMenuController {
            return  ResponseEntity.ok(this.menuService.getMenuByUuId(uuidMenu));
     }
 
-
+    @Override
+    public ResponseEntity<List<MenuDtOut>> getAllMenu() {
+        return ResponseEntity.ok().body(this.menuService.getAllMenus());
+    }
 
 
 }

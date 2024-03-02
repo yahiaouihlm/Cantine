@@ -51,6 +51,7 @@ export class UpdateMealComponent implements OnInit {
             return;
         }
         const param = this.route.snapshot.paramMap.get('id');
+        console.log(param)
         if (param) {
             this.mealServiceService.getMealByUuId(param).subscribe(data => {
                 this.meal = data;
@@ -185,7 +186,7 @@ export class UpdateMealComponent implements OnInit {
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                    this.router.navigate([IConstantsURL.ADMIN_MEALS_URL],).then(r => window.location.reload());
+                      this.goBack();
                 });
             },
             error: (error) => {
