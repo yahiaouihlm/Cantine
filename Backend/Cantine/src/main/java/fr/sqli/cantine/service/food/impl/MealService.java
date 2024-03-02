@@ -73,7 +73,6 @@ public class MealService implements IMealService {
         meal.setDescription(mealDtoIn.getDescription().trim());
         meal.setPrice(mealDtoIn.getPrice());
         meal.setQuantity(mealDtoIn.getQuantity());
-        meal.setStatus(mealDtoIn.getStatus());
         meal.setMealType(mealDtoIn.getMealTypeEnum());
 
         //check  if the  meal  is  already  present  in  the  database despite  the  update
@@ -94,6 +93,15 @@ public class MealService implements IMealService {
             meal.getImage().setImagename(newImageName);
 
         }
+        meal.setStatus(mealDtoIn.getStatus());
+        if (mealDtoIn.getStatus() == 0) {
+            for (var menu  : meal.getMenus()){
+                menu.setStatus(0);
+                this.menuDao.save(menu);
+            }
+        }
+
+
         return this.mealDao.save(meal);
     }
 
