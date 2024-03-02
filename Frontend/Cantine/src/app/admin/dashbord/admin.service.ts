@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
@@ -9,6 +9,8 @@ import {Adminfunction} from "../../sharedmodule/models/adminfunction";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
 import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+import Malfunctions from "../../sharedmodule/functions/malfunctions";
+import {User} from "../../sharedmodule/models/user";
 
 @Injectable()
 export class AdminService {
@@ -16,6 +18,7 @@ export class AdminService {
 
     private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin';
 
+    private GET_ADMIN_BY_ID = this.BASIC_ENDPOINT + "/getAdmin"
     private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/register';
     private GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
 
@@ -33,7 +36,9 @@ export class AdminService {
     }
 
     getAdminFunctionS() {
-        return this.httpClient.get<Adminfunction[]>(this.GET_ADMIN_FUNCTION_S);
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get<Adminfunction[]>(this.GET_ADMIN_FUNCTION_S ,{headers : headers});
     }
 
 
@@ -71,24 +76,40 @@ export class AdminService {
     }
 
 
-    private openDialog(message: string, httpError: HttpStatusCode): void {
-        const result = this.matDialog.open(ExceptionDialogComponent, {
-            data: {message: message},
-            width: '40%',
-        });
-
-        result.afterClosed().subscribe((confirmed: boolean) => {
-            if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError == HttpStatusCode.Conflict || httpError == HttpStatusCode.NotFound) {
-                //  this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
-                console.log("je suis  la  dans  le  if  ")
-            } else {
-                console.log("je suis  la ")
-                /* TODO  remove THE  Token  */
-                //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
-            }
-
-        });
-
+    getAdminById(adminUuid: string) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        const params = new HttpParams().set('adminUuid', adminUuid);
+        return this.httpClient.get <User>(this.GET_ADMIN_BY_ID, {
+            headers: headers,
+            params: params
+        }).pipe(
+            catchError((error) => this.handleErrorOfGetAdminById(error))
+        );
     }
+
+
+    private handleErrorOfGetAdminById(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+
+        if  (errorMessage == undefined){
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+
+        if (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+
+        return throwError(() => new Error(errorMessage));
+    }
+
 
 }

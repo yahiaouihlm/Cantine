@@ -4,7 +4,7 @@
 
         <form [formGroup]="adminUpdated" class="test" >
             <div class="wallet center">
-                <img id="profile-picture" src="{{admin.image}}" >
+                <img id="profile-picture" src="{{admin.image}}"   alt="profile  picture"/>
                 <h1>{{admin.firstname}}   {{admin.lastname}}</h1>
 
             </div>
@@ -60,7 +60,7 @@
                          type="email"
                          id="email"
 
-                />
+                  />
                 <!--     <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
                          <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
                          <div *ngIf="f['email'].errors['maxlength']" class="center">
@@ -155,8 +155,8 @@
             <div class="form-group ">
                 <label for="image"> Choisissez une image de profile </label>
 
-                <input class="input-group-prepend"
-                       [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
+                <input class="input-group-prepend form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f['image'].errors }"
                        formControlName="image"
                        placeholder=" IMAGE  DU  Profil "
                        type="file"
@@ -174,8 +174,8 @@
         <div class=" center btn"  *ngIf="!isLoading ; else loadingTemplate">
             <div class="update-btn">
                 <mat-icon>done_outline</mat-icon>
-              <!--  <span *ngIf="!touched" (click)="modify()"> Modifier</span>
-                <span *ngIf="touched" (click)="onSubmit()">   Valider </span>-->
+                <span > Modifier</span>
+                <span >   Valider </span>
             </div>
 
             <div class="reset btn " >
@@ -186,13 +186,9 @@
     </div>
 </div>
 
-<div class="btn">
-    changer le mot  de passe
-</div>
 
 
 <style>
-
 
     #profile-picture {
         width: 20%;

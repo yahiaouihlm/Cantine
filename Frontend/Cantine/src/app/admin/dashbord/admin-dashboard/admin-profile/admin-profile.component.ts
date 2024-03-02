@@ -4,20 +4,20 @@ import Validation from "../../../../sharedmodule/functions/validation";
 import {Observable, of} from "rxjs";
 import {Adminfunction} from "../../../../sharedmodule/models/adminfunction";
 import {AdminService} from "../../admin.service";
-import {GlobalAdminService} from "../../../global-admin.service";
 import {User} from "../../../../sharedmodule/models/user";
 import Malfunctions from "../../../../sharedmodule/functions/malfunctions";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-admin-profile',
     templateUrl: './admin-profile.component.html',
     styles: [],
-    providers: [AdminService, GlobalAdminService]
+    providers: [AdminService]
 })
 export class AdminProfileComponent implements OnInit {
 
     submitted = false;
-    admin!: User;
+    admin = new  User;
     adminUpdated: FormGroup = new FormGroup({
         firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
         lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
@@ -33,15 +33,18 @@ export class AdminProfileComponent implements OnInit {
     isLoading = false;
     adminfunction$: Observable<Adminfunction[]> = of([]);
 
-    constructor(private adminService: AdminService, private globalAdminService: GlobalAdminService) {
+    constructor(private adminService: AdminService,  private router: Router) {
     }
 
 
     ngOnInit(): void {
-        this.adminUpdated.disable();
-        let idAdmin = Malfunctions.getUserIdFromLocalStorage();
+        this.adminUpdated.controls['email'].disable();
+        if (!Malfunctions.checkAdminConnectivity(this.router)) {
+            return;
+        }
+        let adminUuid = Malfunctions.getUserIdFromLocalStorage();
         this.adminfunction$ = this.adminService.getAdminFunctionS();
-        this.globalAdminService.getAdminById(idAdmin).subscribe((admin) => {
+        this.adminService.getAdminById(adminUuid).subscribe((admin) => {
             this.admin = admin;
             this.matchFormsValue();
         });
@@ -66,8 +69,7 @@ export class AdminProfileComponent implements OnInit {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
     get f(): { [key: string]: AbstractControl } {

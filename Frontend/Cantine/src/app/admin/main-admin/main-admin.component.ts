@@ -1,21 +1,21 @@
 import {Component, OnInit} from '@angular/core';
 import Malfunctions from "../../sharedmodule/functions/malfunctions";
-import {GlobalAdminService} from "../global-admin.service";
 import {User} from "../../sharedmodule/models/user";
 import {Router} from "@angular/router";
 import { IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+import {AdminService} from "../dashbord/admin.service";
 
 @Component({
     selector: 'app-main-admin',
     templateUrl: './main-admin.component.html',
     styleUrls: ["../../../assets/styles/main.component.scss"],
-    providers: [GlobalAdminService]
+    providers: [AdminService]
 })
 export class MainAdminComponent implements OnInit {
     isConnected = false;
 
      admin = new User();
-    constructor(private router: Router , private globalAdminService: GlobalAdminService) {
+    constructor(private router: Router , private adminService: AdminService) {
     }
 
     ngOnInit(): void {
@@ -25,7 +25,7 @@ export class MainAdminComponent implements OnInit {
             this.logout();
             return
         }
-      this.globalAdminService.getAdminById(adminId).subscribe((admin) => {
+      this.adminService.getAdminById(adminId).subscribe((admin) => {
             this.admin = admin;
             this.isConnected = true;
         });
@@ -54,5 +54,9 @@ export class MainAdminComponent implements OnInit {
 
     goToHome() {
         this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+    }
+
+    goToMyProfile() {
+        this.router.navigate([IConstantsURL.ADMIN_PROFILE_URL]).then(window.location.reload);
     }
 }
