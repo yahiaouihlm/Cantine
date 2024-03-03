@@ -2,9 +2,9 @@
     <div class="row">
 
 
-        <form [formGroup]="adminUpdated" class="test" >
+        <form [formGroup]="adminUpdated" class="admin-form">
             <div class="wallet center">
-                <img id="profile-picture" src="{{admin.image}}"   alt="profile  picture"/>
+                <img id="profile-picture" src="{{admin.image}}" alt="profile  picture"/>
                 <h1>{{admin.firstname}}   {{admin.lastname}}</h1>
 
             </div>
@@ -54,13 +54,13 @@
             <!---------------------- Email --------------------------->
             <div class="form-group  input-card   col">
                 <label for="email"> Email : </label>
-                <input   [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
-                         formControlName="email"
-                         placeholder="  Votre Email "
-                         type="email"
-                         id="email"
+                <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                       formControlName="email"
+                       placeholder="  Votre Email "
+                       type="email"
+                       id="email"
 
-                  />
+                />
                 <!--     <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
                          <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
                          <div *ngIf="f['email'].errors['maxlength']" class="center">
@@ -170,65 +170,29 @@
 
         </form>
 
+    </div>
+</div>
+<div class="container">
+    <div class="row">
 
-        <div class=" center btn"  *ngIf="!isLoading ; else loadingTemplate">
-            <div class="update-btn">
-                <mat-icon>done_outline</mat-icon>
-                <span > Modifier</span>
-                <span >   Valider </span>
+        <div class="col-5"><span (click)="backToHome()"><mat-icon>arrow_back</mat-icon></span></div>
+
+        <div class="col-7">
+            <div class="btns" *ngIf="!isLoading else loadingTemplate">
+                <div class="btn-save">
+                    <button *ngIf="this.adminUpdated.disabled" (click)="onUpdate()" class="btn"> Modifier</button>
+                    <button *ngIf="!this.adminUpdated.disabled" (click)="onSubmit()" class="btn"> Enregistrer</button>
+                </div>
+
             </div>
-
-            <div class="reset btn " >
-                Annuler
-            </div>
-
         </div>
+
     </div>
 </div>
 
-
-
-<style>
-
-    #profile-picture {
-        width: 20%;
-        height: auto;
-        border-radius: 100%;
-    }
-
-
-    .test {
-        padding: 5px;
-        margin-top: 30px;
-        border: 1px solid rgba(50, 47, 47, 0.64);
-
-    }
-
-
-    img {
-        width: 25%;
-    }
-
-
-    .input-card {
-        width: 50%;
-    }
-
-
-</style>
-
-<ng-template #loadingTemplate >
+<ng-template #loadingTemplate>
     <div class="spinner-container">
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
 
 </ng-template>
-
-<style>
-    .spinner-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 15vh;
-    }
-</style>

@@ -7,11 +7,12 @@ import {AdminService} from "../../admin.service";
 import {User} from "../../../../sharedmodule/models/user";
 import Malfunctions from "../../../../sharedmodule/functions/malfunctions";
 import {Router} from "@angular/router";
+import {IConstantsURL} from "../../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-admin-profile',
     templateUrl: './admin-profile.component.html',
-    styles: [],
+    styleUrls: ['../../../../../assets/styles/admin-profile.component.scss'],
     providers: [AdminService]
 })
 export class AdminProfileComponent implements OnInit {
@@ -39,6 +40,7 @@ export class AdminProfileComponent implements OnInit {
 
     ngOnInit(): void {
         this.adminUpdated.controls['email'].disable();
+        this.adminUpdated.disable();
         if (!Malfunctions.checkAdminConnectivity(this.router)) {
             return;
         }
@@ -77,4 +79,12 @@ export class AdminProfileComponent implements OnInit {
     }
 
 
+    onUpdate() {
+        this.adminUpdated.enable();
+        this.adminUpdated.controls['email'].disable();
+    }
+
+    backToHome() {
+        this.router.navigate(([IConstantsURL.ADMIN_HOME_URL])).then(r => window.location.reload());
+    }
 }
