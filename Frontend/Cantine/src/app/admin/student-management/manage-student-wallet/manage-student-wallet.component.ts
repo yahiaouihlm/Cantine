@@ -66,7 +66,7 @@ export class ManageStudentWalletComponent implements OnInit {
     addAmount() {
         let amountToAdd = 0;
         let dialogRef = this.matDialog.open(EditStudentWalletDialogComponent, {
-            data: {message: "Le Montant à Ajouter", userid: this.user.id},
+            data: {message: "Le Montant à Ajouter", userid: this.user.uuid},
             width: '47%',
             height: '30%'
         });
@@ -82,7 +82,7 @@ export class ManageStudentWalletComponent implements OnInit {
     }
 
     sendStudentAmount(amountToAdd: number) {
-        this.studentsManagementService.sendStudentWallet(this.user.id, amountToAdd).subscribe({
+        this.studentsManagementService.sendStudentWallet(this.user.uuid, amountToAdd).subscribe({
             next: (response) => {
                 this.isLoadingPage = false
                 this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
@@ -107,7 +107,7 @@ export class ManageStudentWalletComponent implements OnInit {
     }
 
     sendStudentConfirmationCodeReq(amountToAdd: number, validationCode: number) {
-        this.studentsManagementService.sendStudentCode(this.user.id, amountToAdd, validationCode).subscribe({
+        this.studentsManagementService.sendStudentCode(this.user.uuid, amountToAdd, validationCode).subscribe({
             next: (response) => {
                 this.showConfirmationDialog();
                 this.isLoadingPage = false //  si  le code éte correcte

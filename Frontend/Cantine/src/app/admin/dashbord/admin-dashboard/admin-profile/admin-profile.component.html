@@ -3,7 +3,7 @@
 
 
         <form [formGroup]="adminUpdated" class="admin-form">
-            <div class="wallet center">
+            <div class="center">
                 <img id="profile-picture" src="{{admin.image}}" alt="profile  picture"/>
                 <h1>{{admin.firstname}}   {{admin.lastname}}</h1>
 
@@ -85,6 +85,28 @@
                 <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
                     <div *ngIf="f['birthDate'].errors['required']" class="center"> La date de naissance est requise
                     </div>
+
+                </div>
+            </div>
+            <!---------------------- Address --------------------------->
+            <div class="form-group ">
+                <label for="address"> Adresse : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['address'].errors }" class="form-control"
+                       formControlName="address"
+                       placeholder="L'adresse "
+                       type="text"
+                       id="address"
+                />
+                <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                    <div *ngIf="f['address'].errors['required']" class="center"> le champs est obligatoire</div>
+                    <div *ngIf="f['address'].errors['maxlength']" class="center">
+                        L'adresse ne doit pas dépasser 3000 charctéres
+                    </div>
+
+                    <div *ngIf="f['address'].errors['minlength']" class="center">
+                        L'adresse doit avoir au minimum de 10 charctéres
+                    </div>
+
 
                 </div>
             </div>
@@ -172,13 +194,13 @@
 
     </div>
 </div>
-<div class="container">
+<div class="container" *ngIf="!isLoading else loadingTemplate">
     <div class="row">
 
         <div class="col-5"><span (click)="backToHome()"><mat-icon>arrow_back</mat-icon></span></div>
 
         <div class="col-7">
-            <div class="btns" *ngIf="!isLoading else loadingTemplate">
+            <div class="btns">
                 <div class="btn-save">
                     <button *ngIf="this.adminUpdated.disabled" (click)="onUpdate()" class="btn"> Modifier</button>
                     <button *ngIf="!this.adminUpdated.disabled" (click)="onSubmit()" class="btn"> Enregistrer</button>
