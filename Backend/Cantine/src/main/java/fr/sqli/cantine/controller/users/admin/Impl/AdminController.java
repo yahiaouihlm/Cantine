@@ -40,7 +40,6 @@ public class AdminController implements IAdminController {
     }
 
     @Override
-    @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateAdminInfo(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException {
         this.adminService.updateAdminInfo(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_INFO_UPDATED_SUCCESSFULLY));

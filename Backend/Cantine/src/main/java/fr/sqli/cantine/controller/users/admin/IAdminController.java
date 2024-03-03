@@ -40,7 +40,7 @@ public interface IAdminController {
 
 
 
-    @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
+    @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     ResponseEntity<ResponseDtout> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException;
 
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)

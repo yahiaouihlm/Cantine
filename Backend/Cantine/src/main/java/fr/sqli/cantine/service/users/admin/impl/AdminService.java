@@ -194,7 +194,7 @@ public class AdminService implements IAdminService {
         var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
 
         if (functionAdminEntity.isEmpty()) {
-            AdminService.LOG.error("function  is  not  valid");
+            AdminService.LOG.error("FUNCTION  OF ADMIN  IS  NOT  FOUND  IN  updateAdminInfo  WITH  FUNCTION = {}", functionAdmin);
             throw new AdminFunctionNotFoundException("YOUR FUNCTIONALITY IS NOT FOUND");
         }
 
@@ -218,7 +218,7 @@ public class AdminService implements IAdminService {
             // check  if the image  to  delete  is  the  default image  or  not
             if (adminEntity.getImage().getImagename().equals(DEFAULT_ADMIN_IMAGE_NAME)) {
                 imageName = this.imageService.uploadImage(image, ADMIN_IMAGE_PATH);
-                AdminService.LOG.info("image  is  uploaded");
+                AdminService.LOG.info("IMAGE  UPLOADED  SUCCESSFULLY  WITH  NAME = {}", imageName);
             } else {
                 var oldImageName = adminEntity.getImage().getImagename();
                 imageName = this.imageService.updateImage(oldImageName, image, ADMIN_IMAGE_PATH);
