@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
@@ -9,6 +9,8 @@ import {Adminfunction} from "../../sharedmodule/models/adminfunction";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
 import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+import Malfunctions from "../../sharedmodule/functions/malfunctions";
+import {User} from "../../sharedmodule/models/user";
 
 @Injectable()
 export class AdminService {
@@ -16,6 +18,8 @@ export class AdminService {
 
     private BASIC_ENDPOINT = "http://localhost:8080/cantine/" + 'admin';
 
+    private UPDATE_ADMIN_URL = this.BASIC_ENDPOINT + '/updateAdmin/info';
+    private GET_ADMIN_BY_ID = this.BASIC_ENDPOINT + "/getAdmin"
     private ADMIN_SIGN_UP_URL = this.BASIC_ENDPOINT + '/register';
     private GET_ADMIN_FUNCTION_S = this.BASIC_ENDPOINT + '/getAllAdminFunctions';
 
@@ -25,6 +29,13 @@ export class AdminService {
 
     private dialog = new DialogErrors(this.matDialog);
 
+    updateAdmin(admin: FormData) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.post<NormalResponse>(this.UPDATE_ADMIN_URL, admin, {headers: headers}).pipe(
+            catchError((error) => this.handleUpdateAdminErrors(error))
+        );
+    }
 
     signUpAdmin(admin: FormData) {
         return this.httpClient.post<NormalResponse>(this.ADMIN_SIGN_UP_URL, admin).pipe(
@@ -33,9 +44,46 @@ export class AdminService {
     }
 
     getAdminFunctionS() {
-        return this.httpClient.get<Adminfunction[]>(this.GET_ADMIN_FUNCTION_S);
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get<Adminfunction[]>(this.GET_ADMIN_FUNCTION_S, {headers: headers});
     }
 
+    getAdminById(adminUuid: string) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        const params = new HttpParams().set('adminUuid', adminUuid);
+        return this.httpClient.get <User>(this.GET_ADMIN_BY_ID, {
+            headers: headers,
+            params: params
+        }).pipe(
+            catchError((error) => this.handleErrorOfGetAdminById(error))
+        );
+    }
+
+    private handleErrorOfGetAdminById(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+
+        if (errorMessage == undefined) {
+            errorMessage = "Une erreur s'est produite Veuillez réessayer plus tard";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            throwError(() => new Error(errorMessage));
+        }
+
+        if (error.status == HttpStatusCode.BadRequest || error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+
+        return throwError(() => new Error(errorMessage));
+    }
 
     private handleSignUpAdminErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
@@ -56,7 +104,7 @@ export class AdminService {
         } else if (error.status == HttpStatusCode.NotAcceptable) {
             dialog = this.dialog.openDialog(" Image  invalide Il ne  pas etre  pris en  charge");
 
-        } else  if (error.status == HttpStatusCode.InternalServerError) {
+        } else if (error.status == HttpStatusCode.InternalServerError) {
             dialog = this.dialog.openDialog("Une erreur serveur est survenue lors de l'ajout de l'administrateur");
         } else {
             dialog = this.dialog.openDialog("Une erreur est inconnue survenue lors de l'ajout de l'administrateur");
@@ -64,31 +112,46 @@ export class AdminService {
 
         /** TODO :    REVOIR  CECI */
         dialog.afterClosed().subscribe((confirmed: boolean) => {
-           // this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
+            // this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
         });
         return throwError(() => new Error(errorMessage));
 
     }
 
 
-    private openDialog(message: string, httpError: HttpStatusCode): void {
-        const result = this.matDialog.open(ExceptionDialogComponent, {
-            data: {message: message},
-            width: '40%',
-        });
-
-        result.afterClosed().subscribe((confirmed: boolean) => {
-            if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError == HttpStatusCode.Conflict || httpError == HttpStatusCode.NotFound) {
-                //  this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
-                console.log("je suis  la  dans  le  if  ")
-            } else {
-                console.log("je suis  la ")
-                /* TODO  remove THE  Token  */
-                //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
-            }
-
-        });
+    private handleUpdateAdminErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            errorMessage = "Une erreur s'est produite Veuillez réessayer plus tard";
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            throwError(() => new Error(errorMessage));
+        }
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Certains champs sont invalides";
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "utilisateur  introuvable ou  bien  Votre  fonction au  sien de  Ecole  aston    est introuvable";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.InternalServerError) {
+            errorMessage = "Une erreur serveur est survenue lors de la modification de l'administrateur";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        return throwError(() => new Error(errorMessage));
 
     }
-
 }

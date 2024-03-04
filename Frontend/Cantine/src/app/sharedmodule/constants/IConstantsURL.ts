@@ -1,5 +1,6 @@
 export module IConstantsURL {
 
+    export const ADMIN_PROFILE_URL = "cantine/admin/dashboard/profile";
     /*****************ADMIN URLS******************/
     export const ADMIN_HOME_URL = "cantine/admin/home";
     export const ADMIN_STUDENTS_URL = "cantine/admin/students";
