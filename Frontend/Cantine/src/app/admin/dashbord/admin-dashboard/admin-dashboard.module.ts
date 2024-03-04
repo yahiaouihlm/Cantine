@@ -7,8 +7,9 @@ import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 
 
 const  routes = [
-    {path: 'signUp', component: SignUpComponent},
-    {path: 'profile', component: AdminProfileComponent},
+  {path: 'signUp', component: SignUpComponent},
+  {path: 'profile', component: AdminProfileComponent},
+  {path: '' , component: SignUpComponent}
 
 ];
 
