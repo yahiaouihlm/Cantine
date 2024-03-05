@@ -59,6 +59,21 @@ public class AdminWorksService implements IAdminFunctionService {
         this.studentClassDao.save(studentClassEntity);
     }
 
+    @Override
+    public StudentDtout getStudentByEmail(String email) throws InvalidUserInformationException, UserNotFoundException {
+         if (email  ==  null || email.isEmpty() || email.isBlank() || email.length() < 5){
+             AdminWorksService.LOG.error("INVALID  EMAIL  IN  getStudentByEmail ADMIN WORK SERVICE ");
+            throw new InvalidUserInformationException("INVALID  EMAIL");
+         }
+         var  student   =  this.studentDao.findByEmail(email).orElseThrow(
+                    () -> {
+                        AdminWorksService.LOG.error("STUDENT  WITH  EMAIL =  " + email + "  DOEST NOT EXISTS");
+                        return new UserNotFoundException("STUDENT NOT  FOUND");
+                    }
+         );
+        return  new StudentDtout(student, this.STUDENT_IMAGE_URL);
+    }
+
 
     @Override
     public void addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException {
@@ -140,15 +155,14 @@ public class AdminWorksService implements IAdminFunctionService {
         this.confirmationAddingAmountToStudent.sendConfirmationAmount(student.get(), amount, confirmationToken);
     }
 
-    @Override
-    public StudentDtout getStudentById(Integer studentID) throws InvalidUserInformationException, UserNotFoundException {
-        if (studentID == null) {
-            AdminWorksService.LOG.error("studentID IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
+    public StudentDtout getStudentByUuid(String  studentUuid) throws InvalidUserInformationException, UserNotFoundException {
+        if (studentUuid == null || studentUuid.isEmpty()  || studentUuid.isBlank() ||  studentUuid.length() < 20) {
+            AdminWorksService.LOG.error("studentUuid IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID ");
         }
-        var student = this.studentDao.findById(studentID);
+        var student = this.studentDao.findByUuid(studentUuid);
         if (student.isEmpty()) {
-            AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentID + "  DOEST NOT EXISTS");
+            AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentUuid + "  DOEST NOT EXISTS");
             throw new UserNotFoundException("STUDENT NOT  FOUND");
         }
 

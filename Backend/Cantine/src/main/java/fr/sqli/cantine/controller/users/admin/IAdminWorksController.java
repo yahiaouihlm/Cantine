@@ -16,9 +16,9 @@ public interface IAdminWorksController {
     String ADMIN_DASH_BOARD_BASIC_WORK_URL = "/cantine/admin/adminDashboard/works";
     String SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT = "/addStudentAmount";
 
-    String      VALIDATE_STUDENT_AMOUNT_STUDENT =  "/validationAmount";
+    String  VALIDATE_STUDENT_AMOUNT_STUDENT =  "/validationAmount";
     String GET_STUDENTS = "/getStudents";
-    String GET_STUDENT_BY_ID = "/getStudent";
+    String GET_STUDENT = "/getStudent";
     String ADD_STUDENT_CLASS_ENDPOINT = "/addStudentClass";
     String UPDATE_STUDENT_CLASS_ENDPOINT = "/updateStudentClass";
 
@@ -37,8 +37,8 @@ public interface IAdminWorksController {
     @PutMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
     ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentId") Integer studentId, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
 
-    @GetMapping(GET_STUDENT_BY_ID)
-    ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentId") Integer studentId) throws InvalidUserInformationException, UserNotFoundException;
+/*    @GetMapping(GET_STUDENT_BY_ID)
+    ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;*/
 
     @GetMapping(GET_STUDENTS)
     ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String firstname, @RequestParam String Lastname, @RequestParam String birthdateAsString) throws InvalidUserInformationException;
@@ -46,4 +46,7 @@ public interface IAdminWorksController {
     ResponseEntity<String> updateStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
 
     ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
+
+    @GetMapping(GET_STUDENT)
+    ResponseEntity <StudentDtout> getStudentByEmail(@RequestParam("email") String email) throws UserNotFoundException, InvalidUserInformationException;
 }

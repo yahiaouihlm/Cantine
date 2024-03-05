@@ -38,10 +38,12 @@ public class AdminWorksController  implements  IAdminWorksController {
         return ResponseEntity.ok(new ResponseDtout(SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION));
     }
 
+/*
     @Override
-    public ResponseEntity<StudentDtout> getStudentById(Integer studentId) throws InvalidUserInformationException, UserNotFoundException {
-        return  ResponseEntity.ok(this.adminWorksService.getStudentById(studentId));
+    public ResponseEntity<StudentDtout> getStudentById(String  studentUuid) throws InvalidUserInformationException, UserNotFoundException {
+        return  ResponseEntity.ok(this.adminWorksService.getStudentByUuid(studentUuid));
     }
+*/
 
     @Override
     public ResponseEntity<List<StudentDtout>> getStudents( String  firstname , String  lastname  ,  String  birthdateAsString) throws InvalidUserInformationException {
@@ -55,6 +57,11 @@ public class AdminWorksController  implements  IAdminWorksController {
     public ResponseEntity<String> addStudentClass(@RequestBody StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException {
         this.adminWorksService.addStudentClass(studentClassDtoIn);
         return ResponseEntity.ok(STUDENT_CLASS_ADDED_SUCCESSFULLY);
+    }
+
+    @Override
+    public ResponseEntity<StudentDtout> getStudentByEmail(String email) throws UserNotFoundException, InvalidUserInformationException {
+        return ResponseEntity.ok(this.adminWorksService.getStudentByEmail(email));
     }
 
 
