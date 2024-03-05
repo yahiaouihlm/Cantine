@@ -4,23 +4,24 @@ import {Observable, of} from "rxjs";
 import {User} from "../../../sharedmodule/models/user";
 import {StudentsManagementService} from "../students-management.service";
 import {NavigationExtras, Router} from "@angular/router";
+import Validation from "../../../sharedmodule/functions/validation";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
   selector: 'app-students-handler',
   templateUrl:'students-handler.component.html' ,
-  styles: [],
+  styleUrls: ['../../../../assets/styles/students-handler.component.scss'],
   providers : [StudentsManagementService]
 })
 export class StudentsHandlerComponent {
-  students$  :  Observable <User[]>  =  of([]);
+   student  =   new User();
   submitted =  false ;
 
   isLoaded = false ;
 
+  found =  false ;
   studentSeeked: FormGroup = new FormGroup({
-    firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
-    lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
-    birthDate: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
   });
 
   constructor(private studentsManagementService :  StudentsManagementService,  private router : Router) {
@@ -33,16 +34,21 @@ export class StudentsHandlerComponent {
       return;
     }
     this.isLoaded =  true ;
-    this.getStudents();
+    this.getStudent();
   }
 
-  getStudents() {
-    let user  =   new User();
-    user.firstname = this.studentSeeked.value.firstName ;
-    user.lastname=this.studentSeeked.value.lastName ;
-    user.birthdate =  this.studentSeeked.value.birthDate;
-    this.students$ = this.studentsManagementService.getStudents(user)
-    this.isLoaded =  false ;
+  getStudent() {
+    this.studentsManagementService.getStudentByEmail(this.studentSeeked.value.email).subscribe({
+        next: (student) => {
+            this.student = student;
+            this.isLoaded =  false ;
+            this.found =  true ;
+            },
+        error: (error) => {
+            this.isLoaded =  false ;
+        }
+    })
+
 
   }
 
@@ -51,7 +57,7 @@ export class StudentsHandlerComponent {
       queryParams: { studentId: studentId }
     };
 
-    this.router.navigate(["cantine/admin/students/profile"],  navigationExtras);
+    this.router.navigate([IConstantsURL.ADMIN_STUDENT_PROFILE_URL],  navigationExtras).then(r => window.location.reload());
   }
 
   get f(): { [key: string]: AbstractControl } {

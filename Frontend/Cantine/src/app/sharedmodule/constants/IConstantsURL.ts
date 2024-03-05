@@ -8,6 +8,7 @@ export module IConstantsURL {
     export const ADMIN_MEALS_URL = "cantine/admin/meals";
     export const ADMIN_NEW_MEAL_URL = "cantine/admin/meals/new";
     export const ADMIN_UPDATE_MEAL_URL = "cantine/admin/meals/update";
+    export const ADMIN_STUDENT_PROFILE_URL = "cantine/admin/student/profile";
     /* Menus  URLS */
     export const ADMIN_MENUS_URL = "cantine/admin/menus";
     export  const ADMIN_NEW_MENU_URL = "cantine/admin/menus/new";
