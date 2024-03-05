@@ -74,4 +74,18 @@ public class UserEmailSender {
 
     }
 
+    public  void sendNotificationTOStudentWhenEmailHasBeenChanged(UserEntity student, String cantineLink) throws MessagingException {
+        Context context = new Context();
+        context.setVariable("firstname", student.getFirstname());
+        context.setVariable("lastname", student.getLastname());
+        context.setVariable("cantineLink", cantineLink);
+
+        context.setVariable("sqliImage", this.environment.getProperty("sqli.cantine.confirmation.email.sqli.image.url"));
+        context.setVariable("cantineLogo", this.environment.getProperty("sqli.cantine.confirmation.email.cantiere.logo.url"));
+        context.setVariable("astonLogo", this.environment.getProperty("sqli.cantine.confirmation.email.aston.logo.url"));
+
+        String body = templateEngine.process("student-email-updated", context);
+        this.emailSenderService.send(student.getEmail(), "Votre Email à été changer", body);
+    }
+
 }

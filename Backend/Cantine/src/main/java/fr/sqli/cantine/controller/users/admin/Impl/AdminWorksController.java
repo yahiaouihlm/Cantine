@@ -27,6 +27,12 @@ public class AdminWorksController  implements  IAdminWorksController {
 
 
     @Override
+    public ResponseEntity<ResponseDtout> updateStudentEmail(String studentUuid, String newEmail) throws UserNotFoundException, MessagingException, ExistingUserException, InvalidUserInformationException {
+        this.adminWorksService.updateStudentEmail(studentUuid , newEmail);
+        return  ResponseEntity.ok(new ResponseDtout(STUDENT_EMAIL_UPDATED_SUCCESSFULLY));
+    }
+
+    @Override
     public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException {
          this.adminWorksService.addAmountToStudentAccountCodeValidation(studentId ,  validationCode , amount);
         return  ResponseEntity.ok(new ResponseDtout(STUDENT_VALIDATE_STUDENT_AMOUNT));
@@ -38,12 +44,10 @@ public class AdminWorksController  implements  IAdminWorksController {
         return ResponseEntity.ok(new ResponseDtout(SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION));
     }
 
-/*
     @Override
     public ResponseEntity<StudentDtout> getStudentById(String  studentUuid) throws InvalidUserInformationException, UserNotFoundException {
         return  ResponseEntity.ok(this.adminWorksService.getStudentByUuid(studentUuid));
     }
-*/
 
     @Override
     public ResponseEntity<List<StudentDtout>> getStudents( String  firstname , String  lastname  ,  String  birthdateAsString) throws InvalidUserInformationException {

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {StudentsManagementService} from "../students-management.service";
 import {User} from "../../../sharedmodule/models/user";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -13,15 +13,17 @@ import {
     NgOtpInputDialogComponent
 } from "../../../sharedmodule/dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
+import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 
 @Component({
     selector: 'app-manage-student-wallet',
-    templateUrl: './manage-student-wallet.component.html',
-    styles: [],
+    templateUrl: './manage-student.component.html',
+    styleUrls: ['../../../../assets/styles/manage-student.component.scss'],
     providers: [StudentsManagementService, StudentDashboardService]
 })
-export class ManageStudentWalletComponent implements OnInit {
-    constructor(private route: ActivatedRoute, private studentsManagementService: StudentsManagementService, private studentService: StudentDashboardService, private matDialog: MatDialog) {
+export class ManageStudentComponent implements OnInit {
+    constructor(private route:  ActivatedRoute, private  router : Router , private studentsManagementService: StudentsManagementService, private studentService: StudentDashboardService, private matDialog: MatDialog) {
     }
 
     AMOUNT_ADDED_SUCCESSFULLY = "Le montant a été ajouté avec succès !"
@@ -42,22 +44,21 @@ export class ManageStudentWalletComponent implements OnInit {
 
 
     ngOnInit(): void {
+        if (!Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
+            return;
+        }
         this.student.disable();
         this.route.queryParams.subscribe(params => {
-            const studentId = params['studentId'];
-            console.log("le id  " + studentId)
-         /*   if (!isNaN(studentId) && Number.isInteger(Number(studentId))) {
-                this.studentClass$ = this.studentService.getAllStudentClass();
-                this.studentsManagementService.getStudentById(studentId).subscribe(data => {
-                    this.user = data;
-                    this.matchFormsValue();
-                });
-            } else {
-                /!*TODO:*!/
-                // Le paramètre 'id' n'est pas un nombre entier, signalez une erreur
-                console.error('Le paramètre "id" n\'est pas un nombre entier valide.');
-                // Vous pouvez également rediriger l'utilisateur vers une page d'erreur ici
-            }*/
+            const studentUuid = params['studentUuid'];
+            if (studentUuid == undefined) {
+                this.router.navigate([IConstantsURL.ADMIN_STUDENTS_URL]).then(r => window.location.reload());
+            }
+           this.studentsManagementService.getStudentByUuId(studentUuid).subscribe((student) => {
+                this.user = student;
+                this.matchFormsValue();
+           });
+
+
         });
 
     }

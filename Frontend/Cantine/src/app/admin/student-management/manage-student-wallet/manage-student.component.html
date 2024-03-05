@@ -73,20 +73,6 @@
                 />
             </div>
 
-
-            <!---------------------- StudentClass  --------------------------->
-
-            <div class="form-group">
-                <label for="studentClass"> </label>
-                <select formControlName="studentClass" class="form-control" id="studentClass"
-                        [ngClass]="{ 'is-invalid': submitted && f['studentClass'].errors }" name="studentClass">
-                    <option value="" disabled>-- Votre class --</option>
-                    <ng-container *ngFor="let Sclass of studentClass$ | async ">
-                        <option [value]="Sclass.name">{{ Sclass.name }}</option>
-                    </ng-container>
-                </select>
-
-            </div>
         </form>
 
         <div class="center">
@@ -100,31 +86,6 @@
 <style>
 
 
-    #profile-picture {
-        width: 20%;
-        height: auto;
-        border-radius: 100%;
-    }
-
-
-    .test {
-        padding: 5px;
-        margin-top: 30px;
-        margin-bottom: 30px ;
-        border: 1px solid rgba(50, 47, 47, 0.64);
-
-    }
-
-
-    img {
-        width: 25%;
-    }
-
-
-    .input-card {
-        width: 50%;
-    }
-
 
 </style>
 
@@ -134,14 +95,3 @@
     </div>
 
 </ng-template>
-
-<style>
-    .spinner-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 15vh;
-    }
-
-
-</style>

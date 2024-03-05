@@ -21,7 +21,8 @@ public interface IAdminWorksController {
     String GET_STUDENT = "/getStudent";
     String ADD_STUDENT_CLASS_ENDPOINT = "/addStudentClass";
     String UPDATE_STUDENT_CLASS_ENDPOINT = "/updateStudentClass";
-
+    String GET_STUDENT_BY_UUID = "/getStudentByUuId";
+    String UPDATE_STUDENT_EMAIL = "/updateStudentEmail";
     /**************************** SERVER ANSWERS ************************************/
 
     String  STUDENT_VALIDATE_STUDENT_AMOUNT  = "NOTIFICATION SENT SUCCESSFULLY";
@@ -29,16 +30,19 @@ public interface IAdminWorksController {
 
     String STUDENT_CLASS_UPDATED_SUCCESSFULLY = "STUDENT CLASS UPDATED SUCCESSFULLY";
     String STUDENT_CLASS_ADDED_SUCCESSFULLY = "STUDENT CLASS ADDED SUCCESSFULLY";
+    String STUDENT_EMAIL_UPDATED_SUCCESSFULLY = "STUDENT EMAIL UPDATED SUCCESSFULLY";
 
 
+    @PostMapping(UPDATE_STUDENT_EMAIL)
+    ResponseEntity<ResponseDtout> updateStudentEmail(@RequestParam("studentUuid") String studentUuid, @RequestParam("newEmail") String newEmail) throws UserNotFoundException, MessagingException, ExistingUserException, InvalidUserInformationException;
     @PostMapping(VALIDATE_STUDENT_AMOUNT_STUDENT)
     ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(@RequestParam("studentId") Integer studentId, @RequestParam("validationCode") Integer validationCode, @RequestParam("amount") Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException;
 
     @PutMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
     ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentId") Integer studentId, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
 
-/*    @GetMapping(GET_STUDENT_BY_ID)
-    ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;*/
+    @GetMapping(GET_STUDENT_BY_UUID)
+    ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     @GetMapping(GET_STUDENTS)
     ResponseEntity<List<StudentDtout>> getStudents(@RequestParam String firstname, @RequestParam String Lastname, @RequestParam String birthdateAsString) throws InvalidUserInformationException;

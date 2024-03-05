@@ -8,6 +8,7 @@ import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.mailer.ConfirmationAddingAmountToStudent;
+import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
@@ -26,7 +27,7 @@ public class AdminWorksService implements IAdminFunctionService {
     private  final  Integer  MAX_STUDENT_WALLET  =   3000;
     private final String STUDENT_IMAGE_URL;
     private IStudentDao studentDao;
-
+    private final UserEmailSender userEmailSender;
     private IStudentClassDao studentClassDao;
 
     private Environment environment;
@@ -34,11 +35,12 @@ public class AdminWorksService implements IAdminFunctionService {
     private ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent;
 
     @Autowired
-    public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment,
+    public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment, UserEmailSender userEmailSender,
                              ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent, IConfirmationTokenDao confirmationTokenDao) {
         this.studentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
+        this.userEmailSender = userEmailSender;
         this.confirmationAddingAmountToStudent = confirmationAddingAmountToStudent;
         this.confirmationTokenDao = confirmationTokenDao;
         this.STUDENT_IMAGE_URL = this.environment.getProperty("sqli.cantine.images.url.student");
@@ -72,6 +74,33 @@ public class AdminWorksService implements IAdminFunctionService {
                     }
          );
         return  new StudentDtout(student, this.STUDENT_IMAGE_URL);
+    }
+
+    @Override
+    public void updateStudentEmail(String studentUuid, String newEmail) throws InvalidUserInformationException, UserNotFoundException, ExistingUserException, MessagingException {
+        if (studentUuid == null || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 20) {
+            AdminWorksService.LOG.error("INVALID  STUDENT UUID  IN  updateStudentEmail ADMIN WORK SERVICE ");
+            throw new InvalidUserInformationException("INVALID  STUDENT UUID");
+        }
+        if (newEmail == null || newEmail.isEmpty() || newEmail.isBlank() || newEmail.length() < 5) {
+            AdminWorksService.LOG.error("INVALID  EMAIL  IN  updateStudentEmail ADMIN WORK SERVICE ");
+            throw new InvalidUserInformationException("INVALID  EMAIL");
+        }
+        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(
+                () -> {
+                    AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
+                    return new UserNotFoundException("STUDENT NOT  FOUND");
+                }
+        );
+        var studentWithNewEmail = this.studentDao.findByEmail(newEmail);
+        if (studentWithNewEmail.isPresent()) {
+            AdminWorksService.LOG.error("STUDENT  WITH  EMAIL =  " + newEmail + "  ALREADY EXISTS");
+            throw new ExistingUserException("STUDENT ALREADY EXISTS");
+        }
+        student.setEmail(newEmail);
+        student.setStatus(0);
+        this.studentDao.save(student);
+        this.userEmailSender.sendNotificationTOStudentWhenEmailHasBeenChanged(student, this.environment.getProperty("sqli.cantine.front.url"));
     }
 
 

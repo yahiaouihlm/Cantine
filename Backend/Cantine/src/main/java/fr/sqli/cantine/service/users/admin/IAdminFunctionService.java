@@ -23,6 +23,7 @@ public interface IAdminFunctionService {
 
     void  addStudentClass  (StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
 
-
     StudentDtout  getStudentByEmail  (String  email) throws InvalidUserInformationException, UserNotFoundException;
+
+    void  updateStudentEmail(String  studentUuid, String  newEmail) throws InvalidUserInformationException, UserNotFoundException, ExistingUserException, MessagingException;
 }
