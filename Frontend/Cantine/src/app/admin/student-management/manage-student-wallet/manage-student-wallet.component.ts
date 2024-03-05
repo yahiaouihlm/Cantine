@@ -46,18 +46,18 @@ export class ManageStudentWalletComponent implements OnInit {
         this.route.queryParams.subscribe(params => {
             const studentId = params['studentId'];
             console.log("le id  " + studentId)
-            if (!isNaN(studentId) && Number.isInteger(Number(studentId))) {
+         /*   if (!isNaN(studentId) && Number.isInteger(Number(studentId))) {
                 this.studentClass$ = this.studentService.getAllStudentClass();
                 this.studentsManagementService.getStudentById(studentId).subscribe(data => {
                     this.user = data;
                     this.matchFormsValue();
                 });
             } else {
-                /*TODO:*/
+                /!*TODO:*!/
                 // Le paramètre 'id' n'est pas un nombre entier, signalez une erreur
                 console.error('Le paramètre "id" n\'est pas un nombre entier valide.');
                 // Vous pouvez également rediriger l'utilisateur vers une page d'erreur ici
-            }
+            }*/
         });
 
     }

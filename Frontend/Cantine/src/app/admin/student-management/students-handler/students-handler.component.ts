@@ -52,11 +52,12 @@ export class StudentsHandlerComponent {
 
   }
 
-  goToStudentProfile(studentId :  string) {
+  goToStudentProfile() {
     const navigationExtras: NavigationExtras = {
-      queryParams: { studentId: studentId }
-    };
-
+        state: {
+            student: this.student
+        }
+    }
     this.router.navigate([IConstantsURL.ADMIN_STUDENT_PROFILE_URL],  navigationExtras).then(r => window.location.reload());
   }
 
