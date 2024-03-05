@@ -21,7 +21,7 @@ export class AllMenusComponent implements OnInit {
     menus$: Observable<Menu[]> = of([]);
 
     ngOnInit(): void {
-        if (Malfunctions.checkAdminConnectivity(this.router)) {
+        if (Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
             this.menus$ = this.menusService.getAllMenus();
         }
     }

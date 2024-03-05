@@ -21,7 +21,7 @@ export class AllMealsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if  (Malfunctions.checkAdminConnectivity(this.router)){
+        if  (Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)){
             this.meals$ =this.mealService.getAllMeals();
         }
     }

@@ -30,7 +30,7 @@ export  default class Malfunctions {
         console.log("user  is connected");
     }
 
-    public static checkAdminConnectivity(router: Router)  : boolean  {
+    public static checkAdminConnectivityAndMakeRedirection(router: Router)  : boolean  {
         let  interdiction  = () => {
             localStorage.clear();
             router.navigate([IConstantsURL.SIGN_IN_URL]).then(r =>

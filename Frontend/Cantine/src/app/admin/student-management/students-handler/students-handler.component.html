@@ -38,17 +38,17 @@
 </div>
 
 
-<div  class="container">
+<div  *ngIf="found" class="container">
      <div class="row student-result" >
           <div class="col-md-2">
-               <span>  <strong>Nom  : </strong>  halim  </span>
+               <span>  <strong>Nom  : </strong>  {{student.firstname}}  </span>
           </div>
           <div class="col-md-2">
-               <span><strong>Prénom : </strong> yahiaoui</span>
+               <span><strong>Prénom : </strong> {{student.lastname}} </span>
           </div>
 
           <div class="col-md-4">
-               <span><strong>Date De  Naissance  : </strong> 18/07/2000 </span>
+               <span><strong>Date De  Naissance  : </strong>{{student.birthdate}} </span>
           </div>
 
 

@@ -18,6 +18,7 @@ export class StudentsManagementService {
     private GET_STUDENTS = this.BASIC_ADMIN_URL + "/getStudents"
 
     private GET_STUDENT = this.BASIC_ADMIN_URL + "/getStudent";
+    private GET_STUDENT_BY_UUID = this.BASIC_ADMIN_URL + "/getStudentByUuId";
 
     private SEND_STUDENT_WALLET = this.BASIC_ADMIN_URL + "/addStudentAmount";
 
@@ -50,30 +51,22 @@ export class StudentsManagementService {
         );
     }
 
-    getStudentById(id: string) {
+    getStudentByUuId(studentUuid: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('studentUuid', id)
-        return this.httpClient.get<User>(this.GET_STUDENT, {headers: headers, params: params}).pipe(
-            catchError((error) => this.handleError(error))
+        const params = new HttpParams().set('studentUuid', studentUuid)
+        return this.httpClient.get<User>(this.GET_STUDENT_BY_UUID, {headers: headers, params: params}).pipe(
+            catchError((error) => this.handleGetStudentError(error))
         );
     }
 
-    getStudents(user: User) {
-        let token = Malfunctions.getTokenFromLocalStorage();
-        const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('firstname', user.firstname)
-            .set('lastname', user.lastname)
-            .set('birthdateAsString', user.birthdate.toString())
-        return this.httpClient.get<User[]>(this.GET_STUDENTS, {params: params, headers: headers});
-    }
 
     getStudentByEmail(email: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         const params = new HttpParams().set('email', email);
         return this.httpClient.get<User>(this.GET_STUDENT, {params: params, headers: headers}).pipe(
-            catchError((error) => this.handleGetStudentByEmailError(error))
+            catchError((error) => this.handleGetStudentError(error))
         );
     }
 
@@ -90,7 +83,7 @@ export class StudentsManagementService {
         return throwError(() => new Error(error.error));
 
     }
-    private handleGetStudentByEmailError(error: HttpErrorResponse) {
+    private handleGetStudentError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
         if (errorMessage == undefined) {

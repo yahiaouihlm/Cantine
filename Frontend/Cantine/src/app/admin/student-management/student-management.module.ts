@@ -4,7 +4,7 @@ import { StudentsHandlerComponent } from './students-handler/students-handler.co
 import {RouterModule, Routes} from "@angular/router";
 import {OrderDashboardComponent} from "../orders/order-dashbord/order-dashboard.component";
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
-import { ManageStudentWalletComponent } from './manage-student-wallet/manage-student-wallet.component';
+import { ManageStudentComponent } from './manage-student-wallet/manage-student.component';
 import { EditStudentWalletDialogComponent } from './edit-student-wallet-dialog/edit-student-wallet-dialog.component';
 
 
@@ -14,12 +14,12 @@ import { EditStudentWalletDialogComponent } from './edit-student-wallet-dialog/e
 
 const routes: Routes = [
   {path: '', component: StudentsHandlerComponent },
-  {path: 'profile', component: ManageStudentWalletComponent }
+  {path: 'profile', component: ManageStudentComponent }
 ];
 @NgModule({
   declarations: [
     StudentsHandlerComponent,
-    ManageStudentWalletComponent,
+    ManageStudentComponent,
     EditStudentWalletDialogComponent
   ],
     imports: [

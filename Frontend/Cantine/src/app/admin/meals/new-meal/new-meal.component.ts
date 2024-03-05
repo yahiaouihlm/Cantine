@@ -39,7 +39,7 @@ export class NewMealComponent implements OnInit {
     /** TODO : make  loadingTemplate in  the   center of  the  page   in  html   in reponsive  mode  */
 
     ngOnInit(): void {
-        if (!Malfunctions.checkAdminConnectivity(this.router)) {
+        if (!Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
             return;
         }
     }
