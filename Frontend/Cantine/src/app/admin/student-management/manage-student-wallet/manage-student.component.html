@@ -1,7 +1,7 @@
 
     <app-loading-dialog *ngIf="isLoadingPage"></app-loading-dialog>
 
-<div class="container test ">
+<div class="container main-container">
     <div class="row">
         <form [formGroup]="student" >
             <div class="wallet center">
@@ -45,6 +45,19 @@
                          id="email"
 
                 />
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                    <div *ngIf="f['email'].errors['maxlength']" class="center">
+                        votre Nom ne doit pas dépasser 1000 charctéres
+                    </div>
+                    <div *ngIf="f['email'].errors['email']" class="center">
+                        Format Email incorrect
+                    </div>
+
+                    <div *ngIf="f['email'].errors['pattern']" class="center">
+                        Format Email incorrect
+                    </div>
+                </div>
             </div>
 
 
@@ -75,19 +88,25 @@
 
         </form>
 
-        <div class="center">
-            <button class="btn" (click)="addAmount()"> Ajouter   Un  montant </button>
-            <button class="btn"> Soustraire  Un montant </button>
+        <div class="center add-subtract-btn">
+            <button class="btn" (click)="addAmount()">
+                <mat-icon>add_circle_outline</mat-icon>
+                Ajouter   Un  montant
+            </button>
+            <button class="btn">
+                <mat-icon>remove_circle_outline</mat-icon>
+                Soustraire  Un montant
+            </button>
+
         </div>
 
 
     </div>
 </div>
-<style>
-
-
-
-</style>
+    <div class="center modify-email-btn">
+        <button *ngIf="!enableEmailInput" class="btn"  (click)="enableEmailFormInput()"> Modifier  le  Email  </button>
+        <button *ngIf="enableEmailInput" class="btn"  (click)="changeStudentEmail()"> Valider  </button>
+    </div>
 
 <ng-template #loadingTemplate >
     <div class="spinner-container">

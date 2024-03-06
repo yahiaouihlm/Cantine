@@ -27,9 +27,10 @@ export class ManageStudentComponent implements OnInit {
     }
 
     AMOUNT_ADDED_SUCCESSFULLY = "Le montant a été ajouté avec succès !"
+    STUDENT_EMAIL_UPDATED_SUCCESSFULLY = "L'email  a été modifié avec succès ! un email de confirmation a été envoyé à la nouvelle adresse email";
     user: User = new User();
     submitted = false
-    studentClass$: Observable<StudentClass[]> = of([]);
+    enableEmailInput =  false ;
     isLoadingPage: boolean = false;
 
     student: FormGroup = new FormGroup({
@@ -110,7 +111,7 @@ export class ManageStudentComponent implements OnInit {
     sendStudentConfirmationCodeReq(amountToAdd: number, validationCode: number) {
         this.studentsManagementService.sendStudentCode(this.user.uuid, amountToAdd, validationCode).subscribe({
             next: (response) => {
-                this.showConfirmationDialog();
+                this.showConfirmationDialog(this.AMOUNT_ADDED_SUCCESSFULLY);
                 this.isLoadingPage = false //  si  le code éte correcte
             }
             , error: (error) => {
@@ -120,9 +121,9 @@ export class ManageStudentComponent implements OnInit {
     }
 
 
-    showConfirmationDialog(): void {
+    showConfirmationDialog(message:  string ): void {
         const result = this.matDialog.open(SuccessfulDialogComponent, {
-            data: {message: this.AMOUNT_ADDED_SUCCESSFULLY},
+            data: {message: message},
             width: '40%',
         });
         result.afterClosed().subscribe((result) => {
@@ -149,4 +150,32 @@ export class ManageStudentComponent implements OnInit {
     }
 
 
+    changeStudentEmail() {
+        this.submitted = true;
+        if (this.student.controls['email'].invalid || this.student.controls['email'].value == this.user.email  || !this.student.controls['email'].touched) {
+            return;
+        }
+        let  confirmation = confirm("Voulez-vous vraiment modifier l'email de cet étudiant ?");
+        if (!confirmation)
+              return;
+
+        this.isLoadingPage = true;
+        this.studentsManagementService.updateStudentEmail(this.user.uuid, this.student.controls['email'].value).subscribe({
+            next: (response) => {
+                this.showConfirmationDialog(this.STUDENT_EMAIL_UPDATED_SUCCESSFULLY);
+                this.isLoadingPage = false;
+                this.enableEmailInput = false;
+            },
+            error: (error) => {
+                this.isLoadingPage = false;
+                this.enableEmailInput = false;
+            }
+
+        });
+    }
+
+    enableEmailFormInput(){
+        this.enableEmailInput = true;
+        this.student.controls['email'].enable();
+    }
 }
