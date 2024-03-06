@@ -30,16 +30,18 @@ public class AdminWorksService implements IAdminFunctionService {
     private final UserEmailSender userEmailSender;
     private IStudentClassDao studentClassDao;
 
+    private  IAdminDao adminDao;
     private Environment environment;
     private IConfirmationTokenDao confirmationTokenDao;
     private ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent;
 
     @Autowired
-    public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment, UserEmailSender userEmailSender,
+    public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment, UserEmailSender userEmailSender,IAdminDao adminDao,
                              ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent, IConfirmationTokenDao confirmationTokenDao) {
         this.studentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
+        this.adminDao = adminDao;
         this.userEmailSender = userEmailSender;
         this.confirmationAddingAmountToStudent = confirmationAddingAmountToStudent;
         this.confirmationTokenDao = confirmationTokenDao;
@@ -92,10 +94,10 @@ public class AdminWorksService implements IAdminFunctionService {
                     return new UserNotFoundException("STUDENT NOT  FOUND");
                 }
         );
-        var studentWithNewEmail = this.studentDao.findByEmail(newEmail);
-        if (studentWithNewEmail.isPresent()) {
-            AdminWorksService.LOG.error("STUDENT  WITH  EMAIL =  " + newEmail + "  ALREADY EXISTS");
-            throw new ExistingUserException("STUDENT ALREADY EXISTS");
+
+        if (this.studentDao.findByEmail(newEmail).isPresent() || this.adminDao.findByEmail(newEmail).isPresent()) {
+            AdminWorksService.LOG.error("EMAIL =  " + newEmail + "  ALREADY EXISTS IN ADMIN OR STUDENT  TABLE");
+            throw new ExistingUserException("EMAIL ALREADY EXISTS");
         }
         student.setEmail(newEmail);
         student.setStatus(0);
