@@ -25,6 +25,7 @@ import java.util.List;
 public class AdminWorksService implements IAdminFunctionService {
     private static final Logger LOG = LogManager.getLogger();
     private  final  Integer  MAX_STUDENT_WALLET  =   3000;
+    private  final  Integer  MAX_STUDENT_WALLET_ADD_AMOUNT  =   500;
     private final String STUDENT_IMAGE_URL;
     private IStudentDao studentDao;
     private final UserEmailSender userEmailSender;
@@ -168,22 +169,25 @@ public class AdminWorksService implements IAdminFunctionService {
     }
 
     @Override
-    public void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
-        if (studentId == null || amount == null || amount < 10 || amount > 200) {
+    public void attemptAddAmountToStudentAccount(String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
+        if (studentUuid == null || amount == null || amount < 10 || amount > MAX_STUDENT_WALLET_ADD_AMOUNT || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 10) {
+            AdminWorksService.LOG.error("INVALID  STUDENT UUID OR AMOUNT IN  attemptAddAmountToStudentAccount ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID OR AMOUNT");
         }
-        var student = this.studentDao.findById(studentId);
-        if (student.isEmpty()) {
-            throw new UserNotFoundException("STUDENT NOT FOUND");
-        }
+        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
+                    AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
+                    return new UserNotFoundException("STUDENT NOT  FOUND");
+                }
+        );
 
-        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student.get());
-        this.confirmationTokenDao.findByStudent(student.get()).ifPresent(confirmationTokenEntity -> {
+
+        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student);
+        this.confirmationTokenDao.findByStudent(student).ifPresent(confirmationTokenEntity -> {
             this.confirmationTokenDao.delete(confirmationTokenEntity);
         });
         this.confirmationTokenDao.save(confirmationToken);
 
-        this.confirmationAddingAmountToStudent.sendConfirmationAmount(student.get(), amount, confirmationToken);
+        this.userEmailSender.sendConfirmationCodeToCheckAddRemoveAmount(student, confirmationToken.getUuid(), amount);
     }
 
     public StudentDtout getStudentByUuid(String  studentUuid) throws InvalidUserInformationException, UserNotFoundException {

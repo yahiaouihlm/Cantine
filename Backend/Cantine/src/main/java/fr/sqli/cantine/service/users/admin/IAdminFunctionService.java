@@ -15,7 +15,7 @@ public interface IAdminFunctionService {
 
     void addAmountToStudentAccountCodeValidation(Integer studentId , Integer validationCode , Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException;
 
-    void attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws  InvalidUserInformationException, MessagingException, UserNotFoundException;
+    void attemptAddAmountToStudentAccount(String studentUuid, Double amount) throws  InvalidUserInformationException, MessagingException, UserNotFoundException;
     public StudentDtout getStudentByUuid(String  studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     List<StudentDtout> getStudentsByNameAndBirthdate( String  firstname , String  lastname  , String  birthdateAsString) throws InvalidUserInformationException;

@@ -39,8 +39,8 @@ public class AdminWorksController  implements  IAdminWorksController {
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(Integer studentId, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
-        this.adminWorksService.attemptAddAmountToStudentAccount(studentId , amount);
+    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
+        this.adminWorksService.attemptAddAmountToStudentAccount(studentUuid , amount);
         return ResponseEntity.ok(new ResponseDtout(SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION));
     }
 

@@ -39,8 +39,8 @@ public interface IAdminWorksController {
     @PostMapping(VALIDATE_STUDENT_AMOUNT_STUDENT)
     ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(@RequestParam("studentId") Integer studentId, @RequestParam("validationCode") Integer validationCode, @RequestParam("amount") Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException;
 
-    @PutMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
-    ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentId") Integer studentId, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
+    @PostMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
+    ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentUuid") String studentUuid, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
 
     @GetMapping(GET_STUDENT_BY_UUID)
     ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
