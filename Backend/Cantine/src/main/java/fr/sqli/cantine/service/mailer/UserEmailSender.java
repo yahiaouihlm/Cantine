@@ -13,11 +13,11 @@ import java.math.BigDecimal;
 @Service
 public class UserEmailSender {
 
-    private EmailSenderService emailSenderService;
+    private final  EmailSenderService emailSenderService;
 
-    private SpringTemplateEngine templateEngine;
+    private final SpringTemplateEngine templateEngine;
 
-    private Environment environment;
+    private final Environment environment;
 
     @Autowired
     public UserEmailSender(EmailSenderService emailSenderService, SpringTemplateEngine templateEngine, Environment environment) {

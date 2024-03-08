@@ -7,7 +7,6 @@ import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
-import fr.sqli.cantine.service.mailer.ConfirmationAddingAmountToStudent;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
 import fr.sqli.cantine.service.users.exceptions.*;
@@ -34,17 +33,16 @@ public class AdminWorksService implements IAdminFunctionService {
     private  IAdminDao adminDao;
     private Environment environment;
     private IConfirmationTokenDao confirmationTokenDao;
-    private ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent;
+
 
     @Autowired
     public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment, UserEmailSender userEmailSender,IAdminDao adminDao,
-                             ConfirmationAddingAmountToStudent confirmationAddingAmountToStudent, IConfirmationTokenDao confirmationTokenDao) {
+                             IConfirmationTokenDao confirmationTokenDao) {
         this.studentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
         this.adminDao = adminDao;
         this.userEmailSender = userEmailSender;
-        this.confirmationAddingAmountToStudent = confirmationAddingAmountToStudent;
         this.confirmationTokenDao = confirmationTokenDao;
         this.STUDENT_IMAGE_URL = this.environment.getProperty("sqli.cantine.images.url.student");
     }
