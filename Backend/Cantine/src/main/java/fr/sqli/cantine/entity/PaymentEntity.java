@@ -21,8 +21,16 @@ public class PaymentEntity  extends AbstractEntity{
     private BigDecimal amount;
 
     @Column(name = "payment_date" , nullable=false )
-  private LocalDate paymentDate;
+    private LocalDate paymentDate;
 
+
+    public PaymentEntity(AdminEntity admin, StudentEntity student, BigDecimal amount) {
+        this.admin = admin;
+        this.student = student;
+        this.amount = amount;
+        this.paymentDate = LocalDate.now();
+    }
+    public  PaymentEntity(){}
     public AdminEntity getAdmin() {
         return admin;
     }

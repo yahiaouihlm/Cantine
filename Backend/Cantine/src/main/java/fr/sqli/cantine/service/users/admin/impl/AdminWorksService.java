@@ -6,6 +6,7 @@ import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
+import fr.sqli.cantine.entity.PaymentEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +30,7 @@ public class AdminWorksService implements IAdminFunctionService {
     private  final  Integer  MAX_STUDENT_WALLET_ADD_AMOUNT  =   500;
     private final String STUDENT_IMAGE_URL;
     private IStudentDao studentDao;
+    private  IPaymentDao paymentDao;
     private final UserEmailSender userEmailSender;
     private IStudentClassDao studentClassDao;
 
@@ -37,13 +41,14 @@ public class AdminWorksService implements IAdminFunctionService {
 
     @Autowired
     public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment, UserEmailSender userEmailSender,IAdminDao adminDao,
-                             IConfirmationTokenDao confirmationTokenDao) {
+                             IConfirmationTokenDao confirmationTokenDao, IPaymentDao paymentDao) {
         this.studentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
         this.adminDao = adminDao;
         this.userEmailSender = userEmailSender;
         this.confirmationTokenDao = confirmationTokenDao;
+        this.paymentDao = paymentDao;
         this.STUDENT_IMAGE_URL = this.environment.getProperty("sqli.cantine.images.url.student");
     }
 
@@ -106,21 +111,30 @@ public class AdminWorksService implements IAdminFunctionService {
 
 
     @Override
-    public void addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException {
+    public void addAmountToStudentAccountCodeValidation(String  adminUuid , String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException {
 
-        if (studentId == null || validationCode == null || amount == null || amount < 10 || amount > 200) {
-            AdminWorksService.LOG.error("INVALID  studentId Or validationCode or Amount CAN  NOT BE NULL ");
+        if (studentUuid == null  || studentUuid.isEmpty() || studentUuid.trim().length() <10|| validationCode == null || amount == null || amount > MAX_STUDENT_WALLET_ADD_AMOUNT) {
+            AdminWorksService.LOG.error("INVALID  studentId Or validationCode or Amount CAN  NOT BE NULL  studentId = {}  validationCode = {}   amount  = {} IN  addAmountToStudentAccountCodeValidation ADMIN WORK SERVICE", studentUuid, validationCode, amount);
             throw new InvalidUserInformationException("INVALID FIELDS ");
         }
 
 
         //  check if student is valid
-        var student = this.studentDao.findById(studentId).orElseThrow(
+        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(
                 () -> {
-                    AdminWorksService.LOG.error("STUDENT NOT  FOUND ");
+                    AdminWorksService.LOG.error("STUDENT NOT  FOUND  WITH UUID = {}" , studentUuid);
                     return new UserNotFoundException("STUDENT NOT  FOUND");
                 }
         );
+
+        //  check if student is valid
+        var admin = this.adminDao.findByUuid(adminUuid).orElseThrow(
+                () -> {
+                    AdminWorksService.LOG.error("ADMIN NOT  FOUND  WITH UUID = {}" , adminUuid);
+                    return new UserNotFoundException("ADMIN NOT  FOUND");
+                }
+        );
+
 
         // find  the  confirmationToken by the  student
         var confirmationToken = this.confirmationTokenDao.findByStudent(student).orElseThrow(
@@ -129,6 +143,10 @@ public class AdminWorksService implements IAdminFunctionService {
                     return new InvalidUserInformationException("NO  CONFIRMATION CODE HAS  BEEN  FOUND ");
                 }
         );
+        if  (!confirmationToken.getAdmin().equals(admin) || !confirmationToken.getStudent().equals(student)){
+            AdminWorksService.LOG.error("ADMIN  AND STUDENT OF  TOKEN  admin = {}  student = {} IS DIFFERENT FROM ADMIN OF  REQUEST admin = {} , student= {}", adminUuid, studentUuid ,admin.getEmail(),  student.getEmail() );
+            throw new UserNotFoundException("UNKNOWN ADMIN FOUND");
+        }
 
 
         // check  if  the  code found with the  confirmation  token is equals with  the  validationCode SENT  by user
@@ -158,16 +176,18 @@ public class AdminWorksService implements IAdminFunctionService {
              throw  new InvalidUserInformationException("EXCESSIVE AMOUNT");
          }
 
-
-        // add  new amount  to student  account
-
+         // add  new amount  to student  account
         student.setWallet(student.getWallet().add(new BigDecimal(amount)));
+        var paymentInformation =  new PaymentEntity(admin, student, new BigDecimal(amount));
+
+        // save  the  payment  information
+        this.paymentDao.save(paymentInformation);
         this.studentDao.save(student);
 
     }
 
     @Override
-    public void attemptAddAmountToStudentAccount(String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
+    public void attemptAddAmountToStudentAccount(String  adminUuid ,  String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser {
         if (studentUuid == null || amount == null || amount < 10 || amount > MAX_STUDENT_WALLET_ADD_AMOUNT || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 10) {
             AdminWorksService.LOG.error("INVALID  STUDENT UUID OR AMOUNT IN  attemptAddAmountToStudentAccount ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID OR AMOUNT");
@@ -183,8 +203,21 @@ public class AdminWorksService implements IAdminFunctionService {
         this.confirmationTokenDao.findByStudent(student).ifPresent(confirmationTokenEntity -> {
             this.confirmationTokenDao.delete(confirmationTokenEntity);
         });
-        this.confirmationTokenDao.save(confirmationToken);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var  admin = this.adminDao.findByUuid(adminUuid).orElseThrow(() -> {
+            AdminWorksService.LOG.error("ADMIN  WITH  UUID =  " + adminUuid + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("ADMIN NOT  FOUND");
+        });
+        if (admin.equals(this.adminDao.findByEmail(authentication.getPrincipal().toString()).orElseThrow(() -> {
+            AdminWorksService.LOG.error("ADMIN  WITH  EMAIL =  " + authentication.getPrincipal().toString() + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("ADMIN NOT  FOUND");
+        }))) {
+            AdminWorksService.LOG.error("ADMIN OF  TOKEN {} IS DIFFERENT FROM ADMIN OF  REQUEST {}", adminUuid, admin.getEmail() );
+            throw new UnknownUser("UNKNOWN ADMIN FOUND");
+        }
 
+        confirmationToken.setAdmin(admin);
+        this.confirmationTokenDao.save(confirmationToken);
         this.userEmailSender.sendConfirmationCodeToCheckAddRemoveAmount(student, confirmationToken.getUuid(), amount);
     }
 
@@ -232,4 +265,6 @@ public class AdminWorksService implements IAdminFunctionService {
         studentClass.get().setName((studentClassEntity.getName()));
         this.studentClassDao.save(studentClass.get());
     }
+
+
 }

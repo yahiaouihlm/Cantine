@@ -37,10 +37,9 @@ public interface IAdminWorksController {
     @PostMapping(UPDATE_STUDENT_EMAIL)
     ResponseEntity<ResponseDtout> updateStudentEmail(@RequestParam("studentUuid") String studentUuid, @RequestParam("newEmail") String newEmail) throws UserNotFoundException, MessagingException, ExistingUserException, InvalidUserInformationException;
     @PostMapping(VALIDATE_STUDENT_AMOUNT_STUDENT)
-    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(@RequestParam("studentId") Integer studentId, @RequestParam("validationCode") Integer validationCode, @RequestParam("amount") Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException;
-
+    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( String  adminUuid , String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException;
     @PostMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
-    ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("studentUuid") String studentUuid, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException;
+    ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("adminUuid")String adminUuid,@RequestParam("studentUuid") String studentUuid, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser;
 
     @GetMapping(GET_STUDENT_BY_UUID)
     ResponseEntity<StudentDtout> getStudentById(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;

@@ -90,15 +90,16 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
     )
 
-
-
+-- -----------------------------------------------------
+-- Table `cantiniere`.`payment`
+-- -----------------------------------------------------
  CREATE table  if NOT EXISTS payment (
     id SERIAL PRIMARY KEY,
     uuid VARCHAR(255) NOT NULL,
     student_id INT NOT NULL,
     admin_id INT NOT NULL,
     amount DECIMAL(5,2) NOT NULL,
-    payement_date DATE NOT NULL,
+    payment_date DATE NOT NULL,
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (admin_id) REFERENCES admin (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 

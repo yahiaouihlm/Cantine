@@ -10,20 +10,19 @@ import java.util.List;
 public interface IAdminFunctionService {
 
 
+    void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException;
 
+    void attemptAddAmountToStudentAccount(String adminUuid, String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser;
 
+    public StudentDtout getStudentByUuid(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
-    void addAmountToStudentAccountCodeValidation(Integer studentId , Integer validationCode , Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException;
+    List<StudentDtout> getStudentsByNameAndBirthdate(String firstname, String lastname, String birthdateAsString) throws InvalidUserInformationException;
 
-    void attemptAddAmountToStudentAccount(String studentUuid, Double amount) throws  InvalidUserInformationException, MessagingException, UserNotFoundException;
-    public StudentDtout getStudentByUuid(String  studentUuid) throws InvalidUserInformationException, UserNotFoundException;
-
-    List<StudentDtout> getStudentsByNameAndBirthdate( String  firstname , String  lastname  , String  birthdateAsString) throws InvalidUserInformationException;
     void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
 
-    void  addStudentClass  (StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
+    void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
 
-    StudentDtout  getStudentByEmail  (String  email) throws InvalidUserInformationException, UserNotFoundException;
+    StudentDtout getStudentByEmail(String email) throws InvalidUserInformationException, UserNotFoundException;
 
-    void  updateStudentEmail(String  studentUuid, String  newEmail) throws InvalidUserInformationException, UserNotFoundException, ExistingUserException, MessagingException;
+    void updateStudentEmail(String studentUuid, String newEmail) throws InvalidUserInformationException, UserNotFoundException, ExistingUserException, MessagingException;
 }

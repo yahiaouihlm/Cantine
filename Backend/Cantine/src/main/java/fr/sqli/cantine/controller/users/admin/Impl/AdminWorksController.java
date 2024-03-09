@@ -33,14 +33,14 @@ public class AdminWorksController  implements  IAdminWorksController {
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation(Integer studentId, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException {
-         this.adminWorksService.addAmountToStudentAccountCodeValidation(studentId ,  validationCode , amount);
+    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( String  adminUuid , String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException {
+         this.adminWorksService.addAmountToStudentAccountCodeValidation(adminUuid ,  studentUuid , validationCode ,amount);
         return  ResponseEntity.ok(new ResponseDtout(STUDENT_VALIDATE_STUDENT_AMOUNT));
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException {
-        this.adminWorksService.attemptAddAmountToStudentAccount(studentUuid , amount);
+    public ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(String  adminUuid , String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser {
+        this.adminWorksService.attemptAddAmountToStudentAccount(adminUuid , studentUuid , amount);
         return ResponseEntity.ok(new ResponseDtout(SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION));
     }
 
@@ -75,4 +75,6 @@ public class AdminWorksController  implements  IAdminWorksController {
         this.adminWorksService.updateStudentClass(studentClassDtoIn);
         return ResponseEntity.ok(STUDENT_CLASS_UPDATED_SUCCESSFULLY);
     }
+
+
 }
