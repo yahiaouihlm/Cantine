@@ -10,7 +10,7 @@ import java.util.List;
 public interface IAdminFunctionService {
 
 
-    void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException;
+    void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException, UnknownUser, MessagingException;
 
     void attemptAddAmountToStudentAccount(String adminUuid, String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser;
 

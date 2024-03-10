@@ -26,7 +26,7 @@ public interface IAdminWorksController {
     String UPDATE_STUDENT_EMAIL = "/updateStudentEmail";
     /**************************** SERVER ANSWERS ************************************/
 
-    String  STUDENT_VALIDATE_STUDENT_AMOUNT  = "NOTIFICATION SENT SUCCESSFULLY";
+    String AMOUNT_ADDED_SUCCESSFULLY = "AMOUNT ADDED SUCCESSFULLY";
     String SEND_NEW_AMOUNT_TO_STUDENT_NOTIFICATION = "NOTIFICATION SENT SUCCESSFULLY";
 
     String STUDENT_CLASS_UPDATED_SUCCESSFULLY = "STUDENT CLASS UPDATED SUCCESSFULLY";
@@ -37,7 +37,7 @@ public interface IAdminWorksController {
     @PostMapping(UPDATE_STUDENT_EMAIL)
     ResponseEntity<ResponseDtout> updateStudentEmail(@RequestParam("studentUuid") String studentUuid, @RequestParam("newEmail") String newEmail) throws UserNotFoundException, MessagingException, ExistingUserException, InvalidUserInformationException;
     @PostMapping(VALIDATE_STUDENT_AMOUNT_STUDENT)
-    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( String  adminUuid , String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException;
+    ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( @RequestParam("adminUuid")String  adminUuid , @RequestParam("studentUuid")String studentUuid, @RequestParam("validationCode")Integer validationCode,@RequestParam("amount") Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException, UnknownUser, MessagingException;
     @PostMapping(SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT)
     ResponseEntity<ResponseDtout> attemptAddAmountToStudentAccount(@RequestParam("adminUuid")String adminUuid,@RequestParam("studentUuid") String studentUuid, @RequestParam("amount") Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser;
 

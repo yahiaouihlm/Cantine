@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping(IAdminWorksController.ADMIN_DASH_BOARD_BASIC_WORK_URL)
 public class AdminWorksController  implements  IAdminWorksController {
 
-    private AdminWorksService adminWorksService;
+    private final AdminWorksService adminWorksService;
 
     @Autowired
     public  AdminWorksController  (AdminWorksService adminWorksService){
@@ -33,9 +33,9 @@ public class AdminWorksController  implements  IAdminWorksController {
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( String  adminUuid , String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException {
+    public ResponseEntity<ResponseDtout> addAmountToStudentAccountCodeValidation( String  adminUuid , String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, InvalidTokenException, ExpiredToken, UserNotFoundException, UnknownUser, MessagingException {
          this.adminWorksService.addAmountToStudentAccountCodeValidation(adminUuid ,  studentUuid , validationCode ,amount);
-        return  ResponseEntity.ok(new ResponseDtout(STUDENT_VALIDATE_STUDENT_AMOUNT));
+        return  ResponseEntity.ok(new ResponseDtout(AMOUNT_ADDED_SUCCESSFULLY));
     }
 
     @Override
