@@ -49,14 +49,15 @@ export class StudentsManagementService {
             )
     }
 
-    sendStudentWallet(studentId: string, amount: number) {
+    attemptAddAmountToStudentAccount(adminUuid :string, studentUuid: string, amount: number) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('studentId', studentId.toString())
-            .set('amount', amount)
+        const params = new HttpParams().set('adminUuid', adminUuid)
+            .set('studentUuid', studentUuid)
+            .set('amount', amount.toString());
 
-        return this.httpClient.put<NormalResponse>(this.SEND_STUDENT_WALLET, null, {headers: headers, params: params}).pipe(
-            catchError((error) => this.handleError(error))
+        return this.httpClient.post<NormalResponse>(this.SEND_STUDENT_WALLET, null, {headers: headers, params: params}).pipe(
+            catchError((error) => this.handleAttemptAddAmountToStudentAccountError(error))
         );
     }
 
@@ -79,6 +80,47 @@ export class StudentsManagementService {
         );
     }
 
+    private handleAttemptAddAmountToStudentAccountError(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Les informations de l'etudiant ou du  montant sont incorrectes";
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+        }else if (error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        }
+        else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Etudiant non trouvé";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }else  if  (error.status == HttpStatusCode.InternalServerError) {
+            errorMessage = "Une  erreur serveur  est  survenue  !";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }else if (error.status == HttpStatusCode.Forbidden) {
+            errorMessage = "Une  erreur d'authentification  est  survenue  !";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else {
+            errorMessage = "Une erreur s'est produite Veuillez réessayer plus tard";
+            localStorage.clear();
+            this.dialog.openDialog(errorMessage);
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        return  throwError(() => new Error(errorMessage))
+    }
+
     private handleError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
@@ -96,7 +138,6 @@ export class StudentsManagementService {
     private  handleUpdateStudentEmailError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
-        let  dialog = null  ;
         if (errorMessage == undefined) {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");

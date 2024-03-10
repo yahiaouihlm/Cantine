@@ -84,10 +84,12 @@ export class ManageStudentComponent implements OnInit {
     }
 
     sendStudentAmount(amountToAdd: number) {
-        this.studentsManagementService.sendStudentWallet(this.user.uuid, amountToAdd).subscribe({
+       let  myAdminUuid = Malfunctions.getUserIdFromLocalStorage()
+        this.studentsManagementService.attemptAddAmountToStudentAccount(myAdminUuid,  this.user.uuid, amountToAdd).subscribe({
             next: (response) => {
                 this.isLoadingPage = false
-                this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
+                console.log(response);
+                //  this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
             },
             error: (error) => {
                 this.isLoadingPage = false

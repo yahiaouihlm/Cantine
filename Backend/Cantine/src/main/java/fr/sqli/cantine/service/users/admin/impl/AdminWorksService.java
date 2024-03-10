@@ -119,11 +119,19 @@ public class AdminWorksService implements IAdminFunctionService {
 
         //  if we want we can add the condifition     than  student  wallet  must  be  less than  3000
 
-        var newWallet = student.getWallet().add(new BigDecimal(amount));
-        if (newWallet.compareTo(new BigDecimal(MAX_STUDENT_WALLET)) > 0) {
-            AdminWorksService.LOG.error("WALLET  TO  BIG");
-            throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
-        }
+            var newWallet = student.getWallet().add(new BigDecimal(amount));
+
+            if  (newWallet.compareTo(BigDecimal.ZERO) < 0) {
+                AdminWorksService.LOG.error("WALLET  CAN  NOT  BE  NEGATIVE  AMOUNT");
+                throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
+            }
+
+            if (newWallet.compareTo(new BigDecimal(MAX_STUDENT_WALLET)) > 0) {
+                AdminWorksService.LOG.error("WALLET  TO  BIG");
+                throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
+            }
+
+
 
         // add  new amount  to student  account
         student.setWallet(student.getWallet().add(new BigDecimal(amount)));
@@ -139,6 +147,7 @@ public class AdminWorksService implements IAdminFunctionService {
     @Override
     public void attemptAddAmountToStudentAccount(String adminUuid, String studentUuid, Double amount) throws
             InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser {
+
         if (studentUuid == null || amount == null || amount < 10 || amount > MAX_STUDENT_WALLET_ADD_AMOUNT || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 10) {
             AdminWorksService.LOG.error("INVALID  STUDENT UUID OR AMOUNT IN  attemptAddAmountToStudentAccount ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID OR AMOUNT");

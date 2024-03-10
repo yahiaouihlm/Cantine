@@ -18,7 +18,7 @@ export class EditStudentWalletDialogComponent {
     submitted: boolean = false;
     isLoaded: boolean = false;
     amountForm: FormGroup = new FormGroup({
-        amount: new FormControl('', [Validators.required, Validators.max(200), Validators.min(10)]),
+        amount: new FormControl('', [Validators.required, Validators.max(200), Validators.min(-200)]),
     });
 
 
