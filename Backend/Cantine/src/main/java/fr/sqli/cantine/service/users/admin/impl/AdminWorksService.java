@@ -137,10 +137,10 @@ public class AdminWorksService implements IAdminFunctionService {
         student.setWallet(student.getWallet().add(new BigDecimal(amount)));
         var paymentInformation = new PaymentEntity(adminAuth, student, new BigDecimal(amount));
 
+        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
         // save  the  payment  information
         this.paymentDao.save(paymentInformation);
         this.studentDao.save(student);
-        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
 
     }
 
