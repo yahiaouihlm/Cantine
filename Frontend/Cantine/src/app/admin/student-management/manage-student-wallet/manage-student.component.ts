@@ -11,7 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {EditStudentWalletDialogComponent} from "../edit-student-wallet-dialog/edit-student-wallet-dialog.component";
 import {
     NgOtpInputDialogComponent
-} from "../../../sharedmodule/dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component";
+} from "./ng-otp-input-dialog/ng-otp-input-dialog.component";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
@@ -26,7 +26,7 @@ export class ManageStudentComponent implements OnInit {
     constructor(private route:  ActivatedRoute, private  router : Router , private studentsManagementService: StudentsManagementService, private studentService: StudentDashboardService, private matDialog: MatDialog) {
     }
 
-    AMOUNT_ADDED_SUCCESSFULLY = "Le montant a été ajouté avec succès !"
+
     STUDENT_EMAIL_UPDATED_SUCCESSFULLY = "L'email  a été modifié avec succès ! un email de confirmation a été envoyé à la nouvelle adresse email";
     user: User = new User();
     submitted = false
@@ -66,30 +66,35 @@ export class ManageStudentComponent implements OnInit {
 
 
     addAmount() {
-        let amountToAdd = 0;
+        this.sendStudentConfirmationCode(
+            7
+        );
+      /*  let amountToAdd = 0;
         let dialogRef = this.matDialog.open(EditStudentWalletDialogComponent, {
             data: {message: "Le Montant à Ajouter", userid: this.user.uuid},
             width: '47%',
             height: '30%'
         });
-        let result = dialogRef.afterClosed().subscribe((result: number) => {
+
+            let result = dialogRef.afterClosed().subscribe((result: number) => {
             if (result != undefined && result != 0) {
                 this.isLoadingPage = true;
                 amountToAdd = result;
                 this.sendStudentAmount(amountToAdd);
             }
-        });
+        });*/
 
 
     }
 
     sendStudentAmount(amountToAdd: number) {
+
        let  myAdminUuid = Malfunctions.getUserIdFromLocalStorage()
         this.studentsManagementService.attemptAddAmountToStudentAccount(myAdminUuid,  this.user.uuid, amountToAdd).subscribe({
             next: (response) => {
                 this.isLoadingPage = false
                 console.log(response);
-                //  this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
+            this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
             },
             error: (error) => {
                 this.isLoadingPage = false
@@ -101,26 +106,18 @@ export class ManageStudentComponent implements OnInit {
     /************ Le formulaire   du  saisie  du  code  ************/
 
     sendStudentConfirmationCode(amountToAdd: number) {
-        let dialogRef = this.matDialog.open(NgOtpInputDialogComponent, {width: "50vw", height: "25vh"});
-        let result = dialogRef.afterClosed().subscribe((result: string) => {
+        let dialogRef = this.matDialog.open(NgOtpInputDialogComponent, {
+            width: "50vw", height: "30vh",
+            data: {studentUuid: this.user.uuid , amount : amountToAdd},
+        });
+    /*    let result = dialogRef.afterClosed().subscribe((result: string) => {
             if (result != undefined && result != "") {
                 this.isLoadingPage = true;
-                this.sendStudentConfirmationCodeReq(amountToAdd, Number(result)); //  envoyer le  code  de  confirmation
+              //  this.sendStudentConfirmationCodeReq(amountToAdd, Number(result)); //  envoyer le  code  de  confirmation
             }
-        });
+        });*/
     }
 
-    sendStudentConfirmationCodeReq(amountToAdd: number, validationCode: number) {
-        this.studentsManagementService.sendStudentCode(this.user.uuid, amountToAdd, validationCode).subscribe({
-            next: (response) => {
-                this.showConfirmationDialog(this.AMOUNT_ADDED_SUCCESSFULLY);
-                this.isLoadingPage = false //  si  le code éte correcte
-            }
-            , error: (error) => {
-                this.isLoadingPage = false  //  si le code est  incorrecte
-            }
-        });
-    }
 
 
     showConfirmationDialog(message:  string ): void {

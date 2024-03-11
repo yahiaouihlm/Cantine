@@ -4,7 +4,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import {StudentsManagementService} from "../students-management.service";
 import {
     NgOtpInputDialogComponent
-} from "../../../sharedmodule/dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component";
+} from "../manage-student-wallet/ng-otp-input-dialog/ng-otp-input-dialog.component";
 
 
 @Component({

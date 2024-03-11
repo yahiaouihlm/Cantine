@@ -37,16 +37,14 @@ export class StudentsManagementService {
             catchError((error) => this.handleUpdateStudentEmailError(error))
         );
     }
-    sendStudentCode(studentId: string, amount: number, validationCode: number) {
+    sendStudentCode(adminUuid :  string ,  studentId: string, amount: number, validationCode: number) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('studentId', studentId.toString())
+        const params = new HttpParams().set('studentUuid', studentId.toString())
+            .set('adminUuid' , adminUuid)
             .set('amount', amount)
             .set('validationCode', validationCode)
-        return this.httpClient.post<NormalResponse>(this.SEND_STUDENT_VALIDATION_CODE, null, {headers: headers, params: params})
-            .pipe(
-                catchError((error) => this.handleError(error))
-            )
+        return this.httpClient.post<NormalResponse>(this.SEND_STUDENT_VALIDATION_CODE, null, {headers: headers, params: params});
     }
 
     attemptAddAmountToStudentAccount(adminUuid :string, studentUuid: string, amount: number) {
