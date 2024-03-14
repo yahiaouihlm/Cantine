@@ -32,7 +32,11 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
     @Query( value = "SELECT meal  FROM MealEntity  meal  WHERE meal.status=1")
     List<MealEntity> getAvailableMeals ();
 
+    @Query( value = "SELECT meal  FROM MealEntity  meal  WHERE meal.status=0")
+    List<MealEntity> getUnavailableMeals ();
 
+    @Query( value = "SELECT meal  FROM MealEntity  meal  WHERE meal.status=2")
+    List<MealEntity> getMealsInDeletionProcess();
 
     Optional<MealEntity>findByUuid(String uuid);
 

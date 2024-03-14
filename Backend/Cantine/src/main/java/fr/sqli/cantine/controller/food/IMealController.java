@@ -27,7 +27,11 @@ public interface IMealController {
     String ENDPOINT_DELETE_MEAL_URL = "/delete";
     String ENDPOINT_GET_ONE_MEAL_URL = "/get";
     String ENDPOINT_UPDATE_MEAL_URL = "/update";
+    String  ENDPOINT_GET_ONLY_AVAILABLE_MEALS =  "/getAvailableMeals";
 
+    String ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS = "/getUnavailableMeals";
+
+    String GET_ONLY_MEALS_IN_DELETION_PROCESS_URL = "/getMealsInDeletionProcess";
     String  ENDPOINT_GET_ALL_MEAL =  "/getAll";
 
     /*------------------ MESSAGES ------------------*/
@@ -48,6 +52,14 @@ public interface IMealController {
     ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException;
 
 
+    @GetMapping(value = ENDPOINT_GET_ONLY_AVAILABLE_MEALS)
+    ResponseEntity<List<MealDtOut>> getAvailableMeals();
+
+    @GetMapping(value = ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS)
+    ResponseEntity<List<MealDtOut>> getUnavailableMeals();
+
+    @GetMapping(value = GET_ONLY_MEALS_IN_DELETION_PROCESS_URL)
+    ResponseEntity<List<MealDtOut>> getMealsInDeletionProcess();
     @GetMapping(value = ENDPOINT_GET_ALL_MEAL)
     ResponseEntity<List<MealDtOut>> getAllMeal();
 
