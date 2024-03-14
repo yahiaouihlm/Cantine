@@ -44,7 +44,7 @@ export class NgOtpInputDialogComponent {
     otp!: string;
     numberOfAttempts = 3 ;
     wrongCode = false;
-    isLoading =  true ;
+    isLoading =  false ;
 
     AMOUNT_ADDED_SUCCESSFULLY = "Le montant a été ajouté avec succès !"
     constructor(@Inject(MAT_DIALOG_DATA) public data: { studentUuid: string , amount : number},private dialogRef: MatDialogRef<NgOtpInputDialogComponent>, private studentsManagementService: StudentsManagementService , private matDialog: MatDialog, private router : Router) {
@@ -68,6 +68,7 @@ export class NgOtpInputDialogComponent {
             this.numberOfAttempts --;
             this.dialogRef.close();
         }
+        this.isLoading = true ;
         this.sendStudentConfirmationCodeReq(this.data.studentUuid , this.data.amount ,  validationCode)
     }
 
@@ -80,6 +81,7 @@ export class NgOtpInputDialogComponent {
         this.studentsManagementService.sendStudentCode(myAdminUuid, userUuid, amountToAdd, validationCode).subscribe({
             next: (response) => {
                 this.showConfirmationDialog(this.AMOUNT_ADDED_SUCCESSFULLY);
+                this.isLoading = false ;
                 this.dialogRef.close();
             }
             , error: (error) => {
@@ -93,6 +95,7 @@ export class NgOtpInputDialogComponent {
                     localStorage.clear();
                     this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
                 }
+                this.isLoading = false ;
             }
         });
     }

@@ -6,6 +6,7 @@ import {OrderDashboardComponent} from "../orders/order-dashbord/order-dashboard.
 import {SharedmoduleModule} from "../../sharedmodule/sharedmodule.module";
 import { ManageStudentComponent } from './manage-student-wallet/manage-student.component';
 import { EditStudentWalletDialogComponent } from './edit-student-wallet-dialog/edit-student-wallet-dialog.component';
+import { StudentTransactionHistoryComponent } from './student-transaction-history/student-transaction-history.component';
 
 
 
@@ -14,13 +15,15 @@ import { EditStudentWalletDialogComponent } from './edit-student-wallet-dialog/e
 
 const routes: Routes = [
   {path: '', component: StudentsHandlerComponent },
-  {path: 'profile', component: ManageStudentComponent }
+  {path: 'profile', component: ManageStudentComponent },
+    {path: 'transaction-history', component: StudentTransactionHistoryComponent }
 ];
 @NgModule({
   declarations: [
     StudentsHandlerComponent,
     ManageStudentComponent,
-    EditStudentWalletDialogComponent
+    EditStudentWalletDialogComponent,
+    StudentTransactionHistoryComponent
   ],
     imports: [
         CommonModule,

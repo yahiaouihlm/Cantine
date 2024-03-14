@@ -66,10 +66,7 @@ export class ManageStudentComponent implements OnInit {
 
 
     addAmount() {
-        this.sendStudentConfirmationCode(
-            7
-        );
-      /*  let amountToAdd = 0;
+        let amountToAdd = 0;
         let dialogRef = this.matDialog.open(EditStudentWalletDialogComponent, {
             data: {message: "Le Montant à Ajouter", userid: this.user.uuid},
             width: '47%',
@@ -82,19 +79,19 @@ export class ManageStudentComponent implements OnInit {
                 amountToAdd = result;
                 this.sendStudentAmount(amountToAdd);
             }
-        });*/
+        });
 
 
     }
 
     sendStudentAmount(amountToAdd: number) {
 
-       let  myAdminUuid = Malfunctions.getUserIdFromLocalStorage()
-        this.studentsManagementService.attemptAddAmountToStudentAccount(myAdminUuid,  this.user.uuid, amountToAdd).subscribe({
+        let myAdminUuid = Malfunctions.getUserIdFromLocalStorage()
+        this.studentsManagementService.attemptAddAmountToStudentAccount(myAdminUuid, this.user.uuid, amountToAdd).subscribe({
             next: (response) => {
                 this.isLoadingPage = false
                 console.log(response);
-            this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
+                this.sendStudentConfirmationCode(amountToAdd);//  ouvrir le formulaire pour avoir le code  de confirmation
             },
             error: (error) => {
                 this.isLoadingPage = false
@@ -110,12 +107,12 @@ export class ManageStudentComponent implements OnInit {
             width: "50vw", height: "30vh",
             data: {studentUuid: this.user.uuid , amount : amountToAdd},
         });
-    /*    let result = dialogRef.afterClosed().subscribe((result: string) => {
-            if (result != undefined && result != "") {
-                this.isLoadingPage = true;
-              //  this.sendStudentConfirmationCodeReq(amountToAdd, Number(result)); //  envoyer le  code  de  confirmation
-            }
-        });*/
+            let result = dialogRef.afterClosed().subscribe((result: string) => {
+                if (result != undefined && result != "") {
+                    this.isLoadingPage = true;
+                  //  this.sendStudentConfirmationCodeReq(amountToAdd, Number(result)); //  envoyer le  code  de  confirmation
+                }
+            });
     }
 
 
@@ -177,4 +174,8 @@ export class ManageStudentComponent implements OnInit {
         this.enableEmailInput = true;
         this.student.controls['email'].enable();
     }
+
+    goToTransactionsHistory() {
+        this.router.navigate([IConstantsURL.ADMIN_STUDENT_TRANSACTIONS_HISTORY_URL], {queryParams: {studentUuid: this.user.uuid}}).then(r => window.location.reload());
+     }
 }
