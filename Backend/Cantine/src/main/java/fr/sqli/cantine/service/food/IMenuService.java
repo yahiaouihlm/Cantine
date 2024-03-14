@@ -1,6 +1,7 @@
 package fr.sqli.cantine.service.food;
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.*;
@@ -41,7 +42,9 @@ public interface IMenuService {
   public  List<MenuDtOut> getAvailableMenu();
   public List<MenuDtOut> getAllMenus();
 
+    List<MenuDtOut> getMenusInDeletionProcess();
 
+    List<MenuDtOut> getUnavailableMenus();
 
   public Optional<MenuEntity> getMenuWithLabelAndDescriptionAndPrice(String label, String description, BigDecimal price) ;
 

@@ -4,6 +4,7 @@ package fr.sqli.cantine.controller.food.impl;
 import fr.sqli.cantine.controller.food.IMenuController;
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.food.impl.MenuService;
@@ -67,6 +68,21 @@ public class MenuController implements IMenuController {
     @Override
     public ResponseEntity<List<MenuDtOut>> getAllMenu() {
         return ResponseEntity.ok().body(this.menuService.getAllMenus());
+    }
+
+    @Override
+    public ResponseEntity<List<MenuDtOut>> getAvailableMenus() {
+        return ResponseEntity.ok(this.menuService.getAvailableMenu());
+    }
+
+    @Override
+    public ResponseEntity<List<MenuDtOut>> getUnavailableMenus() {
+        return ResponseEntity.ok(this.menuService.getUnavailableMenus());
+    }
+
+    @Override
+    public ResponseEntity<List<MenuDtOut>> getMenusInDeletionProcess() {
+        return ResponseEntity.ok(this.menuService.getMenusInDeletionProcess());
     }
 
 

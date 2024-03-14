@@ -2,6 +2,7 @@ package fr.sqli.cantine.controller.food;
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
+import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
@@ -26,7 +27,11 @@ public interface IMenuController {
     String  ENDPOINT_GET_ALL_MENU =  "/getAll";
 
     String ENDPOINT_GET_ONE_MENU_URL = "/get";
+    String  ENDPOINT_GET_ONLY_AVAILABLE_MENUS =  "/getAvailableMenus";
 
+    String ENDPOINT_GET_ONLY_UNAVAILABLE_MENUS = "/getUnavailableMenus";
+
+    String GET_ONLY_MENUS_IN_DELETION_PROCESS_URL = "/getMenusInDeletionProcess";
 
 
     /*------------------ MESSAGES ------------------*/
@@ -49,4 +54,14 @@ public interface IMenuController {
 
     @GetMapping(value = ENDPOINT_GET_ALL_MENU)
     public  ResponseEntity<List<MenuDtOut>> getAllMenu();
+
+    @GetMapping(value = ENDPOINT_GET_ONLY_AVAILABLE_MENUS)
+    ResponseEntity<List<MenuDtOut>> getAvailableMenus();
+
+    @GetMapping(value = ENDPOINT_GET_ONLY_UNAVAILABLE_MENUS)
+    ResponseEntity<List<MenuDtOut>> getUnavailableMenus();
+
+    @GetMapping(value = GET_ONLY_MENUS_IN_DELETION_PROCESS_URL)
+    ResponseEntity<List<MenuDtOut>> getMenusInDeletionProcess();
+
 }
