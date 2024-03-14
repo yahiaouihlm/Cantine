@@ -204,6 +204,25 @@ public class MealService implements IMealService {
     }
 
     @Override
+    public List<MealDtOut> getAvailableMeals() {
+        return this.getOnlyAvailableMeals();
+    }
+
+    @Override
+    public List<MealDtOut> getMealsInDeletionProcess() {
+        return  this.mealDao.getMealsInDeletionProcess().stream().map(
+                mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
+        ).toList();
+    }
+
+    @Override
+    public List<MealDtOut> getUnavailableMeals() {
+        return this.mealDao.getUnavailableMeals().stream().map(
+                mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
+        ).toList();
+    }
+
+    @Override
     public MealEntity getMealEntityByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
         IMealService.checkMealUuidValidity(uuid);
 

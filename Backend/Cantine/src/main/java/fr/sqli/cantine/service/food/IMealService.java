@@ -100,6 +100,12 @@ public interface IMealService {
     MealDtOut getMealByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException;
 
 
+    List<MealDtOut> getAvailableMeals();
+
+    List<MealDtOut> getMealsInDeletionProcess();
+
+    List<MealDtOut> getUnavailableMeals();
+
     MealEntity getMealEntityByUUID(String uuid) throws  InvalidFoodInformationException, FoodNotFoundException;
 
 

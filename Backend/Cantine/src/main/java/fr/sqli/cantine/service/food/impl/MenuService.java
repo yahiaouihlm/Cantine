@@ -214,6 +214,20 @@ public class MenuService implements IMenuService {
                 .toList();
     }
 
+    @Override
+    public List<MenuDtOut> getMenusInDeletionProcess() {
+        return  this.menuDao.getMenusInDeletionProcess().stream()
+                .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
+                .toList();
+    }
+
+    @Override
+    public List<MenuDtOut> getUnavailableMenus() {
+        return  this.menuDao.getUnavailableMenu().stream()
+                .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
+                .toList();
+    }
+
 
     @Override
     public Optional<MenuEntity> getMenuWithLabelAndDescriptionAndPrice(String label, String description, BigDecimal price) {

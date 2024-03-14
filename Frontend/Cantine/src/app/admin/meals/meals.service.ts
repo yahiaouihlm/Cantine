@@ -28,6 +28,11 @@ export class MealsService {
     private DELETE_MEAL_URL = this.BASIC_ENDPOINT + "/delete";
     private GET_ALL_MEALS_URL = this.BASIC_ENDPOINT + "/getAll";
 
+    private GET_ONLY_AVAILABLE_MEALS_URL = this.BASIC_ENDPOINT + "/getAvailableMeals";
+
+    private GET_ONLY_UNAVAILABLE_MEALS_URL = this.BASIC_ENDPOINT + "/getUnavailableMeals";
+
+    private GET_ONLY_MEALS_IN_DELETION_PROCESS_URL = this.BASIC_ENDPOINT + "/getMealsInDeletionProcess";
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
@@ -70,7 +75,27 @@ export class MealsService {
         );
     }
 
-
+    getOnlyMealsInDeletionProcess() {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get <Meal[]>(this.GET_ONLY_MEALS_IN_DELETION_PROCESS_URL, {
+            headers: headers,
+        });
+    }
+    getOnlyUnavailableMeals() {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get <Meal[]>(this.GET_ONLY_UNAVAILABLE_MEALS_URL, {
+            headers: headers,
+        });
+    }
+    getOnlyAvailableMeals() {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get <Meal[]>(this.GET_ONLY_AVAILABLE_MEALS_URL, {
+            headers: headers,
+        });
+    }
     getAllMeals() {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);

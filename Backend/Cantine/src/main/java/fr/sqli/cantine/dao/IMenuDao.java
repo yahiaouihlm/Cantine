@@ -1,7 +1,5 @@
 package fr.sqli.cantine.dao;
 
-
-import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,7 +28,11 @@ public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
 
     @Query( value = " SELECT menu FROM MenuEntity  menu  WHERE menu.status=1 ")
     List<MenuEntity> getAvailableMenus ();
+    @Query( value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=0")
+    List<MenuEntity> getUnavailableMenu ();
 
+    @Query( value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=2")
+    List<MenuEntity> getMenusInDeletionProcess();
 
     Optional<MenuEntity>findByUuid(String uuid);
 

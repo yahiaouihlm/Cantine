@@ -1,7 +1,21 @@
 <div class="center" style="margin: 20px">
     <button class="btn"  (click)="addMenu()" >Ajouter un Menu</button>
 </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <select class="form-control"  [(ngModel)]="selectedOption" >
+                <option *ngFor="let option of optionsOfMenus" [value]="option" style="font-weight: bolder">{{ option }}</option>
+            </select>
+        </div>
 
+        <div class=" center col-md-4">
+            <button class=" btn" (click)="validateSearch()">valider</button>
+        </div>
+
+    </div>
+</div>
 <ng-container *ngIf="(menus$ | async) as meals; else noMenu">
     <div *ngIf="meals.length > 0; else noMenu"></div>
 </ng-container>
@@ -37,7 +51,7 @@
 
 <ng-template #noMenu>
     <div class="center" style=" padding: 12%; height: 50%;">
-        <h2> Aucun plat disponible</h2>
+        <h2> Aucun Menu disponible</h2>
     </div>
 </ng-template>
 <style>
