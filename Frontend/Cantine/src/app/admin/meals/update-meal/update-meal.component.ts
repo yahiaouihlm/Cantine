@@ -47,7 +47,7 @@ export class UpdateMealComponent implements OnInit {
 
     ngOnInit(): void {
 
-        if (!Malfunctions.checkAdminConnectivity(this.router)) {
+        if (!Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
             return;
         }
         const param = this.route.snapshot.paramMap.get('id');

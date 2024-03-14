@@ -12,7 +12,7 @@ public  abstract  class AbstractUsersDtoIn {
     private static final Logger LOG = LogManager.getLogger();
 
 
-         private String  uuid ;
+    private String  uuid ;
     private  String firstname;
     private  String lastname;
     private  String email;
@@ -20,7 +20,6 @@ public  abstract  class AbstractUsersDtoIn {
     private  String birthdateAsString;
     private LocalDate birthdate;
     private  String town;
-
     private  String phone;
     private MultipartFile image;
 

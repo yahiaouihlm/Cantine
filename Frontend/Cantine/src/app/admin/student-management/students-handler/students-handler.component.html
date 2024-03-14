@@ -1,136 +1,72 @@
-
-
-
 <div class="container">
-     <div class="row">
-          <form [formGroup]="studentSeeked">
-
-               <!---------------------- Name --------------------------->
-               <div class="form-group ">
-                    <label for="firstName"> Prénom :  </label>
-                    <input [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" class="form-control"
-                           formControlName="firstName"
-                           placeholder="  Votre Prénom "
-                           type="text"
-                           id="firstName"
-                    />
-                    <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
-                         <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
-                         <div *ngIf="f['firstName'].errors['maxlength']" class="center">
-                              votre Prénom  ne doit pas dépasser 60 charctéres
-                         </div>
-                         <div *ngIf="f['firstName'].errors['minlength']" class="center">
-                              votre Prénom    doit avoir au minimum de 3 charctéres
-                         </div>
+    <div class="row student-search">
+        <div class="col-md-12">
+            <h1 class="center"> Rechercher un étudiant </h1>
+        </div>
+        <form [formGroup]="studentSeeked">
+            <!---------------------- Email --------------------------->
+            <div class="form-group ">
+                <label for="email"> Email : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                       formControlName="email"
+                       placeholder="  Votre Email "
+                       type="email"
+                       id="email"
+                />
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                    <div *ngIf="f['email'].errors['maxlength']" class="center">
+                        votre Nom ne doit pas dépasser 1000 charctéres
                     </div>
-               </div>
-
-
-               <!---------------------- LastName --------------------------->
-               <div class="form-group ">
-                    <label for="lastName"> Nom :  </label>
-                    <input [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" class="form-control"
-                           formControlName="lastName"
-                           placeholder="  Votre Nom "
-                           type="text"
-                           id="lastName"
-                    />
-                    <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
-                         <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
-                         <div *ngIf="f['lastName'].errors['maxlength']" class="center">
-                              votre Nom  ne doit pas dépasser 60 charctéres
-                         </div>
-                         <div *ngIf="f['lastName'].errors['minlength']" class="center">
-                              votre Nom  doit avoir au minimum de 3 charctéres
-                         </div>
+                    <div *ngIf="f['email'].errors['email']" class="center">
+                        Format Email incorrect
                     </div>
-               </div>
 
-
-
-
-               <!---------------------- Birthdate--------------------------->
-               <div class="form-group ">
-                    <label for="birthDate"> Date De  Naissance   :  </label>
-                    <input [ngClass]="{ 'is-invalid': submitted && f['birthDate'].errors }" class="form-control"
-                           formControlName="birthDate"
-                           placeholder="Votre  Date  De  Naissance "
-                           type="Date"
-                           id="birthDate"
-                    />
-                    <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
-                         <div *ngIf="f['birthDate'].errors['required']" class="center"> La  date  de  naissance  est requise     </div>
-
+                    <div *ngIf="f['email'].errors['pattern']" class="center">
+                        Format Email incorrect pattern
                     </div>
-               </div>
-          </form>
+                </div>
+            </div>
+
+        </form>
 
 
-          <div *ngIf="!isLoaded; else loadingTemplate" class="search center ">
-               <button  class="btn" (click)="validate()"> Chercher </button>
+        <div *ngIf="!isLoaded; else loadingTemplate" class="search center ">
+            <button class="btn" (click)="validate()"> Chercher</button>
+        </div>
+    </div>
+</div>
+
+
+<div  *ngIf="found" class="container">
+     <div class="row student-result" >
+          <div class="col-md-2">
+               <span>  <strong>Nom  : </strong>  {{student.firstname}}  </span>
           </div>
+          <div class="col-md-2">
+               <span><strong>Prénom : </strong> {{student.lastname}} </span>
+          </div>
+
+          <div class="col-md-4">
+               <span><strong>Date De  Naissance  : </strong>{{student.birthdate}} </span>
+          </div>
+
+
+         <div class="col-md-4">
+             <button class="btn" (click)="goToStudentProfile()"> voir le  profile</button>
+         </div>
+
+
      </div>
 </div>
 
 
-<div *ngIf="(students$ | async)?.length; else noStudents">
-     <div *ngFor="let student of students$ | async ">
-          <div class="container" (click)="goToStudentProfile(student.uuid)">
-               <div class="row">
-                    <div class="col-md-2">
-                         <span>   Nom :  {{student.lastname}}  </span>
-                    </div>
-                    <div class="col-md-2">
-                         <span><strong>Prénom : </strong> {{student.firstname}} </span>
-                    </div>
-
-                    <div class="col-md-4">
-                         <span><strong>Email  : </strong> {{student.email}}</span>
-                    </div>
-
-                    <div class="col-md-4">
-                         <span><strong>Date De  Naissance  : </strong> {{student.birthdate}} </span>
-                    </div>
 
 
-               </div>
-          </div>
-     </div>
-</div>
-
-
-<ng-template #noStudents >
-     <p class="center" >Aucun étudiant n'a été trouvé .</p>
-</ng-template>
-
-
-
-
-<ng-template #loadingTemplate >
-     <!-- Afficher le spinner ici pendant le chargement -->
-     <div class="spinner-container">
-          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-     </div>
+<ng-template #loadingTemplate>
+    <!-- Afficher le spinner ici pendant le chargement -->
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
 
 </ng-template>
-<style>
-     .spinner-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 15vh;
-     }
-  .row{
-       margin-top: 40px;
-       border:  1px  solid  black ;
-  }
-
-  .search{
-       margin: 10px;
-  }
-  p{
-       color: red;
-       font-size: 1.2rem;
-       font-weight: bold;
-  }
-</style>

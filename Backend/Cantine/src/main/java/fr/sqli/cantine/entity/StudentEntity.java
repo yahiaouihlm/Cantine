@@ -8,26 +8,24 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "student", uniqueConstraints={
-        @UniqueConstraint(columnNames={"email"})
+@Table(name = "student", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email"})
 }
 )
 
-public class StudentEntity  extends UserEntity implements Serializable {
+public class StudentEntity extends UserEntity implements Serializable {
 
-    @Column(name = "wallet" , nullable=false )
+    @Column(name = "wallet", nullable = false)
     @Check(constraints = "wallet >= 0")
     private BigDecimal wallet;
-    @Column(name = "phone" , nullable=true , length = 99)
-    private String phone ;
-    @ManyToOne(cascade =  CascadeType.MERGE)
-    @JoinColumn(name="class_id", nullable=false)
+    @Column(name = "phone", nullable = true, length = 99)
+    private String phone;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "class_id", nullable = false)
     private StudentClassEntity studentClass;
 
 
-
-
-    public  StudentEntity (String firstname , String lastname , String email , String password , LocalDate birthdate , String town , String phone , LocalDate disableDate  , StudentClassEntity studentClass , Integer status , BigDecimal wallet,  ImageEntity image) {
+    public StudentEntity(String firstname, String lastname, String email, String password, LocalDate birthdate, String town, String phone, LocalDate disableDate, StudentClassEntity studentClass, Integer status, BigDecimal wallet, ImageEntity image) {
         super();
         super.setFirstname(firstname.trim());
         super.setLastname(lastname.trim());
@@ -43,7 +41,17 @@ public class StudentEntity  extends UserEntity implements Serializable {
         this.wallet = wallet;
     }
 
-    public StudentEntity() {}
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof StudentEntity student)) return false;
+        if (!super.equals(other)) return false;
+
+        return this.getEmail().equals(student.getEmail()) && this.getUuid().equals(student.getUuid());
+    }
+
+    public StudentEntity() {
+    }
 
     public BigDecimal getWallet() {
         return wallet;

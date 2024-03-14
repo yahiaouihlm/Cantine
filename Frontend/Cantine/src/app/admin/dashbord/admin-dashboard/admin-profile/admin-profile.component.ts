@@ -48,7 +48,7 @@ export class AdminProfileComponent implements OnInit {
     ngOnInit(): void {
         this.adminUpdated.controls['email'].disable();
         this.adminUpdated.disable();
-        if (!Malfunctions.checkAdminConnectivity(this.router)) {
+        if (!Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
             return;
         }
         let adminUuid = Malfunctions.getUserIdFromLocalStorage();
