@@ -5,6 +5,7 @@ import fr.sqli.cantine.controller.users.admin.IAdminWorksController;
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.service.users.admin.impl.AdminWorksService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
@@ -25,6 +26,11 @@ public class AdminWorksController  implements  IAdminWorksController {
         this.adminWorksService = adminWorksService;
     }
 
+
+    @Override
+    public ResponseEntity<List<TransactionDtout>> getStudentTransactions(String studentUuid) throws InvalidUserInformationException, UserNotFoundException {
+        return ResponseEntity.ok(this.adminWorksService.getStudentTransactions(studentUuid));
+    }
 
     @Override
     public ResponseEntity<ResponseDtout> updateStudentEmail(String studentUuid, String newEmail) throws UserNotFoundException, MessagingException, ExistingUserException, InvalidUserInformationException {

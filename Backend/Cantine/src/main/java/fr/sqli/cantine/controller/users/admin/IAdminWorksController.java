@@ -4,6 +4,7 @@ package fr.sqli.cantine.controller.users.admin;
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,8 @@ import java.util.List;
 public interface IAdminWorksController {
 
     String ADMIN_DASH_BOARD_BASIC_WORK_URL = "/cantine/admin/adminDashboard/works";
+    String GET_STUDENT_TRANSACTIONS_ENDPOINT = "/getStudentTransactions";
     String SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT = "/addStudentAmount";
-
     String  VALIDATE_STUDENT_AMOUNT_STUDENT =  "/validationAmount";
     String GET_STUDENTS = "/getStudents";
     String GET_STUDENT = "/getStudent";
@@ -34,6 +35,8 @@ public interface IAdminWorksController {
     String STUDENT_EMAIL_UPDATED_SUCCESSFULLY = "STUDENT EMAIL UPDATED SUCCESSFULLY";
 
 
+    @GetMapping(GET_STUDENT_TRANSACTIONS_ENDPOINT)
+    ResponseEntity<List<TransactionDtout>> getStudentTransactions(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
     @PostMapping(UPDATE_STUDENT_EMAIL)
     ResponseEntity<ResponseDtout> updateStudentEmail(@RequestParam("studentUuid") String studentUuid, @RequestParam("newEmail") String newEmail) throws UserNotFoundException, MessagingException, ExistingUserException, InvalidUserInformationException;
     @PostMapping(VALIDATE_STUDENT_AMOUNT_STUDENT)

@@ -5,6 +5,7 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.PaymentEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
@@ -52,6 +53,21 @@ public class AdminWorksService implements IAdminFunctionService {
         this.STUDENT_IMAGE_URL = this.environment.getProperty("sqli.cantine.images.url.student");
     }
 
+
+    @Override
+    public List<TransactionDtout> getStudentTransactions(String studentUuid) throws InvalidUserInformationException, UserNotFoundException {
+        if  (studentUuid == null || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 10) {
+            AdminWorksService.LOG.error("INVALID  STUDENT UUID  IN  getStudentTransactions ADMIN WORK SERVICE ");
+            throw new InvalidUserInformationException("INVALID  STUDENT UUID");
+        }
+        var  student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
+            AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("STUDENT NOT  FOUND");
+        });
+
+        return this.paymentDao.findByStudent(student).stream().map(transaction ->
+                new TransactionDtout(transaction.getAdmin() , transaction.getStudent(), transaction.getAmount(), transaction.getPaymentDate())).toList();
+    }
 
     @Override
     public void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException, UnknownUser, MessagingException {

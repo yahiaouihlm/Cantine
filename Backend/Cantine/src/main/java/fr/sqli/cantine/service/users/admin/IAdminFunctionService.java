@@ -2,6 +2,7 @@ package fr.sqli.cantine.service.users.admin;
 
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public interface IAdminFunctionService {
 
 
+    List<TransactionDtout>getStudentTransactions(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
     void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException, UnknownUser, MessagingException;
 
     void attemptAddAmountToStudentAccount(String adminUuid, String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser;
