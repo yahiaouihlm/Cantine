@@ -4,7 +4,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/form
 import {StudentsManagementService} from "../students-management.service";
 import {
     NgOtpInputDialogComponent
-} from "../../../sharedmodule/dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component";
+} from "../manage-student-wallet/ng-otp-input-dialog/ng-otp-input-dialog.component";
 
 
 @Component({
@@ -18,7 +18,7 @@ export class EditStudentWalletDialogComponent {
     submitted: boolean = false;
     isLoaded: boolean = false;
     amountForm: FormGroup = new FormGroup({
-        amount: new FormControl('', [Validators.required, Validators.max(200), Validators.min(10)]),
+        amount: new FormControl('', [Validators.required, Validators.max(200), Validators.min(-200)]),
     });
 
 

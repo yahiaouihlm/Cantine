@@ -1,6 +1,7 @@
 package fr.sqli.cantine.service.food.impl;
 
 import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
@@ -16,6 +17,7 @@ import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,17 @@ import java.util.Optional;
 public class MealService implements IMealService {
     private static final Logger LOG = LogManager.getLogger();
     private final IMealDao mealDao;
+    private final IMenuDao menuDao;
     private final String MEALS_IMAGES_URL;
     private final String MEALS_IMAGES_PATH;
     private final IImageService imageService;
 
 
     @Autowired
-    public MealService(Environment env, IMealDao mealDao, IImageService imageService) {
+    public MealService(Environment env, IMealDao mealDao, IImageService imageService ,  IMenuDao menuDao) {
         this.mealDao = mealDao;
         this.imageService = imageService;
+        this.menuDao = menuDao;
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
         this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.meals.path");
     }
@@ -69,7 +73,6 @@ public class MealService implements IMealService {
         meal.setDescription(mealDtoIn.getDescription().trim());
         meal.setPrice(mealDtoIn.getPrice());
         meal.setQuantity(mealDtoIn.getQuantity());
-        meal.setStatus(mealDtoIn.getStatus());
         meal.setMealType(mealDtoIn.getMealTypeEnum());
 
         //check  if the  meal  is  already  present  in  the  database despite  the  update
@@ -90,6 +93,15 @@ public class MealService implements IMealService {
             meal.getImage().setImagename(newImageName);
 
         }
+        meal.setStatus(mealDtoIn.getStatus());
+        if (mealDtoIn.getStatus() == 0) {
+            for (var menu  : meal.getMenus()){
+                menu.setStatus(0);
+                this.menuDao.save(menu);
+            }
+        }
+
+
         return this.mealDao.save(meal);
     }
 
@@ -103,20 +115,37 @@ public class MealService implements IMealService {
             return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
 
+        if (meal.getStatus() == 2) {
+            MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS IN PROCESS OF DELETION", uuid);
+            throw new RemoveFoodException("THE MEAL WITH AN UUID = " + uuid + "IS IN PROCESS OF DELETION");
+        }
 
-        // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
-        meal.setStatus(2);
-        this.mealDao.save(meal);
         // check  if  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
         if (meal.getMenus() != null && meal.getMenus().size() > 0) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
-            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S)" +
-                    "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
+
+            // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+            meal.setStatus(2);
+            this.mealDao.save(meal);
+
+         // make all  menu  have the  status 0  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+            for (var menu  : meal.getMenus()){
+                menu.setStatus(0);
+                this.menuDao.save(menu);
+            }
+
+            throw new RemoveFoodException("THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S) PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
+
         }
 
         // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
         if (meal.getOrders() != null && meal.getOrders().size() > 0) {
             MealService.LOG.debug("THE MENU WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
+
+            // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
+            meal.setStatus(2);
+            this.mealDao.save(meal);
+
             throw new RemoveFoodException("THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)"
             +"PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
         }
@@ -172,6 +201,25 @@ public class MealService implements IMealService {
     @Override
     public MealDtOut getMealByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
         return new MealDtOut(getMealEntityByUUID(uuid), this.MEALS_IMAGES_URL);
+    }
+
+    @Override
+    public List<MealDtOut> getAvailableMeals() {
+        return this.getOnlyAvailableMeals();
+    }
+
+    @Override
+    public List<MealDtOut> getMealsInDeletionProcess() {
+        return  this.mealDao.getMealsInDeletionProcess().stream().map(
+                mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
+        ).toList();
+    }
+
+    @Override
+    public List<MealDtOut> getUnavailableMeals() {
+        return this.mealDao.getUnavailableMeals().stream().map(
+                mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
+        ).toList();
     }
 
     @Override

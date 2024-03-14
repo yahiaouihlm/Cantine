@@ -1,9 +1,10 @@
 export  class  Meal {
-    id! :  number;
+    uuid! :  string;
     label! :  string;
     description! :  string;
     category! :  string;
     price! :  number;
+    mealType! :  string;
 
     quantity! :  number;
 

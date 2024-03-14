@@ -17,6 +17,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -60,14 +61,13 @@ public class SecurityConfig {
                 .authorizeRequests(
                         authorize -> {
                             authorize.requestMatchers("cantine/api/**").permitAll();
-                            authorize.requestMatchers("/cantine/superAdmin/ExistingEmail").permitAll();
                             authorize.requestMatchers("/cantine/download/images/**",
                                     "/cantine/download/images/**").permitAll();
-                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions"
+                            authorize.requestMatchers("/cantine/admin/getAllAdminFunctions"
                                     ,"/cantine/user/check-confirmation-token/**"
                                     ,"/cantine/user/existing-email"
                                     ,"/cantine/user/send-reset-password-link/**"
-                                    , "/cantine/admin/adminDashboard/signUp").permitAll();
+                                    , "/cantine/admin/register").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                             authorize.requestMatchers("/cantine/student/getAllStudentClass"
                                     , "/cantine/student/signUp"
@@ -85,6 +85,11 @@ public class SecurityConfig {
                 .and()
                 .build();
 
+    }
+
+    @Bean
+    public UserDetailsChecker customUserDetailsChecker() {
+        return new CustomUserDetailsChecker();
     }
 /*
     @Bean
@@ -111,6 +116,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(appUserService);
         provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setPreAuthenticationChecks( customUserDetailsChecker());
         return provider;
     }
 

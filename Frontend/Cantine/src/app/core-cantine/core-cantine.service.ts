@@ -10,7 +10,7 @@ import {AuthObject} from "../sharedmodule/models/authObject";
 export class CoreCantineService {
     private BASIC_URL = "http://localhost:8080/cantine/";
     private USER_AUTHENTICATION_ENDPOINT = "http://localhost:8080/" + 'login';
-    private GET_ALL_MEALS_ENDPOINT = this.BASIC_URL + 'api/meals/getAll'
+    private GET_ALL_MEALS_ENDPOINT = this.BASIC_URL + 'api/getAll/meals'
     private GET_ALL_MENUS_ENDPOINT = this.BASIC_URL + 'api/menus/getAll';
 
 
@@ -22,7 +22,7 @@ export class CoreCantineService {
         return this.httpClient.post<AuthObject>(this.USER_AUTHENTICATION_ENDPOINT, login);
     }
 
-    getAllMeals() {
+    getAllAvailableMeals() {
         return this.httpClient.get<Meal[]>(this.GET_ALL_MEALS_ENDPOINT)
     }
 

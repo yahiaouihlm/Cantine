@@ -58,6 +58,21 @@ public class MealController implements IMealController {
     }
 
     @Override
+    public ResponseEntity<List<MealDtOut>> getAvailableMeals() {
+        return ResponseEntity.ok(this.mealService.getAvailableMeals());
+    }
+
+    @Override
+    public ResponseEntity<List<MealDtOut>> getUnavailableMeals() {
+        return  ResponseEntity.ok(this.mealService.getUnavailableMeals());
+    }
+
+    @Override
+    public ResponseEntity<List<MealDtOut>> getMealsInDeletionProcess() {
+        return  ResponseEntity.ok(this.mealService.getMealsInDeletionProcess());
+    }
+
+    @Override
     public ResponseEntity<List<MealDtOut>> getAllMeal() {
           return ResponseEntity.ok(this.mealService.getAllMeals());
     }

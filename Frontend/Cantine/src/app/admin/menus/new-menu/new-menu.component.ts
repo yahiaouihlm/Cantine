@@ -7,6 +7,7 @@ import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-
 import {MenusService} from "../menus.service";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {Router} from "@angular/router";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-new-menu',
@@ -18,11 +19,8 @@ import {Router} from "@angular/router";
 export class NewMenuComponent {
 
     private MENU_ADDED_SUCCESSFULLY = "Le Menu a été ajouté avec succès !"
-    private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  Priw de 80€  Pour un Menu  !"
+    private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  Prix de 80€  Pour un Menu  !"
     private WOULD_YOU_LIKE_TO_SAVE_THIS_MENU = "Voulez-vous  enregistrer  ce  menu ?"
-
-    private   ERROR_OCCURRED_WHILE_UPDATING_MENU = "Une erreur s'est produite lors de la mise à jour du menu !"
-
     submitted = false;
     image!: File
     mealsContainMenu: Meal[] = []
@@ -34,7 +32,7 @@ export class NewMenuComponent {
         image: new FormControl('', [Validators.required]),
         status: new FormControl('', [Validators.required]),
     });
-     isLoaded = false;
+    isLoaded = false;
     closedDialog = false;
 
     constructor(private matDialog: MatDialog, private menusService: MenusService, private router: Router) {
@@ -43,14 +41,13 @@ export class NewMenuComponent {
 
     onSubmit() {
         this.submitted = true;
-        this.isLoaded = true;
         if (this.newMenu.invalid || this.mealsContainMenu.length < 2) {
-            this.isLoaded = false;
-          return;
+            return;
         }
         if (this.newMenu.controls["price"].value > 50) {
-          alert(this.ATTENTION_MENU_PRICE)
+            alert(this.ATTENTION_MENU_PRICE)
         }
+        this.isLoaded = true;
         this.confirmAndSendNewMeal();
 
     }
@@ -66,6 +63,7 @@ export class NewMenuComponent {
             if (result != undefined && result == true) {
                 this.sendNewMenu();
             } else {
+                this.isLoaded = false;
                 return;
             }
         });
@@ -75,10 +73,10 @@ export class NewMenuComponent {
 
 
     sendNewMenu(): void {
-        let mealsIds: number[] = []
+        let mealsIds: string[] = []
 
         this.mealsContainMenu.forEach((meal) => {
-            mealsIds.push(meal.id);
+            mealsIds.push(meal.uuid);
         });
 
         const formData = new FormData();
@@ -88,24 +86,24 @@ export class NewMenuComponent {
         formData.append("quantity", this.newMenu.controls["quantity"].value);
         formData.append("image", this.image);
         formData.append('status', this.newMenu.controls['status'].value === "available" ? "1" : "0");
-        formData.append("mealIDs", JSON.stringify(mealsIds));
+        formData.append("listOfMealsAsString", JSON.stringify(mealsIds));
+        console.log("form  data  of meals : ");
+        console.log(formData.get("listOfMealsAsString"));
 
-
-        this.menusService.sendMenu(formData).subscribe((result) => {
-            if (result != undefined && result.message === "MENU ADDED SUCCESSFULLY") {
-                const result = this.matDialog.open(SuccessfulDialogComponent, {
+        this.menusService.addMenu(formData).subscribe({
+            next: (response) => {
+                this.isLoaded = false;
+                this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: this.MENU_ADDED_SUCCESSFULLY},
                     width: '40%',
                 });
-                result.afterClosed().subscribe((result) => {
-                    this.router.navigate(['/admin/menus'], {queryParams: {reload: 'true'}})
-                });
-
-            }else{
-                alert(this.ERROR_OCCURRED_WHILE_UPDATING_MENU);
-                /*TODO    Remove  Token   */
+                this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(r => window.location.reload());
+            },
+            error: (error) => {
+                this.isLoaded = false;
             }
-        })
+        });
+
     }
 
 
@@ -120,8 +118,6 @@ export class NewMenuComponent {
             else {
                 this.mealsContainMenu = result;
             }
-
-            // this.clicked = true;
         })
 
     }
@@ -129,8 +125,7 @@ export class NewMenuComponent {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
 
@@ -139,4 +134,7 @@ export class NewMenuComponent {
     }
 
 
+    goBack() {
+        this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(r => window.location.reload());
+    }
 }

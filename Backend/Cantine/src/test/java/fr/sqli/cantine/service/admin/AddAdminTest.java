@@ -83,7 +83,7 @@ class AddAdminTest {
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
         this.functionEntity = new FunctionEntity();
-        this.adminService = new AdminService(adminDao, functionDao, imageService, this.environment, new BCryptPasswordEncoder(), this.iConfirmationToken, null);
+        this.adminService = new AdminService(adminDao, functionDao, imageService, this.environment, new BCryptPasswordEncoder(), null, null);
 
     }
 

@@ -52,7 +52,14 @@ public class AdminEntity  extends  UserEntity implements Serializable {
 
     public AdminEntity() {}
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof AdminEntity admin)) return false;
+        if (!super.equals(other)) return false;
 
+        return this.getEmail().equals(admin.getEmail()) && this.getUuid().equals(admin.getUuid());
+    }
     public String getAddress() {
         return address;
     }

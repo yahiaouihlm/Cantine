@@ -1,51 +1,62 @@
 import {Component, OnInit} from '@angular/core';
 import Malfunctions from "../../sharedmodule/functions/malfunctions";
-import {GlobalAdminService} from "../global-admin.service";
 import {User} from "../../sharedmodule/models/user";
 import {Router} from "@angular/router";
+import { IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+import {AdminService} from "../dashbord/admin.service";
 
 @Component({
     selector: 'app-main-admin',
     templateUrl: './main-admin.component.html',
     styleUrls: ["../../../assets/styles/main.component.scss"],
-    providers: [GlobalAdminService]
+    providers: [AdminService]
 })
 export class MainAdminComponent implements OnInit {
-    isconnected = false;
-    admin = new User();
+    isConnected = false;
 
-    constructor(private globalAdminService: GlobalAdminService, private router: Router) {
+     admin = new User();
+    constructor(private router: Router , private adminService: AdminService) {
     }
 
     ngOnInit(): void {
         let adminId = Malfunctions.getUserIdFromLocalStorage();
-        console.log("admin  Id = " + adminId);
-        /*if (adminId === '') {
-            this.isconnected = false;
-            this.router.navigate(['cantine/home']).then();
 
-        }*/
-        this.getAdminById(adminId);
-
-    }
-
-    goToStudents() : void  {
-        this.router.navigate(['cantine/admin/students']).then();
-    }
-    getAdminById(adminId: string) {
-        this.globalAdminService.getAdminById(adminId).subscribe((response) => {
-            this.admin = response;
-            this.isconnected = true;
+        if (adminId == "") {
+            this.logout();
+            return
+        }
+      this.adminService.getAdminById(adminId).subscribe((admin) => {
+            this.admin = admin;
+            this.isConnected = true;
         });
     }
 
+    goToStudents() : void  {
+        this.router.navigate([IConstantsURL.ADMIN_STUDENTS_URL]).then();
+    }
 
     goToOrders() {
-        this.router.navigate(['cantine/admin/orders']).then();
+        this.router.navigate([IConstantsURL.ADMIN_ORDERS_URL]).then();
     }
 
     logout(): void {
         localStorage.clear();
-        this.router.navigate(["cantine/home"]).then();
+        this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+    }
+
+    goToMeals() {
+        this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(window.location.reload);
+    }
+
+    goToMenus() {
+        this.router.navigate([IConstantsURL.ADMIN_MENUS_URL]).then(window.location.reload);
+    }
+
+    goToHome() {
+        this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(window.location.reload);
+    }
+
+    goToMyProfile() {
+        this.router.navigate([IConstantsURL.ADMIN_PROFILE_URL]).then(window.location.reload);
     }
 }

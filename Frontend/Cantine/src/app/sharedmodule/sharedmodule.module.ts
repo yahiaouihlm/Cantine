@@ -19,8 +19,9 @@ import {EuroSymbolPipe} from "./CustomPipes/euro-symbol-pipe";
 import { FoodAvailablePipe } from './CustomPipes/food-available.pipe';
 import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {NgOtpInputConfig, NgOtpInputModule} from "ng-otp-input";
-import { NgOtpInputDialogComponent } from './dialogs/ng-otp-input-dialog/ng-otp-input-dialog.component';
+import { NgOtpInputDialogComponent } from '../admin/student-management/manage-student-wallet/ng-otp-input-dialog/ng-otp-input-dialog.component';
 import { LoadingDialogComponent } from './dialogs/loading-dialog/loading-dialog.component';
+import {NgIf} from "@angular/common";
 
 
 @NgModule({
@@ -32,23 +33,23 @@ import { LoadingDialogComponent } from './dialogs/loading-dialog/loading-dialog.
         NgOtpInputDialogComponent,
         LoadingDialogComponent,
   ],
-  imports: [
-    MatSidenavModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatListModule,
-    MatBadgeModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatDialogModule,
-    MatCardModule,
-    HttpClientModule,
-    MatFormFieldModule,
-    MatOptionModule,
-    MatSelectModule,
-    NgOtpInputModule, MatProgressSpinnerModule,
+    imports: [
+        MatSidenavModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatListModule,
+        MatBadgeModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatCardModule,
+        HttpClientModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatSelectModule,
+        NgOtpInputModule, MatProgressSpinnerModule, NgIf,
 
-  ],
+    ],
     exports: [
 
         MainFooterComponent,

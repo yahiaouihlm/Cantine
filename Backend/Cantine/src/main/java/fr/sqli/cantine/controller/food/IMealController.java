@@ -10,6 +10,7 @@ import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,11 @@ public interface IMealController {
     String ENDPOINT_DELETE_MEAL_URL = "/delete";
     String ENDPOINT_GET_ONE_MEAL_URL = "/get";
     String ENDPOINT_UPDATE_MEAL_URL = "/update";
+    String  ENDPOINT_GET_ONLY_AVAILABLE_MEALS =  "/getAvailableMeals";
 
+    String ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS = "/getUnavailableMeals";
+
+    String GET_ONLY_MEALS_IN_DELETION_PROCESS_URL = "/getMealsInDeletionProcess";
     String  ENDPOINT_GET_ALL_MEAL =  "/getAll";
 
     /*------------------ MESSAGES ------------------*/
@@ -36,17 +41,25 @@ public interface IMealController {
 
 
     /*------------------ METHODS ------------------*/
-    @PutMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
 
-    @DeleteMapping(value = ENDPOINT_DELETE_MEAL_URL)
+    @PostMapping(value = ENDPOINT_DELETE_MEAL_URL)
     ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, RemoveFoodException, ImagePathException, InvalidFoodInformationException;
 
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException;
 
 
+    @GetMapping(value = ENDPOINT_GET_ONLY_AVAILABLE_MEALS)
+    ResponseEntity<List<MealDtOut>> getAvailableMeals();
+
+    @GetMapping(value = ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS)
+    ResponseEntity<List<MealDtOut>> getUnavailableMeals();
+
+    @GetMapping(value = GET_ONLY_MEALS_IN_DELETION_PROCESS_URL)
+    ResponseEntity<List<MealDtOut>> getMealsInDeletionProcess();
     @GetMapping(value = ENDPOINT_GET_ALL_MEAL)
     ResponseEntity<List<MealDtOut>> getAllMeal();
 

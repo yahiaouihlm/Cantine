@@ -1,7 +1,7 @@
 
     <app-loading-dialog *ngIf="isLoadingPage"></app-loading-dialog>
 
-<div class="container test ">
+<div class="container main-container">
     <div class="row">
         <form [formGroup]="student" >
             <div class="wallet center">
@@ -45,6 +45,19 @@
                          id="email"
 
                 />
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
+                    <div *ngIf="f['email'].errors['maxlength']" class="center">
+                        votre Nom ne doit pas dépasser 1000 charctéres
+                    </div>
+                    <div *ngIf="f['email'].errors['email']" class="center">
+                        Format Email incorrect
+                    </div>
+
+                    <div *ngIf="f['email'].errors['pattern']" class="center">
+                        Format Email incorrect
+                    </div>
+                </div>
             </div>
 
 
@@ -73,75 +86,30 @@
                 />
             </div>
 
-
-            <!---------------------- StudentClass  --------------------------->
-
-            <div class="form-group">
-                <label for="studentClass"> </label>
-                <select formControlName="studentClass" class="form-control" id="studentClass"
-                        [ngClass]="{ 'is-invalid': submitted && f['studentClass'].errors }" name="studentClass">
-                    <option value="" disabled>-- Votre class --</option>
-                    <ng-container *ngFor="let Sclass of studentClass$ | async ">
-                        <option [value]="Sclass.name">{{ Sclass.name }}</option>
-                    </ng-container>
-                </select>
-
-            </div>
         </form>
 
-        <div class="center">
-            <button class="btn" (click)="addAmount()"> Ajouter   Un  montant </button>
-            <button class="btn"> Soustraire  Un montant </button>
+        <div class="center add-subtract-btn">
+            <button class="btn" (click)="addAmount()">
+                <mat-icon>add_circle_outline</mat-icon>
+                Ajouter   Un  montant
+            </button>
+            <button  (click)="goToTransactionsHistory()" class="btn">
+                <mat-icon>history</mat-icon>
+                historique des  transactions
+            </button>
+
         </div>
 
 
     </div>
 </div>
-<style>
-
-
-    #profile-picture {
-        width: 20%;
-        height: auto;
-        border-radius: 100%;
-    }
-
-
-    .test {
-        padding: 5px;
-        margin-top: 30px;
-        margin-bottom: 30px ;
-        border: 1px solid rgba(50, 47, 47, 0.64);
-
-    }
-
-
-    img {
-        width: 25%;
-    }
-
-
-    .input-card {
-        width: 50%;
-    }
-
-
-</style>
+    <div class="center modify-email-btn">
+        <button *ngIf="!enableEmailInput" class="btn"  (click)="enableEmailFormInput()"> Modifier  le  Email  </button>
+        <button *ngIf="enableEmailInput" class="btn"  (click)="changeStudentEmail()"> Valider  </button>
+    </div>
 
 <ng-template #loadingTemplate >
     <div class="spinner-container">
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
-
 </ng-template>
-
-<style>
-    .spinner-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 15vh;
-    }
-
-
-</style>

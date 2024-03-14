@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class UserExceptionHandler {
 
+
+    @ExceptionHandler(UnknownUser.class)
+    public ResponseEntity<ExceptionDtout> handleUnknownUser(UnknownUser e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
+    }
+
+
     @ExceptionHandler(ExpiredToken.class)
     public ResponseEntity<ExceptionDtout> handleExpiredToken(ExpiredToken e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDtout(e.getMessage()));

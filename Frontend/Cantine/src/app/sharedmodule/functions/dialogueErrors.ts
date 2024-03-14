@@ -7,7 +7,7 @@ export class  DialogErrors  {
 
 
     constructor(private matDialog: MatDialog) {}
-    public openDialog(message: string , httpError :  HttpStatusCode ): MatDialogRef<ExceptionDialogComponent, any> {
+    public openDialog(message: string): MatDialogRef<ExceptionDialogComponent, any> {
         return this.matDialog.open(ExceptionDialogComponent, {
             data: {message: message},
             width: '40%',

@@ -68,8 +68,6 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println(e.getMessage());
                     response.addHeader("error", e.getMessage());
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     Map<String, String> error = new HashMap<>();

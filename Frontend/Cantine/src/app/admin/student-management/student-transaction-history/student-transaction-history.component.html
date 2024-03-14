@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row center">
+            <div class=" center transaction-info">
+                <h2> Historique  des  transactions </h2>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">administrateur  chargé </th>
+                        <th scope="col"> Etudiant </th>
+                        <th scope="col">Le montant</th>
+                        <th scope="col">La  date </th>
+                        <th scope="col">L'Heure</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let transaction of transactions$ | async ">
+                            <th scope="row">{{transaction.admin.firstname}} {{transaction.admin.lastname}}</th>
+                            <td>{{transaction.student.firstname}} {{transaction.student.lastname}}</td>
+                            <td>{{transaction.amount}} € </td>
+                            <td>{{transaction.paymentDate}}</td>
+                            <td>{{transaction.paymentTime}}</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+    </div>
+</div>
+
+<style>
+    .transaction-info {
+        margin-top: 50px;
+ /*       border: #2f2727 2px solid;
+        padding: 18px;
+*/
+    }
+</style>

@@ -10,6 +10,7 @@ import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 
+import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.UserService;
 import fr.sqli.cantine.service.users.admin.IAdminService;
 import fr.sqli.cantine.service.users.exceptions.*;
@@ -48,12 +49,14 @@ public class AdminService implements IAdminService {
     private final IAdminDao adminDao;
     private final UserService userService;
     private IStudentDao studentDao;
+    private UserEmailSender userEmailSender;
 
     @Autowired
     public AdminService(IAdminDao adminDao, IFunctionDao functionDao, ImageService imageService
             , Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , UserService userService
+            , UserEmailSender userEmailSender
     ) {
 
         this.imageService = imageService;
@@ -61,6 +64,7 @@ public class AdminService implements IAdminService {
         this.functionDao = functionDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
+        this.userEmailSender = userEmailSender;
         this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
         this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
@@ -74,7 +78,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
+    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, RemovedAccountException, AccountActivatedException {
 
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
@@ -129,8 +133,9 @@ public class AdminService implements IAdminService {
         // save admin
         this.adminDao.save(adminEntity);
 
-
+        String URL = this.SERVER_ADDRESS + "/cantine/superAdmin/newAdmins";
         this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
+        this.userEmailSender.sendNotificationToSuperAdminAboutAdminRegistration(adminEntity, URL);
     }
 
 
@@ -161,7 +166,10 @@ public class AdminService implements IAdminService {
                     return new UserNotFoundException("ADMIN NOT FOUND");
                 }
         );
-
+        if (admin.getStatus() != 1 || admin.getValidation() != 1) {
+            AdminService.LOG.error("ADMIN FOUND BUT NOT  ACTIVE  OR  NOT  VALIDATED GET  ADMIN  BY  UUID  WITH  UUID = {} CAN  NOT  BE  EXECUTED", adminUuid);
+            throw new InvalidUserInformationException("INVALID USER");
+        }
         return new AdminDtout(admin, this.ADMIN_IMAGE_URL);
     }
 
@@ -186,7 +194,7 @@ public class AdminService implements IAdminService {
         var functionAdminEntity = this.functionDao.findByName(functionAdmin.trim());
 
         if (functionAdminEntity.isEmpty()) {
-            AdminService.LOG.error("function  is  not  valid");
+            AdminService.LOG.error("FUNCTION  OF ADMIN  IS  NOT  FOUND  IN  updateAdminInfo  WITH  FUNCTION = {}", functionAdmin);
             throw new AdminFunctionNotFoundException("YOUR FUNCTIONALITY IS NOT FOUND");
         }
 
@@ -210,7 +218,7 @@ public class AdminService implements IAdminService {
             // check  if the image  to  delete  is  the  default image  or  not
             if (adminEntity.getImage().getImagename().equals(DEFAULT_ADMIN_IMAGE_NAME)) {
                 imageName = this.imageService.uploadImage(image, ADMIN_IMAGE_PATH);
-                AdminService.LOG.info("image  is  uploaded");
+                AdminService.LOG.info("IMAGE  UPLOADED  SUCCESSFULLY  WITH  NAME = {}", imageName);
             } else {
                 var oldImageName = adminEntity.getImage().getImagename();
                 imageName = this.imageService.updateImage(oldImageName, image, ADMIN_IMAGE_PATH);
@@ -225,12 +233,10 @@ public class AdminService implements IAdminService {
 
     }
 
-
     @Override
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());
     }
-
 
     @Override
     public void existingEmail(String adminEmail) throws ExistingUserException {
@@ -239,10 +245,11 @@ public class AdminService implements IAdminService {
         }
     }
 
-
     @Autowired
     public void setStudentDao(IStudentDao studentDao) {
         this.studentDao = studentDao;
     }
+
+
 }
 

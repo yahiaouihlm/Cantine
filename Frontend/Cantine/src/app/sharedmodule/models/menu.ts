@@ -2,7 +2,7 @@ import {Meal} from "./meal";
 
 export class  Menu {
 
-    id! : number;
+    uuid! : string;
     label! : string ;
 
     description!:string;

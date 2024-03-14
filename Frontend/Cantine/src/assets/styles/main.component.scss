@@ -18,9 +18,10 @@ mat-toolbar {
   }
 
   img {
-    width: 60px;
+    height: 60px;
+    width: 60;
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 100%;
   }
 
   //z-index: 100;
@@ -65,8 +66,8 @@ mat-sidenav-container {
   font-size: 1rem;
   background-color: $navbar-color;
   border: none;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   color: $iconnav-color;
 
   mat-icon {

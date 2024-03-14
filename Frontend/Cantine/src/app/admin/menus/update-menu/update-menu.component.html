@@ -6,7 +6,7 @@
                     <img alt="logo" class="form-logo" src="../../../../assets/images/logo.png" width="80px">
                     <h4 class="mt-1 mb-5 pb-1"> Cantinière</h4>
                 </div>
-                <h1 class="center"> Modifier Le Plat </h1>
+                <h1 class="center"> Modifier Le Menu </h1>
                 <div class="register-form ">
                     <form [formGroup]="updatedMenu">
 
@@ -117,6 +117,8 @@
                                              class="form-control" formControlName="status">
                                 <mat-radio-button value="available"><span> Plat Disponible </span></mat-radio-button>
                                 <mat-radio-button value="unavailable"><span> Plat n'est  Disponible </span>
+                                    <mat-radio-button value="toRemove" disabled><span> A supprimé </span>
+                                    </mat-radio-button>
                                 </mat-radio-button>
                             </mat-radio-group>
                             <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
@@ -127,7 +129,7 @@
                         </div>
 
                         <div class="center" style="padding-top: 10px;">
-                            <p> Image du Plat </p>
+                            <p> Image du Menu </p>
                             <img src="{{menu.image}}" alt="y'a pas de image ou  il  na pas pu  etre charger"
                                  width="300px">
                         </div>
@@ -137,8 +139,8 @@
                         <div class="form-group">
                             <label for="image"> Choisissez une image pour modifier celle du plat </label>
 
-                            <input class="input-group-prepend"
-                                   [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
+                            <input class="input-group-prepend form-control"
+                                   [ngClass]="{ 'is-invalid': submitted && f['image'].errors }"
                                    formControlName="image"
                                    placeholder="Le prix du  Plat "
                                    type="file"
@@ -163,22 +165,22 @@
 
                             <h3 *ngIf="mealsContainMenu.length >= 2"> Les plat choisis </h3>
                             <div *ngFor="let meal of  mealsContainMenu">
-                                <p> Label : {{meal.label}}  , Catégoey :  {{meal.category}} , prix
-                                    : {{meal.price}}  </p>
+                                <p> {{meal.label}} : {{meal.category}} :
+                                    : {{meal.price}} €    <span *ngIf="meal.status != 1" style="color: red"> ( indisponible | supprimé ) </span></p>
                             </div>
                             <button class="btn" (click)="onOpenListMealDialog()">Modifier La List Des plats</button>
                         </div>
 
-                        <div class="btns">
+                        <div class="btns" *ngIf="!isLoading ;  else loadingTemplate">
                             <!---->
                             <div class="btn-save center">
                                 <button class="btn" (click)=" onSubmit()"> Valider</button>
                             </div>
                             <!--(click)="goback()"-->
-                            <span><mat-icon>arrow_back</mat-icon></span>
+                            <span (click)="goBack()"><mat-icon>arrow_back</mat-icon></span>
 
                             <div class="btn-save right">
-                                <button class="btn"> supprimer</button>
+                                <button class="btn" (click)="removeMenu()"> supprimer</button>
                             </div>
 
                         </div>
@@ -194,3 +196,11 @@
 
     </div>
 </div>
+
+<ng-template #loadingTemplate>
+    <!-- Afficher le spinner ici pendant le chargement -->
+    <div style="margin-left: 18vw; margin-top: 5%" class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+</ng-template>

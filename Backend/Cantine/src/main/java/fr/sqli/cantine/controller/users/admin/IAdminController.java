@@ -33,17 +33,14 @@ public interface IAdminController {
     /**************************** SERVER ANSWERS ************************************/
 
 
-
-    String TOKEN_CHECKED_SUCCESSFULLY = "TOKEN CHECKED SUCCESSFULLY";
     String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
 
    String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
    String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
 
-    String TOKEN_SENT_SUCCESSFULLY = "TOKEN SENT SUCCESSFULLY";
 
 
-    @PutMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
+    @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     ResponseEntity<ResponseDtout> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException;
 
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)

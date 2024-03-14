@@ -47,9 +47,8 @@ public class UserController implements IUserController {
         return ResponseEntity.ok(new ResponseDtout(EMAIL_DOES_NOT_EXISTS));
     }
 
-    public ResponseEntity<ResponseDtout> checkConfirmationToken(@RequestParam("token") String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException {
-        this.userService.checkLinkValidity(token);
-        return ResponseEntity.ok(new ResponseDtout(TOKEN_CHECKED_SUCCESSFULLY));
+    public ResponseEntity<ResponseDtout> checkConfirmationToken(@RequestParam("token") String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException, AccountActivatedException {
+        return ResponseEntity.ok(this.userService.checkLinkValidity(token));
     }
 
 

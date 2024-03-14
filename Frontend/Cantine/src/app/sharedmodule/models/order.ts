@@ -15,8 +15,8 @@ export class Order {
     creationTime!: Date;
     isCancelled!: boolean;
     status!: number;
-    mealsId: number[] = [];
-    menusId: number[] = [];
+    mealsId: string[] = [];
+    menusId: string[] = [];
     studentOrder!: User;
     public static getOrderFromLocalStorage() {
         let order = localStorage.getItem('Order');
@@ -79,7 +79,7 @@ export class Order {
         if (order) {
             let index = -1;
             for (let counter = 0; counter < order.meals.length; counter++)
-                if (order.meals[counter].id === meal.id) {
+                if (order.meals[counter].uuid === meal.uuid) {
                     index = counter;
                     break;
                 }
@@ -105,7 +105,7 @@ export class Order {
             let index = -1;
 
             for (let counter = 0; counter < order.menus.length; counter++)
-                if (order.menus[counter].id === menu.id) {
+                if (order.menus[counter].uuid === menu.uuid) {
                     index = counter;
                     break;
                 }
@@ -131,11 +131,11 @@ export class Order {
     }
 
 
-    getMealsIds(): number[] {
-        return this.meals.map(meal => meal.id);
+    getMealsIds(): string[] {
+        return this.meals.map(meal => meal.uuid);
     }
 
-    public getMenusIds(): number[] {
-        return this.menus.map(menu => menu.id);
+    public getMenusIds(): string[] {
+        return this.menus.map(menu => menu.uuid);
     }
 }

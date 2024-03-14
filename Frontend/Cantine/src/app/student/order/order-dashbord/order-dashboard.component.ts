@@ -48,8 +48,8 @@ export class OrderDashboardComponent implements OnInit {
                 return;
             }
             this.order.studentId = +studentId;
-            this.order.mealsId = this.order.meals.map(meal => meal.id);
-            this.order.menusId = this.order.menus.map(menu => menu.id);
+            this.order.mealsId = this.order.meals.map(meal => meal.uuid);
+            this.order.menusId = this.order.menus.map(menu => menu.uuid);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
                     let dialogue =  this.matDialog.open(SuccessfulDialogComponent, {

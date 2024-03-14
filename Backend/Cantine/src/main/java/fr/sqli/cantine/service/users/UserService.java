@@ -4,6 +4,7 @@ package fr.sqli.cantine.service.users;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.StudentEntity;
@@ -25,8 +26,8 @@ public class UserService {
 
     private static final Logger LOG = LogManager.getLogger();
     final String SERVER_ADDRESS;
-
     final String RESET_PASSWORD_URL;
+    final  String CONFIRMATION_EMAIL_URL;
     private final Environment environment;
     private final IStudentDao iStudentDao;
     private final IAdminDao iAdminDao;
@@ -48,6 +49,7 @@ public class UserService {
         var port = environment.getProperty("sali.cantine.server.port");
         this.SERVER_ADDRESS = protocol + host + ":" + port;
         this.RESET_PASSWORD_URL = environment.getProperty("sqli.canine.server.reset.password.url");
+        this.CONFIRMATION_EMAIL_URL =  environment.getProperty("sqli.cantine.server.confirmation.token.url");
 
     }
 
@@ -155,7 +157,7 @@ public class UserService {
     }
 
 
-    public void checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
+    public ResponseDtout checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException {
 
         if (token == null || token.trim().isEmpty()) {
             UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
@@ -172,6 +174,10 @@ public class UserService {
         if (user == null) {
             UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
             throw new InvalidTokenException("INVALID TOKEN"); //  token  not  found
+        }
+        if (user.getStatus() == 1) {
+            UserService.LOG.error("ACCOUNT  ALREADY  ACTIVATED WITH  EMAIL  {} ", user.getEmail());
+            throw new AccountActivatedException("ACCOUNT  ALREADY  ACTIVATED");
         }
 
         var expiredTime = System.currentTimeMillis() - confirmationTokenEntity.getCreatedDate().getTime();
@@ -198,8 +204,10 @@ public class UserService {
         userEntity.setStatus(1);
         if (userEntity instanceof StudentEntity) {
             this.iStudentDao.save((StudentEntity) userEntity);
+            return  new ResponseDtout("STUDENT_TOKEN_CHECKED_SUCCESSFULLY");
         } else {
             this.iAdminDao.save((AdminEntity) userEntity);
+            return  new ResponseDtout("ADMIN_TOKEN_CHECKED_SUCCESSFULLY");
         }
     }
 
@@ -233,9 +241,9 @@ public class UserService {
         }
         this.iConfirmationTokenDao.save(confirmationToken);
 
-        var url = this.SERVER_ADDRESS + this.RESET_PASSWORD_URL + confirmationToken.getToken();
+        var url = this.SERVER_ADDRESS + this.CONFIRMATION_EMAIL_URL + confirmationToken.getToken();
 
-        this.sendUserConfirmationEmail.sendLinkToResetPassword(user, url);
+        this.sendUserConfirmationEmail.sendConfirmationLink(user, url);
     }
 
 

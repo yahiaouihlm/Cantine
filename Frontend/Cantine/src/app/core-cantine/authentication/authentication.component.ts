@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../sharedmodule/functions/validation";
 import {HttpStatusCode} from "@angular/common/http";
@@ -7,7 +7,9 @@ import {SharedService} from "../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
-import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
+import Malfunctions from "../../sharedmodule/functions/malfunctions";
+import {IConstantsMessages} from "../../sharedmodule/constants/IConstantsMessages";
+import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-authentication',
@@ -15,7 +17,7 @@ import {IConstantsCoreCantine} from "../IConstantsCoreCantine";
     styleUrls: ['../../../assets/styles/authentication.component.scss', '../../../assets/styles/global.scss'],
     providers: [CoreCantineService, SharedService]
 })
-export class AuthenticationComponent {
+export class AuthenticationComponent  implements  OnInit{
 
 
     submitted = false;
@@ -29,6 +31,10 @@ export class AuthenticationComponent {
     });
 
     constructor(private coreCantineService: CoreCantineService, private sharedService: SharedService, private matDialog: MatDialog, private router: Router) {
+    }
+
+    ngOnInit(): void {
+        Malfunctions.checkUserConnection(this.router);
     }
 
     singIn() {
@@ -49,26 +55,29 @@ export class AuthenticationComponent {
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
                     console.log("response", response)
-                    if (response.role === IConstantsCoreCantine.ADMIN_ROLE) {
-                        this.router.navigate([IConstantsCoreCantine.ADMIN_URL]).then(() => {
+                    if (response.role === IConstantsMessages.ADMIN_ROLE) {
+                        this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(() => {
                             window.location.reload();
                         });
-                    } else {
-                        this.router.navigate([IConstantsCoreCantine.HOME_URL]).then(() => {
+                    } else if (response.role === IConstantsMessages.STUDENT_ROLE) {
+                        this.router.navigate([IConstantsURL.HOME_URL]).then(() => {
                             window.location.reload();
                         });
 
+                    }else {
+                        this.invalid_account = true;
+                        /*TODO  redirection    to  error  page  */
                     }
 
                 },
                 error: (error) => {
-                    if (error.status === HttpStatusCode.Forbidden && error.error.message === IConstantsCoreCantine.USER_DISABLED_ACCOUNT) {
+                    if (error.status === HttpStatusCode.Forbidden && error.error.message === IConstantsMessages.USER_DISABLED_ACCOUNT) {
                         this.disabled_account = true;
                         this.wrong_credentials = false;
-                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsCoreCantine.USER_WRONG_CREDENTIALS) {
+                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsMessages.USER_WRONG_CREDENTIALS) {
                         this.wrong_credentials = true;
                         this.disabled_account = false;
-                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsCoreCantine.ADMIN_INVALID_ACCOUNT) {
+                    } else if (error.status === HttpStatusCode.Unauthorized && error.error.message === IConstantsMessages.ADMIN_INVALID_ACCOUNT) {
                         this.invalid_account = true;
                         this.disabled_account = false;
                         this.wrong_credentials = false;
@@ -80,9 +89,6 @@ export class AuthenticationComponent {
         );
 
     }
-
-    // Subscribe to value changes for the entire form
-
 
     sendTokenToActivateAccount() {
         this.isLoading = true;
@@ -105,14 +111,14 @@ export class AuthenticationComponent {
 
     }
 
-
     get f(): { [key: string]: AbstractControl } {
         return this.signIn.controls;
     }
-
-
     forgotPassword() {
-        this.router.navigate([IConstantsCoreCantine.FORGOT_PASSWORD_URL]).then(r => window.location.reload());
+        this.router.navigate([IConstantsURL.FORGOT_PASSWORD_URL]).then(r => window.location.reload());
     }
+
+
+
 
 }

@@ -19,12 +19,11 @@ export class ListMealsComponent implements  OnInit{
     }
 
     ngOnInit(): void {
-        this.meals$ = this.coreCantineService.getAllMeals();
-
+        this.meals$ = this.coreCantineService.getAllAvailableMeals();
     }
 
-    isInMealsList(meal : Meal) : boolean {
-        return !!this.chosenMeals.find(pmeal => pmeal.id === meal.id);
+    isInMealsList(pmeal : Meal) : boolean {
+        return !!this.chosenMeals.find(meal => meal.uuid === pmeal.uuid);
     }
 
     addToListToLinkMealToMenu(meal : Meal) {
@@ -49,8 +48,6 @@ export class ListMealsComponent implements  OnInit{
         this.dialogRef.close(this.chosenMeals);
     }
 
-    mealAvailableToString(mealAvailable : number): string {
-    return mealAvailable === 1 ? 'Available' : 'Unavailable';
-  }
+
 
 }

@@ -16,14 +16,22 @@ export class ConfirmationTokenComponent implements OnInit {
     serverResponse: string = "";
     activated: boolean = false;
 
-    constructor(private route: ActivatedRoute, private sharedService: SharedService) {
+    token: string = '';
+    isAdministrator: boolean = false;
+
+    constructor(private route: ActivatedRoute, private sharedService: SharedService, private router: Router) {
     }
 
     ngOnInit(): void {
-        const token = this.route.snapshot.paramMap.get('token');
-        if (token) {
-            this.checkUserTokenValidity(token);
-        }
+        this.route.queryParams.subscribe(params => {
+            this.token = params['token'];
+
+            if (!this.token) {  /*TODO redirect to ERROR page */
+                this.router.navigate(['cantine/signIn']).then(r => console.log("redirected to login page"));
+            } else {
+                this.checkUserTokenValidity(this.token);
+            }
+        });
 
     }
 
@@ -31,10 +39,11 @@ export class ConfirmationTokenComponent implements OnInit {
     checkUserTokenValidity(token: string) {
         this.sharedService.checkUserTokenValidity(token).subscribe({
             next: (response) => {
-                if (response.message == "TOKEN VALID") {
-                    this.serverResponse = "Votre compte a été activé avec succès";
-                    this.activated = true;
+                if (response.message == "ADMIN_TOKEN_CHECKED_SUCCESSFULLY") {
+                    this.isAdministrator = true;
                 }
+                this.serverResponse = "Votre compte a été activé avec succès";
+                this.activated = true;
 
             },
             error: (error) => {
@@ -45,7 +54,6 @@ export class ConfirmationTokenComponent implements OnInit {
                 } else if (error.status === HttpStatusCode.Conflict) {
                     this.serverResponse = "Votre compte a été déjà activé";
                 } else {
-                    console.log(error.status)
                     this.serverResponse = "Une erreur s'est produite pendant la vérification du token";
                 }
 

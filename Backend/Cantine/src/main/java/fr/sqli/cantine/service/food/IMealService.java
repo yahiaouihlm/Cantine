@@ -11,6 +11,7 @@ import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -96,8 +97,14 @@ public interface IMealService {
      * @return The meal found with the given id or throw an exception if the meal is not found
 
      */
-    MealDtOut getMealByUUID(String uuid) throws  InvalidFoodInformationException, FoodNotFoundException;
+    MealDtOut getMealByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException;
 
+
+    List<MealDtOut> getAvailableMeals();
+
+    List<MealDtOut> getMealsInDeletionProcess();
+
+    List<MealDtOut> getUnavailableMeals();
 
     MealEntity getMealEntityByUUID(String uuid) throws  InvalidFoodInformationException, FoodNotFoundException;
 

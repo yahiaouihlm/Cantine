@@ -1,13 +1,13 @@
 <mat-toolbar>
-    <button (click)="sidenav.toggle()" *ngIf="isconnected" class="burgger" mat-icon-button>
+    <button (click)="sidenav.toggle()" *ngIf="isConnected" class="burgger" mat-icon-button>
         <div *ngIf="!sidenav.opened">
-            <img alt="cantière-logo"  src="{{admin.image}}">
+            <img  alt="admin  image"  src="{{admin.image}}">
         </div>
         <div *ngIf="sidenav.opened">
-            <img alt="cantière-logo"   src="{{admin.image}}" >
+            <img alt="admin"   src="{{admin.image}}" >
         </div>
     </button>
-    <div *ngIf="!isconnected">
+    <div *ngIf="!isConnected">
      <img alt="cantière-logo" src="../../assets/logo.png">
     </div>
 
@@ -25,10 +25,10 @@
 
 
 
-    <div *ngIf="isconnected" class="not-connect-login-small">
+    <div *ngIf="isConnected" class="not-connect-login-small">
         <mat-icon>logout</mat-icon>
     </div>
-    <div *ngIf="!isconnected" class="not-connect-login-small">
+    <div *ngIf="!isConnected" class="not-connect-login-small">
         <mat-icon>login</mat-icon>
     </div>
 </mat-toolbar>
@@ -38,13 +38,13 @@
         <img class="avatar mat-elevation-z8" src="{{admin.image}}"/>
 
         <h4 class="name">{{admin.firstname}}  {{admin.lastname}}</h4>
-        <p class="designation"> {{admin.function}} </p>
+        <p class="designation"> Manager </p>
 
         <p class="designation"> Aston Administrator 😇 </p>
 
         <mat-divider></mat-divider>
 
-        <button class="menu-button" mat-button>
+        <button class="menu-button" (click)="goToMyProfile()">
             <mat-icon>person</mat-icon>
             <span>Profile</span>
         </button>
@@ -62,12 +62,16 @@
 
 
         <mat-divider></mat-divider>
+        <button class="menu-button" mat-button (click)="goToHome()">
+            <mat-icon> home</mat-icon>
+            <span>Home</span>
+        </button>
 
-        <button class="menu-button" mat-button>
+        <button class="menu-button" mat-button (click)="goToMenus()">
             <mat-icon> restaurant_menu</mat-icon>
             <span>Menus</span>
         </button>
-        <button class="menu-button" mat-button>
+        <button class="menu-button" mat-button (click)="goToMeals()">
             <mat-icon>lunch_dining</mat-icon>
             <span>Plats</span>
         </button>

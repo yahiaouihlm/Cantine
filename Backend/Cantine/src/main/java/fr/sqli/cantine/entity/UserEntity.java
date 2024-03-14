@@ -45,7 +45,6 @@ public class UserEntity  extends  AbstractEntity{
         this.registrationDate = LocalDate.now();
     }
 
-
     public String getFirstname() {
         return firstname;
     }
