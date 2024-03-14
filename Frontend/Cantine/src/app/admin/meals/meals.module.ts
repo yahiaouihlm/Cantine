@@ -11,6 +11,7 @@ import { MainMealsComponent } from './main-meals/main-meals.component';
 import {MealsService} from "./meals.service";
 import { UpdateMealComponent } from './update-meal/update-meal.component';
 import { ExceptionDialogComponent } from '../../sharedmodule/dialogs/exception-dialog/exception-dialog.component';
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -46,6 +47,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         SharedmoduleModule,
+        FormsModule,
     ],
   providers: [MealsService],
 })

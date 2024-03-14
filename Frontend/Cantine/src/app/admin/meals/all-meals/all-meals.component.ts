@@ -15,6 +15,9 @@ import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 })
 export class AllMealsComponent implements OnInit {
     /** TODO :  revoir  le reponsive avec plusieur  plat */
+
+    optionsOfMeals: string[] = ['Tous  les plats ', 'Les  Plats Disponible', 'Les Plats Indisponible' ,'Les Plats  en  cours  de suppression'];
+    selectedOption: string = 'Tous  les plats '; // Pour stocker l'option sélectionnée
     meals$: Observable<Meal[]> = of([]);
 
     constructor(private router: Router, private mealService: MealsService) {
@@ -39,4 +42,22 @@ export class AllMealsComponent implements OnInit {
         return mealAvailable === 1 ? 'Available' : 'Unavailable';
     }
 
+    validateSearch() {
+        if  (this.selectedOption === this.optionsOfMeals[0]) {
+            this.meals$ =this.mealService.getAllMeals();
+        }
+        else if  (this.selectedOption === this.optionsOfMeals[1]) {
+            this.meals$ =this.mealService.getOnlyAvailableMeals();
+        }
+        else if (this.selectedOption === this.optionsOfMeals[2]) {
+            this.meals$ =this.mealService.getOnlyUnavailableMeals();
+        }
+        else if (this.selectedOption === this.optionsOfMeals[3]) {
+            this.meals$ =this.mealService.getOnlyMealsInDeletionProcess();
+        }
+        else {
+            return; //  nothing  to  do
+        }
+
+    }
 }
