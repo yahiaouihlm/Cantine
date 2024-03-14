@@ -6,14 +6,22 @@
                     <thead>
                     <tr>
                         <th scope="col">administrateur  chargé </th>
+                        <th scope="col"> Etudiant </th>
                         <th scope="col">Le montant</th>
                         <th scope="col">La  date </th>
+                        <th scope="col">L'Heure</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">1</th><td>Mark</td><td>Otto</td><td>@mdo</td></tr>
-                    <tr>
+
+                        <tr *ngFor="let transaction of transactions$ | async ">
+                            <th scope="row">{{transaction.admin.firstname}} {{transaction.admin.lastname}}</th>
+                            <td>{{transaction.student.firstname}} {{transaction.student.lastname}}</td>
+                            <td>{{transaction.amount}} € </td>
+                            <td>{{transaction.paymentDate}}</td>
+                            <td>{{transaction.paymentTime}}</td>
+                        </tr>
+
 
                     </tbody>
                 </table>
@@ -25,5 +33,8 @@
 <style>
     .transaction-info {
         margin-top: 50px;
+ /*       border: #2f2727 2px solid;
+        padding: 18px;
+*/
     }
 </style>
