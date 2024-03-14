@@ -5,12 +5,11 @@ import {catchError, throwError} from "rxjs";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
-import {ExceptionDialogComponent} from "../../sharedmodule/dialogs/exception-dialog/exception-dialog.component";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 import Malfunctions from "../../sharedmodule/functions/malfunctions";
 import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
-import {Meal} from "../../sharedmodule/models/meal";
+
 
 @Injectable()
 export class MenusService {
@@ -21,6 +20,12 @@ export class MenusService {
     private UPDATE_MENU_URL = this.BASIC_ENDPOINT + '/update';
     private GET_ALL_MENUS_URL = this.BASIC_ENDPOINT + '/getAll';
     private  DELETE_MENU_URL = this.BASIC_ENDPOINT + '/delete';
+
+    private GET_ONLY_AVAILABLE_MENUS_URL = this.BASIC_ENDPOINT + "/getAvailableMenus";
+
+    private GET_ONLY_UNAVAILABLE_MENUS_URL = this.BASIC_ENDPOINT + "/getUnavailableMenus";
+
+    private GET_ONLY_MENUS_IN_DELETION_PROCESS_URL = this.BASIC_ENDPOINT + "/getMenusInDeletionProcess";
     private dialog = new DialogErrors(this.matDialog);
 
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
@@ -67,7 +72,27 @@ export class MenusService {
             headers: headers,
         });
     }
-
+    getOnlyMenusInDeletionProcess() {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get <Menu[]>(this.GET_ONLY_MENUS_IN_DELETION_PROCESS_URL, {
+            headers: headers,
+        });
+    }
+    getOnlyUnavailableMenus() {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get <Menu[]>(this.GET_ONLY_UNAVAILABLE_MENUS_URL, {
+            headers: headers,
+        });
+    }
+    getOnlyAvailableMenus() {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get <Menu[]>(this.GET_ONLY_AVAILABLE_MENUS_URL, {
+            headers: headers,
+        });
+    }
 
     private  handleRemoveMenusError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;

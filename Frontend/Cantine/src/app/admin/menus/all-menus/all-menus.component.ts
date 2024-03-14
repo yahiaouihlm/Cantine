@@ -19,7 +19,8 @@ export class AllMenusComponent implements OnInit {
     }
 
     menus$: Observable<Menu[]> = of([]);
-
+    optionsOfMenus: string[] = ['Tous  les Menus ', 'Les  Menus Disponible', 'Les Menus Indisponible' ,'Les Menus  en  cours  de suppression'];
+    selectedOption: string = 'Tous  les Menus '; // Pour stocker l'option sélectionnée
     ngOnInit(): void {
         if (Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
             this.menus$ = this.menusService.getAllMenus();
@@ -39,5 +40,22 @@ export class AllMenusComponent implements OnInit {
     menuAvailableToString(menuAvailable: number): string {
         return menuAvailable === 1 ? 'Available' : 'Unavailable';
     }
+    validateSearch() {
+        if  (this.selectedOption === this.optionsOfMenus[0]) {
+            this.menus$ =this.menusService.getAllMenus();
+        }
+        else if  (this.selectedOption === this.optionsOfMenus[1]) {
+            this.menus$ =this.menusService.getOnlyAvailableMenus();
+        }
+        else if (this.selectedOption === this.optionsOfMenus[2]) {
+            this.menus$ =this.menusService.getOnlyUnavailableMenus();
+        }
+        else if (this.selectedOption === this.optionsOfMenus[3]) {
+            this.menus$ =this.menusService.getOnlyMenusInDeletionProcess();
+        }
+        else {
+            return; //  nothing  to  do
+        }
 
+    }
 }
