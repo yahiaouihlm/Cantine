@@ -4,6 +4,7 @@ import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.StudentEntity;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.time.LocalDate;
 
 public class TransactionDtout {
@@ -16,13 +17,16 @@ public class TransactionDtout {
 
     private LocalDate paymentDate;
 
+    private Time paymentTime ;
 
 
-    public TransactionDtout(AdminEntity admin, StudentEntity student, BigDecimal amount, LocalDate paymentDate) {
+
+    public TransactionDtout(AdminEntity admin, StudentEntity student, BigDecimal amount, LocalDate paymentDate , Time paymentTime) {
         this.admin = new AdminDtout(admin ,  "IMAGE_IS_NOT_NEEDED");
         this.student = new StudentDtout(student , "IMAGE_IS_NOT_NEEDED");
         this.amount = amount;
         this.paymentDate = paymentDate;
+        this.paymentTime =  paymentTime;
     }
 
 
@@ -57,4 +61,14 @@ public class TransactionDtout {
     public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
+
+    public Time getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(Time paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
+
 }

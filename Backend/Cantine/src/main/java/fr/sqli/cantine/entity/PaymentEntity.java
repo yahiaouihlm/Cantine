@@ -3,7 +3,9 @@ package fr.sqli.cantine.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "payment")
@@ -23,12 +25,16 @@ public class PaymentEntity  extends AbstractEntity{
     @Column(name = "payment_date" , nullable=false )
     private LocalDate paymentDate;
 
+    @Column(name = "payment_time", nullable=false)
+    private Time paymentTime;
+
 
     public PaymentEntity(AdminEntity admin, StudentEntity student, BigDecimal amount) {
         this.admin = admin;
         this.student = student;
         this.amount = amount;
         this.paymentDate = LocalDate.now();
+        this.paymentTime = Time.valueOf(LocalTime.now());
     }
     public  PaymentEntity(){}
     public AdminEntity getAdmin() {
@@ -62,4 +68,13 @@ public class PaymentEntity  extends AbstractEntity{
     public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
+
+    public Time getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(Time paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
 }

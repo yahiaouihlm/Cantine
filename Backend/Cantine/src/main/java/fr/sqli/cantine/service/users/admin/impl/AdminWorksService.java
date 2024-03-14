@@ -66,7 +66,7 @@ public class AdminWorksService implements IAdminFunctionService {
         });
 
         return this.paymentDao.findByStudent(student).stream().map(transaction ->
-                new TransactionDtout(transaction.getAdmin() , transaction.getStudent(), transaction.getAmount(), transaction.getPaymentDate())).toList();
+                new TransactionDtout(transaction.getAdmin() , transaction.getStudent(), transaction.getAmount(), transaction.getPaymentDate() , transaction.getPaymentTime())).toList();
     }
 
     @Override

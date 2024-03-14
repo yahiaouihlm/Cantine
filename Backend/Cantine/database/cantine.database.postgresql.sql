@@ -100,6 +100,7 @@ CREATE  TABLE IF NOT EXISTS "admin" (
     admin_id INT NOT NULL,
     amount DECIMAL(5,2) NOT NULL,
     payment_date DATE NOT NULL,
+    payment_time TIME NOT NULL,
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (admin_id) REFERENCES admin (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 
