@@ -12,6 +12,7 @@ import { AuthenticationComponent } from './authentication/authentication.compone
 import { ConfirmationTokenComponent } from './confirmation-token/confirmation-token.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -47,10 +48,11 @@ const routes: Routes = [
     ForgotPasswordComponent,
     ResetPasswordComponent,
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    SharedmoduleModule,
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        SharedmoduleModule,
+        FormsModule,
+    ]
 })
 export class CoreCantineModule { }

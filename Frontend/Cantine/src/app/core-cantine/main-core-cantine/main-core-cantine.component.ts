@@ -3,21 +3,37 @@ import {AuthObject} from "../../sharedmodule/models/authObject";
 import {Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
+import Malfunctions from 'src/app/sharedmodule/functions/malfunctions';
+import { IConstantsURL } from 'src/app/sharedmodule/constants/IConstantsURL';
 
 @Component({
   selector: 'app-main-core-cantine',
   templateUrl: "./main-core-cantine.component.html",
-  styleUrls:['../../../assets/styles/main.component.scss']
+  styleUrls:['../../../assets/styles/main.component.scss'],
+    providers: [SharedService]
 })
 export class MainCoreCantineComponent  implements OnInit{
-    disconnected = false;
+    isConnected = false;
     authObj :  AuthObject =  new AuthObject();
     user : User = new User();
     constructor (private  router : Router,   private sharedService: SharedService) {}
 
     ngOnInit(): void {
-     /*   let  authObj = localStorage.getItem('authObject');
-        if (authObj) {
+   
+        let  userid  =  Malfunctions.getUserIdFromLocalStorage();
+        if (userid !=null  && userid != "") {
+            console.log(userid);
+        
+
+            this.sharedService.getStudentById(userid).subscribe( (response) => {
+                this.user = response;
+                console.log(response);                
+                this.isConnected = true;
+            });      
+    
+        } 
+
+     /*   if (authObj) {
             this.disconnected = true;
             this.authObj = JSON.parse(authObj);
            this.getStudentById(this.authObj.id);
@@ -29,29 +45,25 @@ export class MainCoreCantineComponent  implements OnInit{
 
     }
 
-    getStudentById( id : string) {
-     this.sharedService.getStudentById(id).subscribe( (response) => {
-            this.user = response;
-     });
-    }
 
     goToOrders() {
         this.router.navigate(['cantine/student/orders']).then( () => window.location.reload());
     }
 
     goToHome() {
-        this.router.navigate(['cantine/home']);
+        this.router.navigate([IConstantsURL.HOME_URL]).then( () => window.location.reload());
     }
     gotoProfile() {
         this.router.navigate(['cantine/student/profile'],  { queryParams: { id: this.authObj.id } });
     }
     logout() {
         localStorage.clear();
-        this.disconnected = false;
-        this.router.navigate(['cantine/home']).then(  () => window.location.reload());
+        this.isConnected = false;
+        this.router.navigate([IConstantsURL.HOME_URL]).then(  () => window.location.reload());
     }
 
     toLogin() {
-       this.router.navigate(['cantine/signIn']);
+        localStorage.clear();
+       this.router.navigate([IConstantsURL.SIGN_IN_URL]).then( () => window.location.reload());
     }
 }

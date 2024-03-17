@@ -5,6 +5,7 @@ import {Observable, of} from "rxjs";
 import {Router} from "@angular/router";
 import {Order} from "../../sharedmodule/models/order";
 import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
+import Malfunctions from 'src/app/sharedmodule/functions/malfunctions';
 
 @Component({
   selector: 'app-meals',
@@ -15,6 +16,8 @@ import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 export class MealsComponent  implements  OnInit{
 
   order! : Order;
+  optionsOfMeals: string[] = [ 'TOUS  LES  PLATS', 'ENTREE', 'PLAT', 'DESSERT', 'BOISSON', 'ACCOMPAGNEMENT', 'AUTRE'];
+  selectedOption: string = 'TOUS  LES  PLATS'; // Pour stocker l'option sélectionnée
   meals$ : Observable <Meal[]> = of([]) ;
   constructor( private  coreCantineService :CoreCantineService ,  private router :  Router ) {}
 
@@ -23,17 +26,26 @@ export class MealsComponent  implements  OnInit{
   }
 
   addToOrder(   meal:  Meal) {
-    const  authObject = localStorage.getItem('authObject');
-    if (authObject) {
+    const  userId = Malfunctions.getUserIdFromLocalStorage();
+    if (userId != null && userId !== "") {
       Order.addMealToOrder(meal);
     }
     else {
         localStorage.clear();
-        this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(r => console.log("it  works"));
+        this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
     }
   }
 
-  goback() {
-    this.router.navigate(['cantine/home'])
+  goBack() {
+    this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+  }
+
+  validate() {
+    if  (this.selectedOption === this.optionsOfMeals[0]) {
+      this.meals$ = this.coreCantineService.getAllAvailableMeals();
+
+    }else{
+      this.meals$ =this.coreCantineService.getMealsByType(this.selectedOption);
+    }
   }
 }
