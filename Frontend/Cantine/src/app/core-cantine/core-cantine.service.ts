@@ -9,7 +9,7 @@ import {AuthObject} from "../sharedmodule/models/authObject";
 @Injectable()
 export class CoreCantineService {
     private BASIC_URL = "http://localhost:8080/cantine/api/getAll/";
-    private USER_AUTHENTICATION_ENDPOINT = "http://localhost:8080/cantine" + 'login';
+    private USER_AUTHENTICATION_ENDPOINT = "http://localhost:8080/" + 'login';
     private GET_ALL_MEALS_ENDPOINT = this.BASIC_URL + 'meals'
     private GET_ALL_MENUS_ENDPOINT = this.BASIC_URL + 'menus';
     private GET_MEALS_BY_TYPE_ENDPOINT = this.BASIC_URL + 'getMealsByType';
