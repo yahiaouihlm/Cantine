@@ -21,15 +21,22 @@ import static fr.sqli.cantine.controller.food.IApi.BASIC_API_URL;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ApiController   implements IApi {
 
-    private MealService mealService ;
+    private final MealService mealService ;
 
-    private MenuService menuService ;
+    private final MenuService menuService ;
     @Autowired
     public  ApiController( MenuService menuService , MealService mealService ){
         this.menuService = menuService;
         this.mealService  = mealService;
     }
 
+
+
+
+    @Override
+    public ResponseEntity<List<MealDtOut>> getMealsByType(String mealType) {
+        return ResponseEntity.ok(this.mealService.getMealsByType(mealType));
+    }
 
     @Override
     public ResponseEntity<List<MealDtOut>> getOnlyAvailableMeals() {

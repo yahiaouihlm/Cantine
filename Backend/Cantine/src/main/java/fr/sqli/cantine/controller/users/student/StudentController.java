@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(StudentController.STUDENT_BASIC_URL)
+@CrossOrigin(origins = "http://localhost:4200")
 public class StudentController implements IStudentController {
 
     private final StudentService studentService;

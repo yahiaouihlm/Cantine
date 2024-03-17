@@ -136,7 +136,7 @@ public class StudentService implements IStudentService {
 
         var studentEntity = this.studentDao.findByUuid(studentUuid);
         if (studentEntity.isEmpty()) {
-            StudentService.LOG.error("student  is  not  found");
+            StudentService.LOG.error("STUDENT  IS  NOT  FOUND");
             throw new UserNotFoundException("STUDENT NOT FOUND");
         }
 

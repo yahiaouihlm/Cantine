@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
                         authorize -> {
-                            authorize.requestMatchers("cantine/api/**").permitAll();
+                            authorize.requestMatchers("/cantine/api/getAll/**" , "/cantine/api/getAll/getMealsByType/**").permitAll();
                             authorize.requestMatchers("/cantine/download/images/**",
                                     "/cantine/download/images/**").permitAll();
                             authorize.requestMatchers("/cantine/admin/getAllAdminFunctions"

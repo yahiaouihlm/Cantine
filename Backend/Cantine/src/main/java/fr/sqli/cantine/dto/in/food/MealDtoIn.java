@@ -43,7 +43,7 @@ public class MealDtoIn extends AbstractFoodDtoIn implements Serializable {
         if (mealType == null || mealType.isBlank()) {
             throw new InvalidFoodInformationException("MEAL_TYPE_IS_MANDATORY");
         }
-        if (!MealTypeEnum.checkMealType(mealType)) {
+        if (!MealTypeEnum.contains(mealType)) {
             throw new InvalidFoodInformationException("MEAL_TYPE_IS_INVALID");
         }
 

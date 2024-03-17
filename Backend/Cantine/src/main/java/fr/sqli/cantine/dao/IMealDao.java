@@ -1,6 +1,7 @@
 package fr.sqli.cantine.dao;
 
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,11 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
     )
     Optional<MealEntity> findByLabelAndAndCategoryAndDescriptionIgnoreCase(String label, String category, String description);
 
+
+    @Query(
+            value = "SELECT meal FROM MealEntity meal WHERE  meal.mealType = ?1"
+    )
+     List<MealEntity> findAllMealsWhereTypeEqualsTo(MealTypeEnum mealType);
 
     @Query( value = "SELECT meal  FROM MealEntity  meal  WHERE meal.status=1")
     List<MealEntity> getAvailableMeals ();

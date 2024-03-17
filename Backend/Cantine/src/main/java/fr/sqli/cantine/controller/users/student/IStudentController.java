@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IStudentController {
-    String STUDENT_BASIC_URL = "/cantine/student";
+    String STUDENT_BASIC_URL = "/cantine/user/student";
     String STUDENT_SIGN_UP_ENDPOINT = "/signUp";
 
     String GET_STUDENT_BY_ID_ENDPOINT = "/getStudent";

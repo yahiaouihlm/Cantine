@@ -6,6 +6,7 @@ import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
@@ -17,7 +18,6 @@ import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
-import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,6 +184,18 @@ public class MealService implements IMealService {
 
         return this.mealDao.save(meal);
     }
+
+    @Override
+    public List<MealDtOut> getMealsByType(String type) {
+        if (type == null || type.isBlank() || !MealTypeEnum.contains(type)) {
+            MealService.LOG.debug("INVALID MEAL TYPE");
+            return List.of();
+        }
+      return this.mealDao.findAllMealsWhereTypeEqualsTo(MealTypeEnum.getMealTypeEnum(type)).stream().map(
+                mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
+        ).toList();
+    }
+
 
     @Override
     public List<MealDtOut> getAllMeals() {
