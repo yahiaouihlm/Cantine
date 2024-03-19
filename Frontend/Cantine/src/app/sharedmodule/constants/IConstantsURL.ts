@@ -17,6 +17,7 @@ export module IConstantsURL {
     /******************PUBLIC URLS *****************/
     export const  MEALS_URL = "cantine/meals";
     export const  MENUS_URL = "cantine/menus";
+    export const  MENU_DETAILS_URL = "cantine/menus/menu-details";
     /*****************STUDENT URLS******************/
 
     export const HOME_URL = "cantine/home";

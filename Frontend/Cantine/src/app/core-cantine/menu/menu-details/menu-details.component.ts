@@ -25,8 +25,7 @@ export class MenuDetailsComponent implements OnInit {
         if (userId != null && userId !== "") {
             this.route.queryParams.subscribe({
                     next: (params) => {
-                      this.mealID = params['mealID'];
-                      console.log(this.mealID);
+                      this.mealID = params['mealLabel'];
                     },
                     error: (error) => {
                       this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
