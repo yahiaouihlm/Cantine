@@ -13,28 +13,28 @@ import java.util.Optional;
 public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
 
 
-
-
-
     @Query(value = "SELECT menu FROM MenuEntity menu WHERE (" +
             "LOWER(REPLACE(menu.label, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +
             "AND LOWER(REPLACE(menu.description, ' ', '')) = LOWER(REPLACE(?2, ' ', ''))" +
-             "AND menu.price = ?3 "+
+            "AND menu.price = ?3 " +
             ")"
 
     )
-    Optional<MenuEntity> findByLabelAndAndPriceAndDescriptionIgnoreCase(String label, String description , BigDecimal price);
+    Optional<MenuEntity> findByLabelAndAndPriceAndDescriptionIgnoreCase(String label, String description, BigDecimal price);
 
+    @Query(value = "SELECT DISTINCT menu.label FROM  MenuEntity  menu WHERE LOWER(menu.label) LIKE LOWER(CONCAT('%',?1,'%'))")
+    List<String> findLabelsContainsIgnoreCase(String term);
 
-    @Query( value = " SELECT menu FROM MenuEntity  menu  WHERE menu.status=1 ")
-    List<MenuEntity> getAvailableMenus ();
-    @Query( value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=0")
-    List<MenuEntity> getUnavailableMenu ();
+    @Query(value = " SELECT menu FROM MenuEntity  menu  WHERE menu.status=1 ")
+    List<MenuEntity> getAvailableMenus();
 
-    @Query( value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=2")
+    @Query(value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=0")
+    List<MenuEntity> getUnavailableMenu();
+
+    @Query(value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=2")
     List<MenuEntity> getMenusInDeletionProcess();
 
-    Optional<MenuEntity>findByUuid(String uuid);
+    Optional<MenuEntity> findByUuid(String uuid);
 
 
 }

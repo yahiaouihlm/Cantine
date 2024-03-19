@@ -90,13 +90,13 @@ public class MenuService implements IMenuService {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
 
             if (meal.getStatus() != 1) {
-                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid , meal.getStatus());
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid, meal.getStatus());
                 throw new UnavailableFoodException("THE UNAVAILABLE  OR DELETED  MEAL CAN NOT BE ADDED TO  MENU");
             }
             mealsInMenu.add(meal);
         }
         // check  if  the  menu  contains  at  least  2 meals
-        if (mealsInMenu.size() < 2 ){
+        if (mealsInMenu.size() < 2) {
             MenuService.LOG.error("THE MENU MUST CONTAIN AT LEAST 2 MEALS FOR THE UPDATE");
             throw new InvalidFoodInformationException("FEW MEALS IN THE MENU");
         }
@@ -125,14 +125,13 @@ public class MenuService implements IMenuService {
 
         // check that the menu is not used in the orders
 
-        if (menu.getOrders() != null && menu.getOrders().size() > 0)  {
+        if (menu.getOrders() != null && menu.getOrders().size() > 0) {
             menu.setStatus(3);
             this.menuDao.save(menu);
             MenuService.LOG.error("THE MENU WITH UUID = {} IS USED IN THE ORDERS CAN NOT BE DELETED", menuUuid);
             throw new RemoveFoodException("THE MENU IS USED IN THE ORDERS CAN NOT BE DELETED" +
                     "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT");
         }
-
 
 
         var imageName = menu.getImage().getImagename();
@@ -144,7 +143,7 @@ public class MenuService implements IMenuService {
     @Override
     public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
 
-        if  (menuDtoIn == null) {
+        if (menuDtoIn == null) {
             MenuService.LOG.debug("THE MENU DTO CAN NOT BE NULL IN THE addMenu METHOD ");
             throw new InvalidFoodInformationException("THE MENU CAN NOT BE NULL");
         }
@@ -161,7 +160,7 @@ public class MenuService implements IMenuService {
         for (String mealUuid : menuDtoIn.getMealUuids()) {
             var meal = this.mealService.getMealEntityByUUID(mealUuid);
             if (meal.getStatus() != 1) {
-                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid , meal.getStatus());
+                MenuService.LOG.error("THE MEAL WITH UUID = {} IS NOT AVAILABLE OR  DELETED MEAL  (meal.status = {}) CAN NOT BE ADDED TO  MENU", mealUuid, meal.getStatus());
                 throw new UnavailableFoodException("THE UNAVAILABLE OR DELETED  MEAL CAN NOT BE ADDED TO  MENU");
             }
 
@@ -169,7 +168,7 @@ public class MenuService implements IMenuService {
             mealsInMenu.add(meal);
         }
         // check  if  the  menu  contains  at  least  2 meals
-        if (mealsInMenu.size() < 2 ){
+        if (mealsInMenu.size() < 2) {
             MenuService.LOG.error("THE MENU MUST CONTAIN AT LEAST 2 MEALS FOR THE UPDATE");
             throw new InvalidFoodInformationException("FEW MEALS IN THE MENU");
         }
@@ -201,6 +200,14 @@ public class MenuService implements IMenuService {
     }
 
     @Override
+    public List<String> searchLablesOfMenuContainsTerm(String term) {
+        if (term == null || term.trim().length() <= 1)
+            return Collections.emptyList();
+
+        return this.menuDao.findLabelsContainsIgnoreCase(term);
+    }
+
+    @Override
     public List<MenuDtOut> getAvailableMenu() {
         return this.menuDao.getAvailableMenus().stream()
                 .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
@@ -216,14 +223,14 @@ public class MenuService implements IMenuService {
 
     @Override
     public List<MenuDtOut> getMenusInDeletionProcess() {
-        return  this.menuDao.getMenusInDeletionProcess().stream()
+        return this.menuDao.getMenusInDeletionProcess().stream()
                 .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
                 .toList();
     }
 
     @Override
     public List<MenuDtOut> getUnavailableMenus() {
-        return  this.menuDao.getUnavailableMenu().stream()
+        return this.menuDao.getUnavailableMenu().stream()
                 .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
                 .toList();
     }

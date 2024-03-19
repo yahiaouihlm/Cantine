@@ -31,7 +31,10 @@ public class ApiController   implements IApi {
     }
 
 
-
+    @Override
+    public ResponseEntity<List<String>> searchLabelsOfMenuContains(String term) {
+        return  ResponseEntity.ok(this.menuService.searchLablesOfMenuContainsTerm(term));
+    }
 
     @Override
     public ResponseEntity<List<MealDtOut>> getMealsByType(String mealType) {

@@ -15,7 +15,11 @@ public interface IApi {
     String ENDPOINT_GET_ALL_MEALS_BY_TYPE_URL = "/getMealsByType";
     String ENDPOINT_GET_ALL_MEALS_URL = "/meals";
     String ENDPOINT_GET_ALL_MENUS_URL = "/menus";
+    String  ENDPOINT_GET_ALL_MENUS_CONTAINS_TERM_URL = "/menus/contains";
 
+
+    @GetMapping(value = ENDPOINT_GET_ALL_MENUS_CONTAINS_TERM_URL)
+    ResponseEntity<List<String>> searchLabelsOfMenuContains(@RequestParam("term") String  term);
 
     @GetMapping(value = ENDPOINT_GET_ALL_MEALS_BY_TYPE_URL)
     ResponseEntity<List<MealDtOut>> getMealsByType(@RequestParam("mealType") String mealType);
