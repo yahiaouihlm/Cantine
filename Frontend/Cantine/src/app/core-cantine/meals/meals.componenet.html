@@ -1,4 +1,7 @@
-<h1 class="center"> Nos Plats </h1>
+<!--<h1 class="center"> Nos Plats </h1>-->
+<div class="center" style="margin: 10px">
+     <img src="assets/images/nos-menus.jpg" alt="food" style="width: 50%; height: 20%">
+</div>
 
 <div class="container">
     <div class="row">
@@ -26,7 +29,7 @@
         <div *ngFor="let meal of meals$ | async " class="col-md-4">
             <div class="card horizontal ">
                 <div class="center">
-                    <img [src]="meal.image" height="190px" width="40%" alt="meal image"/>
+                    <img [src]="meal.image" height="190px" width="40%" alt="meal image" style="margin-top: 10px"/>
                     <div class="card-stacked">
                         <div class="card-content">
                             <p><span class="meal-title">{{meal.label}}</span></p>
@@ -38,7 +41,7 @@
                         </div>
                     </div>
                     <div style="margin: 15px">
-                        <button class="btn" (click)="addToOrder(meal)"> Ajouter Ce Plat</button>
+                        <button class="btn" (click)="addToOrder(meal)" id="{{meal.uuid}}"> Ajouter Ce Plat</button>
                     </div>
                 </div>
             </div>

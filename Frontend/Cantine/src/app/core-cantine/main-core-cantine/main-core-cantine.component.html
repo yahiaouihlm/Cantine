@@ -74,11 +74,11 @@
 
         <mat-divider></mat-divider>
 
-        <button class="menu-button" mat-button>
+        <button class="menu-button"  (click)="goToMenus()" mat-button>
             <mat-icon> restaurant_menu</mat-icon>
             <span>Menus</span>
         </button>
-        <button class="menu-button" mat-button>
+        <button class="menu-button" (click)="goToMeals()" mat-button>
             <mat-icon>lunch_dining</mat-icon>
             <span>Plats</span>
         </button>

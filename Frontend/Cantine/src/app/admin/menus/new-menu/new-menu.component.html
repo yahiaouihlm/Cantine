@@ -21,12 +21,12 @@
                                    id="label"
                             />
                             <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
-                                <div *ngIf="f['label'].errors['required']" class="center"> Nom du plat est requis</div>
+                                <div *ngIf="f['label'].errors['required']" class="center"> Nom du menu est requis</div>
                                 <div *ngIf="f['label'].errors['maxlength']" class="center">
-                                    le nom du plat ne doit pas dépasser 60 charctéres
+                                    le nom du menu ne doit pas dépasser 60 charctéres
                                 </div>
                                 <div *ngIf="f['label'].errors['minlength']" class="center">
-                                    le nom du plat  doit avoir au minimum de 3 charctéres
+                                    le nom du menu  doit avoir au minimum de 3 charctéres
                                 </div>
                             </div>
                         </div>
@@ -41,14 +41,14 @@
                                       id="description"
                             > </textarea>
                             <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
-                                <div *ngIf="f['description'].errors['required']" class="center"> Description du plat est
+                                <div *ngIf="f['description'].errors['required']" class="center"> Description du menu est
                                     requis
                                 </div>
                                 <div *ngIf="f['description'].errors['maxlength']" class="center">
-                                    Description du plat ne doit pas dépasser 1700 charctéres
+                                    Description du menu ne doit pas dépasser 1700 charctéres
                                 </div>
                                 <div *ngIf="f['description'].errors['minlength']" class="center">
-                                    Description du plat ne doit avoir au minimum de 5 charctéres
+                                    Description du menu ne doit avoir au minimum de 5 charctéres
                                 </div>
                             </div>
                         </div>
@@ -61,19 +61,19 @@
                                         [ngClass]="{ 'is-invalid': submitted && f['price'].errors }"
                                         class="form-control"
                                         formControlName="price"
-                                        placeholder="Le prix du  Plat "
+                                        placeholder="Le prix du  menu "
                                         type="number"
                                         id="price"
                                 />
                                 <mat-icon>euro</mat-icon>
                                 <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
-                                    <div *ngIf="f['price'].errors['required']" class="center"> le prix du plat est
+                                    <div *ngIf="f['price'].errors['required']" class="center"> le prix du menu est
                                         requis
                                     </div>
-                                    <div *ngIf="f['price'].errors['min']" class="center"> le prix du plat doit être
+                                    <div *ngIf="f['price'].errors['min']" class="center"> le prix du menu doit être
                                         supérieur à 0.01 euro
                                     </div>
-                                    <div *ngIf="f['price'].errors['max']" class="center"> le prix du plat doit être
+                                    <div *ngIf="f['price'].errors['max']" class="center"> le prix du menu doit être
                                         inférieur strictement à 1000 euro
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                             <label for="quantity">Le quatité </label>
                             <input [ngClass]="{ 'is-invalid': submitted && f['quantity'].errors }" class="form-control"
                                    formControlName="quantity"
-                                   placeholder="Le quatité des plats  disponible "
+                                   placeholder="Le quatité des menus  disponible "
                                    type="number"
                                    id="quantity"
                             />
@@ -112,26 +112,26 @@
 
                         <!---------------------- status --------------------------->
                         <div class="form-group">
-                            <label for="status"> Le plat est t-il disponible ? </label>
+                            <label for="status"> Le menu est t-il disponible ? </label>
                             <mat-radio-group aria-label="Select an option" id="status"
                                              [ngClass]="{ 'is-invalid': submitted && f['status'].errors }"
                                              class="form-control" formControlName="status">
-                                <mat-radio-button value="available"><span> Plat Disponible </span></mat-radio-button>
-                                <mat-radio-button value="unavailable"><span> Plat n'est  Disponible </span>
+                                <mat-radio-button value="available"><span> menu Disponible </span></mat-radio-button>
+                                <mat-radio-button value="unavailable"><span> menu n'est  Disponible </span>
                                 </mat-radio-button>
                             </mat-radio-group>
                             <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
-                                <div *ngIf="f['status'].errors['required']" class="center"> le status du plat est
+                                <div *ngIf="f['status'].errors['required']" class="center"> le status du menu est
                                     requise
                                 </div>
                             </div>
                         </div>
 
                         <div class="center addMeals-btn" >
-                             <button   class="btn" (click)="onOpenListMealDialog()">Ajouter  La List Des plats</button>
+                             <button   class="btn" (click)="onOpenListMealDialog()">Ajouter  La List Des menus</button>
                              <p *ngIf="(closedDialog && mealsContainMenu.length < 2) || ( submitted && mealsContainMenu.length < 2) " style="color: crimson"> Vous Devez choisir impérativement  au moins 2 plats pour former un menu  </p>
 
-                                                 <h3 *ngIf="mealsContainMenu.length >= 2"> Les plat choisis </h3>
+                                                 <h3 *ngIf="mealsContainMenu.length >= 2"> Les menu choisis </h3>
                                 <div *ngFor="let meal of  mealsContainMenu">
                                     <p> Label : {{meal.label}}  , Catégoey :  {{meal.category}} , prix : {{meal.price}}  </p>
                                </div>
@@ -140,12 +140,12 @@
 
                         <!---------------------- Image --------------------------->
                         <div class="form-group">
-                            <label for="image"> Choisissez une image pour le plat </label>
+                            <label for="image"> Choisissez une image pour le menu </label>
 
                             <input class="input-group-prepend"
                                    [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
                                    formControlName="image"
-                                   placeholder="Le prix du  Plat "
+                                   placeholder="Le prix du  menu "
                                    type="file"
                                    id="image"
                                    accept="image/png, image/jpeg"
@@ -153,7 +153,7 @@
                             />
 
                             <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
-                                <div *ngIf="f['image'].errors['required']" class="center"> le image du plat est requis
+                                <div *ngIf="f['image'].errors['required']" class="center"> le image du menu est requis
                                 </div>
                             </div>
 

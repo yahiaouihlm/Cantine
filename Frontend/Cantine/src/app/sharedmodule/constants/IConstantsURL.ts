@@ -10,10 +10,14 @@ export module IConstantsURL {
     export const ADMIN_NEW_MEAL_URL = "cantine/admin/meals/new";
     export const ADMIN_UPDATE_MEAL_URL = "cantine/admin/meals/update";
     export const ADMIN_STUDENT_PROFILE_URL = "cantine/admin/students/profile";
-    /* Menus  URLS */
     export const ADMIN_MENUS_URL = "cantine/admin/menus";
     export  const ADMIN_NEW_MENU_URL = "cantine/admin/menus/new";
     export const ADMIN_UPDATE_MENU_URL = "cantine/admin/menus/update";
+
+    /******************PUBLIC URLS *****************/
+    export const  MEALS_URL = "cantine/meals";
+    export const  MENUS_URL = "cantine/menus";
+    /*****************STUDENT URLS******************/
 
     export const HOME_URL = "cantine/home";
     export const  FORGOT_PASSWORD_URL = "cantine/user/forgot-password";
