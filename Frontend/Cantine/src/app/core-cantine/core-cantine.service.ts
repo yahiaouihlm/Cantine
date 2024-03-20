@@ -13,7 +13,7 @@ export class CoreCantineService {
     private GET_ALL_MEALS_ENDPOINT = this.BASIC_URL + 'meals'
     private GET_ALL_MENUS_ENDPOINT = this.BASIC_URL + 'menus';
     private GET_MEALS_BY_TYPE_ENDPOINT = this.BASIC_URL + 'getMealsByType';
-    private  GET_MENUS_BY_TERM_ENDPOINT = this.BASIC_URL + '/menus/contains';
+    private  GET_MENUS_BY_TERM_ENDPOINT = this.BASIC_URL + 'menus/contains';
 
 
     constructor(private httpClient: HttpClient) {
@@ -39,7 +39,7 @@ export class CoreCantineService {
 
     searchMenusByTerm(term: string) {
         let params = new HttpParams().set('term', term);
-        return this.httpClient.get<Menu[]>(this.GET_MENUS_BY_TERM_ENDPOINT, {params: params})
+        return this.httpClient.get<string[]>(this.GET_MENUS_BY_TERM_ENDPOINT, {params: params})
     }
 }
 
