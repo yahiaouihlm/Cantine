@@ -29,6 +29,7 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
      public  void checkMenuInformationsWithOutImage() throws InvalidFoodInformationException, IOException {
         super.CheckNullabilityAndEmptiness();
         this.validateMealsUuids();
+        super.setLabel(super.getLabel().trim());
     }
 
     /**
@@ -43,6 +44,7 @@ public class MenuDtoIn extends AbstractFoodDtoIn {
         super.CheckNullabilityAndEmptiness();
         super.checkImageValidity();
         this.validateMealsUuids();
+        super.setLabel(super.getLabel().trim());
     }
 
 

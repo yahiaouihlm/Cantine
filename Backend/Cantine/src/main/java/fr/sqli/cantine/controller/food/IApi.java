@@ -3,10 +3,12 @@ package fr.sqli.cantine.controller.food;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 
 public interface IApi {
 

@@ -26,6 +26,7 @@ public class MealDtoIn extends AbstractFoodDtoIn implements Serializable {
     public void toMealEntityWithoutImage() throws InvalidFoodInformationException {
         super.CheckNullabilityAndEmptiness(); // check if the meal information is valid except the image and  category
         this.checkMealSpecificArguments();
+        super.setLabel(super.getLabel().trim());
     }
 
 
