@@ -65,6 +65,8 @@ public class MenuController implements IMenuController {
            return  ResponseEntity.ok(this.menuService.getMenuByUuId(uuidMenu));
     }
 
+
+
     @Override
     public ResponseEntity<List<MenuDtOut>> getAllMenu() {
         return ResponseEntity.ok().body(this.menuService.getAllMenus());

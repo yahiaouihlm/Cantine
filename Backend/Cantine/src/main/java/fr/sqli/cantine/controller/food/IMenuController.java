@@ -34,6 +34,8 @@ public interface IMenuController {
     String GET_ONLY_MENUS_IN_DELETION_PROCESS_URL = "/getMenusInDeletionProcess";
 
 
+
+
     /*------------------ MESSAGES ------------------*/
     String  MENU_UPDATED_SUCCESSFULLY = "MENU UPDATED SUCCESSFULLY";
     String MENU_ADDED_SUCCESSFULLY = "MENU ADDED SUCCESSFULLY";
@@ -51,6 +53,7 @@ public interface IMenuController {
 
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws InvalidFoodInformationException, FoodNotFoundException;
+
 
     @GetMapping(value = ENDPOINT_GET_ALL_MENU)
     public  ResponseEntity<List<MenuDtOut>> getAllMenu();

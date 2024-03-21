@@ -200,6 +200,15 @@ public class MenuService implements IMenuService {
     }
 
     @Override
+    public List<MenuDtOut> searchMenuByLabel(String label) {
+        if (label == null || label.trim().length() <= 1)
+            return Collections.emptyList();
+        return this.menuDao.findMenuEntitiesByLabel(label).stream()
+                .map(menuEntity -> new MenuDtOut(menuEntity, this.MENUS_IMAGES_URL, this.MEALS_IMAGES_PATH))
+                .toList();
+    }
+
+    @Override
     public List<String> searchLablesOfMenuContainsTerm(String term) {
         if (term == null || term.trim().length() <= 1)
             return Collections.emptyList();
