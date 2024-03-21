@@ -117,7 +117,7 @@ CREATE table  if NOT EXISTS  st_order(
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
-     status INT  NOT NULL DEFAULT 0   ,   /* 0 = disabled, 1 = enabled */
+     status INT  NOT NULL DEFAULT 0   ,   /* 0 = disabled, 1 = enabled , 2=taken */
      isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
      qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
