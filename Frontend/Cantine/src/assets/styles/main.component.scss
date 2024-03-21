@@ -19,7 +19,7 @@ mat-toolbar {
 
   img {
     height: 60px;
-    width: 60;
+    width: 60px;
     cursor: pointer;
     border-radius: 100%;
   }
@@ -28,7 +28,6 @@ mat-toolbar {
 }
 
 mat-sidenav {
-  margin: 16px;
   width: 200px;
   border-right: none;
   background: $navbar-color;
@@ -36,14 +35,13 @@ mat-sidenav {
   border-radius: 15px;
   padding: 15px;
   text-align: center;
-  margin-left: 5px;
+  margin: 16px 16px 16px 5px;
 }
 
 //  ce qui  il  y'a  au  milieur
 .content {
   height: calc(100vh - 98px);
-  margin: 16px;
-  margin-left: 32px;
+  margin: 16px 16px 16px 32px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,10 +135,7 @@ mat-divider {
 
       .sqli {
         margin-left: 10%;
-        font-family: 'Courgette', cursive;
         font-family: 'Satisfy', cursive;
-        font-family: 'Sedgwick Ave Display', cursive;
-
       }
     }
   }
@@ -163,8 +158,7 @@ mat-divider {
     font-size: 1rem;
     background-color: $navprincipale-color;
     border: none;
-    padding: 15px;
-    padding-right: 17px;
+    padding: 15px 17px 15px 15px;
     color: rgb(220, 226, 238);
     margin-right: 10px;
 

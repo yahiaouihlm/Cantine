@@ -4,7 +4,7 @@
 
         <form [formGroup]="studentUpdated" class="test">
             <div class="wallet center">
-                <img id="profile-picture" src={{user.image}}>
+                <img id="profile-picture" src="{{user.image}}" alt="profile image">
                 <h1>{{user.firstname}}   {{user.lastname}}</h1>
                 <h2> MON SOLDE : {{user.wallet}} € </h2>
             </div>
@@ -171,32 +171,30 @@
         </form>
 
 
-        <div class=" center btn"  *ngIf="!isLoading ; else loadingTemplate">
+        <div class="center btn"  *ngIf="!isLoading ; else loadingTemplate">
             <div class="update-btn">
                 <mat-icon>done_outline</mat-icon>
                 <span *ngIf="!touched" (click)="modify()"> Modifier</span>
                 <span *ngIf="touched" (click)="onSubmit()">   Valider </span>
             </div>
 
-            <div class="reset btn " (click)="cancel()">
+            <div class="btn" (click)="cancel()">
                 Annuler
             </div>
-
         </div>
+
+
     </div>
 </div>
 
-<div class="btn">
-       changer le mot  de passe
-</div>
 
 
 <style>
 
 
     #profile-picture {
-        width: 20%;
-        height: auto;
+        width: 200px;
+        height: 200px;
         border-radius: 100%;
     }
 
@@ -206,11 +204,6 @@
         margin-top: 30px;
         border: 1px solid rgba(50, 47, 47, 0.64);
 
-    }
-
-
-    img {
-        width: 25%;
     }
 
 

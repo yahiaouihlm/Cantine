@@ -13,7 +13,7 @@ import Malfunctions from "../../sharedmodule/functions/malfunctions";
 @Injectable()
 export class StudentDashboardService {
 
-    private BASIC_ENDPOINT = "http://localhost:8080/cantine/student/";
+    private BASIC_ENDPOINT = "http://localhost:8080/cantine/user/student/";
 
     private STUDENT_SIGN_UP_URL = this.BASIC_ENDPOINT + 'signUp';
     private GET_ALL_STUDENT_CLASS = this.BASIC_ENDPOINT + 'getAllStudentClass';
@@ -38,7 +38,9 @@ export class StudentDashboardService {
     }
 
     getAllStudentClass() {
-        return this.httpClient.get<StudentClass[]>(this.GET_ALL_STUDENT_CLASS);
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        return this.httpClient.get<StudentClass[]>(this.GET_ALL_STUDENT_CLASS, {headers : headers});
     }
 
     private handleError(error: HttpErrorResponse) {

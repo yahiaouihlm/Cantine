@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthObject} from "../../sharedmodule/models/authObject";
 import {Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
@@ -15,7 +14,6 @@ import {IConstantsURL} from 'src/app/sharedmodule/constants/IConstantsURL';
 })
 export class MainCoreCantineComponent implements OnInit {
     isConnected = false;
-    authObj: AuthObject = new AuthObject();
     user: User = new User();
 
     constructor(private router: Router, private sharedService: SharedService) {
@@ -45,7 +43,8 @@ export class MainCoreCantineComponent implements OnInit {
     }
 
     gotoProfile() {
-        this.router.navigate(['cantine/student/profile'], {queryParams: {id: this.authObj.id}});
+        this.router.navigate([IConstantsURL.STUDENT_PROFILE_URL],
+            {queryParams: {id: this.user.uuid}}).then(window.location.reload);
     }
 
     logout() {

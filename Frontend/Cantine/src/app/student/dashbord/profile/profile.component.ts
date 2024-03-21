@@ -10,6 +10,7 @@ import {StudentClass} from "../../../sharedmodule/models/studentClass";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-profile',
@@ -45,6 +46,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
 
     ngOnInit(): void {
+
         this.studentUpdated.disable();
         this.studentClass$ = this.studentService.getAllStudentClass();
         this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
@@ -52,12 +54,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
             if (id) {
                 this.getStudentByIdSubscription = this.sharedService.getStudentById(id).subscribe((response) => {
                     this.user = response;
-                    console.log(this.user.wallet);
                     this.matchFormsValue();
                 });
             } else {
                 localStorage.clear();
-                this.router.navigate(["cantine/home"]).then(r => console.log(r));
+                this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
             }
 
         });
@@ -107,7 +108,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         console.log("valeur de  image est  ")
         console.log(this.studentUpdated.value.phoneNumber)
-        this.studentService.updateStudent(formDataStudent).subscribe( {
+        this.studentService.updateStudent(formDataStudent).subscribe({
             next: (response) => {
                 this.isLoading = false;
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
@@ -118,7 +119,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     window.location.reload();
                 });
             },
-            error : (error) => {
+            error: (error) => {
                 this.isLoading = false;
             }
         });
