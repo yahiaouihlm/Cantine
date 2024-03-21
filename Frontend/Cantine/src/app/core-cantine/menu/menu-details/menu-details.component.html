@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div *ngFor="let  menu  of  menus$ | async" class="menu-container col-md-12 center">
+            <img src="{{menu.image}}" width="50%" alt="menu image">
+            <p>{{menu.label}}</p>
+            <p>{{menu.description}}</p>
+            <p>{{menu.price}} € </p>
+            <h3> Les Plats </h3>
+            <div *ngFor="let  meal  of  menu.meals">
+                <p> ---------------------------------------------------</p>
+                <p>{{meal.label}}</p>
+                <p>{{meal.description}}</p>
+                <p>{{meal.price}} € </p>
+            </div>
+
+            <button class="btn btn-primary" (click)="addMenuToOrder(menu)">Ajouter au panier</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .menu-container {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        border-radius: 10px;
+        padding-top: 30px;
+        padding-bottom: 50px;
+        border: 2px solid rgba(164, 162, 152, 0.53);
+    }
+
+</style>

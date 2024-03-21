@@ -29,7 +29,7 @@ const routes: Routes = [
       {path: 'home', component: HomeComponent},
       {path: 'meals', component: MealsComponent},
       {path: 'menus', component: MenuComponent},
-      {path: 'menu-details', component: MenuDetailsComponent},
+      {path: 'menus/menu-details', component: MenuDetailsComponent},
       {path: 'user/confirmation-token', component: ConfirmationTokenComponent},
       {path: 'user/forgot-password', component: ForgotPasswordComponent},
       {path: 'user/reset-password', component: ResetPasswordComponent}

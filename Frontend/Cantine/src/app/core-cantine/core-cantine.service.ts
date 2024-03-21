@@ -14,6 +14,7 @@ export class CoreCantineService {
     private GET_ALL_MENUS_ENDPOINT = this.BASIC_URL + 'menus';
     private GET_MEALS_BY_TYPE_ENDPOINT = this.BASIC_URL + 'getMealsByType';
     private  GET_MENUS_BY_TERM_ENDPOINT = this.BASIC_URL + 'menus/contains';
+    private  GET_MENUS_BY_LABEL_ENDPOINT = this.BASIC_URL + 'getMenuByLabel';
 
 
     constructor(private httpClient: HttpClient) {
@@ -22,6 +23,12 @@ export class CoreCantineService {
 
     userAuthentication(login: Login) {
         return this.httpClient.post<AuthObject>(this.USER_AUTHENTICATION_ENDPOINT, login);
+    }
+
+
+    getMenusByLabel(label: string) {
+        let params = new HttpParams().set('label', label);
+        return this.httpClient.get<Menu[]>(this.GET_MENUS_BY_LABEL_ENDPOINT, {params: params})
     }
 
     getAllAvailableMeals() {
