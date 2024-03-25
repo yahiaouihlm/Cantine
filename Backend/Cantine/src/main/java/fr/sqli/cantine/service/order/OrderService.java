@@ -232,8 +232,6 @@ public class OrderService implements IOrderService {
         this.studentDao.save(student);
 
 
-        this.confirmationOrderSender.sendConfirmationOrder(student, order);
-
         this.orderEmailSender.confirmOrder(student, order, tax);
 
         if ((newStudentWallet.compareTo(new BigDecimal(this.SMALL_STUDENT_WALLET))) <= 0) {
