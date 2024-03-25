@@ -152,8 +152,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
     modify() {

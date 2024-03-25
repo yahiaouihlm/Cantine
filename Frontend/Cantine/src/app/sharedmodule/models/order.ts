@@ -4,9 +4,9 @@ import {User} from "./user";
 
 export class Order {
 
-    id!: number;
+
     uuid!: string;
-    studentId!: number;
+    studentId!: string;
 
     meals: Meal[] = [];
 

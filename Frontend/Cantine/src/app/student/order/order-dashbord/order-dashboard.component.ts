@@ -8,6 +8,8 @@ import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {Observable, of} from "rxjs";
 import {Meal} from "../../../sharedmodule/models/meal";
+import {Router} from "@angular/router";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-order-dashbord',
@@ -24,17 +26,24 @@ export class OrderDashboardComponent implements OnInit {
     order: Order = new Order();
     isLoading = false;
 
-    ordersOfDay$  :  Observable <Order[]>  =  of([]);
-    constructor(private matDialog: MatDialog, private orderService: OrderService) {
+    ordersOfDay$: Observable<Order[]> = of([]);
+
+    constructor(private matDialog: MatDialog, private orderService: OrderService, private router: Router) {
     }
 
     ngOnInit(): void {
-
-        let order = Order.getOrderFromLocalStorage();
-        if (order) {
-            this.order = order;
+        const userId = Malfunctions.getUserIdFromLocalStorage();
+        if (userId != null && userId !== "") {
+            let order = Order.getOrderFromLocalStorage();
+            if (order) {
+                this.order = order;
+            }
+            //  this.ordersOfDay$ = this.orderService.getOrdersOfDay()
+        } else {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
         }
-        this.ordersOfDay$ = this.orderService.getOrdersOfDay();
+
     }
 
 
@@ -47,12 +56,12 @@ export class OrderDashboardComponent implements OnInit {
             if (this.isOrderEmpty() || !studentId) {
                 return;
             }
-            this.order.studentId = +studentId;
+            this.order.studentId = studentId;
             this.order.mealsId = this.order.meals.map(meal => meal.uuid);
             this.order.menusId = this.order.menus.map(menu => menu.uuid);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
-                    let dialogue =  this.matDialog.open(SuccessfulDialogComponent, {
+                    let dialogue = this.matDialog.open(SuccessfulDialogComponent, {
                         data: {message: " Votre  Commande a éte bien enregistrer il sera validé prochainement"},
                         width: '40%',
                     });
@@ -61,7 +70,7 @@ export class OrderDashboardComponent implements OnInit {
                         window.location.reload()
                         Order.clearOrder();
                     });
-                   // il faut   faire  un reloade  a la page apres   les  modification
+                    // il faut   faire  un reloade  a la page apres   les  modification
 
                 }
 
