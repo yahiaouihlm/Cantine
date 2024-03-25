@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
                         authorize -> {
+                            authorize.requestMatchers("/test").permitAll();
                             authorize.requestMatchers("/cantine/api/getAll/**" , "/cantine/api/getAll/getMealsByType/**").permitAll();
                             authorize.requestMatchers("/cantine/download/images/**",
                                     "/cantine/download/images/**").permitAll();
@@ -76,6 +77,7 @@ public class SecurityConfig {
                             ).permitAll();
                             authorize.anyRequest().authenticated();
                         })
+
                 .authenticationProvider(authenticationProvider())
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)

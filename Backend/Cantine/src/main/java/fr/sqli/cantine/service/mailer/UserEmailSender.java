@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.math.BigDecimal;
-
 @Service
 public class UserEmailSender {
 
@@ -33,7 +31,7 @@ public class UserEmailSender {
         context.setVariable("lastname", user.getLastname());
         context.setVariable("amount", amount.toString());
         context.setVariable("sold", newSold.toString());
-        context.setVariable("cantineLink", this.environment.getProperty("sqli.cantine.front.url"));
+        context.setVariable("cantineLink", this.environment.getProperty("sqli.cantine.front.home.url"));
 
         context.setVariable("sqliImage", this.environment.getProperty("sqli.cantine.confirmation.email.sqli.image.url"));
         context.setVariable("cantineLogo", this.environment.getProperty("sqli.cantine.confirmation.email.cantiere.logo.url"));
@@ -111,7 +109,7 @@ public class UserEmailSender {
         Context context = new Context();
         context.setVariable("firstname", student.getFirstname());
         context.setVariable("lastname", student.getLastname());
-        context.setVariable("cantineLink", this.environment.getProperty("sqli.cantine.front.url"));
+        context.setVariable("cantineLink", this.environment.getProperty("sqli.cantine.front.home.url"));
 
         context.setVariable("sqliImage", this.environment.getProperty("sqli.cantine.confirmation.email.sqli.image.url"));
         context.setVariable("cantineLogo", this.environment.getProperty("sqli.cantine.confirmation.email.cantiere.logo.url"));

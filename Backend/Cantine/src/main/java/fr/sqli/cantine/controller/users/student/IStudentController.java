@@ -33,13 +33,13 @@ public interface IStudentController {
 
 
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
-    ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid")String  studentUuid) throws  InvalidUserInformationException, UserNotFoundException;
+    ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
 
     ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
 
     @PostMapping(STUDENT_SIGN_UP_ENDPOINT)
-    ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException,UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException;
+    ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException;
 
 
     @GetMapping(GET_ALL_STUDENT_CLASS)

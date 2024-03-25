@@ -22,7 +22,7 @@ import java.util.List;
 
 public interface IOrderController {
 
-    String  BASIC_ORDER_URL =  "cantine/order";
+    String  BASIC_ORDER_URL =  "order/";
 
     String ADMIN_GET_ALL_ORDERS_BY_DAY = "admin/getAllOrdersOfDay";
 

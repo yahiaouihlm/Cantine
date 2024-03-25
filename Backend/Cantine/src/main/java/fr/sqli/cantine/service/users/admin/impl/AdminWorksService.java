@@ -20,6 +20,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -70,6 +71,7 @@ public class AdminWorksService implements IAdminFunctionService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException, UnknownUser, MessagingException {
 
         if (studentUuid == null || studentUuid.isEmpty() || studentUuid.trim().length() < 10 || validationCode == null || amount == null || amount > MAX_STUDENT_WALLET_ADD_AMOUNT) {

@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static java.util.Arrays.stream;
 
-
+/*TDOO: remove context  root  cantine on the url .*/
 @Component
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
@@ -37,13 +37,14 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     @Autowired
     public JwtTokenVerifier(Environment environment) {
         this.environment = environment;
+
     }
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        if (request.getServletPath().equals("/login")) {
+        if (request.getServletPath().equals("/user/login")) {
             filterChain.doFilter(request, response);
         } else {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {

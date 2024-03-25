@@ -38,7 +38,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordA
 
     public JwtUsernameAndPasswordAuthenticationFiler(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-
+        setFilterProcessesUrl("/user/login");
     }
 
 
