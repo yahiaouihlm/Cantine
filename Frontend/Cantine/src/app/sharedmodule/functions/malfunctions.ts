@@ -27,7 +27,7 @@ export  default class Malfunctions {
                 });
             }
         }
-        console.log("user  is connected");
+        
     }
 
     public static checkAdminConnectivityAndMakeRedirection(router: Router)  : boolean  {

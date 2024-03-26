@@ -119,6 +119,7 @@ export class AuthenticationComponent  implements  OnInit{
     }
 
 
-
-
+    goToSignUpStudent() {
+        this.router.navigate([IConstantsURL.STUDENT_SIGN_UP_URL]).then(r => window.location.reload());
+    }
 }

@@ -39,8 +39,7 @@ export class StudentDashboardService {
 
     getAllStudentClass() {
         let token = Malfunctions.getTokenFromLocalStorage();
-        const headers = new HttpHeaders().set('Authorization', token);
-        return this.httpClient.get<StudentClass[]>(this.GET_ALL_STUDENT_CLASS, {headers : headers});
+        return this.httpClient.get<StudentClass[]>(this.GET_ALL_STUDENT_CLASS);
     }
 
     private handleError(error: HttpErrorResponse) {

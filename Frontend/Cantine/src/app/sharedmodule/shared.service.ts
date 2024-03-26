@@ -76,25 +76,6 @@ export class SharedService {
     }
 
 
-    private handleErrors(error: HttpErrorResponse) {
-        const errorObject = error.error as ErrorResponse;
-        let errorMessage = errorObject.exceptionMessage;
-
-        if (error.status == HttpStatusCode.Conflict) {
-            return throwError(() => new Error(errorMessage));
-        } else if (error.status == HttpStatusCode.Unauthorized) {
-            localStorage.clear();
-            this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
-
-        } else {
-            localStorage.clear();
-            this.dialog.openDialog("Unkwon Error   has  been occured  ")
-            this.router.navigate(['cantine/home']).then(error => console.log("redirected to login page"));
-        }
-
-        return throwError(() => new Error(error.message));
-
-    }
 
     sendToken(email: string) {
         const params = new HttpParams().set('email', email);

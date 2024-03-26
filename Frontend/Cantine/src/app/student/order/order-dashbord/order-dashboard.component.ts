@@ -51,13 +51,13 @@ export class OrderDashboardComponent implements OnInit {
 
         let sendOrder = () => {
 
-            let studentId = Malfunctions.getUserIdFromLocalStorage();
+            let studentUuid = Malfunctions.getUserIdFromLocalStorage();
 
-            if (this.isOrderEmpty() || !studentId) {
+            if (this.isOrderEmpty() || !studentUuid) {
                 return;
             }
             this.isLoading = true;
-            this.order.studentUuid = studentId;
+            this.order.studentUuid = studentUuid;
             this.order.mealsId = this.order.meals.map(meal => meal.uuid);
             this.order.menusId = this.order.menus.map(menu => menu.uuid);
             this.orderService.addOrder(this.order).subscribe({

@@ -10,6 +10,7 @@ import {SharedService} from "../../../sharedmodule/shared.service";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {Router} from "@angular/router";
+import Malfunctions from "../../../sharedmodule/functions/malfunctions";
 
 @Component({
   selector: 'app-sign-in',
@@ -50,6 +51,7 @@ export class SignUpComponent  implements   OnInit {
   }
 
     ngOnInit(): void {
+        Malfunctions.checkUserConnection(this.router);
        this.studentClass$ =  this.studentService.getAllStudentClass();
     }
 

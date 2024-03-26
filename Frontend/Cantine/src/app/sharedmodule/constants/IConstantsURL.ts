@@ -19,7 +19,7 @@ export module IConstantsURL {
     export const  MENUS_URL = "cantine/menus";
     export const  MENU_DETAILS_URL = "cantine/menus/menu-details";
     /*****************STUDENT URLS******************/
-
+    export const  STUDENT_SIGN_UP_URL = "cantine/student/sign-up";
     export const  STUDENT_PROFILE_URL = "cantine/student/profile";
     export const HOME_URL = "cantine/home";
     export const  FORGOT_PASSWORD_URL = "cantine/user/forgot-password";
