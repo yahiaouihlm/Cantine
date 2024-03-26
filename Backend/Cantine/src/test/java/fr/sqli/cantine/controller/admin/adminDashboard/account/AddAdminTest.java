@@ -129,7 +129,7 @@ public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTe
            Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
 
          var imageName =  admin.getImage().getImagename();
-         Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.default.persons.admin.imagename"));
+         Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.admin.default.image"));
 
     }
 

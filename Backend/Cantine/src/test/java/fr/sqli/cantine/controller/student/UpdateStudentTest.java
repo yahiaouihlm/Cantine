@@ -120,7 +120,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
          cleanDataBase();
 
         // make  a  new  admin  with  a default  image
-        var defaultImageAdmin  =  this.env.getProperty("sqli.cantine.default.persons.student.imagename");
+        var defaultImageAdmin  =  this.env.getProperty("sqli.cantine.student.default.image");
         var defaultImg = new ImageEntity();
         defaultImg.setImagename(defaultImageAdmin);
         this.studentEntity.setImage(defaultImg);
