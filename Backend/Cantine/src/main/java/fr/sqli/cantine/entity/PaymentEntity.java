@@ -1,6 +1,8 @@
 package fr.sqli.cantine.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -9,6 +11,8 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "payment")
+@Getter
+@Setter
 public class PaymentEntity  extends AbstractEntity{
 
 
@@ -28,53 +32,19 @@ public class PaymentEntity  extends AbstractEntity{
     @Column(name = "payment_time", nullable=false)
     private Time paymentTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "origin" ,  nullable = false)
+    private TransactionType origin;
 
-    public PaymentEntity(AdminEntity admin, StudentEntity student, BigDecimal amount) {
+    public PaymentEntity(AdminEntity admin, StudentEntity student, BigDecimal amount , TransactionType origin) {
         this.admin = admin;
         this.student = student;
         this.amount = amount;
         this.paymentDate = LocalDate.now();
         this.paymentTime = Time.valueOf(LocalTime.now());
+        this.origin= origin;
     }
     public  PaymentEntity(){}
-    public AdminEntity getAdmin() {
-        return admin;
-    }
 
-    public void setAdmin(AdminEntity admin) {
-        this.admin = admin;
-    }
-
-    public StudentEntity getStudent() {
-        return student;
-    }
-
-    public void setStudent(StudentEntity student) {
-        this.student = student;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public Time getPaymentTime() {
-        return paymentTime;
-    }
-
-    public void setPaymentTime(Time paymentTime) {
-        this.paymentTime = paymentTime;
-    }
 
 }

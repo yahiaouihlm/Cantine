@@ -30,6 +30,23 @@ public class OrderEmailSender {
         this.environment = environment;
     }
 
+    public void  cancelledOrder (UserEntity student, OrderEntity order) throws MessagingException {
+        Context context = new Context();
+
+        context.setVariable("firstname", student.getFirstname());
+        context.setVariable("lastname", student.getLastname());
+        context.setVariable("orderUuid", order.getUuid());
+        context.setVariable("orderDate", order.getCreationDate());
+        context.setVariable("orderTotalPrice", order.getPrice());
+
+        context.setVariable("sqliImage", this.environment.getProperty("sqli.cantine.confirmation.email.sqli.image.url"));
+        context.setVariable("cantineLogo", this.environment.getProperty("sqli.cantine.confirmation.email.cantiere.logo.url"));
+        context.setVariable("astonLogo", this.environment.getProperty("sqli.cantine.confirmation.email.aston.logo.url"));
+
+
+        String body = templateEngine.process("cancelled-order-notification", context);
+        this.emailSenderService.send(student.getEmail(), "Votre  Commande été Annuler  avec succes", body);
+    }
 
     public void  confirmOrder(UserEntity student, OrderEntity order ,  BigDecimal tax) throws MessagingException {
         Context context = new Context();

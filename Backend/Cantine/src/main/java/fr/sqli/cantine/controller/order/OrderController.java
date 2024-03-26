@@ -40,8 +40,8 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws OrderNotFoundException, InvalidOrderException, InvalidUserInformationException, UserNotFoundException {
-        return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentId,date));
+    public ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(String studentUuid, LocalDate date) throws InvalidOrderException, InvalidUserInformationException, UserNotFoundException {
+        return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentUuid,date));
     }
 
     @Override
@@ -56,9 +56,9 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<String> cancelOrder(@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException {
-        this.orderService.cancelOrder(orderId);
-        return ResponseEntity.ok( ORDER_CANCELLED_SUCCESSFULLY);
+    public ResponseEntity<ResponseDtout> cancelOrder( String orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
+        this.orderService.cancelOrder(orderUuid);
+        return ResponseEntity.ok( new ResponseDtout(ORDER_CANCELLED_SUCCESSFULLY));
     }
 
 

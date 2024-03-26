@@ -9,6 +9,7 @@ import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.PaymentEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.entity.TransactionType;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
 import fr.sqli.cantine.service.users.exceptions.*;
@@ -153,12 +154,13 @@ public class AdminWorksService implements IAdminFunctionService {
 
         // add  new amount  to student  account
         student.setWallet(student.getWallet().add(new BigDecimal(amount)));
-        var paymentInformation = new PaymentEntity(adminAuth, student, new BigDecimal(amount));
-
-        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
+        var paymentInformation = new PaymentEntity(adminAuth, student, new BigDecimal(amount), TransactionType.ADDITION);
         // save  the  payment  information
         this.paymentDao.save(paymentInformation);
         this.studentDao.save(student);
+
+        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
+
 
     }
 

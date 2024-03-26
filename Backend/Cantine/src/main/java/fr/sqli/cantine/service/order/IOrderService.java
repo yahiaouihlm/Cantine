@@ -18,18 +18,16 @@ import java.util.List;
 public interface IOrderService {
 
 
+    void submitOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException;
+
+    void addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
+
+    void cancelOrder(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException;
 
 
+    List<OrderDtOut> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidUserInformationException;
 
-     void  submitOrder (Integer  orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException;
-     void   addOrder  (OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
-
-      void cancelOrder  (Integer orderId ) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException;
-
-
-      List<OrderDtOut> getOrdersByDate(LocalDate date ) throws InvalidOrderException, InvalidUserInformationException;
-      List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId , LocalDate date ) throws InvalidOrderException, OrderNotFoundException, InvalidUserInformationException, UserNotFoundException;
-
+    List<OrderDtOut> getOrdersByDateAndStudentId(String studentUuid, LocalDate date) throws InvalidOrderException, OrderNotFoundException, InvalidUserInformationException, UserNotFoundException;
 
 
 }

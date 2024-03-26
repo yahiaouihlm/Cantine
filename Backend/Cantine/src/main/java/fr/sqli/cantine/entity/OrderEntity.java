@@ -27,7 +27,7 @@ public class OrderEntity extends AbstractEntity implements Serializable {
     @Column(nullable = false )
     private BigDecimal price;
     @Column(nullable = false)
-    @Check(constraints = "status IN (0,1)")
+    @Check(constraints = "status IN (0,1,2)")
     private Integer status;
 
 

@@ -63,9 +63,13 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
+
+                    /*TODO:  make the  request  to  database  to check  the  user   exists, not  disables....ect */
+
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
                     authentication.setDetails(authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+
 
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {
