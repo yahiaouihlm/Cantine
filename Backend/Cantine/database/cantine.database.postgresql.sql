@@ -101,10 +101,13 @@ CREATE  TABLE IF NOT EXISTS "admin" (
     amount DECIMAL(5,2) NOT NULL,
     payment_date DATE NOT NULL,
     payment_time TIME NOT NULL,
+    origin TransactionType NOT NULL,
+
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (admin_id) REFERENCES admin (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 
 )
+CREATE TYPE TransactionType AS ENUM ('REFUNDS', 'DEDUCTION', 'ADDITION', 'OTHERS');
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`order`
@@ -117,11 +120,11 @@ CREATE table  if NOT EXISTS  st_order(
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
-     status INT  NOT NULL DEFAULT 0   ,   /* 0 = disabled, 1 = enabled , 2=taken */
+     status INT  NOT NULL DEFAULT 0   ,   /*0 basic statas  1=validate By Admin, 2=taken */
      isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
      qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
-     check (status IN (0,1)),
+     check (status IN (0,1,2)),
      FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -129,7 +132,7 @@ CREATE table  if NOT EXISTS  st_order(
 -- Table `cantiniere`.`plat`
 -- -----------------------------------------------------
 
-CREATE TYPE mealType AS ENUM ('ENTREE', 'PLAT', 'DESSERT', 'BOISSON', 'ACCOMPAGNEMENT', 'AUTRE');
+CREATE TYPE MealType AS ENUM ('ENTREE', 'PLAT', 'DESSERT', 'BOISSON', 'ACCOMPAGNEMENT', 'AUTRE');
 
 
 CREATE TABLE IF NOT EXISTS meal(
@@ -142,7 +145,7 @@ CREATE TABLE IF NOT EXISTS meal(
     image_idimage  INT NOT NULL ,
     quantity   INT    DEFAULT 0 ,
     status INT  NOT NULL,   /* 0 = disabled, 1 = enabled  , 2 =  to  delete  */
-    meal_type mealType NOT NULL,
+    meal_type MealType NOT NULL,
     PRIMARY KEY (id),
     CHECK (status IN (0,1,2)),
     CHECK (quantity >= 0),
@@ -184,15 +187,13 @@ CREATE TABLE IF NOT EXISTS menu_has_meal (
 CREATE TABLE IF NOT EXISTS st_order_has_meal (
     order_idorder INT NOT NULL,
     meal_idmeal INT NOT NULL,
-    PRIMARY KEY (order_idorder, meal_idmeal),
     FOREIGN KEY (order_idorder) REFERENCES st_order (id) ON DELETE CASCADE,
     FOREIGN KEY (meal_idmeal) REFERENCES meal (id) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS st_order_has_menu (
-    order_idorder INT NOT NULL,
+    order_idorder INT NOT  NULL,
     menu_idmenu INT NOT NULL,
-    PRIMARY KEY (order_idorder, menu_idmenu),
     FOREIGN KEY (order_idorder) REFERENCES st_order (id) ON DELETE CASCADE,
     FOREIGN KEY (menu_idmenu) REFERENCES menu (id) ON DELETE RESTRICT
 );

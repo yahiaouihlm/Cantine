@@ -57,7 +57,7 @@ public class OrderService implements IOrderService {
     private final IPaymentDao paymentDao;
 
     @Autowired
-    public OrderService(Environment env, IOrderDao orderDao, IAdminDao adminDao,IPaymentDao iPaymentDao , IStudentDao studentDao, IMealDao mealDao,
+    public OrderService(Environment env, IOrderDao orderDao, IAdminDao adminDao, IPaymentDao iPaymentDao, IStudentDao studentDao, IMealDao mealDao,
                         IMenuDao menuDao, ITaxDao taxDao, UserEmailSender userEmailSender, OrderEmailSender orderEmailSender,
                         ConfirmationOrderSender confirmationOrderSender) {
         this.orderDao = orderDao;
@@ -126,13 +126,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
+    public void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
         if (orderDtoIn == null) {
             OrderService.LOG.error("INVALID ORDER ORDER IS NULL");
             throw new InvalidOrderException("INVALID ORDER");
         }
-
-
         orderDtoIn.checkOrderIDsValidity();
         var student = this.studentDao.findByUuid(orderDtoIn.getStudentId()).orElseThrow(() -> {
             OrderService.LOG.error("STUDENT WITH  UUID  = {} NOT FOUND", orderDtoIn.getStudentId());
@@ -145,7 +143,6 @@ public class OrderService implements IOrderService {
         }
 
         var totalPrice = BigDecimal.ZERO;
-
 
         if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && orderDtoIn.getMealsId().isEmpty() && orderDtoIn.getMenusId().isEmpty()) {
             OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
@@ -252,7 +249,7 @@ public class OrderService implements IOrderService {
 
 
     @Override
-    public void cancelOrder(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
+    public void cancelOrderByStudent(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
         if (orderUuid == null || orderUuid.trim().length() < 10) {
             OrderService.LOG.error("INVALID ORDER ID");
             throw new InvalidOrderException("INVALID ORDER ID");
@@ -294,8 +291,8 @@ public class OrderService implements IOrderService {
         order.setCancelled(true);
         this.orderDao.save(order);
 
-        var randomAdmin = this.adminDao.findRandomAdmin().orElseThrow(()-> new UserNotFoundException("NO ADMIN FOUND"));
-        this.paymentDao.save(new PaymentEntity(randomAdmin ,student, orderPrice, TransactionType.REFUNDS));
+        var randomAdmin = this.adminDao.findRandomAdmin().orElseThrow(() -> new UserNotFoundException("NO ADMIN FOUND"));
+        this.paymentDao.save(new PaymentEntity(randomAdmin, student, orderPrice, TransactionType.REFUNDS));
         this.orderEmailSender.cancelledOrder(student, order);
         this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), orderPrice.doubleValue());
 

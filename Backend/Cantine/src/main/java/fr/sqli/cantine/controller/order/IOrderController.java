@@ -43,13 +43,13 @@ public interface IOrderController {
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
     ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(@RequestParam("studentUuid") String studentUuid , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, InvalidUserInformationException, UserNotFoundException;
     @PostMapping(ADD_ORDER_URL)
-    ResponseEntity <ResponseDtout>addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
+    ResponseEntity <ResponseDtout> addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
 
     @GetMapping(ADMIN_GET_ALL_ORDERS_BY_DAY)
     ResponseEntity<List<OrderDtOut>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidUserInformationException, InvalidOrderException;
 
     @PostMapping(CANCEL_ORDER_URL)
-    ResponseEntity<ResponseDtout> cancelOrder(@RequestParam("orderUuid")String  orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException;
+    ResponseEntity<ResponseDtout> cancelOrderByStudent(@RequestParam("orderUuid")String  orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException;
 
 
 }

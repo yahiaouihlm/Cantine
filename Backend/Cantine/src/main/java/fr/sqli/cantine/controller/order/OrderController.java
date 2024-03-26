@@ -45,8 +45,8 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<ResponseDtout>  addOrder(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
-        this.orderService.addOrder(orderDtoIn) ;
+    public ResponseEntity<ResponseDtout> addOrderByStudent(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
+        this.orderService.addOrderByStudent(orderDtoIn) ;
         return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }
 
@@ -56,8 +56,8 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> cancelOrder( String orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
-        this.orderService.cancelOrder(orderUuid);
+    public ResponseEntity<ResponseDtout> cancelOrderByStudent(String orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
+        this.orderService.cancelOrderByStudent(orderUuid);
         return ResponseEntity.ok( new ResponseDtout(ORDER_CANCELLED_SUCCESSFULLY));
     }
 

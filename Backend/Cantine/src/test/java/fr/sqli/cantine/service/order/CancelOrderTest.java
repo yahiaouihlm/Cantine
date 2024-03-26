@@ -64,7 +64,7 @@ public class CancelOrderTest {
         Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.of(orderEntity));
         Mockito.when(studentDao.findById(studentId)).thenReturn(Optional.of(studentEntity));
 
-        this.orderService.cancelOrder(orderId);
+        this.orderService.cancelOrderByStudent(orderId);
 
 
         Assertions.assertEquals(0, studentEntity.getWallet().compareTo(BigDecimal.TWO.add(BigDecimal.TEN)));
@@ -91,7 +91,7 @@ public class CancelOrderTest {
 
         Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.of(orderEntity));
         Assertions.assertThrows(UnableToCancelOrderException.class, () -> {
-            orderService.cancelOrder(orderId);
+            orderService.cancelOrderByStudent(orderId);
         });
 
         Mockito.verify(orderDao, Mockito.times(1)).findById(orderId);
@@ -111,7 +111,7 @@ public class CancelOrderTest {
 
         Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.of(orderEntity));
         Assertions.assertThrows(UnableToCancelOrderException.class, () -> {
-            orderService.cancelOrder(orderId);
+            orderService.cancelOrderByStudent(orderId);
         });
 
         Mockito.verify(orderDao, Mockito.times(1)).findById(orderId);
@@ -129,7 +129,7 @@ public class CancelOrderTest {
 
         Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.of(orderEntity));
         Assertions.assertThrows(UnableToCancelOrderException.class, () -> {
-            orderService.cancelOrder(orderId);
+            orderService.cancelOrderByStudent(orderId);
         });
 
         Mockito.verify(orderDao, Mockito.times(1)).findById(orderId);
@@ -146,7 +146,7 @@ public class CancelOrderTest {
         var orderId = 3;
         Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.empty());
         Assertions.assertThrows(OrderNotFoundException.class, () -> {
-            orderService.cancelOrder(orderId);
+            orderService.cancelOrderByStudent(orderId);
         });
 
         Mockito.verify(orderDao, Mockito.times(1)).findById(orderId);
@@ -161,7 +161,7 @@ public class CancelOrderTest {
     @Test
     void cancelOrderWithNegativeOrderIdTest() {
         Assertions.assertThrows(InvalidOrderException.class, () -> {
-            orderService.cancelOrder(-3);
+            orderService.cancelOrderByStudent(-3);
         });
 
 
@@ -172,7 +172,7 @@ public class CancelOrderTest {
     @Test
     void cancelOrderWithNUllOrderIdTest() {
         Assertions.assertThrows(InvalidOrderException.class, () -> {
-            orderService.cancelOrder(null);
+            orderService.cancelOrderByStudent(null);
         });
         Mockito.verify(studentDao, Mockito.times(0)).save(Mockito.any(StudentEntity.class));
         Mockito.verify(orderDao, Mockito.times(0)).save(Mockito.any());
