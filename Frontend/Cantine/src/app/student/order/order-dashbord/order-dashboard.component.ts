@@ -20,7 +20,7 @@ export class OrderDashboardComponent implements OnInit {
 
     private WOULD_YOU_LIKE_TO_SEND_ORDER = "Voulez-vous Valider votre commande ?";
     private ORDER_WAS_SUCCESSFULLY_CANCELED = "Votre commande a été annulée avec succès";
-
+    private ORDER_WAS_SUCCESSFULLY_VALIDATED = "Votre  Commande a éte bien enregistrer il sera validé prochainement";
 //http://localhost:8080/cantine/student/order/getByDate?studentId=21&date=2023-09-18
 //http://localhost:8080/cantine/student/order/getByDate?date=2023-09-18&idStudent=21
     order: Order = new Order();
@@ -56,22 +56,24 @@ export class OrderDashboardComponent implements OnInit {
             if (this.isOrderEmpty() || !studentId) {
                 return;
             }
+            this.isLoading = true;
             this.order.studentUuid = studentId;
             this.order.mealsId = this.order.meals.map(meal => meal.uuid);
             this.order.menusId = this.order.menus.map(menu => menu.uuid);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
+                    this.isLoading = false;
                     let dialogue = this.matDialog.open(SuccessfulDialogComponent, {
-                        data: {message: " Votre  Commande a éte bien enregistrer il sera validé prochainement"},
+                        data: {message: this.ORDER_WAS_SUCCESSFULLY_VALIDATED},
                         width: '40%',
                     });
-
                     dialogue.afterClosed().subscribe((result) => {
                         window.location.reload()
                         Order.clearOrder();
                     });
-                    // il faut   faire  un reloade  a la page apres   les  modification
-
+                },
+                error: (error) => {
+                    this.isLoading = false;
                 }
 
             });

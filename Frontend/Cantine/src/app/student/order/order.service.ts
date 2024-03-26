@@ -18,6 +18,7 @@ export class OrderService {
     private GET_ORDERS_OF_DAY_URL = this.ORDER_BASIC_URL + "/getByDateAndStudentId";
 
     private dialog = new DialogErrors(this.matDialog);
+
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
@@ -25,13 +26,13 @@ export class OrderService {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         return this.httpClient.post<NormalResponse>(this.ADD_ORDER_URL, order, {headers: headers}).pipe(
-            catchError((error) => this.handleError(error))
+            catchError((error) => this.handleAddOrderError(error))
         )
     }
 
 
     getOrdersOfDay() {
-        let  studentId = Malfunctions.getUserIdFromLocalStorage();
+        let studentId = Malfunctions.getUserIdFromLocalStorage();
         let date = Malfunctions.getCurrentDate();
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
@@ -43,10 +44,14 @@ export class OrderService {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
         const params = {orderUuid: orderUuid};
-        return this.httpClient.post<NormalResponse>(this.CANCEL_ORDER_URL, null, {headers: headers , params : params}).pipe(
+        return this.httpClient.post<NormalResponse>(this.CANCEL_ORDER_URL, null, {
+            headers: headers,
+            params: params
+        }).pipe(
             catchError((error) => this.handleCancelOrderError(error))
         )
     }
+
     private handleError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
@@ -60,6 +65,7 @@ export class OrderService {
         return throwError(() => new Error(errorMessage));
 
     }
+
     private handleCancelOrderError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
@@ -69,30 +75,69 @@ export class OrderService {
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
             this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
             return throwError(() => new Error(errorMessage));
-        }
-        else if (error.status == HttpStatusCode.BadRequest) {
+        } else if (error.status == HttpStatusCode.BadRequest) {
             errorMessage = "Informations  invalides sur  la  commande"
             this.dialog.openDialog(errorMessage);
-        }
-        else if (error.status == HttpStatusCode.NotFound){
-           errorMessage = "Commande  Introuvable "
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Commande  Introuvable "
             this.dialog.openDialog(errorMessage);
-        }
-        else if (error.status == HttpStatusCode.Unauthorized){
+        } else if (error.status == HttpStatusCode.Unauthorized) {
             localStorage.clear();
             this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
-        }
-        else if (error.status == HttpStatusCode.Forbidden){
+        } else if (error.status == HttpStatusCode.Forbidden) {
             errorMessage = "Commande  déja  annulée ou  validée  !"
             this.dialog.openDialog(errorMessage);
-        }
-        else if (error.status == HttpStatusCode.InternalServerError){
+        } else if (error.status == HttpStatusCode.InternalServerError) {
             errorMessage = "Une erreur  s'est produite  pendant  l'annulation  de  la commande"
             this.dialog.openDialog(errorMessage);
             localStorage.clear();
             this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else {
+            errorMessage = "Une erreur  inconnue  s'est produite"
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
         }
-        else {
+
+        return throwError(() => new Error(errorMessage));
+
+    }
+
+    private handleAddOrderError(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        } else if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Informations  invalides sur  la  commande"
+            this.dialog.openDialog(errorMessage);
+        } else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Utilisateur ,Plat ou Menu  Introuvable  !"
+            this.dialog.openDialog(errorMessage);
+        } else if (error.status == HttpStatusCode.NotAcceptable) {
+            errorMessage = "Votre commande dépasse le nombre de repas autorisé  !";
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.ServiceUnavailable) {
+            errorMessage = "Certains plats ou  menus  ne sont pas  disponibles  !"
+            this.dialog.openDialog(errorMessage);
+        } else if (error.status == HttpStatusCode.InternalServerError) {
+            errorMessage = "Une erreur  s'est produite  pendant  l'annulation  de  la commande"
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        } else if (error.status == HttpStatusCode.PaymentRequired) {
+            errorMessage = "Votre solde est insuffisant pour  effectuer  cette commande  !";
+            this.dialog.openDialog(errorMessage);
+        } else {
             errorMessage = "Une erreur  inconnue  s'est produite"
             this.dialog.openDialog(errorMessage);
             localStorage.clear();
