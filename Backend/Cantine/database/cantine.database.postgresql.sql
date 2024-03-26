@@ -122,7 +122,7 @@ CREATE table  if NOT EXISTS  st_order(
      price DECIMAL(5,2) NOT NULL,
      status INT  NOT NULL DEFAULT 0   ,   /*0 basic statas  1=validate By Admin, 2=taken */
      isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
-     qr_code VARCHAR(1000) NOT NULL , /* pour faire le qr code  we just make  the  path  to real  image  */
+     qr_code VARCHAR(1000), /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
      check (status IN (0,1,2)),
      FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION

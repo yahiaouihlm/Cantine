@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class OrderDtoIn {
 
     private static final Logger LOG = LogManager.getLogger();
-    private String studentId;
+    private String studentUuid;
 
     private List<String> mealsId;
 
@@ -20,7 +24,7 @@ public class OrderDtoIn {
 
     @JsonIgnore
     public void checkOrderIDsValidity() throws InvalidUserInformationException, InvalidOrderException, InvalidFoodInformationException {
-        if (this.studentId == null || this.studentId.trim().length() < 10 ) {
+        if (this.studentUuid == null || this.studentUuid.trim().length() < 10 ) {
             OrderDtoIn.LOG.error("STUDENT ID IS  REQUIRED OR HAS LESS THAN 10 CHARACTERS");
             throw new InvalidUserInformationException("STUDENT ID IS  REQUIRED");
         }
@@ -49,27 +53,5 @@ public class OrderDtoIn {
 
     }
 
-    public String getStudentId() {
-        return studentId;
-    }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public List<String> getMealsId() {
-        return mealsId;
-    }
-
-    public void setMealsId(List<String> mealsId) {
-        this.mealsId = mealsId;
-    }
-
-    public List<String> getMenusId() {
-        return menusId;
-    }
-
-    public void setMenusId(List<String> menusId) {
-        this.menusId = menusId;
-    }
 }

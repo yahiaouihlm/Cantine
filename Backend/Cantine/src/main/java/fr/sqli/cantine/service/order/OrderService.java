@@ -107,9 +107,11 @@ public class OrderService implements IOrderService {
             OrderService.LOG.error(" ORDER  HAS BEEN  CANCLLED ");
             throw new CancelledOrderException(" ORDER IS   CANCELLED ");
         }
+  /*    create the  QrCode  and  save  the  order  in  the  database
+        String token = "qrcode" + UUID.randomUUID();
+        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT);
 
-
-     /*   String qrCodeData = "Student  : " + student.getFirstname() + " " + student.getLastname() +
+    String qrCodeData = "Student  : " + student.getFirstname() + " " + student.getLastname() +
                 "\n" + " Student Email : " + student.getEmail() +
                 "\n" + " Order Id :" + order.getId() +
                 "\n" + " Order Price : " + order.getPrice() + "£" +
@@ -132,13 +134,13 @@ public class OrderService implements IOrderService {
             throw new InvalidOrderException("INVALID ORDER");
         }
         orderDtoIn.checkOrderIDsValidity();
-        var student = this.studentDao.findByUuid(orderDtoIn.getStudentId()).orElseThrow(() -> {
-            OrderService.LOG.error("STUDENT WITH  UUID  = {} NOT FOUND", orderDtoIn.getStudentId());
+        var student = this.studentDao.findByUuid(orderDtoIn.getStudentUuid()).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT WITH  UUID  = {} NOT FOUND", orderDtoIn.getStudentUuid());
             return new UserNotFoundException("STUDENT NOT FOUND");
         });
         var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!student.getEmail().equals(username)) {
-            OrderService.LOG.error("STUDENT WITH  ID  = {} IS NOT THE OWNER OF THE ORDER  OF THE STUDENT  AUTHENTICATED {} ", orderDtoIn.getStudentId(), username);
+            OrderService.LOG.error("STUDENT WITH  ID  = {} IS NOT THE OWNER OF THE ORDER  OF THE STUDENT  AUTHENTICATED {} ", orderDtoIn.getStudentUuid(), username);
             throw new InvalidUserInformationException("ERROR  STUDENT  ID");
         }
 
@@ -212,7 +214,7 @@ public class OrderService implements IOrderService {
         // check  if  student  has  enough  money  to  pay  for  the  order
 
         if (student.getWallet().compareTo(totalPrice) < 0) {
-            OrderService.LOG.error("STUDENT WITH  ID  = " + orderDtoIn.getStudentId() + " DOES NOT HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
+            OrderService.LOG.error("STUDENT WITH  ID  = " + orderDtoIn.getStudentUuid() + " DOES NOT HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
             throw new InsufficientBalanceException("YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
         }
 
@@ -222,9 +224,7 @@ public class OrderService implements IOrderService {
         orderEntity.setMenus(menus);
         orderEntity.setStatus(0);
         orderEntity.setCancelled(false);
-        //  create the  QrCode  and  save  the  order  in  the  database
-        String token = "qrcode" + UUID.randomUUID();
-        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT);
+
 
 
         orderEntity.setPrice(totalPrice);

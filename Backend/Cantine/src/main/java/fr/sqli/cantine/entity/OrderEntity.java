@@ -22,7 +22,7 @@ public class OrderEntity extends AbstractEntity implements Serializable {
     private Time creationTime;
 
 
-    @Column(name = "qr_code", nullable=false, length = 1000)
+    @Column(name = "qr_code", nullable=true, length = 1000)
     private  String QRCode;
     @Column(nullable = false )
     private BigDecimal price;
