@@ -7,7 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
 
 @Component({
-    selector: 'app-order-dashbord',
+    selector: 'app-order-dashboard',
     templateUrl: './order-dashboard.component.html',
     styles: [],
     providers: [AdminOrderService]
@@ -27,7 +27,7 @@ export class OrderDashboardComponent implements OnInit {
 
   goToStudentProfile() {}
 
-    validateOrder(orderId :  number){
+    validateOrder(orderId :  string){
 
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_SUBMIT_THE_ORDER},
@@ -46,7 +46,7 @@ export class OrderDashboardComponent implements OnInit {
 
 
 
-    submitOrder (orderId  :  number) {
+    submitOrder (orderId  :  string) {
         this.adminOrderService.submitOrder(orderId).subscribe(data =>{
             window.location.reload();
         });

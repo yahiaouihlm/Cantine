@@ -1,3 +1,4 @@
+<app-loading-dialog *ngIf="isLoading"></app-loading-dialog>
 <div class="container currentOrder">
     <div class="row" *ngIf="!isOrderEmpty()">
         <h2>Ma commande  : </h2> <br> <br>
@@ -24,7 +25,7 @@
     </div>
     <div class="row center" *ngIf="isOrderEmpty()">
         <div>
-            <h2> Vous avez Aucune commande Aujourd'huit </h2>
+            <h2> Vous avez Aucune commande Aujourd'hui </h2>
         </div>
     </div>
 </div>
@@ -41,7 +42,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-2">
-                <span>  N° Commande  :  {{order.id}} </span>
+                <span>  <strong>N° Commande  : </strong>   {{order.uuid}} </span>
             </div>
             <div class="col-md-2">
                 <span><strong>Date : </strong> {{order.creationDate}}</span>
@@ -58,11 +59,14 @@
             <div class="col-md-2">
                 <span><strong>Prix total : </strong> {{order.price}} € </span>
             </div>
-            <div class="col-md-2" *ngIf="order.status == 0 ">
-                <button class="btn btn-success" (click)="validateOrder()">Annuler</button>
+            <div class="col-md-2" *ngIf="!order.cancelled">
+                <button class="btn btn-success" (click)="cancelOrder(order.uuid)">Annuler</button>
             </div>
-            <div class="col-md-2" *ngIf="order.status == 1 ">
-                <h3  style="color : #25de25"> Déja Validé </h3>
+            <div class="col-md-2" *ngIf="order.cancelled">
+                <h3  style="color : #a91d3f"> <strong>Commande Annulé</strong> </h3>
+            </div>
+            <div class="col-md-2" *ngIf="order.status == 1  && !order.cancelled">
+                <h3  style="color : #25de25"> <strong>Déja Validé</strong> </h3>
             </div>
         </div>
     </div>

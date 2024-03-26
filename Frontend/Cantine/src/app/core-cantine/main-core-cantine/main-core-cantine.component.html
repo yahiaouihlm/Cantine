@@ -1,6 +1,6 @@
 <mat-toolbar>
-    <div *ngIf="isConnected"  >
-        <button (click)="sidenav.toggle()"  class="burgger" mat-icon-button>
+    <div *ngIf="isConnected">
+        <button (click)="sidenav.toggle()" class="burgger" mat-icon-button>
             <div *ngIf="!sidenav.opened">
                 <img alt="cantière-logo" src={{user.image}}>
             </div>
@@ -20,14 +20,14 @@
         </div>
     </div>
 
-    <div *ngIf="isConnected" class="connect" (click)="logout()" >
+    <div *ngIf="isConnected" class="connect" (click)="logout()">
         <button>
             <mat-icon>logout</mat-icon>
             Deconnexion
         </button>
     </div>
 
-    <div *ngIf="!isConnected" class="connect" (click)="toLogin()" >
+    <div *ngIf="!isConnected" class="connect" (click)="toLogin()">
         <button>
             <mat-icon>login</mat-icon>
             Connexion
@@ -35,10 +35,10 @@
     </div>
 
 
-    <div *ngIf="isConnected" class="not-connect-login-small"  >
+    <div *ngIf="isConnected" class="not-connect-login-small">
         <mat-icon>logout</mat-icon>
     </div>
-    <div *ngIf="!isConnected" class="not-connect-login-small" >
+    <div *ngIf="!isConnected" class="not-connect-login-small">
         <mat-icon>login</mat-icon>
     </div>
 </mat-toolbar>
@@ -47,9 +47,9 @@
 
         <img class="avatar mat-elevation-z8" src={{user.image}}/>
 
-        <h4 class="name">{{user.firstname}} {{user.lastname}}</h4>
+        <h4 class="name">{{ user.firstname }} {{ user.lastname }}</h4>
 
-        <p class="designation"> {{user.studentClass}} </p>
+        <p class="designation"> {{ user.studentClass }} </p>
 
         <p class="designation"> Aston Student 😇 </p>
 
@@ -64,17 +64,18 @@
             <span>Profile</span>
         </button>
 
-        <button class="menu-button"  (click)="goToOrders()"  mat-button>
+        <button class="menu-button" (click)="goToOrders()" mat-button>
             <mat-icon>shopping_cart</mat-icon>
             <span>Mon Panier </span>
-            <mat-icon class="badge" matBadge="10" matBadgeColor="warn" matBadgePosition="above after"></mat-icon>
+            <mat-icon *ngIf="nbOfMealsAndMenus!=0" class="badge" matBadge="{{this.nbOfMealsAndMenus}}"
+                      matBadgeColor="warn" matBadgePosition="above after"></mat-icon>
 
         </button>
 
 
         <mat-divider></mat-divider>
 
-        <button class="menu-button"  (click)="goToMenus()" mat-button>
+        <button class="menu-button" (click)="goToMenus()" mat-button>
             <mat-icon> restaurant_menu</mat-icon>
             <span>Menus</span>
         </button>

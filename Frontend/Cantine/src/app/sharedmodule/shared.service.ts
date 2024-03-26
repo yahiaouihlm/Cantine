@@ -150,7 +150,7 @@ export class SharedService {
     private handleGetStudentByIdErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
-        console.log( "erreur" , errorMessage)
+
         if (errorMessage == undefined) {
             localStorage.clear();
             this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");

@@ -6,7 +6,7 @@ export class Order {
 
 
     uuid!: string;
-    studentId!: string;
+    studentUuid!: string;
 
     meals: Meal[] = [];
 
@@ -14,7 +14,7 @@ export class Order {
     price!: number;
     creationDate!: Date;
     creationTime!: Date;
-    isCancelled!: boolean;
+    cancelled!: boolean;
     status!: number;
     mealsId: string[] = [];
     menusId: string[] = [];

@@ -4,6 +4,7 @@ import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
 import Malfunctions from 'src/app/sharedmodule/functions/malfunctions';
 import {IConstantsURL} from 'src/app/sharedmodule/constants/IConstantsURL';
+import {Order} from "../../sharedmodule/models/order";
 
 
 @Component({
@@ -15,7 +16,7 @@ import {IConstantsURL} from 'src/app/sharedmodule/constants/IConstantsURL';
 export class MainCoreCantineComponent implements OnInit {
     isConnected = false;
     user: User = new User();
-
+    nbOfMealsAndMenus = 0;
     constructor(private router: Router, private sharedService: SharedService) {
     }
 
@@ -26,6 +27,12 @@ export class MainCoreCantineComponent implements OnInit {
             this.sharedService.getStudentById(userid).subscribe((response) => {
                 this.user = response;
                 this.isConnected = true;
+                let order =  Order.getOrderFromLocalStorage();
+                if (order != null) {
+                    this.nbOfMealsAndMenus = order.meals.length + order.menus.length;
+                } else {
+                    this.nbOfMealsAndMenus = 0;
+                }
             });
 
         }

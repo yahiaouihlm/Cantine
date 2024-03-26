@@ -1,3 +1,4 @@
+
 <div class="order">
     <div class="center">
         <h1>Commandes du jour</h1>
@@ -7,7 +8,7 @@
         <div class="container">
             <div class="row test">
                 <div class="col-md-2">
-                    <span>  N° Commande  :  {{order.id}} </span>
+                    <span>  N° Commande  :  {{order.uuid}} </span>
                 </div>
                 <div class="col-md-2">
                     <span><strong> Etudiant : </strong> <span (click)="goToStudentProfile()"
@@ -22,7 +23,7 @@
 
 
                 <div *ngIf="order.status==0" class="col-md-2">
-                    <button class="btn btn-success" (click)="validateOrder(order.id)">Valider</button>
+                    <button class="btn btn-success" (click)="validateOrder(order.uuid)">Valider</button>
                 </div>
                 <div *ngIf="order.status==0" class="col-md-2">
                     <button class="btn btn-success  red">Annuler</button>

@@ -4,22 +4,22 @@
 <mat-dialog-content class="mat-typography">
     <h3 class="center">------------ MES PLATS ----------------</h3>
     <div class="container-fluid">
-         <div class="row">
-             <div *ngFor="let meal of order.meals" class="col-md-4">
+        <div class="row">
+            <div *ngFor="let meal of order.meals" class="col-md-4">
 
-                 <div class="card" style="width: 75%;"  >
-                     <img class="card-img-top" src="{{meal.image}}" alt="Card image cap">
-                     <div class="card-body">
-                         <h5 class="card-title">{{ meal.label }}</h5>
-                         <p>{{ meal.price }} €</p>
-                         <p>{{ meal.category }}</p>
-                         <div class="btn center" (click)="removeMealFromOrder(meal)"> retirer le  plat </div>
-                     </div>
-                 </div>
+                <div class="card" style="width: 75%;">
+                    <img class="card-img-top" src="{{meal.image}}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ meal.label }}</h5>
+                        <p>{{ meal.price }} €</p>
+                        <p>{{ meal.category }}</p>
+                        <div class="btn center" (click)="removeMealFromOrder(meal)"> retirer le plat</div>
+                    </div>
+                </div>
 
-             </div>
+            </div>
 
-         </div>
+        </div>
     </div>
 
 
@@ -28,13 +28,13 @@
         <div class="row">
             <div *ngFor="let menu of order.menus" class="col-md-4">
 
-                <div class="card" style="width: 75%;"   >
+                <div class="card" style="width: 75%;">
                     <img class="card-img-top" src="{{menu.image}}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ menu.label }}</h5>
                         <p>{{ menu.price }} €</p>
                         <p>{{ menu.description }}</p>
-                        <div class="btn center" (click)="removeMenuFromOrder(menu)"> retirer </div>
+                        <div class="btn center" (click)="removeMenuFromOrder(menu)"> retirer</div>
                     </div>
                 </div>
 
@@ -71,10 +71,6 @@
 
     <h3>Architecture overview</h3>
 
-    <p>Angular is a platform and framework for building client applications in HTML and TypeScript.
-        Angular is itself written in TypeScript. It implements core and optional functionality as a
-        set of TypeScript libraries that you import into your apps.</p>
-
     <p>The basic building blocks of an Angular application are NgModules, which provide a compilation
         context for components. NgModules collect related code into functional sets; an Angular app is
         defined by a set of NgModules. An app always has at least a root module that enables
@@ -100,12 +96,12 @@
     <p>An app's components typically define many views, arranged hierarchically. Angular provides
         the Router service to help you define navigation paths among views. The router provides
         sophisticated in-browser navigational capabilities.</p>
+    <button class="btn center"> vider Ma commande</button>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+    <button class="btn" mat-dialog-close> Valider</button>
+    <!-- <button  [mat-dialog-close]="true" cdkFocusInitial>Install</button>-->
 </mat-dialog-actions>
-
 
 
 <!--

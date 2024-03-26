@@ -19,7 +19,7 @@ export class AdminOrderService {
 
 
 
-  submitOrder (orderId: number)  {
+  submitOrder (orderId: string) {
     let token  =  Malfunctions.getTokenFromLocalStorage();
     const headers = new HttpHeaders().set('Authorization', token);;  // const params = new HttpParams().set('orderId', orderId);
     const params =  new HttpParams().set('orderId' , orderId)
