@@ -30,9 +30,9 @@ export class StudentDashboardService {
     updateStudent(student: FormData) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        return this.httpClient.put<NormalResponse>(this.UPDATE_STUDENT_INFO, student, {
+        return this.httpClient.post<NormalResponse>(this.UPDATE_STUDENT_INFO, student, {
             headers: headers,
-        }).pipe(catchError((error) => this.handleSignUpErrors(error)));
+        }).pipe(catchError((error) => this.handleUpdateStudentErrors(error)));
     }
 
     signUpStudent(student: FormData) {
@@ -70,6 +70,34 @@ export class StudentDashboardService {
             this.dialog.openDialog(errorMessage);
         }
         return throwError(() => new Error(errorMessage));
+    }
 
+
+    private handleUpdateStudentErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
+
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Veuillez vérifier les informations saisies";
+            this.dialog.openDialog(errorMessage);
+        } else if (error.status == HttpStatusCode.NotAcceptable) {
+            errorMessage = "Format d'image non valide";
+            this.dialog.openDialog(errorMessage);
+        } else if (error.status == HttpStatusCode.Unauthorized) {
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+            localStorage.clear()
+        } else {
+            errorMessage = "Une erreur s'est produite Veuillez réessayer plus tard";
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        return throwError(() => new Error(errorMessage));
     }
 }

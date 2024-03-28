@@ -20,6 +20,7 @@ import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     private WOULD_YOU_LIKE_TO_UPDATE = "Voulez-vous mettre à jour votre profile ?";
+    private SUCCESSFUL_UPDATE = "Votre profile a été mis à jour avec succès !";
 
     constructor(private route: ActivatedRoute, private sharedService: SharedService, private router: Router, private studentService: StudentDashboardService, private matDialog: MatDialog) {
     }
@@ -93,7 +94,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     updateStudent() {
         const formDataStudent = new FormData();
-        formDataStudent.append('id', this.user.uuid.toString());
+        formDataStudent.append('uuid', this.user.uuid.toString());
         formDataStudent.append('firstname', this.studentUpdated.value.firstName);
         formDataStudent.append('lastname', this.studentUpdated.value.lastName);
         formDataStudent.append('birthdateAsString  ', this.studentUpdated.value.birthDate);
@@ -111,7 +112,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             next: (response) => {
                 this.isLoading = false;
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: " Votre profile a été mis à jour avec succès ! "},
+                    data: {message: this.SUCCESSFUL_UPDATE},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
@@ -163,6 +164,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     cancel() {
         this.studentUpdated.disable();
         this.touched = false;
+        this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
     }
 
     get f(): { [key: string]: AbstractControl } {

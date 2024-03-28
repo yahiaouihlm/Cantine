@@ -1,6 +1,6 @@
+<app-loading-dialog *ngIf="isLoading"></app-loading-dialog>
 <div class="container">
     <div class="row">
-
 
         <form [formGroup]="studentUpdated" class="test">
             <div class="wallet center">
@@ -19,11 +19,11 @@
                        id="firstName"
                 />
                 <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
-                    <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
-                    <div *ngIf="f['firstName'].errors['maxlength']" class="center">
+                    <div *ngIf="f['firstName'].errors?.['required']" class="center"> Votre Prénom est requis</div>
+                    <div *ngIf="f['firstName'].errors?.['maxlength']" class="center">
                         votre Prénom ne doit pas dépasser 60 charctéres
                     </div>
-                    <div *ngIf="f['firstName'].errors['minlength']" class="center">
+                    <div *ngIf="f['firstName'].errors?.['minlength']" class="center">
                         votre Prénom doit avoir au minimum de 3 charctéres
                     </div>
                 </div>
@@ -40,11 +40,11 @@
                        id="lastName"
                 />
                 <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
-                    <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
-                    <div *ngIf="f['lastName'].errors['maxlength']" class="center">
+                    <div *ngIf="f['lastName'].errors?.['required']" class="center"> Votre Nom est requis</div>
+                    <div *ngIf="f['lastName'].errors?.['maxlength']" class="center">
                         votre Nom ne doit pas dépasser 60 charctéres
                     </div>
-                    <div *ngIf="f['lastName'].errors['minlength']" class="center">
+                    <div *ngIf="f['lastName'].errors?.['minlength']" class="center">
                         votre Nom doit avoir au minimum de 3 charctéres
                     </div>
                 </div>
@@ -61,15 +61,6 @@
                        id="email"
 
                 />
-           <!--     <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                    <div *ngIf="f['email'].errors['required']" class="center"> Votre Email est requis</div>
-                    <div *ngIf="f['email'].errors['maxlength']" class="center">
-                        votre Nom ne doit pas dépasser 1000 charctéres
-                    </div>
-                    <div *ngIf="(f['email'].errors['email'] )  ||  (f['email'].errors['pattern'])" class="center">
-                        Le Format de Email est incorrecte
-                    </div>
-                </div>-->
             </div>
 
 
@@ -83,7 +74,7 @@
                        id="birthDate"
                 />
                 <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
-                    <div *ngIf="f['birthDate'].errors['required']" class="center"> La date de naissance est requise
+                    <div *ngIf="f['birthDate'].errors?.['required']" class="center"> La date de naissance est requise
                     </div>
 
                 </div>
@@ -100,12 +91,12 @@
                        id="town"
                 />
                 <div *ngIf="submitted && f['town'].errors" class="invalid-feedback">
-                    <div *ngIf="f['town'].errors['required']" class="center"> le champs est obligatoire</div>
-                    <div *ngIf="f['town'].errors['maxlength']" class="center">
+                    <div *ngIf="f['town'].errors?.['required']" class="center"> le champs est obligatoire</div>
+                    <div *ngIf="f['town'].errors?.['maxlength']" class="center">
                         Le nom de la ville ne doit pas dépasser 1000 charctéres
                     </div>
 
-                    <div *ngIf="f['town'].errors['minlength']" class="center">
+                    <div *ngIf="f['town'].errors?.['minlength']" class="center">
                         Le nom de la ville doit avoir au minimum de 3 charctéres
                     </div>
 
@@ -124,7 +115,7 @@
                        id="phoneNumber"
                 />
                 <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
-                    <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
+                    <div *ngIf="f['phoneNumber'].errors?.['pattern']" class="center">
                         Format Numéro Téléphone est incorrect
                     </div>
 
@@ -144,7 +135,7 @@
                     </ng-container>
                 </select>
                 <div *ngIf="submitted && f['studentClass'].errors" class="invalid-feedback">
-                    <div *ngIf="f['studentClass'].errors['required']" class="center"> saisie de votre travail est
+                    <div *ngIf="f['studentClass'].errors?.['required']" class="center"> saisie de votre travail est
                         requise
                     </div>
                 </div>
@@ -155,8 +146,8 @@
             <div class="form-group ">
                 <label for="image"> Choisissez une image de profile </label>
 
-                <input class="input-group-prepend"
-                       [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" class="form-control"
+                <input class="input-group-prepend form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f['image'].errors }"
                        formControlName="image"
                        placeholder=" IMAGE  DU  Profil "
                        type="file"
@@ -171,20 +162,39 @@
         </form>
 
 
-        <div class="center btn"  *ngIf="!isLoading ; else loadingTemplate">
-            <div class="update-btn">
-                <mat-icon>done_outline</mat-icon>
-                <span *ngIf="!touched" (click)="modify()"> Modifier</span>
-                <span *ngIf="touched" (click)="onSubmit()">   Valider </span>
-            </div>
 
-        </div>
 
-        <div class="btn" (click)="cancel()">
-            Annuler
-        </div>
+
 
     </div>
+</div>
+
+<div class="container">
+     <div class="row">
+         <div class="col-4">
+             <div class="btn" (click)="cancel()">
+                 <mat-icon>keyboard_backspace</mat-icon>
+                 Annuler
+             </div>
+         </div>
+          <div class="col-4">
+              <div class="center btn">
+                  <div class="update-btn">
+                      <mat-icon>done_outline</mat-icon>
+                      <span *ngIf="!touched" (click)="modify()"> Modifier</span>
+                      <span *ngIf="touched" (click)="onSubmit()">   Valider </span>
+                  </div>
+
+              </div>
+          </div>
+
+         <div class="col-4">
+             <div class="btn" (click)="cancel()">
+                  supprimer le compte
+             </div>
+         </div>
+
+     </div>
 </div>
 
 
@@ -214,18 +224,4 @@
 
 </style>
 
-<ng-template #loadingTemplate >
-    <div class="spinner-container">
-        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
 
-</ng-template>
-
-<style>
-    .spinner-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 15vh;
-    }
-</style>
