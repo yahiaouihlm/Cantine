@@ -88,6 +88,12 @@ export class SharedService {
     private handleError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
 
         if (error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Forbidden) {
             this.dialog.openDialog("Utilisateur  n'existe  pas");
@@ -107,6 +113,13 @@ export class SharedService {
     private handleRestPasswordErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
+
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
         let dialog;
         if (error.status == HttpStatusCode.BadRequest) {
             dialog = this.dialog.openDialog("Les  Informations  Transmises Sont  invalides");

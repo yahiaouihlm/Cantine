@@ -106,8 +106,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             formDataStudent.append('image', this.image);
 
-        console.log("valeur de  image est  ")
-        console.log(this.studentUpdated.value.phoneNumber)
+
         this.studentService.updateStudent(formDataStudent).subscribe({
             next: (response) => {
                 this.isLoading = false;

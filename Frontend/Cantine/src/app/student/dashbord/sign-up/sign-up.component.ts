@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import Validation from "../../../sharedmodule/functions/validation";
 import {Observable, of} from "rxjs";
-import {Adminfunction} from "../../../sharedmodule/models/adminfunction";
 import {StudentClass} from "../../../sharedmodule/models/studentClass";
 import {StudentDashboardService} from "../student-dashboard.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,69 +10,67 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {Router} from "@angular/router";
 import Malfunctions from "../../../sharedmodule/functions/malfunctions";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
-  selector: 'app-sign-in',
-  templateUrl: './sign-up.component.html',
-  styles: [
-  ] , providers: [StudentDashboardService]
+    selector: 'app-sign-in',
+    templateUrl: './sign-up.component.html',
+    styles: [], providers: [StudentDashboardService]
 })
-export class SignUpComponent  implements   OnInit {
+export class SignUpComponent implements OnInit {
 
 
-
-    private   WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vous inscrire ?";
+    private WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vous inscrire ?";
+    private STUDENT_SIGN_UP_SUCCESSFULLY = "Votre inscription a été effectuée avec succès, un email vous a été envoyé pour vérifier votre adresse";
     image!: File;
     submitted = false;
-    existEmail = false;
     isLoading = false;
-   studentClass$: Observable<StudentClass[]> = of([]);
-  studentForm: FormGroup = new FormGroup({
-        firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
-        lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
-        email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
-        password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
-        confirmPassword: new FormControl("", [Validators.required]),
-        birthDate: new FormControl('', [Validators.required]),
-        phoneNumber: new FormControl('', [Validators.pattern(Validation.FRENCH_PHONE_REGEX)]),
-        town: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.minLength(3)]),
-        studentClass: new FormControl('', [Validators.required]),
-        image: new FormControl(''),
+    studentClass$: Observable<StudentClass[]> = of([]);
+    studentForm: FormGroup = new FormGroup({
+            firstName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
+            lastName: new FormControl('', [Validators.required, Validators.maxLength(90), Validators.minLength(3)]),
+            email: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.pattern(Validation.EMAIL_REGEX)]),
+            password: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]),
+            confirmPassword: new FormControl("", [Validators.required]),
+            birthDate: new FormControl('', [Validators.required]),
+            phoneNumber: new FormControl('', [Validators.pattern(Validation.FRENCH_PHONE_REGEX)]),
+            town: new FormControl('', [Validators.required, Validators.maxLength(1000), Validators.minLength(3)]),
+            studentClass: new FormControl('', [Validators.required]),
+            image: new FormControl(''),
 
-      },
-      {
-        validators: [Validation.match('password', 'confirmPassword')]
-      }
-  );
+        },
+        {
+            validators: [Validation.match('password', 'confirmPassword')]
+        }
+    );
 
 
-  constructor( private  studentService: StudentDashboardService, private matDialog: MatDialog , private sharedService: SharedService , private  router : Router) {
-  }
+    constructor(private studentService: StudentDashboardService, private matDialog: MatDialog, private sharedService: SharedService, private router: Router) {
+    }
 
     ngOnInit(): void {
         Malfunctions.checkUserConnection(this.router);
-       this.studentClass$ =  this.studentService.getAllStudentClass();
+        this.studentClass$ = this.studentService.getAllStudentClass();
     }
 
 
-
     onSubmit() {
-      this.submitted = true;
-        this.existEmail = false;
+        this.submitted = true;
+
         if (this.studentForm.invalid) {
             return;
         }
         this.isLoading = true;
         // check if email exist
-        this.sharedService.checkExistenceOfEmail(this.studentForm.value.email).subscribe( {
-                next: (data) => {
-                    this.existEmail =  false;
+        this.sharedService.checkExistenceOfEmail(this.studentForm.value.email).subscribe({
+                next: () => {
+                    this.studentForm.setErrors({existingEmail: false});
                     this.inscription();
-                } ,
+                },
                 error: (error) => {
-                    this.existEmail =  true;
+                    this.studentForm.controls['email'].setErrors({existingEmail: true});
                     this.isLoading = false;
-                    },
+                },
             }
         );
 
@@ -93,6 +90,7 @@ export class SignUpComponent  implements   OnInit {
             }
         });
     }
+
     signUp() {
         const formData = new FormData();
         formData.append('firstname', this.studentForm.value.firstName);
@@ -109,50 +107,33 @@ export class SignUpComponent  implements   OnInit {
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             formData.append('image', this.image);
 
-
-
-        this.studentService.signUpStudent(formData).subscribe(data => {
-
-            if (data != undefined && data.message === "STUDENT SAVED SUCCESSFULLY") {
-                this.sendConfirmationToken();
-            }
-
-        });
-
-
-    }
-
-
-    sendConfirmationToken() {
-        this.sharedService.sendToken(this.studentForm.value.email).subscribe((data) => {
-            if (data != undefined && data.message === "TOKEN SENT SUCCESSFULLY") {
+        this.studentService.signUpStudent(formData).subscribe({
+            next: (data) => {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: " Votre  Inscription  est  prise en compte , un  Email  vous a éte  envoyer  pour vérifier  votre  Adresse "},
+                    data: {message: this.STUDENT_SIGN_UP_SUCCESSFULLY},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
-                     this.router.navigate(['/signIn'])
+                    this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(() => window.location.reload());
                 });
-
-            } else {
-                console.log("error");
+                this.isLoading = false;
+            },
+            error: (error) => {
+                this.isLoading = false;
             }
+
         });
 
-     this.isLoading = false;
-  }
-
+    }
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
     get f(): { [key: string]: AbstractControl } {
         return this.studentForm.controls;
     }
-
 
 }
 
