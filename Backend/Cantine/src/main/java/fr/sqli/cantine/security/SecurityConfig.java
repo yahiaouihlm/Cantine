@@ -70,7 +70,7 @@ public class SecurityConfig {
                                     , "/cantine/admin/register").permitAll();
                             authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
                                 authorize.requestMatchers("/cantine/user/student/getAllStudentClass"
-                                    , "/cantine/student/signUp"
+                                    , "/cantine/user/student/signUp"
                                     , "/cantine/user/send-confirmation-link"
                                     , "/cantine/user/reset-password/**"
                             ).permitAll();

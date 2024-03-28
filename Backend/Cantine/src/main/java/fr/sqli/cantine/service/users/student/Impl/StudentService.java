@@ -142,7 +142,7 @@ public class StudentService implements IStudentService {
 
 
     @Override
-    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException {
+    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidStudentClassException, InvalidUserInformationException, ExistingUserException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         StudentEntity studentEntity = studentDtoIn.toStudentEntity();
 
         var studentClass = studentDtoIn.getStudentClass();
@@ -168,19 +168,19 @@ public class StudentService implements IStudentService {
 
         studentEntity.setPassword(this.bCryptPasswordEncoder.encode(studentEntity.getPassword()));
 
+        ImageEntity imageEntity = new ImageEntity();
+
         if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();
             var imageName = this.imageService.uploadImage(image, this.IMAGES_STUDENT_PATH);
-            ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
-            studentEntity.setImage(imageEntity);
         } else {
-            ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(this.DEFAULT_STUDENT_IMAGE);
-            studentEntity.setImage(imageEntity);
+
         }
 
 
+        studentEntity.setImage(imageEntity);
         this.studentDao.save(studentEntity);
         this.userService.sendConfirmationLink(studentEntity.getEmail());
     }

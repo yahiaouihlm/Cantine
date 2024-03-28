@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class StudentDtoIn  extends AbstractUsersDtoIn {
 
     private String studentClass;
@@ -52,13 +56,6 @@ public class StudentDtoIn  extends AbstractUsersDtoIn {
 
 
 
-    public String getStudentClass() {
-        return studentClass;
-    }
-
-    public void setStudentClass(String studentClass) {
-        this.studentClass = studentClass;
-    }
 
 
 
