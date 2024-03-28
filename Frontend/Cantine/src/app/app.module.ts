@@ -7,7 +7,6 @@ import { CoreCantineModule } from './core-cantine/core-cantine.module';
 import { RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './sharedmodule/page-not-found/page-not-found.component';
 import {AdminModule} from "./admin/admin.module";
-;
 @NgModule({
   declarations: [
     AppComponent,
