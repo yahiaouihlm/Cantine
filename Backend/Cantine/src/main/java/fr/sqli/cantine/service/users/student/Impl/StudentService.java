@@ -47,7 +47,7 @@ public class StudentService implements IStudentService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-     private IAdminDao adminDao;
+    private IAdminDao adminDao;
 
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService, UserService userService) {
@@ -76,55 +76,42 @@ public class StudentService implements IStudentService {
 
         IStudentService.checkUuIdValidity(studentDtoIn.getUuid());
 
-        studentDtoIn.checkStudentClassValidity();
+        studentDtoIn.checkStudentInformationForUpdate();
 
-        var studentClass = studentDtoIn.getStudentClass();
-
-        var studentClassEntity = this.iStudentClassDao.findByName(studentClass);
-
-        if (studentClassEntity.isEmpty()) {
+        var studentClassEntity = this.iStudentClassDao.findByName(studentDtoIn.getStudentClass()).orElseThrow(() -> {
             StudentService.LOG.error("STUDENT CLASS  IS  NOT  FOUND");
-            throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
-        }
+            return new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
+        });
 
-        var studentEntity = this.studentDao.findByUuid(studentDtoIn.getUuid());
 
-        if (studentEntity.isEmpty()) {
-            StudentService.LOG.error("student  is  not  found");
-            throw new UserNotFoundException("STUDENT NOT FOUND");
-        }
+        var studentEntity = this.studentDao.findByUuid(studentDtoIn.getUuid()).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT  IS  NOT  FOUND");
+            return new UserNotFoundException("STUDENT NOT FOUND");
+        });
 
-        var studentUpdated = studentEntity.get();
-        studentUpdated.setFirstname(studentDtoIn.getFirstname());
-        studentUpdated.setLastname(studentDtoIn.getLastname());
-        studentUpdated.setBirthdate(studentDtoIn.getBirthdate());
-        studentUpdated.setStudentClass(studentClassEntity.get());
-        studentUpdated.setTown(studentDtoIn.getTown());
-
-        if (studentDtoIn.getPhone() != null && !studentDtoIn.getPhone().trim().isEmpty()) {
-            studentUpdated.setPhone(studentDtoIn.getPhone());
-        }
+        studentEntity.setFirstname(studentDtoIn.getFirstname());
+        studentEntity.setLastname(studentDtoIn.getLastname());
+        studentEntity.setBirthdate(studentDtoIn.getBirthdate());
+        studentEntity.setStudentClass(studentClassEntity);
+        studentEntity.setTown(studentDtoIn.getTown());
+        studentEntity.setPhone(studentDtoIn.getPhone());
 
 
         if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();
             String imageName;
-            if (studentUpdated.getImage().getImagename().equals(this.DEFAULT_STUDENT_IMAGE)) {
+            if (studentEntity.getImage().getImagename().equals(this.DEFAULT_STUDENT_IMAGE)) {
                 imageName = this.imageService.uploadImage(image, this.IMAGES_STUDENT_PATH);
             } else {
-                var oldImageName = studentUpdated.getImage().getImagename();
+                var oldImageName = studentEntity.getImage().getImagename();
                 imageName = this.imageService.updateImage(oldImageName, image, this.IMAGES_STUDENT_PATH);
             }
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
-            studentUpdated.setImage(imageEntity);
-
+            studentEntity.setImage(imageEntity);
         }
 
-        if (studentDtoIn.getPhone() == null || studentDtoIn.getPhone().trim().isEmpty()) {
-            studentUpdated.setPhone(null);
-        }
-        this.studentDao.save(studentUpdated);
+        this.studentDao.save(studentEntity);
 
     }
 
@@ -142,13 +129,14 @@ public class StudentService implements IStudentService {
 
 
     @Override
-    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidStudentClassException, InvalidUserInformationException, ExistingUserException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
+    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidStudentClassException, InvalidUserInformationException, ExistingUserException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException,
+            UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         StudentEntity studentEntity = studentDtoIn.toStudentEntity();
 
         var studentClass = studentDtoIn.getStudentClass();
 
-        var studentClassEntity = this.iStudentClassDao.findByName(studentClass).orElseThrow(()->{
-            StudentService.LOG.error("STUDENT CLASS ={}  IS  NOT  FOUND" , studentClass);
+        var studentClassEntity = this.iStudentClassDao.findByName(studentClass).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT CLASS ={}  IS  NOT  FOUND", studentClass);
             return new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
         });
 
@@ -186,7 +174,6 @@ public class StudentService implements IStudentService {
     }
 
 
-
     @Override
     public List<StudentClassDtout> getAllStudentClass() {
         return this.iStudentClassDao.findAll()
@@ -194,7 +181,6 @@ public class StudentService implements IStudentService {
                 .map(studentClassEntity -> new StudentClassDtout(studentClassEntity.getId(), studentClassEntity.getName()))
                 .toList();
     }
-
 
 
     public void existingEmail(String adminEmail) throws ExistingUserException {
@@ -206,7 +192,7 @@ public class StudentService implements IStudentService {
 
 
     @Autowired
-    public void  setAdminDao(IAdminDao adminDao){
+    public void setAdminDao(IAdminDao adminDao) {
         this.adminDao = adminDao;
     }
 }

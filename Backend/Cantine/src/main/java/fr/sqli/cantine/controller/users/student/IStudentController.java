@@ -11,10 +11,7 @@ import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,8 +33,8 @@ public interface IStudentController {
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
     ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
-
-    ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
+    @PostMapping(UPDATE_STUDENT_INFO_ENDPOINT)
+    ResponseEntity<ResponseDtout> updateStudentInformation(@ModelAttribute  StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
 
     @PostMapping(STUDENT_SIGN_UP_ENDPOINT)
     ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException;

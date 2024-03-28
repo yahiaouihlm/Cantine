@@ -83,7 +83,7 @@ public class AdminService implements IAdminService {
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
 
-        adminDtoIn.checkAdminInformationsValidity();
+        adminDtoIn.checkAdminInformationValidity();
 
         //check  function  validity
         var functionAdmin = adminDtoIn.getFunction();

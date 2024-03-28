@@ -42,7 +42,6 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @PutMapping(UPDATE_STUDENT_INFO_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException {
         this.studentService.updateStudentInformation(studentDtoIn);
         return ResponseEntity.ok(new ResponseDtout(STUDENT_INFO_UPDATED_SUCCESSFULLY));
