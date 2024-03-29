@@ -19,6 +19,7 @@ import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 export class OrderDashboardComponent implements OnInit {
 
     private WOULD_YOU_LIKE_TO_SEND_ORDER = "Voulez-vous Valider votre commande ?";
+    private WOULD_YOU_LIKE_TO_CANCEL_ORDER = "Voulez-vous Vraiment  Annuler  votre  commande ?"
     private ORDER_WAS_SUCCESSFULLY_CANCELED = "Votre commande a été annulée avec succès";
     private ORDER_WAS_SUCCESSFULLY_VALIDATED = "Votre  Commande a éte bien enregistrer il sera validé prochainement";
 //http://localhost:8080/cantine/student/order/getByDate?studentId=21&date=2023-09-18
@@ -124,20 +125,36 @@ export class OrderDashboardComponent implements OnInit {
 
     cancelOrder(orderUuid: string) {
         this.isLoading = true;
-        this.orderService.cancelOrder(orderUuid).subscribe({
-            next: (response) => {
-                this.isLoading = false;
-                let dialogue = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: this.ORDER_WAS_SUCCESSFULLY_CANCELED},
-                    width: '40%',
+        const result = this.matDialog.open(ValidatorDialogComponent, {
+            data: {message: this.WOULD_YOU_LIKE_TO_CANCEL_ORDER},
+            width: '40%',
+        });
+        result.afterClosed().subscribe((result) => {
+            if (result != undefined && result == true) {
+                this.orderService.cancelOrder(orderUuid).subscribe({
+                    next: (response) => {
+                        this.isLoading = false;
+                        let dialogue = this.matDialog.open(SuccessfulDialogComponent, {
+                            data: {message: this.ORDER_WAS_SUCCESSFULLY_CANCELED},
+                            width: '40%',
+                        });
+                        dialogue.afterClosed().subscribe((result) => {
+                            window.location.reload()
+                        });
+                    },
+                    error: (error) => {
+                        this.isLoading = false;
+                    }
                 });
-                dialogue.afterClosed().subscribe((result) => {
-                    window.location.reload()
-                });
-            },
-            error: (error) => {
+            } else {
                 this.isLoading = false;
+                return;
             }
         });
+
+    }
+
+    goToOrdersHistory() {
+        this.router.navigate([IConstantsURL.STUDENT_ORDERS_HISTORY]).then(window.location.reload);
     }
 }

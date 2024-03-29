@@ -8,23 +8,19 @@ import { OrderHistoryComponent } from './order-history/order-history.component';
 
 
 const routes: Routes = [
-    {
-        path: '', component: OrderDashboardComponent,
-        children: [
-            {path: 'history', component: OrderHistoryComponent}
-        ]
-    }
+    {path: '', component: OrderDashboardComponent,},
+    {path: 'history', component: OrderHistoryComponent},
 ];
 
 @NgModule({
     declarations: [
+        ModifyOrderDialogueComponent,
         OrderHistoryComponent,
-        OrderDashboardComponent,
-        ModifyOrderDialogueComponent
+        OrderDashboardComponent
     ],
     imports: [
-        CommonModule,
         RouterModule.forChild(routes),
+        CommonModule,
         SharedmoduleModule
     ]
 })

@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpStatusCode} from "@angular/common/http";
 import {NormalResponse} from "../../sharedmodule/models/NormalResponse";
 import {ErrorResponse} from "../../sharedmodule/models/ErrorResponse";
-import {catchError, throwError} from "rxjs";
+import {catchError, of, throwError} from "rxjs";
 import Malfunctions from "../../sharedmodule/functions/malfunctions";
 import {DialogErrors} from "../../sharedmodule/functions/dialogueErrors";
 import {MatDialog} from "@angular/material/dialog";
 import {Order} from "../../sharedmodule/models/order";
 import {IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 import {Router} from "@angular/router";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Injectable()
 export class OrderService {
@@ -16,6 +17,7 @@ export class OrderService {
     private ADD_ORDER_URL = this.ORDER_BASIC_URL + "/add";
     private CANCEL_ORDER_URL = this.ORDER_BASIC_URL + "/cancel";
     private GET_ORDERS_OF_DAY_URL = this.ORDER_BASIC_URL + "/getByDateAndStudentId";
+    private GET_ORDERS_HISTORY = this.ORDER_BASIC_URL + "/getHistory"
 
     private dialog = new DialogErrors(this.matDialog);
 
@@ -52,18 +54,13 @@ export class OrderService {
         )
     }
 
-    private handleError(error: HttpErrorResponse) {
-        const errorObject = error.error as ErrorResponse;
-        let errorMessage = errorObject.exceptionMessage;
-
-        if (error.status == HttpStatusCode.InternalServerError) {
-            errorMessage = "Une  erreur    est  survenue  !"
-            new DialogErrors(this.matDialog).openDialog(errorMessage);
-        } else {
-            new DialogErrors(this.matDialog).openDialog(errorMessage);
-        }
-        return throwError(() => new Error(errorMessage));
-
+    getAllOrders(studentUuid: string) {
+        let token = Malfunctions.getTokenFromLocalStorage();
+        const headers = new HttpHeaders().set('Authorization', token);
+        const params = new HttpParams().set("studentUuid", studentUuid);
+        return this.httpClient.get <Order[]>(this.GET_ORDERS_HISTORY , {headers: headers, params : params}).pipe(
+            catchError ((error) =>  of ([])
+        ));
     }
 
     private handleCancelOrderError(error: HttpErrorResponse) {

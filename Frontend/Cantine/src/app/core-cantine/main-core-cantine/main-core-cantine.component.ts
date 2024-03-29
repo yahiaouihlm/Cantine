@@ -17,6 +17,7 @@ export class MainCoreCantineComponent implements OnInit {
     isConnected = false;
     user: User = new User();
     nbOfMealsAndMenus = 0;
+
     constructor(private router: Router, private sharedService: SharedService) {
     }
 
@@ -27,7 +28,7 @@ export class MainCoreCantineComponent implements OnInit {
             this.sharedService.getStudentById(userid).subscribe((response) => {
                 this.user = response;
                 this.isConnected = true;
-                let order =  Order.getOrderFromLocalStorage();
+                let order = Order.getOrderFromLocalStorage();
                 if (order != null) {
                     this.nbOfMealsAndMenus = order.meals.length + order.menus.length;
                 } else {
@@ -42,7 +43,7 @@ export class MainCoreCantineComponent implements OnInit {
 
 
     goToOrders() {
-        this.router.navigate(['cantine/student/orders']).then(() => window.location.reload());
+        this.router.navigate([IConstantsURL.STUDENT_ORDER]).then(() => window.location.reload());
     }
 
     goToHome() {

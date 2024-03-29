@@ -3,10 +3,10 @@ import {CommonModule} from '@angular/common';
 import {SignUpComponent} from './dashbord/sign-up/sign-up.component';
 import {RouterModule, Routes} from "@angular/router";
 import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
-import {MainStudentComponent} from './main-student/main-student.component';
 import {ProfileComponent} from './dashbord/profile/profile.component';
 import {MainCoreCantineComponent} from "../core-cantine/main-core-cantine/main-core-cantine.component";
-import {OrderModule} from "./order/order.module";
+
+
 
 
 const routes: Routes = [
@@ -23,7 +23,7 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         SignUpComponent,
-        MainStudentComponent,
+
         ProfileComponent
     ],
     imports: [

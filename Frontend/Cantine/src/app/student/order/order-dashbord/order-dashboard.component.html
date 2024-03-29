@@ -3,7 +3,7 @@
     <div class="row" *ngIf="!isOrderEmpty()">
         <h2>Ma commande  : </h2> <br> <br>
         <div class="col-md-2">
-            <span> <strong> Date : </strong> 10/09/2023</span>
+            <span> <strong> Date : </strong> {{order.creationDate}}</span>
         </div>
         <div class="col-md-2">
             <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
@@ -74,7 +74,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="center  btn"> Historique de Mes Commandes </div>
+        <div class="center  btn" (click)="goToOrdersHistory()"> Historique de Mes Commandes </div>
     </div>
 </div>
 
