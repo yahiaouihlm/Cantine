@@ -51,6 +51,11 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
+    public ResponseEntity<List<OrderDtOut>> getStudentOrdersHistory(String studentUuid) throws UserNotFoundException {
+        return ResponseEntity.ok(this.orderService.getStudentOrder(studentUuid));
+    }
+
+    @Override
     public ResponseEntity<List<OrderDtOut>> getOrdersByDate(LocalDate date) throws InvalidUserInformationException, InvalidOrderException {
         return ResponseEntity.ok(this.orderService.getOrdersByDate(date));
     }

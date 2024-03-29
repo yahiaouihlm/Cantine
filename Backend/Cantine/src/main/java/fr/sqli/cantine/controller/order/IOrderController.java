@@ -23,13 +23,12 @@ import java.util.List;
 public interface IOrderController {
 
     String  BASIC_ORDER_URL =  "order/";
-
     String ADMIN_GET_ALL_ORDERS_BY_DAY = "admin/getAllOrdersOfDay";
-
     String  ADMIN_SUBMIT_ORDER  =  "admin/submitOrder";
     String GET_ORDER_BY_DATE_AND_STUDENT_ID_URL = "student/getByDateAndStudentId";
     String CANCEL_ORDER_URL = "student/cancel";
     String ADD_ORDER_URL = "student/add";
+    String STUDENT_ORDER_HISTORY =  "student/getHistory";
 
     String  ORDER_SUBMITTED_SUCCESSFULLY = "ORDER  SUBMITTED SUCCESSFULLY" ;
     String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
@@ -45,6 +44,8 @@ public interface IOrderController {
     @PostMapping(ADD_ORDER_URL)
     ResponseEntity <ResponseDtout> addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
 
+    @GetMapping(STUDENT_ORDER_HISTORY)
+    ResponseEntity<List<OrderDtOut>> getStudentOrdersHistory(@RequestParam("studentUuid") String studentUuid) throws UserNotFoundException;
     @GetMapping(ADMIN_GET_ALL_ORDERS_BY_DAY)
     ResponseEntity<List<OrderDtOut>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidUserInformationException, InvalidOrderException;
 

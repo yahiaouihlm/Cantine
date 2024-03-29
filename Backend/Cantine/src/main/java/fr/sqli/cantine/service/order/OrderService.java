@@ -226,7 +226,6 @@ public class OrderService implements IOrderService {
         orderEntity.setCancelled(false);
 
 
-
         orderEntity.setPrice(totalPrice);
         orderEntity.setCreationDate(LocalDate.now());
         orderEntity.setCreationTime(new java.sql.Time(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), LocalDateTime.now().getSecond()));
@@ -299,6 +298,22 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public List<OrderDtOut> getStudentOrder(String studentUuid) throws UserNotFoundException {
+        if (studentUuid == null || studentUuid.trim().length() < 10)
+            return List.of();
+        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT  NOT  FOUND  WITH  UUID = {} WHILE  HIS  ORDERS ", studentUuid);
+            return new UserNotFoundException("STUDENT  NOT  FOUND");
+        });
+
+        return this.orderDao.findByStudentOrderByCreationDateDesc(student)
+                .stream()
+                .map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL))
+                .toList();
+
+    }
+
+    @Override
     public List<OrderDtOut> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidUserInformationException {
         if (date == null) {
             OrderService.LOG.error("INVALID DATE");
@@ -308,7 +323,10 @@ public class OrderService implements IOrderService {
         this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidUserInformationException("INVALID ADMIN INFORMATION"));
 
 
-        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByCreationDate(date)
+                .stream()
+                .map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL))
+                .toList();
 
 
     }
