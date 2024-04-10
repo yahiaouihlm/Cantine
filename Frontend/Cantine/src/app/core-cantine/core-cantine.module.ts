@@ -58,4 +58,4 @@ const routes: Routes = [
         FormsModule,
     ]
 })
-export class CoreCantineModule { }
+export class  CoreCantineModule { }

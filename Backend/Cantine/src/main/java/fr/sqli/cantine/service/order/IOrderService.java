@@ -22,9 +22,8 @@ public interface IOrderService {
 
     void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
 
+    void  cancelOrderByAdmin(String orderUuid) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException, UserNotFoundException;
     void cancelOrderByStudent(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException;
-
-
     List<OrderDtOut> getStudentOrder(String  studentUuid) throws UserNotFoundException;
     List<OrderDtOut> getOrdersByDate(LocalDate date) throws InvalidOrderException, InvalidUserInformationException;
 
