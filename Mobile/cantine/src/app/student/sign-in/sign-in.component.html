@@ -13,10 +13,9 @@
   <h4>Connexion</h4>
   <form [formGroup]="signIn">
 
-
     <!---------------------- Email --------------------------->
     <div class="form-group ">
-      <label for="email"> Email : </label>
+
       <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
              formControlName="email"
              placeholder="  Votre Email "
@@ -37,15 +36,14 @@
 
 
     <!---------------------- Password --------------------------->
-    <div class="form-group ">
-      <label for="password"> Mot de passe : </label>
+    <div class="form-group">
       <input [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" class="form-control"
              formControlName="password"
              placeholder="  Votre Mot  de passe "
              type="password"
              id="password"
       />
-      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback-password">
         <div *ngIf="f['password'].errors?.['required']" class="center"> Votre Mot de passe est
           requis
         </div>
@@ -67,3 +65,27 @@
   <p> s'inscrire  pour  la  cantinère  </p>
 </ion-content>
 
+
+<style>
+    input{
+      width: 75%;
+      height: 50px;
+      margin-left: 10%;
+    }
+    ion-button{
+      margin-left: 35%;
+    }
+    .form-group{
+     margin-top: 40px;
+    }
+    .invalid-feedback {
+      margin-left: 30%;
+       margin-top: 15px;
+      color: red;
+    }
+     .invalid-feedback-password{
+       margin-left: 20%;
+       margin-top: 15px;
+       color: red;
+     }
+</style>
