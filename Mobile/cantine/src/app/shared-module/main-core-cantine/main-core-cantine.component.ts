@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from "@angular/router";
+import {IConstantsURL} from "../constants/IConstantsURL";
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 
 @Component({
   selector: 'app-main-core-cantine',
@@ -7,7 +10,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainCoreCantineComponent {
 
-  constructor() { }
+  constructor(private router :  Router) { }
 
 
+  goToMeals() {
+    this.router.navigate([IConstantsURL.MEALS_URL]).then();
+  }
 }

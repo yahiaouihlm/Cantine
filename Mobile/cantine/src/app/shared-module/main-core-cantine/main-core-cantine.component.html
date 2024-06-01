@@ -20,7 +20,7 @@
         <ion-title>Footer</ion-title>
       </ion-toolbar>
     </ion-footer>-->
-    <ion-tabs style="position: fixed">
+    <ion-tabs>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home">
           <ion-icon name="home"></ion-icon>
@@ -30,7 +30,7 @@
           <ion-icon name="fast-food-outline"></ion-icon>
           Nos Menus
         </ion-tab-button>
-        <ion-tab-button tab="library">
+        <ion-tab-button (click)="goToMeals()">
           <ion-icon name="pizza-outline"></ion-icon>
           Nos  plats
         </ion-tab-button>
@@ -45,5 +45,7 @@
 </ion-app>
 
 
+<style>
 
+</style>
 
