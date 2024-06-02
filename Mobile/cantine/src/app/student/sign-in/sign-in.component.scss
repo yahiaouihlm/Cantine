@@ -34,7 +34,8 @@ ion-content {
       border-radius: 30px;
       margin-bottom: 40px;
     }
-    p{
+
+    p {
       color: red;
       font-size: 1rem;
       font-weight: 800;
@@ -49,17 +50,53 @@ ion-content {
     border-radius: 10px;
     box-shadow: 1px 1px 1px 1px rgba(245, 240, 240, 0.6);
   }
-  h4{
+
+  h4 {
     text-align: center;
     color: #6868ab;
     margin-top: 50px;
   }
-  p{
+
+  p {
     text-align: center;
     margin-top: 50px;
     color: #6868ab;
-    :hover{
+
+    :hover {
       cursor: pointer;
     }
+  }
+
+  input {
+    width: 75%;
+    height: 50px;
+    margin-left: 10%;
+    border-radius: 30px;
+  }
+
+  ion-button {
+    margin-left: 35%;
+  }
+
+  .form-group {
+    margin-top: 40px;
+  }
+
+  .invalid-feedback {
+    margin-left: 20%;
+    margin-top: 15px;
+    color: red;
+  }
+
+  .invalid-feedback-password {
+    margin-left: 20%;
+    margin-top: 15px;
+    color: red;
+  }
+  .wrong-credentials{
+     font-weight: bold;
+       p{
+         color: red;
+       }
   }
 }

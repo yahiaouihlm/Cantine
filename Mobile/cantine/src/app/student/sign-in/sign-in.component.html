@@ -6,8 +6,8 @@
 
 
 <ion-content>
-  <div  id="header">
-     <img src="assets/icon/logo.png">
+  <div id="header">
+    <img src="assets/icon/logo.png">
     <h3>cantière</h3>
   </div>
   <h4>Connexion</h4>
@@ -50,42 +50,17 @@
       </div>
     </div>
 
-
-      <ion-button class="center"  (click)="onSubmit()"> connexion </ion-button>
-
-
-
+       <div *ngIf="wrongCredentials" class="wrong-credentials">
+            <p> Email  ou  mot  de  passe  incorrect</p>
+       </div>
+    <ion-button class="center" (click)="onSubmit()"> connexion</ion-button>
 
 
   </form>
 
 
-
-
-  <p> s'inscrire  pour  la  cantinère  </p>
+  <p> s'inscrire pour la cantinère </p>
 </ion-content>
 
 
-<style>
-    input{
-      width: 75%;
-      height: 50px;
-      margin-left: 10%;
-    }
-    ion-button{
-      margin-left: 35%;
-    }
-    .form-group{
-     margin-top: 40px;
-    }
-    .invalid-feedback {
-      margin-left: 30%;
-       margin-top: 15px;
-      color: red;
-    }
-     .invalid-feedback-password{
-       margin-left: 20%;
-       margin-top: 15px;
-       color: red;
-     }
-</style>
+
