@@ -6,15 +6,22 @@
   <ion-searchbar animated="true" placeholder="Je cherche un plat"></ion-searchbar>
 </ion-header>
 
-<ion-card>
-  <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+
+
+<ion-card *ngFor="let meal of meals$ | async" style="border: 1px  solid burlywood">
+  <img alt="meal image" src="{{meal.image}}" />
+  <ion-card-title style="margin-left: 25%">{{meal.label}}</ion-card-title>
   <ion-card-header>
-    <ion-card-title>Card Title</ion-card-title>
-    <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+    <ion-card-subtitle>catégorie :  {{meal.category}}<</ion-card-subtitle>
+    <ion-card-subtitle>type : {{meal.mealType}}</ion-card-subtitle>
+    <ion-card-subtitle>prix : {{meal.price}} <span  style="font-size: 1rem">€ </span></ion-card-subtitle>
   </ion-card-header>
 
   <ion-card-content>
-    Here's a small text description for the card content. Nothing more, nothing less.
+    description : {{meal.description}}
   </ion-card-content>
+  <ion-button color="" style="margin-left: 35% ;  margin-bottom: 15px">ajouter</ion-button>
 </ion-card>
 
+
+<div  style="margin-bottom: 80px"></div>
