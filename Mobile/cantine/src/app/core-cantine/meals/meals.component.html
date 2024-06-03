@@ -10,18 +10,21 @@
 
 <ion-card *ngFor="let meal of meals$ | async" style="border: 1px  solid burlywood">
   <img alt="meal image" src="{{meal.image}}" />
-  <ion-card-title style="margin-left: 25%">{{meal.label}}</ion-card-title>
+  <ion-card-title class="container" >{{meal.label}}</ion-card-title>
   <ion-card-header>
     <ion-card-subtitle>catégorie :  {{meal.category}}<</ion-card-subtitle>
     <ion-card-subtitle>type : {{meal.mealType}}</ion-card-subtitle>
-    <ion-card-subtitle>prix : {{meal.price}} <span  style="font-size: 1rem">€ </span></ion-card-subtitle>
+    <ion-card-subtitle><span  style="font-size: 1.1rem">prix : {{meal.price}} € </span></ion-card-subtitle>
   </ion-card-header>
 
   <ion-card-content>
     description : {{meal.description}}
   </ion-card-content>
-  <ion-button color="" style="margin-left: 35% ;  margin-bottom: 15px">ajouter</ion-button>
+  <div class="container">
+    <ion-button>Ajouter au  panier</ion-button>
+  </div>
 </ion-card>
 
 
 <div  style="margin-bottom: 80px"></div>
+

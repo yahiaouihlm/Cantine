@@ -3,7 +3,11 @@ ion-content {
 }
 ion-tabs {
   position: fixed;
-  top: 93.1vh;
+  top: 91%;
   height: 60px;
   z-index: 1;
+}
+
+ion-avatar {
+  margin-right: 10px;
 }
