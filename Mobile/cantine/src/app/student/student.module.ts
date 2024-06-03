@@ -4,6 +4,7 @@ import {SignInComponent} from "./sign-in/sign-in.component";
 import {SharedModuleModule} from "../shared-module/shared-module.module";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgClass} from "@angular/common";
+import {IonicModule} from "@ionic/angular";
 
 
 
@@ -15,10 +16,11 @@ const  routes: Routes = [
     SignInComponent,
   ],
     imports: [
-      ReactiveFormsModule,
-      FormsModule,
+        ReactiveFormsModule,
+        FormsModule,
         RouterModule.forChild(routes),
         SharedModuleModule,
+        IonicModule,
 
 
     ]

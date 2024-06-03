@@ -93,10 +93,19 @@ ion-content {
     margin-top: 15px;
     color: red;
   }
-  .wrong-credentials{
-     font-weight: bold;
-       p{
-         color: red;
-       }
+
+  .wrong-credentials {
+    font-weight: bold;
+
+    p {
+      color: red;
+    }
+  }
+
+  ion-spinner {
+    --color: #2768ca;
+    width: 70px;
+    height: 70px;
+    margin: 10% 50% 10% 40%;
   }
 }

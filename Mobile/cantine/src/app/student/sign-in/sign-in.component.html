@@ -53,8 +53,13 @@
        <div *ngIf="wrongCredentials" class="wrong-credentials">
             <p> Email  ou  mot  de  passe  incorrect</p>
        </div>
-    <ion-button class="center" (click)="onSubmit()"> connexion</ion-button>
 
+    <div *ngIf="disabled_account" class="wrong-credentials">
+      <p> <a href="#" > votre  compte  n'est  pas  activé </a></p>
+    </div>
+    <ion-button *ngIf="!isLoading"  (click)="onSubmit()"> connexion</ion-button>
+
+    <ion-spinner *ngIf="isLoading"  ></ion-spinner>
 
   </form>
 
