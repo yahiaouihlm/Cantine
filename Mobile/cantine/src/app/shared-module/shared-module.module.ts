@@ -13,9 +13,8 @@ import {
   IonToolbar
 } from "@ionic/angular";
 import {RouterOutlet} from "@angular/router";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
-
+import { HttpClientModule} from "@angular/common/http";
+import { FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
