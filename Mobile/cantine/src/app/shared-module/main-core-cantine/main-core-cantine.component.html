@@ -54,7 +54,7 @@
       <h1></h1>
 
       <ion-list lines="none">
-        <ion-item button="true" detail="false" (click)="modal.dismiss()">
+        <ion-item button="true" detail="false" (click)="modal.dismiss();  goToProfile()">
           <ion-avatar slot="start" expand="block">
             <img alt="Silhouette of a person's head" src="{{this.studentImage}}"/>
           </ion-avatar>

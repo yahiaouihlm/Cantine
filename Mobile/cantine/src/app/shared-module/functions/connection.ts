@@ -23,4 +23,13 @@ export class connection {
     }
     return null ;
   }
+
+
+  public  static  getTokenFromLocalStorage() {
+    let  auth  =  this.getAuthObjectFromLocalStorage();
+    if  (auth){
+         return  auth.Authorization;
+    }
+    return "";
+  }
 }
