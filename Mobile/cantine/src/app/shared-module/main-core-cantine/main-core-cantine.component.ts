@@ -37,4 +37,8 @@ export class MainCoreCantineComponent implements OnInit {
     this.router.navigate([IConstantsURL.MEALS_URL]).then();
   }
 
+  logout() {
+    localStorage.clear();
+    this.router.navigate([IConstantsURL.STUDENT_SIGN_IN]).then();
+  }
 }
