@@ -33,4 +33,11 @@ export class ProfileComponent implements OnInit {
 
   }
 
+  updateProfile() {
+     /*TODO  :  to  do  after */
+  }
+
+  goBack() {
+    this.router.navigate([IConstantsURL.HOME_URL]).then();
+  }
 }
