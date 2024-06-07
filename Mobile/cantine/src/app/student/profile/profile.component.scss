@@ -18,13 +18,14 @@ ion-header {
     justify-content: center;
   }
 
-  h1 {
-    position: relative;
-    top: 60px;
-    color: #89adbd;
-  }
+
 }
 ion-content {
+  h1 {
+    margin: 2% 0% 4% 50%;
+    transform: translateX(-40%);
+    color: #89adbd;
+  }
   border: 1px solid #16212c;
   border-radius: 10px;
 
@@ -45,12 +46,15 @@ ion-content {
   }
 
   .container-student-info {
-    margin-top: 30px;
+    margin-top: 10px;
 
   }
   ion-card {
     border-radius: 20px;
     color: white;
+    margin-top: 1px;
+    margin-bottom: 15px;
+
   }
 
   ion-button {
