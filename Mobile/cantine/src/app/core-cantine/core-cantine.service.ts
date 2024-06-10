@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Meal} from "../shared-module/models/meals";
+import {Meal} from "../shared-module/models/meal";
 
 @Injectable()
 export class CoreCantineService {
