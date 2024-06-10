@@ -3,6 +3,9 @@ import {Observable, of} from "rxjs";
 import {Meal} from "../../shared-module/models/meal";
 import {Router} from "@angular/router";
 import {CoreCantineService} from "../core-cantine.service";
+import {connection} from "../../shared-module/functions/connection";
+import {IConstantsURL} from "../../shared-module/constants/IConstantsURL";
+import {Menu} from "../../shared-module/models/menu";
 
 @Component({
   selector: 'app-menus',
@@ -13,10 +16,17 @@ import {CoreCantineService} from "../core-cantine.service";
 export class MenusComponent  implements OnInit {
 
 
-  meals$: Observable<Meal[]> = of([]);
+  menus$: Observable<Menu[]> = of([]);
   constructor(private router: Router, private coreCantineService : CoreCantineService) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!connection.checkStudentConnection()) {
+      this.router.navigate([IConstantsURL.STUDENT_SIGN_IN]).then()
+      localStorage.clear();
+    }
+    this.menus$ = this.coreCantineService.getAllAvailableMenus();
+
+  }
 
 }

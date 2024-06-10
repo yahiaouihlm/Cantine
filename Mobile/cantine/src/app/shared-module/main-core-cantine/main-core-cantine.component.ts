@@ -45,4 +45,8 @@ export class MainCoreCantineComponent implements OnInit {
   goToProfile() {
     this.router.navigate([IConstantsURL.STUDENT_PROFILE]).then();
   }
+
+  goToMenus() {
+    this.router.navigate([IConstantsURL.MENU_URL]).then();
+  }
 }

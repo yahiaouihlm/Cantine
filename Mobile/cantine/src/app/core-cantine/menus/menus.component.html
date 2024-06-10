@@ -1,3 +1,26 @@
-<p>
-  menus works!
-</p>
+<div class="container">
+  <img src="assets/images/nos-menus.jpg" width="100%">
+</div>
+
+<ion-header>
+  <ion-searchbar animated="true" placeholder="Je cherche un plat"></ion-searchbar>
+</ion-header>
+
+
+<ion-card *ngFor="let menu of menus$ | async" style="border: 1px  solid burlywood">
+  <img alt="meal image" src="{{menu.image}}"/>
+  <ion-card-title class="container">{{ menu.label }}</ion-card-title>
+  <ion-card-header>
+    <ion-card-subtitle><span style="font-size: 1.1rem">prix : {{ menu.price }} € </span></ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    description : {{ menu.description }}
+  </ion-card-content>
+  <div class="container">
+    <ion-button>Ajouter au panier</ion-button>
+  </div>
+</ion-card>
+
+
+<div style="margin-bottom: 80px"></div>
