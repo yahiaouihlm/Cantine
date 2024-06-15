@@ -25,6 +25,7 @@ public interface IOrderController {
     String  BASIC_ORDER_URL =  "order/";
     String ADMIN_GET_ALL_ORDERS_BY_DAY = "admin/getAllOrdersOfDay";
     String  ADMIN_SUBMIT_ORDER  =  "admin/submitOrder";
+    String  ADMIN_CANCEL_ORDER = "admin/cancelOrder";
     String GET_ORDER_BY_DATE_AND_STUDENT_ID_URL = "student/getByDateAndStudentId";
     String CANCEL_ORDER_URL = "student/cancel";
     String ADD_ORDER_URL = "student/add";
@@ -35,10 +36,11 @@ public interface IOrderController {
     String ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
 
 
+
+    @PostMapping(ADMIN_CANCEL_ORDER)
+    ResponseEntity<ResponseDtout> cancelOrder (@RequestParam("orderUuid") String orderUuid) throws OrderNotFoundException, UserNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException;
     @PostMapping(ADMIN_SUBMIT_ORDER)
     ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException;
-
-
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
     ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(@RequestParam("studentUuid") String studentUuid , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, InvalidUserInformationException, UserNotFoundException;
     @PostMapping(ADD_ORDER_URL)

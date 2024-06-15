@@ -25,6 +25,7 @@ public class UserEmailSender {
     }
 
 
+
     public void sendNotificationAboutNewStudentAmount(UserEntity user, Double newSold , Double amount) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", user.getFirstname());

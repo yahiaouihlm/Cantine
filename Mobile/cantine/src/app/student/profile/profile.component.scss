@@ -1,0 +1,68 @@
+ion-header {
+  .title{
+    text-align: center;
+  }
+  .student-profile {
+    position: relative;
+
+    img {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 100px;
+      border: 2px solid rgba(125, 195, 191, 0.53);
+      top: -60px;
+    }
+
+    display: flex;
+    justify-content: center;
+  }
+
+
+}
+ion-content {
+  h1 {
+    margin: 2% 0% 4% 50%;
+    transform: translateX(-40%);
+    color: #89adbd;
+  }
+  border: 1px solid #16212c;
+  border-radius: 10px;
+
+  .container-wallet {
+    margin-top: 15%;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  p {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  .student-class {
+    margin-top: 5px;
+    font-size: 0.7rem;
+    text-align: center;
+  }
+
+  .container-student-info {
+    margin-top: 10px;
+
+  }
+  ion-card {
+    border-radius: 20px;
+    color: white;
+    margin-top: 1px;
+    margin-bottom: 15px;
+
+  }
+
+  ion-button {
+    width: 50%;
+    transform: translateX(50%);
+    border-radius: 10px;
+    margin-top: 2vh;
+  }
+
+}
+

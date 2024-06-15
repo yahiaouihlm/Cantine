@@ -1,0 +1,63 @@
+<ion-app>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title class="center">Cantine</ion-title>
+      <ion-avatar slot="end" id="open-custom-dialog" expand="block">
+        <img alt="student profile  picture " src="{{this.studentImage}}"/>
+      </ion-avatar>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+
+    <!--  main  container  -->
+    <router-outlet></router-outlet>
+
+
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="home">
+          <ion-icon name="home"></ion-icon>
+          Accueil
+        </ion-tab-button>
+        <ion-tab-button tab="radio">
+          <ion-icon name="fast-food-outline"></ion-icon>
+          Nos Menus
+        </ion-tab-button>
+        <ion-tab-button (click)="goToMeals()">
+          <ion-icon name="pizza-outline"></ion-icon>
+          Nos plats
+        </ion-tab-button>
+        <ion-tab-button>
+          <ion-icon name="reorder-four-outline"></ion-icon>
+          Mes Commandes
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-content>
+
+</ion-app>
+
+
+<ion-modal id="example-modal" #modal trigger="open-custom-dialog">
+  <ng-template>
+    <div class="wrapper">
+      <h1></h1>
+
+      <ion-list lines="none">
+        <ion-item button="true" detail="false" (click)="modal.dismiss();  goToProfile()">
+          <ion-avatar slot="start" expand="block">
+            <img alt="Silhouette of a person's head" src="{{this.studentImage}}"/>
+          </ion-avatar>
+          <ion-label>Mon profile</ion-label>
+        </ion-item>
+        <ion-item button="true" detail="false" (click)="modal.dismiss(); logout()">
+          <ion-icon name="log-out-outline" style="width: 30px"></ion-icon>
+          <ion-label>Déconnection</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ng-template>
+</ion-modal>
+
+

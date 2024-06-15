@@ -34,6 +34,12 @@ public class OrderController  implements IOrderController{
 
 
     @Override
+    public ResponseEntity<ResponseDtout> cancelOrder(String orderUuid) throws OrderNotFoundException, UserNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException {
+         this.orderService.cancelOrderByAdmin(orderUuid);
+        return ResponseEntity.ok(new ResponseDtout(ORDER_CANCELLED_SUCCESSFULLY));
+    }
+
+    @Override
     public ResponseEntity<ResponseDtout> submitOrder(Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException {
         this.orderService.submitOrder(orderId);
         return ResponseEntity.ok(new ResponseDtout(ORDER_SUBMITTED_SUCCESSFULLY));

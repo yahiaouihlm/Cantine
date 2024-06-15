@@ -246,6 +246,49 @@ public class OrderService implements IOrderService {
 
     }
 
+    @Override
+    public void cancelOrderByAdmin(String orderUuid) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException, UserNotFoundException {
+        if (orderUuid == null || orderUuid.trim().length() < 10) {
+            OrderService.LOG.error("INVALID ORDER ID");
+            throw new InvalidOrderException("INVALID ORDER ID");
+        }
+        var adminEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var admin  =  this.adminDao.findByEmail(adminEmail.toString()).orElseThrow(() -> {
+            OrderService.LOG.error("INVALID ADMIN INFORMATION");
+            return new InvalidUserInformationException("INVALID ADMIN INFORMATION");
+        });
+
+        var order = this.orderDao.findByUuid(orderUuid).orElseThrow(() -> {
+            OrderService.LOG.error("ORDER WITH  UUID  = {} NOT FOUND ", orderUuid);
+            return new OrderNotFoundException("ORDER NOT FOUND");
+        });
+
+        if (order.getStatus() == 1 || order.getStatus() == 2) {
+            OrderService.LOG.error("ORDER WITH  ID  = {} IS ALREADY VALIDATED OR TAKEN", order.getUuid());
+            throw new CancelledOrderException("ORDER IS ALREADY VALIDATED");
+        }
+
+        if (order.isCancelled()) {
+            OrderService.LOG.error("ORDER WITH  ID  ={} IS ALREADY CANCELED", order.getUuid());
+            throw new CancelledOrderException("ORDER IS ALREADY CANCELED");
+        }
+
+        var student = this.studentDao.findByUuid(order.getStudent().getUuid()).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT WITH  ID  =  {} NOT FOUND", order.getStudent().getUuid());
+            return new UserNotFoundException("STUDENT WITH : " + order.getStudent().getFirstname() + " NOT FOUND");
+        });
+
+        var orderPrice = order.getPrice(); //  get  the  price  of  the  order
+
+        order.setCancelled(true);
+        this.orderDao.save(order);
+        student.setWallet(student.getWallet().add(orderPrice)); //  get  the  student  wallet
+        this.paymentDao.save(new PaymentEntity(admin, student, orderPrice, TransactionType.REFUNDS));
+        this.studentDao.save(student);
+        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), orderPrice.doubleValue());
+        this.orderEmailSender.cancelledOrderByAdmin(student, order);
+    }
+
 
     @Override
     public void cancelOrderByStudent(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
