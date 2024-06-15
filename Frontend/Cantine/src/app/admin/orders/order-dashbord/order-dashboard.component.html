@@ -1,17 +1,18 @@
+
 <div class="order">
     <div class="center">
-        <h1>Commandes du jour</h1>
+        <h1>Commandes du {{Date() |  date:'EEEE d MMMM y':'fr-FR'}}</h1>
     </div>
 
     <div *ngFor="let  order  of ordersOfDay$ |async">
-        <div class="container">
+        <div  class="container">
             <div class="row test">
                 <div class="col-md-2">
-                    <span>  N° Commande  :  {{order.id}} </span>
+                    <span>  N° Commande  :  {{order.uuid}} </span>
                 </div>
                 <div class="col-md-2">
-                    <span><strong> Etudiant : </strong> <span (click)="goToStudentProfile()"
-                                                              style="color: blue">{{order.studentOrder.firstname}}  {{order.studentOrder.lastname}}</span> </span>
+                    <span><strong> Etudiant : </strong> <span (click)="goToStudentProfile(order.studentOrder.uuid)"
+                                                              style="color: blue; cursor: pointer">{{order.studentOrder.firstname}}  {{order.studentOrder.lastname}}</span> </span>
                 </div>
                 <div class="col-md-2">
                     <span><strong>Date : </strong> {{order.creationDate}}</span>
@@ -22,7 +23,7 @@
 
 
                 <div *ngIf="order.status==0" class="col-md-2">
-                    <button class="btn btn-success" (click)="validateOrder(order.id)">Valider</button>
+                    <button class="btn btn-success" (click)="validateOrder(order.uuid)">Valider</button>
                 </div>
                 <div *ngIf="order.status==0" class="col-md-2">
                     <button class="btn btn-success  red">Annuler</button>
@@ -42,11 +43,10 @@
 
 <style>
     .order {
-        border: black 2px solid;
         margin: 50px;
     }
 
-    .test {
+    .currentOrder {
         border-radius: 10px;
         padding: 1%;
         background: #d0d5e3;

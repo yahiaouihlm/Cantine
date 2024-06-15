@@ -52,7 +52,7 @@ public class UpdateStudentInfoTest {
         this.studentClassEntity.setId(1);
         this.studentClassEntity.setName("SQLI JAVA");
         this.environment = new MockEnvironment();
-        this.environment.setProperty("sqli.cantine.default.persons.admin.imagename","defaultAdminImageName");
+        this.environment.setProperty("sqli.cantine.admin.default.image","defaultAdminImageName");
         this.environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
         this.environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
 

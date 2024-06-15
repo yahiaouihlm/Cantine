@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static java.util.Arrays.stream;
 
-
+/*TDOO: remove context  root  cantine on the url .*/
 @Component
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
@@ -37,13 +37,14 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     @Autowired
     public JwtTokenVerifier(Environment environment) {
         this.environment = environment;
+
     }
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        if (request.getServletPath().equals("/login")) {
+        if (request.getServletPath().equals("/user/login")) {
             filterChain.doFilter(request, response);
         } else {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
@@ -62,9 +63,13 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
+
+                    /*TODO:  make the  request  to  database  to check  the  user   exists, not  disables....ect */
+
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
                     authentication.setDetails(authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+
 
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {

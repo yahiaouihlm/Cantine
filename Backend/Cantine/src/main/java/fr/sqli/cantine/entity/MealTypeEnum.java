@@ -11,7 +11,7 @@ public enum MealTypeEnum {
 
 
 
-    public static boolean checkMealType(String mealType) {
+    public static boolean contains(String mealType) {
         for (MealTypeEnum mealTypeEnum : MealTypeEnum.values()) {
             if (mealTypeEnum.name().equals(mealType)) {
                 return true;

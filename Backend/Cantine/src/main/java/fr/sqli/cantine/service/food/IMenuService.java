@@ -1,7 +1,6 @@
 package fr.sqli.cantine.service.food;
 
 import fr.sqli.cantine.dto.in.food.MenuDtoIn;
-import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.*;
@@ -39,8 +38,11 @@ public interface IMenuService {
   public MenuDtOut getMenuByUuId(String menuUuid) throws InvalidFoodInformationException, FoodNotFoundException;
 
 
-  public  List<MenuDtOut> getAvailableMenu();
-  public List<MenuDtOut> getAllMenus();
+  List<MenuDtOut> searchMenuByLabel(String label);
+  List<String> searchLablesOfMenuContainsTerm(String label);
+
+   List<MenuDtOut> getAvailableMenu();
+   List<MenuDtOut> getAllMenus();
 
     List<MenuDtOut> getMenusInDeletionProcess();
 

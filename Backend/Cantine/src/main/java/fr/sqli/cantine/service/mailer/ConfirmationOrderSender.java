@@ -28,53 +28,6 @@ public class ConfirmationOrderSender {
 
 
 
-      public  void  sendConfirmationOrder (StudentEntity student , OrderEntity order) throws MessagingException {
-
-
-           String food =  "" ;
-          for (MealEntity meal : order.getMeals()) {
-              food = food + meal.getLabel() + " , " + meal.getPrice() + "<br>" ;
-          }
-          for ( MenuEntity menu : order.getMenus() ) {
-              food = food + menu.getLabel() + " , " + menu.getPrice() + "<br>      " ;
-          }
-           String qrCodeUrl = this.ORDER_QR_CODE_PATH + order.getQRCode() ;
-          String confirmationOrderMessage =
-                  """
-                     <!DOCTYPE html>
-                     <html lang="en">
-                     <head>
-                         <meta charset="UTF-8">
-                     </head>
-                     <body>
-                           """ +
-
-                  "<h2>Cher " + student.getFirstname() +"  " + student.getLastname()+",</h2>\n\n" +
-                  "Nous vous remercions d'avoir passé votre commande sur Cantière. Votre commande a été enregistrée avec succès et est maintenant en attente d'activation.\n\n" +
-                  "Détails de la commande :<br>" +
-                  "- Numéro de commande : " + order.getId() + "<br>" +
-                  "- Détails : " + food+ "<br>" +
-                  "- Montant total : "+ order.getPrice() +"<br>" +
-                          "-Date   : "  +  order.getCreationDate()  + ": "  + order.getCreationTime() +
-                  "Nous travaillons activement à traiter votre commande dans les plus brefs délais. Vous recevrez une confirmation une fois que votre commande aura été activée et expédiée.\n\n" +
-                  "Merci de votre confiance et de votre soutien.<br>" +
-                  "Cordialement,<br>" +
-                  "Administrateurs  Aston<br>" +
-                  "Aston By SQLI" + """
-                           <img  src ="
-                          """ + qrCodeUrl +  """
-                                ">                          
-                          """
-
-                    +
-                         """
-                         </body>
-                         </html>
-                         """+qrCodeUrl;
-
-          this.emailSenderService.send(student.getEmail(), "Confirmation  de  Reception  De  votre  commande ", confirmationOrderMessage);
-
-      }
 
 
       public  void  sendSubmittedOrder (OrderEntity order ) throws MessagingException {

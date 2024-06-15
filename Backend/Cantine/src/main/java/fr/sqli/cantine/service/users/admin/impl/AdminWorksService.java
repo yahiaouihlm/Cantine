@@ -9,6 +9,7 @@ import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.PaymentEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.entity.TransactionType;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
 import fr.sqli.cantine.service.users.exceptions.*;
@@ -20,6 +21,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -70,6 +72,7 @@ public class AdminWorksService implements IAdminFunctionService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException, UnknownUser, MessagingException {
 
         if (studentUuid == null || studentUuid.isEmpty() || studentUuid.trim().length() < 10 || validationCode == null || amount == null || amount > MAX_STUDENT_WALLET_ADD_AMOUNT) {
@@ -151,12 +154,13 @@ public class AdminWorksService implements IAdminFunctionService {
 
         // add  new amount  to student  account
         student.setWallet(student.getWallet().add(new BigDecimal(amount)));
-        var paymentInformation = new PaymentEntity(adminAuth, student, new BigDecimal(amount));
-
-        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
+        var paymentInformation = new PaymentEntity(adminAuth, student, new BigDecimal(amount), TransactionType.ADDITION);
         // save  the  payment  information
         this.paymentDao.save(paymentInformation);
         this.studentDao.save(student);
+
+        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
+
 
     }
 

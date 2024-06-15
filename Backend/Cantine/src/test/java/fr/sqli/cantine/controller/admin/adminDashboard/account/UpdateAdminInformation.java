@@ -153,7 +153,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
        cleanDtaBase();
 
        // make  a  new  admin  with  a default  image
-       var defaultImageAdmin  =  this.environment.getProperty("sqli.cantine.default.persons.admin.imagename");
+       var defaultImageAdmin  =  this.environment.getProperty("sqli.cantine.admin.default.image");
        var defaultImg = new ImageEntity();
          defaultImg.setImagename(defaultImageAdmin);
          this.savedAdmin.setImage(defaultImg);

@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(StudentController.STUDENT_BASIC_URL)
+@CrossOrigin(origins = "http://localhost:4200")
 public class StudentController implements IStudentController {
 
     private final StudentService studentService;
@@ -41,14 +42,13 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @PutMapping(UPDATE_STUDENT_INFO_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateStudentInformation(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException {
         this.studentService.updateStudentInformation(studentDtoIn);
         return ResponseEntity.ok(new ResponseDtout(STUDENT_INFO_UPDATED_SUCCESSFULLY));
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws UserNotFoundException, InvalidStudentClassException, MessagingException, InvalidFormatImageException, AccountActivatedException, RemovedAccountException, InvalidImageException, InvalidUserInformationException, StudentClassNotFoundException, ImagePathException, IOException, ExistingUserException {
+    public ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws UserNotFoundException, InvalidStudentClassException, MessagingException, InvalidFormatImageException, AccountActivatedException, RemovedAccountException, InvalidImageException, InvalidUserInformationException, StudentClassNotFoundException, ImagePathException, IOException, ExistingUserException {
         this.studentService.signUpStudent(studentDtoIn);
         return ResponseEntity.ok(new ResponseDtout(STUDENT_SIGNED_UP_SUCCESSFULLY));
     }

@@ -1,57 +1,76 @@
-import {Component,OnInit} from '@angular/core';
-import {AuthObject} from "../../sharedmodule/models/authObject";
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {SharedService} from "../../sharedmodule/shared.service";
 import {User} from "../../sharedmodule/models/user";
+import Malfunctions from 'src/app/sharedmodule/functions/malfunctions';
+import {IConstantsURL} from 'src/app/sharedmodule/constants/IConstantsURL';
+import {Order} from "../../sharedmodule/models/order";
+
 
 @Component({
-  selector: 'app-main-core-cantine',
-  templateUrl: "./main-core-cantine.component.html",
-  styleUrls:['../../../assets/styles/main.component.scss']
+    selector: 'app-main-core-cantine',
+    templateUrl: "./main-core-cantine.component.html",
+    styleUrls: ['../../../assets/styles/main.component.scss'],
+    providers: [SharedService]
 })
-export class MainCoreCantineComponent  implements OnInit{
-    disconnected = false;
-    authObj :  AuthObject =  new AuthObject();
-    user : User = new User();
-    constructor (private  router : Router,   private sharedService: SharedService) {}
+export class MainCoreCantineComponent implements OnInit {
+    isConnected = false;
+    user: User = new User();
+    nbOfMealsAndMenus = 0;
+
+    constructor(private router: Router, private sharedService: SharedService) {
+    }
 
     ngOnInit(): void {
-     /*   let  authObj = localStorage.getItem('authObject');
-        if (authObj) {
-            this.disconnected = true;
-            this.authObj = JSON.parse(authObj);
-           this.getStudentById(this.authObj.id);
+
+        let userid = Malfunctions.getUserIdFromLocalStorage();
+        if (userid != null && userid != "") {
+            this.sharedService.getStudentById(userid).subscribe((response) => {
+                this.user = response;
+                this.isConnected = true;
+                let order = Order.getOrderFromLocalStorage();
+                if (order != null) {
+                    this.nbOfMealsAndMenus = order.meals.length + order.menus.length;
+                } else {
+                    this.nbOfMealsAndMenus = 0;
+                }
+            });
+
         }
-        else {
-            this.disconnected = false;
-        }
-*/
+
 
     }
 
-    getStudentById( id : string) {
-     this.sharedService.getStudentById(id).subscribe( (response) => {
-            this.user = response;
-     });
-    }
 
     goToOrders() {
-        this.router.navigate(['cantine/student/orders']).then( () => window.location.reload());
+        this.router.navigate([IConstantsURL.STUDENT_ORDER]).then(() => window.location.reload());
     }
 
     goToHome() {
-        this.router.navigate(['cantine/home']);
+        this.router.navigate([IConstantsURL.HOME_URL]).then(() => window.location.reload());
     }
+
     gotoProfile() {
-        this.router.navigate(['cantine/student/profile'],  { queryParams: { id: this.authObj.id } });
+        this.router.navigate([IConstantsURL.STUDENT_PROFILE_URL],
+            {queryParams: {id: this.user.uuid}}).then(window.location.reload);
     }
+
     logout() {
         localStorage.clear();
-        this.disconnected = false;
-        this.router.navigate(['cantine/home']).then(  () => window.location.reload());
+        this.isConnected = false;
+        this.router.navigate([IConstantsURL.HOME_URL]).then(() => window.location.reload());
     }
 
     toLogin() {
-       this.router.navigate(['cantine/signIn']);
+        localStorage.clear();
+        this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(() => window.location.reload());
+    }
+
+    goToMeals() {
+        this.router.navigate([IConstantsURL.MEALS_URL]).then(() => window.location.reload());
+    }
+
+    goToMenus() {
+        this.router.navigate([IConstantsURL.MENUS_URL]).then(() => window.location.reload());
     }
 }

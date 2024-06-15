@@ -34,7 +34,7 @@ public class OrderHandlerException {
 
     @ExceptionHandler(OrderLimitExceededException.class)
     public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(OrderLimitExceededException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout(e.getMessage()));
     }
 
 

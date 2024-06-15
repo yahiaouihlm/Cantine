@@ -1,13 +1,12 @@
-
-    <app-loading-dialog *ngIf="isLoadingPage"></app-loading-dialog>
+<app-loading-dialog *ngIf="isLoadingPage"></app-loading-dialog>
 
 <div class="container main-container">
     <div class="row">
-        <form [formGroup]="student" >
+        <form [formGroup]="student">
             <div class="wallet center">
                 <img id="profile-picture" src={{user.image}}>
-                <h1>{{user.firstname}}   {{user.lastname}}</h1>
-                <h2> SOLDE : {{user.wallet}} € </h2>
+                <h1>{{ user.firstname }}   {{ user.lastname }}</h1>
+                <h2> SOLDE : {{ user.wallet }} € </h2>
 
             </div>
 
@@ -38,11 +37,11 @@
             <!---------------------- Email --------------------------->
             <div class="form-group  input-card   col">
                 <label for="email"> Email : </label>
-                <input   [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
-                         formControlName="email"
-                         placeholder="  Votre Email "
-                         type="email"
-                         id="email"
+                <input [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" class="form-control"
+                       formControlName="email"
+                       placeholder="  Votre Email "
+                       type="email"
+                       id="email"
 
                 />
                 <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
@@ -74,9 +73,8 @@
             </div>
 
 
-
             <!---------------------- Phone Number--------------------------->
-            <div class="form-group" >
+            <div class="form-group">
                 <label for="phoneNumber"> Numéro Tél : </label>
                 <input [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }" class="form-control"
                        formControlName="phoneNumber"
@@ -91,11 +89,11 @@
         <div class="center add-subtract-btn">
             <button class="btn" (click)="addAmount()">
                 <mat-icon>add_circle_outline</mat-icon>
-                Ajouter   Un  montant
+                Ajouter Un montant
             </button>
-            <button  (click)="goToTransactionsHistory()" class="btn">
+            <button (click)="goToTransactionsHistory()" class="btn">
                 <mat-icon>history</mat-icon>
-                historique des  transactions
+                historique des transactions
             </button>
 
         </div>
@@ -103,12 +101,12 @@
 
     </div>
 </div>
-    <div class="center modify-email-btn">
-        <button *ngIf="!enableEmailInput" class="btn"  (click)="enableEmailFormInput()"> Modifier  le  Email  </button>
-        <button *ngIf="enableEmailInput" class="btn"  (click)="changeStudentEmail()"> Valider  </button>
-    </div>
+<div class="center modify-email-btn">
+    <button *ngIf="!enableEmailInput" class="btn" (click)="enableEmailFormInput()"> Modifier le Email</button>
+    <button *ngIf="enableEmailInput" class="btn" (click)="changeStudentEmail()"> Valider</button>
+</div>
 
-<ng-template #loadingTemplate >
+<ng-template #loadingTemplate>
     <div class="spinner-container">
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>

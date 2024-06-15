@@ -11,7 +11,7 @@ public class AdminDtoIn  extends AbstractUsersDtoIn {
     private  String address;
 
     @JsonIgnore
-    public void  checkAdminInformationsValidity() throws InvalidUserInformationException {
+    public void checkAdminInformationValidity() throws InvalidUserInformationException {
 
         super.ValidatePersonInformationWithOutPhone();
         checkAddressValidity();

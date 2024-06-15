@@ -1,0 +1,56 @@
+<ion-app xmlns="http://www.w3.org/1999/html">
+  <ion-header>
+    <ion-toolbar (click)="goBack()">
+      <ion-title class="title">Cantine</ion-title>
+    </ion-toolbar>
+
+    <ion-img src="assets/images/aston.png" alt="aston ecole  d'inforamtique "></ion-img>
+
+    <div class="student-profile">
+      <img alt="my profile picture" src="{{this.student.image}}"/>
+    </div>
+  </ion-header>
+
+  <ion-content>
+
+    <div class="container-wallet">
+      <h1> {{ this.student.firstname }}  {{ this.student.lastname }} </h1>
+
+      <p> Mon Solde : {{ this.student.wallet }} € </p>
+      <p class="student-class"> Aston Student : {{ this.student.studentClass }} </p>
+    </div>
+
+
+    <div class="container-student-info">
+
+      <ion-card>
+        <ion-card-content> Email :  {{ this.student.email }}</ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-content> class :  {{ this.student.studentClass }}</ion-card-content>
+      </ion-card>
+
+
+      <ion-card>
+        <ion-card-content> Date de Naissance :  {{ this.student.birthdate }}</ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-content> ville :  {{ this.student.town }}</ion-card-content>
+      </ion-card>
+
+
+      <ion-card *ngIf="this.student.phone !== null">
+        <ion-card-content> phone :  {{ this.student.phone }}</ion-card-content>
+      </ion-card>
+
+
+      <ion-button (click)="updateProfile()"> Modifier  Mon  profile </ion-button>
+
+
+    </div>
+
+  </ion-content>
+</ion-app>
+

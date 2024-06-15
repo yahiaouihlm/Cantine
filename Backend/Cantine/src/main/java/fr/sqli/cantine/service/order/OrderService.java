@@ -4,10 +4,10 @@ import com.google.zxing.WriterException;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
-import fr.sqli.cantine.entity.MealEntity;
-import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.entity.OrderEntity;
+import fr.sqli.cantine.entity.*;
 
+import fr.sqli.cantine.service.mailer.OrderEmailSender;
+import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -31,37 +32,44 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class OrderService implements IOrderService {
 
     private static final Logger LOG = LogManager.getLogger();
     final Integer MAXIMUM_ORDER_PER_DAY = 20;
+    final Integer SMALL_STUDENT_WALLET = 10;
     final String ORDER_QR_CODE_PATH;
     final String ORDER_QR_CODE_IMAGE_FORMAT;
     final String STUDENT_IMAGE_URL;
     final String MENU_IMAGE_URL;
     final String MEAL_IMAGE_URL;
-    private IOrderDao orderDao;
+    private final IOrderDao orderDao;
 
-    private ITaxDao taxDao;
-    private IStudentDao studentDao;
-    private IAdminDao adminDao;
-    private IMealDao mealDao;
+    private final ITaxDao taxDao;
+    private final IStudentDao studentDao;
+    private final IAdminDao adminDao;
+    private final IMealDao mealDao;
 
-    private Environment env;
-    private IMenuDao menuDao;
-
-    private ConfirmationOrderSender confirmationOrderSender;
+    private final IMenuDao menuDao;
+    private final OrderEmailSender orderEmailSender;
+    private final ConfirmationOrderSender confirmationOrderSender; /*TODO a  supprimé  */
+    private final UserEmailSender userEmailSender;
+    private final IPaymentDao paymentDao;
 
     @Autowired
-    public OrderService(Environment env, IOrderDao orderDao, IAdminDao adminDao, IStudentDao studentDao, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao, ConfirmationOrderSender confirmationOrderSender) {
+    public OrderService(Environment env, IOrderDao orderDao, IAdminDao adminDao, IPaymentDao iPaymentDao, IStudentDao studentDao, IMealDao mealDao,
+                        IMenuDao menuDao, ITaxDao taxDao, UserEmailSender userEmailSender, OrderEmailSender orderEmailSender,
+                        ConfirmationOrderSender confirmationOrderSender) {
         this.orderDao = orderDao;
         this.adminDao = adminDao;
         this.studentDao = studentDao;
         this.mealDao = mealDao;
         this.menuDao = menuDao;
         this.taxDao = taxDao;
-        this.env = env;
+        this.paymentDao = iPaymentDao;
+        this.orderEmailSender = orderEmailSender;
         this.confirmationOrderSender = confirmationOrderSender;
+        this.userEmailSender = userEmailSender;
         this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
         this.ORDER_QR_CODE_IMAGE_FORMAT = env.getProperty("sqli.canine.order.qrcode.image.format");
         this.STUDENT_IMAGE_URL = env.getProperty("sqli.cantine.images.url.student");
@@ -99,6 +107,19 @@ public class OrderService implements IOrderService {
             OrderService.LOG.error(" ORDER  HAS BEEN  CANCLLED ");
             throw new CancelledOrderException(" ORDER IS   CANCELLED ");
         }
+  /*    create the  QrCode  and  save  the  order  in  the  database
+        String token = "qrcode" + UUID.randomUUID();
+        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT);
+
+    String qrCodeData = "Student  : " + student.getFirstname() + " " + student.getLastname() +
+                "\n" + " Student Email : " + student.getEmail() +
+                "\n" + " Order Id :" + order.getId() +
+                "\n" + " Order Price : " + order.getPrice() + "£" +
+                "\n" + " Created At  " + order.getCreationDate() + " " + order.getCreationTime();
+
+        var filePath = this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
+        QrCodeGenerator.generateQrCode(qrCodeData, filePath);
+*/
 
         order.setStatus(1);
         this.orderDao.save(order);
@@ -107,22 +128,25 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
-        if (orderDtoIn == null)
+    public void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
+        if (orderDtoIn == null) {
+            OrderService.LOG.error("INVALID ORDER ORDER IS NULL");
             throw new InvalidOrderException("INVALID ORDER");
-
-
+        }
         orderDtoIn.checkOrderIDsValidity();
-        var student = this.studentDao.findById(orderDtoIn.getStudentId());
+        var student = this.studentDao.findByUuid(orderDtoIn.getStudentUuid()).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT WITH  UUID  = {} NOT FOUND", orderDtoIn.getStudentUuid());
+            return new UserNotFoundException("STUDENT NOT FOUND");
+        });
+        var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!student.getEmail().equals(username)) {
+            OrderService.LOG.error("STUDENT WITH  ID  = {} IS NOT THE OWNER OF THE ORDER  OF THE STUDENT  AUTHENTICATED {} ", orderDtoIn.getStudentUuid(), username);
+            throw new InvalidUserInformationException("ERROR  STUDENT  ID");
+        }
+
         var totalPrice = BigDecimal.ZERO;
 
-        //  check Information  validity
-
-        if (student.isEmpty())
-            throw new UserNotFoundException("STUDENT NOT FOUND");
-
-
-        if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && orderDtoIn.getMealsId().size() == 0 && orderDtoIn.getMenusId().size() == 0) {
+        if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && orderDtoIn.getMealsId().isEmpty() && orderDtoIn.getMenusId().isEmpty()) {
             OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
             throw new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
         }
@@ -144,34 +168,34 @@ public class OrderService implements IOrderService {
 
         if (orderDtoIn.getMealsId() != null) {
             for (var mealId : orderDtoIn.getMealsId()) {
-                var meal = this.mealDao.findById(mealId);
-                if (meal.isEmpty()) {
-                    OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " NOT FOUND");
-                    throw new FoodNotFoundException("MEAL WITH  ID : " + mealId + " NOT FOUND");
+                var meal = this.mealDao.findByUuid(mealId).orElseThrow(() -> {
+                    OrderService.LOG.error("MEAL WITH UUID = {} NOT FOUND", mealId);
+                    return new FoodNotFoundException("MEAL WITH  ID = " + mealId + " NOT FOUND");
+                });
+
+                if (meal.getStatus() == 0 || meal.getStatus() == 2) {
+                    OrderService.LOG.error("MEAL WITH  ID  = {} AND LABEL= {} IS NOT AVAILABLE OR REMOVED", mealId, meal.getLabel());
+                    throw new UnavailableFoodException("MEAL  : " + meal.getLabel() + " IS UNAVAILABLE OR REMOVED");
                 }
-                if (meal.get().getStatus() == 0) {
-                    OrderService.LOG.error("MEAL WITH  ID  = " + mealId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MEAL  : " + meal.get().getLabel() + " IS UNAVAILABLE");
-                }
-                meals.add(meal.get());
-                totalPrice = totalPrice.add(meal.get().getPrice());
+                meals.add(meal);
+                totalPrice = totalPrice.add(meal.getPrice());
             }
         }
 
         List<MenuEntity> menus = new ArrayList<>();
         if (orderDtoIn.getMenusId() != null) {
             for (var menuId : orderDtoIn.getMenusId()) {
-                var menu = this.menuDao.findById(menuId);
-                if (menu.isEmpty()) {
-                    OrderService.LOG.error("MENU WITH  ID  = " + menuId + " NOT FOUND");
-                    throw new FoodNotFoundException("MENU WITH  ID: " + menuId + " NOT FOUND");
+                var menu = this.menuDao.findByUuid(menuId).orElseThrow(() -> {
+                    OrderService.LOG.error("MENU WITH  ID  = {} NOT FOUND", menuId);
+                    return new FoodNotFoundException("MENU WITH  ID: " + menuId + " NOT FOUND");
+                });
+
+                if (menu.getStatus() == 0 || menu.getStatus() == 2) {
+                    OrderService.LOG.error("MENU WITH  ID  = {} AND  LABEL = {} IS NOT AVAILABLE OR DELETED", menuId, menu.getLabel());
+                    throw new UnavailableFoodException("MENU  : " + menu.getLabel() + " IS UNAVAILABLE OR REMOVED");
                 }
-                if (menu.get().getStatus() == 0) {
-                    OrderService.LOG.error("MENU WITH  ID  = " + menuId + " IS NOT AVAILABLE");
-                    throw new UnavailableFoodException("MENU  : " + menu.get().getLabel() + " IS UNAVAILABLE");
-                }
-                menus.add(menu.get());
-                totalPrice = totalPrice.add(menu.get().getPrice());
+                menus.add(menu);
+                totalPrice = totalPrice.add(menu.getPrice());
             }
         }
         // Calculate  total  price  of  order
@@ -186,24 +210,20 @@ public class OrderService implements IOrderService {
         var tax = taxOpt.get(0).getTax();
 
         totalPrice = totalPrice.add(tax);
-        System.out.println("TOTAL PRICE  = " + totalPrice);
 
         // check  if  student  has  enough  money  to  pay  for  the  order
 
-        if (student.get().getWallet().compareTo(totalPrice) < 0) {
-            OrderService.LOG.error("STUDENT WITH  ID  = " + orderDtoIn.getStudentId() + " DOES NOT HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
+        if (student.getWallet().compareTo(totalPrice) < 0) {
+            OrderService.LOG.error("STUDENT WITH  ID  = " + orderDtoIn.getStudentUuid() + " DOES NOT HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
             throw new InsufficientBalanceException("YOU  DON'T HAVE ENOUGH MONEY TO PAY FOR THE ORDER");
         }
 
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setStudent(student.get());
+        orderEntity.setStudent(student);
         orderEntity.setMeals(meals);
         orderEntity.setMenus(menus);
         orderEntity.setStatus(0);
         orderEntity.setCancelled(false);
-        //  create the  QrCode  and  save  the  order  in  the  database
-        String token = "qrcode" + UUID.randomUUID();
-        orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT);
 
 
         orderEntity.setPrice(totalPrice);
@@ -212,71 +232,127 @@ public class OrderService implements IOrderService {
         var order = this.orderDao.save(orderEntity);
 
         //  update Student  Waller
-        var newStudentWallet = student.get().getWallet().subtract(totalPrice);
-        student.get().setWallet(newStudentWallet);
-        this.studentDao.save(student.get());
+        var newStudentWallet = student.getWallet().subtract(totalPrice);
+        student.setWallet(newStudentWallet);
+        this.studentDao.save(student);
 
 
-        String qrCodeData = "Student  : " + student.get().getFirstname() + " " + student.get().getLastname() +
-                "\n" + " Student Email : " + student.get().getEmail() +
-                "\n" + " Order Id :" + order.getId() +
-                "\n" + " Order Price : " + order.getPrice() + "£" +
-                "\n" + " Created At  " + order.getCreationDate() + " " + order.getCreationTime();
+        this.orderEmailSender.confirmOrder(student, order, tax);
 
-        var filePath = this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
-        QrCodeGenerator.generateQrCode(qrCodeData, filePath);
-
-
-        if ((newStudentWallet.compareTo(new BigDecimal(10))) <= 0) {
-            /* SEND THE NOTIFICATION  */
+        if ((newStudentWallet.compareTo(new BigDecimal(this.SMALL_STUDENT_WALLET))) <= 0) {
+            this.orderEmailSender.sendNotificationForSmallStudentWallet(student);
         }
 
-        this.confirmationOrderSender.sendConfirmationOrder(student.get(), order);
 
+    }
+
+    @Override
+    public void cancelOrderByAdmin(String orderUuid) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException, UserNotFoundException {
+        if (orderUuid == null || orderUuid.trim().length() < 10) {
+            OrderService.LOG.error("INVALID ORDER ID");
+            throw new InvalidOrderException("INVALID ORDER ID");
+        }
+        var adminEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var admin  =  this.adminDao.findByEmail(adminEmail.toString()).orElseThrow(() -> {
+            OrderService.LOG.error("INVALID ADMIN INFORMATION");
+            return new InvalidUserInformationException("INVALID ADMIN INFORMATION");
+        });
+
+        var order = this.orderDao.findByUuid(orderUuid).orElseThrow(() -> {
+            OrderService.LOG.error("ORDER WITH  UUID  = {} NOT FOUND ", orderUuid);
+            return new OrderNotFoundException("ORDER NOT FOUND");
+        });
+
+        if (order.getStatus() == 1 || order.getStatus() == 2) {
+            OrderService.LOG.error("ORDER WITH  ID  = {} IS ALREADY VALIDATED OR TAKEN", order.getUuid());
+            throw new CancelledOrderException("ORDER IS ALREADY VALIDATED");
+        }
+
+        if (order.isCancelled()) {
+            OrderService.LOG.error("ORDER WITH  ID  ={} IS ALREADY CANCELED", order.getUuid());
+            throw new CancelledOrderException("ORDER IS ALREADY CANCELED");
+        }
+
+        var student = this.studentDao.findByUuid(order.getStudent().getUuid()).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT WITH  ID  =  {} NOT FOUND", order.getStudent().getUuid());
+            return new UserNotFoundException("STUDENT WITH : " + order.getStudent().getFirstname() + " NOT FOUND");
+        });
+
+        var orderPrice = order.getPrice(); //  get  the  price  of  the  order
+
+        order.setCancelled(true);
+        this.orderDao.save(order);
+        student.setWallet(student.getWallet().add(orderPrice)); //  get  the  student  wallet
+        this.paymentDao.save(new PaymentEntity(admin, student, orderPrice, TransactionType.REFUNDS));
+        this.studentDao.save(student);
+        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), orderPrice.doubleValue());
+        this.orderEmailSender.cancelledOrderByAdmin(student, order);
     }
 
 
     @Override
-    public void cancelOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException {
-        if (orderId == null || orderId < 0) {
+    public void cancelOrderByStudent(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
+        if (orderUuid == null || orderUuid.trim().length() < 10) {
             OrderService.LOG.error("INVALID ORDER ID");
             throw new InvalidOrderException("INVALID ORDER ID");
         }
+        var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        var orderOpt = this.orderDao.findById(orderId);
+        var order = this.orderDao.findByUuid(orderUuid).orElseThrow(() -> {
+            OrderService.LOG.error("ORDER WITH  UUID  = {} NOT FOUND ", orderUuid);
+            return new OrderNotFoundException("ORDER NOT FOUND");
+        });
 
-        if (orderOpt.isEmpty()) {
-            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " NOT FOUND");
-            throw new OrderNotFoundException("ORDER NOT FOUND");
+        if (!order.getStudent().getEmail().equals(username)) {
+            OrderService.LOG.error("STUDENT WITH  ID  = {} IS NOT THE OWNER OF THE ORDER  OF THE STUDENT  AUTHENTICATED {} ", order.getStudent().getUuid(), username);
+            throw new UserNotFoundException("ERROR  STUDENT  ID");
         }
 
-        if (orderOpt.get().getStatus() == 1) {
-            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY VALIDATED");
+        if (order.getStatus() == 1 || order.getStatus() == 2) {
+            OrderService.LOG.error("ORDER WITH  ID  = {} IS ALREADY VALIDATED OR TAKEN", order.getUuid());
             throw new UnableToCancelOrderException("ORDER IS ALREADY VALIDATED");
         }
 
-        if (orderOpt.get().isCancelled()) {
-            OrderService.LOG.error("ORDER WITH  ID  = " + orderId + " IS ALREADY CANCELED");
+        if (order.isCancelled()) {
+            OrderService.LOG.error("ORDER WITH  ID  ={} IS ALREADY CANCELED", order.getUuid());
             throw new UnableToCancelOrderException("ORDER IS ALREADY CANCELED");
         }
 
-        var student = this.studentDao.findById(orderOpt.get().getStudent().getId());
-        if (student.isEmpty()) {  // it can not   be happened
-            OrderService.LOG.error("STUDENT WITH  ID  = " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
-            throw new UserNotFoundException("STUDENT WITH : " + orderOpt.get().getStudent().getFirstname() + " NOT FOUND");
-        }
+        var student = this.studentDao.findByUuid(order.getStudent().getUuid()).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT WITH  ID  =  {} NOT FOUND", order.getStudent().getUuid());
+            return new UserNotFoundException("STUDENT WITH : " + order.getStudent().getFirstname() + " NOT FOUND");
+        });
 
-        var orderprice = orderOpt.get().getPrice(); //  get  the  price  of  the  order
+        var orderPrice = order.getPrice(); //  get  the  price  of  the  order
 
-        student.get().setWallet(student.get().getWallet().add(orderprice)); //  get  the  student  wallet
+        student.setWallet(student.getWallet().add(orderPrice)); //  get  the  student  wallet
 
-        this.studentDao.save(student.get());
+        this.studentDao.save(student);
 
-        var message = "YOUR ORDER WITH ID : " + orderOpt.get().getId() + " HAS BEEN CANCELED";
 
-        orderOpt.get().setCancelled(true);
-        this.orderDao.save(orderOpt.get());
+        order.setCancelled(true);
+        this.orderDao.save(order);
 
+        var randomAdmin = this.adminDao.findRandomAdmin().orElseThrow(() -> new UserNotFoundException("NO ADMIN FOUND"));
+        this.paymentDao.save(new PaymentEntity(randomAdmin, student, orderPrice, TransactionType.REFUNDS));
+        this.orderEmailSender.cancelledOrder(student, order);
+        this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), orderPrice.doubleValue());
+
+    }
+
+    @Override
+    public List<OrderDtOut> getStudentOrder(String studentUuid) throws UserNotFoundException {
+        if (studentUuid == null || studentUuid.trim().length() < 10)
+            return List.of();
+        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT  NOT  FOUND  WITH  UUID = {} WHILE  HIS  ORDERS ", studentUuid);
+            return new UserNotFoundException("STUDENT  NOT  FOUND");
+        });
+
+        return this.orderDao.findByStudentOrderByCreationDateDesc(student)
+                .stream()
+                .map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL))
+                .toList();
 
     }
 
@@ -290,18 +366,21 @@ public class OrderService implements IOrderService {
         this.adminDao.findByEmail(admin.toString()).orElseThrow(() -> new InvalidUserInformationException("INVALID ADMIN INFORMATION"));
 
 
-        return this.orderDao.findByCreationDate(date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByCreationDate(date)
+                .stream()
+                .map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL))
+                .toList();
 
 
     }
 
     @Override
-    public List<OrderDtOut> getOrdersByDateAndStudentId(Integer studentId, LocalDate date) throws InvalidOrderException, OrderNotFoundException, InvalidUserInformationException, UserNotFoundException {
+    public List<OrderDtOut> getOrdersByDateAndStudentId(String studentUuid, LocalDate date) throws InvalidOrderException, InvalidUserInformationException, UserNotFoundException {
 
         var username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (studentId == null || studentId < 0 || username == null) {
-            OrderService.LOG.error("INVALID STUDENT ID");
+        if (studentUuid == null || studentUuid.trim().length() < 10 || username == null) {
+            OrderService.LOG.error("INVALID STUDENT UUID");
             throw new InvalidOrderException("INVALID STUDENT ID");
         }
 
@@ -310,19 +389,18 @@ public class OrderService implements IOrderService {
             throw new InvalidOrderException("INVALID DATE");
         }
 
-        var student = this.studentDao.findById(studentId);
-        if (student.isEmpty()) {
-            OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " NOT FOUND");
-            throw new UserNotFoundException("STUDENT WITH : " + studentId + " NOT FOUND");
-        }
+        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
+            OrderService.LOG.error("STUDENT WITH  UUID  = {} NOT FOUND", studentUuid);
+            return new UserNotFoundException("STUDENT WITH : " + studentUuid + " NOT FOUND");
+        });
 
-        if (!student.get().getEmail().equals(username)) {
-            OrderService.LOG.error("STUDENT WITH  ID  = " + studentId + " IS NOT THE OWNER OF THE ORDER");
+        if (!student.getEmail().equals(username)) {
+            OrderService.LOG.error("STUDENT WITH  ID  = {} IS NOT THE OWNER OF THE ORDER  OF THE STUDENT  AUTHENTICATED {} ", studentUuid, username);
             throw new InvalidUserInformationException("ERROR  STUDENT  ID");
         }
 
 
-        return this.orderDao.findByStudentIdAndCreationDate(studentId, date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
+        return this.orderDao.findByStudentUuidAndCreationDate(studentUuid, date).stream().map(order -> new OrderDtOut(order, this.MEAL_IMAGE_URL, this.MENU_IMAGE_URL, this.STUDENT_IMAGE_URL)).toList();
 
 
     }

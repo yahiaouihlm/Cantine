@@ -4,8 +4,9 @@ import {User} from "./user";
 
 export class Order {
 
-    id!: number;
-    studentId!: number;
+
+    uuid!: string;
+    studentUuid!: string;
 
     meals: Meal[] = [];
 
@@ -13,7 +14,7 @@ export class Order {
     price!: number;
     creationDate!: Date;
     creationTime!: Date;
-    isCancelled!: boolean;
+    cancelled!: boolean;
     status!: number;
     mealsId: string[] = [];
     menusId: string[] = [];
@@ -33,12 +34,12 @@ export class Order {
         }
         let order: Order = new Order();
         order.meals.push(meal);
-        let bascket = localStorage.getItem('Order');
-        if (!bascket) {
+        let basket = localStorage.getItem('Order');
+        if (!basket) {
             localStorage.setItem('Order', JSON.stringify(order));
             return;
         } else {
-            let newBasket: Order = JSON.parse(bascket);
+            let newBasket: Order = JSON.parse(basket);
             if (newBasket.meals.length >= 10) {
                 alert("you can't add more than 10 meals");
                 return;
@@ -56,12 +57,12 @@ export class Order {
         }
         let order: Order = new Order();
         order.menus.push(menu);
-        let bascket = localStorage.getItem('Order');
-        if (!bascket) {
+        let basket = localStorage.getItem('Order');
+        if (!basket) {
             localStorage.setItem('Order', JSON.stringify(order));
             return;
         } else {
-            let newBasket: Order = JSON.parse(bascket);
+            let newBasket: Order = JSON.parse(basket);
             if (newBasket.menus.length >= 10) {
                 alert("you can't add more than 10 menus");
                 return;

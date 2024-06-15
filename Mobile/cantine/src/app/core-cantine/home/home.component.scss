@@ -1,0 +1,41 @@
+.home-images{
+  text-align: center;
+  img{
+    width: 100%;
+    height: 80px;
+    border: 1px solid #a3abb2;
+    border-radius: 5px;
+  }
+
+  span{
+    font-size: 12px;
+    color: #a3abb2;
+    text-transform: capitalize;
+
+  }
+}
+
+.pub-home-images{
+  img{
+    width: 100%;
+    height: 30vh;
+    border: 1px solid #a3abb2;
+    border-radius: 5px;
+  }
+
+}
+swiper-container , ion-card {
+  padding: 15px 15px 15px 15px;
+}
+ion-card{
+  background-color: #2c3e50;
+  ion-card-title, ion-card-content{
+    text-align: center;
+  }
+
+}
+
+
+
+
+

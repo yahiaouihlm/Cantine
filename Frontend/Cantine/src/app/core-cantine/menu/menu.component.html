@@ -1,35 +1,37 @@
-<div>
+<!--<h1 class="center"> Nos Plats </h1>-->
+<div class="center" style="margin: 10px">
+    <img src="assets/images/nos-menus.jpg" alt="food" style="width: 50%; height: 20%">
+</div>
 
+<div class="container">
+    <div class="row">
+        <app-menu-search></app-menu-search>
 
-    <h1 class="center"> Nos Menus </h1>
+        <div *ngFor="let menu of menus$ |async " class=" center col m4 s12">
+            <div class="card horizontal">
+                <div class="center">
+                    <img [src]="menu.image" height="40%" width="40%"/>
+                </div>
 
-    <div class="container-fluid red">
-        <div class="row">
-            <div *ngFor="let menu of menus$ |async " class="col m4 s12">
-                <div class="card horizontal">
-                    <div class="center">
-                        <img [src]="menu.image" height="40%" width="40%"/>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <p> Menu :   {{menu.label}}</p>
+                        <p> description : {{menu.description}}</p>
+                        <p> Prix :   {{menu.price}}</p>
                     </div>
-
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p> Menu :   {{menu.label}}</p>
-                            <p> description : {{menu.description}}</p>
-                            <p> Prix :   {{menu.price}}</p>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn" (click)="addToOrder(menu)"> Ajouter Le Menu</button>
-                    </div>
+                </div>
+                <div>
+                    <button class="btn" (click)="addToOrder(menu)" style="margin-bottom: 15px" id="{{menu.uuid}}"> Ajouter Le Menu</button>
                 </div>
             </div>
         </div>
+        <div class="center btn" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            retour
+        </div>
+
     </div>
-
-    <div class="center btn" (click)="goback()">
-        <mat-icon>arrow_back</mat-icon>
-        retour
-    </div>
-
-
 </div>
+
+
+

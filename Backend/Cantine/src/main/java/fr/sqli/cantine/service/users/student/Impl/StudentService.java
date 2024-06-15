@@ -47,7 +47,7 @@ public class StudentService implements IStudentService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-     private IAdminDao adminDao;
+    private IAdminDao adminDao;
 
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService, UserService userService) {
@@ -55,12 +55,10 @@ public class StudentService implements IStudentService {
         this.studentDao = studentDao;
         this.environment = environment;
         this.userService = userService;
-        this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
+        this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.student.default.image");
         this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
         this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
-        this.EMAIL_STUDENT_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
-        /*TODO make  the  only  available  email  is      the  emails ends  with  the  domain  of  the  school  */
-        //"^[a-zA-Z0-9._-]+@" + EMAIL_STUDENT_DOMAIN + "$";
+        this.EMAIL_STUDENT_REGEX = "^[a-zA-Z0-9._-]+@" + this.EMAIL_STUDENT_DOMAIN + "$";
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.imageService = imageService;
         var protocol = environment.getProperty("sqli.cantine.server.protocol");
@@ -78,56 +76,42 @@ public class StudentService implements IStudentService {
 
         IStudentService.checkUuIdValidity(studentDtoIn.getUuid());
 
-        studentDtoIn.checkStudentClassValidity();
+        studentDtoIn.checkStudentInformationForUpdate();
 
-        var studentClass = studentDtoIn.getStudentClass();
-
-        var studentClassEntity = this.iStudentClassDao.findByName(studentClass);
-
-        if (studentClassEntity.isEmpty()) {
-            StudentService.LOG.error("student class  is  not  found");
-            throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
-        }
+        var studentClassEntity = this.iStudentClassDao.findByName(studentDtoIn.getStudentClass()).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT CLASS  IS  NOT  FOUND");
+            return new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
+        });
 
 
-        var studentEntity = this.studentDao.findByUuid(studentDtoIn.getUuid());
+        var studentEntity = this.studentDao.findByUuid(studentDtoIn.getUuid()).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT  IS  NOT  FOUND");
+            return new UserNotFoundException("STUDENT NOT FOUND");
+        });
 
-        if (studentEntity.isEmpty()) {
-            StudentService.LOG.error("student  is  not  found");
-            throw new UserNotFoundException("STUDENT NOT FOUND");
-        }
-
-        var studentUpdated = studentEntity.get();
-        studentUpdated.setFirstname(studentDtoIn.getFirstname());
-        studentUpdated.setLastname(studentDtoIn.getLastname());
-        studentUpdated.setBirthdate(studentDtoIn.getBirthdate());
-        studentUpdated.setStudentClass(studentClassEntity.get());
-        studentUpdated.setTown(studentDtoIn.getTown());
-
-        if (studentDtoIn.getPhone() != null && !studentDtoIn.getPhone().trim().isEmpty()) {
-            studentUpdated.setPhone(studentDtoIn.getPhone());
-        }
+        studentEntity.setFirstname(studentDtoIn.getFirstname());
+        studentEntity.setLastname(studentDtoIn.getLastname());
+        studentEntity.setBirthdate(studentDtoIn.getBirthdate());
+        studentEntity.setStudentClass(studentClassEntity);
+        studentEntity.setTown(studentDtoIn.getTown());
+        studentEntity.setPhone(studentDtoIn.getPhone());
 
 
         if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();
             String imageName;
-            if (studentUpdated.getImage().getImagename().equals(this.DEFAULT_STUDENT_IMAGE)) {
+            if (studentEntity.getImage().getImagename().equals(this.DEFAULT_STUDENT_IMAGE)) {
                 imageName = this.imageService.uploadImage(image, this.IMAGES_STUDENT_PATH);
             } else {
-                var oldImageName = studentUpdated.getImage().getImagename();
+                var oldImageName = studentEntity.getImage().getImagename();
                 imageName = this.imageService.updateImage(oldImageName, image, this.IMAGES_STUDENT_PATH);
             }
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
-            studentUpdated.setImage(imageEntity);
-
+            studentEntity.setImage(imageEntity);
         }
 
-        if (studentDtoIn.getPhone() == null || studentDtoIn.getPhone().trim().isEmpty()) {
-            studentUpdated.setPhone(null);
-        }
-        this.studentDao.save(studentUpdated);
+        this.studentDao.save(studentEntity);
 
     }
 
@@ -136,7 +120,7 @@ public class StudentService implements IStudentService {
 
         var studentEntity = this.studentDao.findByUuid(studentUuid);
         if (studentEntity.isEmpty()) {
-            StudentService.LOG.error("student  is  not  found");
+            StudentService.LOG.error("STUDENT  IS  NOT  FOUND");
             throw new UserNotFoundException("STUDENT NOT FOUND");
         }
 
@@ -145,18 +129,20 @@ public class StudentService implements IStudentService {
 
 
     @Override
-    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException {
+    public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidStudentClassException, InvalidUserInformationException, ExistingUserException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException,
+            UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         StudentEntity studentEntity = studentDtoIn.toStudentEntity();
 
         var studentClass = studentDtoIn.getStudentClass();
 
-        var studentClassEntity = this.iStudentClassDao.findByName(studentClass);
-        if (studentClassEntity.isEmpty()) {
-            throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
-        }
+        var studentClassEntity = this.iStudentClassDao.findByName(studentClass).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT CLASS ={}  IS  NOT  FOUND", studentClass);
+            return new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
+        });
+
 
         if (!studentEntity.getEmail().matches(this.EMAIL_STUDENT_REGEX)) {
-            StudentService.LOG.error("email :  {}  is  not  valid", studentEntity.getEmail());
+            StudentService.LOG.error("EMAIL = {} IS NOT  ASTON  EMAIL  DOMAIN", studentEntity.getEmail());
             throw new InvalidUserInformationException("YOUR EMAIL IS NOT VALID");
         }
 
@@ -164,29 +150,28 @@ public class StudentService implements IStudentService {
 
         studentEntity.setStatus(0);
         studentEntity.setWallet(new BigDecimal(0));
-        studentEntity.setStudentClass(studentClassEntity.get());
+        studentEntity.setStudentClass(studentClassEntity);
         studentEntity.setRegistrationDate(java.time.LocalDate.now());
 
 
         studentEntity.setPassword(this.bCryptPasswordEncoder.encode(studentEntity.getPassword()));
 
+        ImageEntity imageEntity = new ImageEntity();
+
         if (studentDtoIn.getImage() != null && !studentDtoIn.getImage().isEmpty()) {
             MultipartFile image = studentDtoIn.getImage();
             var imageName = this.imageService.uploadImage(image, this.IMAGES_STUDENT_PATH);
-            ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(imageName);
-            studentEntity.setImage(imageEntity);
         } else {
-            ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagename(this.DEFAULT_STUDENT_IMAGE);
-            studentEntity.setImage(imageEntity);
+
         }
 
 
+        studentEntity.setImage(imageEntity);
         this.studentDao.save(studentEntity);
         this.userService.sendConfirmationLink(studentEntity.getEmail());
     }
-
 
 
     @Override
@@ -198,17 +183,16 @@ public class StudentService implements IStudentService {
     }
 
 
-
     public void existingEmail(String adminEmail) throws ExistingUserException {
         if (this.studentDao.findByEmail(adminEmail).isPresent() || this.adminDao.findByEmail(adminEmail).isPresent()) {
-            StudentService.LOG.error("this student is already exists");
+            StudentService.LOG.error("THE  USER  WITH  EMAIL = {}  IS  ALREADY  EXISTS", adminEmail);
             throw new ExistingUserException(" EMAIL IS ALREADY EXISTS");
         }
     }
 
 
     @Autowired
-    public void  setAdminDao(IAdminDao adminDao){
+    public void setAdminDao(IAdminDao adminDao) {
         this.adminDao = adminDao;
     }
 }

@@ -65,7 +65,7 @@ public class AdminService implements IAdminService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
         this.userEmailSender = userEmailSender;
-        this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
+        this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.admin.default.image"); //  default  image  name  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
         this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
         this.EMAIL_ADMIN_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -83,7 +83,7 @@ public class AdminService implements IAdminService {
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
 
-        adminDtoIn.checkAdminInformationsValidity();
+        adminDtoIn.checkAdminInformationValidity();
 
         //check  function  validity
         var functionAdmin = adminDtoIn.getFunction();

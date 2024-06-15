@@ -81,6 +81,8 @@ public interface IMealService {
 
     MealEntity addMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException;
 
+    List<MealDtOut> getMealsByType(String type);
+
     /**
      * Get all the meals from the database and return them as a list of MealDTO
      *

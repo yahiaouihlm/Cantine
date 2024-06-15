@@ -22,7 +22,7 @@ export class SharedService {
     constructor(private httpClient: HttpClient, private matDialog: MatDialog, private router: Router) {
     }
 
-    private BASIC_ENDPOINT = "http://localhost:8080/cantine/user/";
+    private BASIC_ENDPOINT =  "http://localhost:8080/cantine/user/";
 
     private RESET_PASSWORD_UER_ENDPOINT = this.BASIC_ENDPOINT + 'reset-password';
     private CHECK_EXISTENCE_OF_EMAIL = this.BASIC_ENDPOINT + "existing-email";
@@ -48,12 +48,13 @@ export class SharedService {
     getStudentById(id: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('idStudent', id);
-        return this.httpClient.get<User>(this.GET_STUDENT_BY_ID, {
-                headers: headers,
-                params: params
-            }
-        ).pipe(catchError((error) => this.handleErrors(error)));
+        const params = new HttpParams().set('studentUuid', id);     
+        return this.httpClient.get <User>(this.GET_STUDENT_BY_ID, {
+            headers: headers,
+            params: params
+        }).pipe(
+            catchError((error) => this.handleGetStudentByIdErrors(error))
+        );
 
     }
 
@@ -75,25 +76,6 @@ export class SharedService {
     }
 
 
-    private handleErrors(error: HttpErrorResponse) {
-        const errorObject = error.error as ErrorResponse;
-        let errorMessage = errorObject.exceptionMessage;
-
-        if (error.status == HttpStatusCode.Conflict) {
-            return throwError(() => new Error(errorMessage));
-        } else if (error.status == HttpStatusCode.Unauthorized) {
-            localStorage.clear();
-            this.router.navigate(['cantine/signIn']).then(error => console.log("redirected to login page"));
-
-        } else {
-            localStorage.clear();
-            this.dialog.openDialog("Unkwon Error   has  been occured  ")
-            this.router.navigate(['cantine/home']).then(error => console.log("redirected to login page"));
-        }
-
-        return throwError(() => new Error(error.message));
-
-    }
 
     sendToken(email: string) {
         const params = new HttpParams().set('email', email);
@@ -106,6 +88,12 @@ export class SharedService {
     private handleError(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
 
         if (error.status == HttpStatusCode.NotFound || error.status == HttpStatusCode.Forbidden) {
             this.dialog.openDialog("Utilisateur  n'existe  pas");
@@ -125,6 +113,13 @@ export class SharedService {
     private handleRestPasswordErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
+
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
+        }
         let dialog;
         if (error.status == HttpStatusCode.BadRequest) {
             dialog = this.dialog.openDialog("Les  Informations  Transmises Sont  invalides");
@@ -146,28 +141,44 @@ export class SharedService {
     }
 
 
+    private handleGetStudentByIdErrors(error: HttpErrorResponse) {
+        const errorObject = error.error as ErrorResponse;
+        let errorMessage = errorObject.exceptionMessage;
 
-    /*
-        private openDialog(message: string, httpError: HttpStatusCode): void {
-            const result = this.matDialog.open(ExceptionDialogComponent, {
-                data: {message: message},
-                width: '40%',
-            });
-
-            result.afterClosed().subscribe((confirmed: boolean) => {
-                if (httpError == HttpStatusCode.BadRequest || httpError == HttpStatusCode.NotAcceptable || httpError == HttpStatusCode.Conflict || httpError == HttpStatusCode.NotFound) {
-                    //  this.router.navigate(['/admin/menus'] , { queryParams: { reload: 'true' } });
-                    console.log("je suis  la  dans  le  if  ")
-                } else {
-                    console.log("je suis  la ")
-                    /!* TODO  remove THE  Token  *!/
-                    //this.router.navigate(['/cantine/home'] , { queryParams: { reload: 'true' } });
-                }
-
-            });
-
+        if (errorMessage == undefined) {
+            localStorage.clear();
+            this.dialog.openDialog("Une erreur s'est produite Veuillez réessayer plus tard");
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+            return throwError(() => new Error(errorMessage));
         }
-    */
-
+        if (error.status == HttpStatusCode.BadRequest) {
+            errorMessage = "Les  Informations  Transmises Sont  invalides";
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        }else if (error.status == HttpStatusCode.Unauthorized) {
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        }
+        else if (error.status == HttpStatusCode.NotFound) {
+            errorMessage = "Utilisateur  n'existe  pas";
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.SIGN_IN_URL]).then(window.location.reload);
+        }
+        else if (error.status == HttpStatusCode.InternalServerError) {
+            errorMessage = " Une erreur serveur s'est produite ";
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        else {
+            errorMessage = " Une erreur Inconnue s'est produite ";
+            this.dialog.openDialog(errorMessage);
+            localStorage.clear();
+            this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
+        }
+        return throwError(() => new Error(errorMessage));
+    }
 
 }

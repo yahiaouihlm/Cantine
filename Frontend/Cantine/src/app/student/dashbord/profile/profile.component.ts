@@ -10,6 +10,7 @@ import {StudentClass} from "../../../sharedmodule/models/studentClass";
 import {ValidatorDialogComponent} from "../../../sharedmodule/dialogs/validator-dialog/validator-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successful-dialog/successful-dialog.component";
+import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-profile',
@@ -19,6 +20,7 @@ import {SuccessfulDialogComponent} from "../../../sharedmodule/dialogs/successfu
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     private WOULD_YOU_LIKE_TO_UPDATE = "Voulez-vous mettre à jour votre profile ?";
+    private SUCCESSFUL_UPDATE = "Votre profile a été mis à jour avec succès !";
 
     constructor(private route: ActivatedRoute, private sharedService: SharedService, private router: Router, private studentService: StudentDashboardService, private matDialog: MatDialog) {
     }
@@ -45,6 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
 
     ngOnInit(): void {
+
         this.studentUpdated.disable();
         this.studentClass$ = this.studentService.getAllStudentClass();
         this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
@@ -52,12 +55,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
             if (id) {
                 this.getStudentByIdSubscription = this.sharedService.getStudentById(id).subscribe((response) => {
                     this.user = response;
-                    console.log(this.user.wallet);
                     this.matchFormsValue();
                 });
             } else {
                 localStorage.clear();
-                this.router.navigate(["cantine/home"]).then(r => console.log(r));
+                this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
             }
 
         });
@@ -92,7 +94,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     updateStudent() {
         const formDataStudent = new FormData();
-        formDataStudent.append('id', this.user.uuid.toString());
+        formDataStudent.append('uuid', this.user.uuid.toString());
         formDataStudent.append('firstname', this.studentUpdated.value.firstName);
         formDataStudent.append('lastname', this.studentUpdated.value.lastName);
         formDataStudent.append('birthdateAsString  ', this.studentUpdated.value.birthDate);
@@ -105,20 +107,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (this.image != null || this.image != undefined) // envoyer  une image  uniquement si  y'a eu  une image  !
             formDataStudent.append('image', this.image);
 
-        console.log("valeur de  image est  ")
-        console.log(this.studentUpdated.value.phoneNumber)
-        this.studentService.updateStudent(formDataStudent).subscribe( {
+
+        this.studentService.updateStudent(formDataStudent).subscribe({
             next: (response) => {
                 this.isLoading = false;
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
-                    data: {message: " Votre profile a été mis à jour avec succès ! "},
+                    data: {message: this.SUCCESSFUL_UPDATE},
                     width: '40%',
                 });
                 result.afterClosed().subscribe((result) => {
                     window.location.reload();
                 });
             },
-            error : (error) => {
+            error: (error) => {
                 this.isLoading = false;
             }
         });
@@ -151,8 +152,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     onChange = ($event: Event) => {
         const target = $event.target as HTMLInputElement;
-        const file: File = (target.files as FileList)[0]
-        this.image = file;
+        this.image = (target.files as FileList)[0];
     }
 
     modify() {
@@ -164,6 +164,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     cancel() {
         this.studentUpdated.disable();
         this.touched = false;
+        this.router.navigate([IConstantsURL.HOME_URL]).then(window.location.reload);
     }
 
     get f(): { [key: string]: AbstractControl } {

@@ -1,0 +1,44 @@
+<div class="global-container">
+      <h2 class="center">Historique de  Mes Commandes </h2>
+<div *ngFor="let  order  of studentOrderHistory$ |async" >
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <span>  <strong>N° Commande  : </strong>   {{order.uuid}} </span>
+            </div>
+            <div class="col-md-2">
+                <span><strong>Date : </strong> {{order.creationDate}} ,  {{order.creationTime}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Nombre de Plats : </strong> {{order.meals.length}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Nombre de Menus : </strong> {{order.menus.length}}</span>
+            </div>
+
+            <div class="col-md-2">
+                <span><strong>Prix total : </strong> {{order.price}} € </span>
+            </div>
+
+            <div class="col-md-2" *ngIf="order.cancelled">
+                <h3  style="color : #a91d3f"> <strong>Commande Annulé</strong> </h3>
+            </div>
+            <div class="col-md-2" *ngIf="order.status == 2 && !order.cancelled">
+                <h3  style="color : #25de25"> <strong>Commande Déja prise</strong> </h3>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="center"> <button class="btn" (click)="goBack()">Annuler</button> </div>
+</div>
+<style>
+    .global-container{
+        border: #002b5c 2px  solid;
+        border-radius: 50px;
+        box-shadow: #2f2727 1px 1px 1px 1px;
+        margin: 20px;
+        padding-top: 20px;
+    }
+</style>
