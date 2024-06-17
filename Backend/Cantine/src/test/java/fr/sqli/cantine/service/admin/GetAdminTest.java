@@ -70,6 +70,8 @@ public class GetAdminTest {
         imageEntity.setImagename(IMAGE_TESTS_PATH);
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(functionEntity);
+        adminEntity.setStatus(1);
+        adminEntity.setValidation(1);
         Mockito.when(this.adminDao.findByUuid(adminEntity.getUuid())).thenReturn(Optional.of(adminEntity));
 
         var  result =  this.adminService.getAdminByUuID(adminUuid);
