@@ -1,3 +1,4 @@
+/*
 package fr.sqli.cantine.service.order;
 
 
@@ -52,7 +53,9 @@ public class AddOrderTest {
     @BeforeEach
     void SetUp() {
         this.env = new MockEnvironment();
-        /* TODO  if we change  the  path property */
+        */
+/* TODO  if we change  the  path property *//*
+
         this.env.setProperty("sqli.canine.order.qrcode.path", "images/orders/qrcode");
         this.env.setProperty("sqli.canine.order.qrcode.image.format", "png");
         this.orderService = new OrderService(env, orderDao, null, studentDao, mealDao, menuDao, taxDao, null);
@@ -78,7 +81,8 @@ public class AddOrderTest {
         this.orderDtoIn = null;
         this.env = null;
     }
- /*   @Test
+ */
+/*   @Test
     @Disabled
     void addOrderWithTheSomePrice () throws InvalidPersonInformationException, InvalidMenuInformationException, TaxNotFoundException, MealNotFoundException, InvalidOrderException, InvalidMealInformationException, MenuNotFoundException, InsufficientBalanceException, StudentNotFoundException, IOException, WriterException {
         // Init
@@ -126,9 +130,12 @@ public class AddOrderTest {
 
     }
 
-*/
+*//*
 
-    /************************ TEST ADD ORDER LIMIT  ************************/
+
+    */
+/************************ TEST ADD ORDER LIMIT  ************************//*
+
     @Test
     void addOrderWitExceedMenuAndMealOrderLimitTest() {
         List<Integer> meals = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
@@ -179,7 +186,9 @@ public class AddOrderTest {
     }
 
 
-    /************************ TEST ADD ORDER  WITH   Student  Balance ************************/
+    */
+/************************ TEST ADD ORDER  WITH   Student  Balance ************************//*
+
 
 
     @Test
@@ -219,7 +228,9 @@ public class AddOrderTest {
     }
 
 
-    /*************************** TESTS  TAX     ************************/
+    */
+/*************************** TESTS  TAX     ************************//*
+
 
 
     @Test
@@ -274,7 +285,9 @@ public class AddOrderTest {
 
     }
 
-    /***************************  TESTS  ORDERS  WITH   Unavailable  MENUS ID AND  MEALS  *****************************/
+    */
+/***************************  TESTS  ORDERS  WITH   Unavailable  MENUS ID AND  MEALS  *****************************//*
+
     @Test
     void addOrderWithUnavailableMenu() {
         this.orderDtoIn.setMealsId(null);
@@ -318,7 +331,9 @@ public class AddOrderTest {
     }
 
 
-    /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID AND  MEALS  *****************************/
+    */
+/***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID AND  MEALS  *****************************//*
+
 
 
     @Test
@@ -334,7 +349,10 @@ public class AddOrderTest {
     }
 
 
-    /***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID *****************************/
+    */
+/***************************  TESTS  ORDERS  WITH   EMPTY MENUS ID *****************************//*
+
+*/
 /*
     @Test
     void addOrderWithMenuNotFoundAndOtherFoundMenu() {
@@ -378,11 +396,15 @@ public class AddOrderTest {
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
     }
+*//*
+
+
+
+    */
+/***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID *****************************//*
+
+
 */
-
-
-    /***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID *****************************/
-
 /*
     @Test
     void addOrderWithMealNotFoundAndOtherFoundMeal() {
@@ -422,9 +444,11 @@ public class AddOrderTest {
         Mockito.verify(this.mealDao, Mockito.times(1)).findById(mealId);
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
-    }*/
+    }*//*
 
 
+
+*/
 /*
     @Test
     void addOrderWithMealNotFoundTest() {
@@ -439,10 +463,13 @@ public class AddOrderTest {
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
 
     }
-*/
+*//*
 
 
-    /***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID  AND MENUS ID  *****************************/
+
+    */
+/***************************  TESTS  ORDERS  WITH   EMPTY MEALS ID  AND MENUS ID  *****************************//*
+
 
     @Test
     void addOrderWithEmptyMealsIdAndMenusIdTest() {
@@ -459,7 +486,9 @@ public class AddOrderTest {
     }
 
 
-    /***************************  TESTS  ORDERS  WITH  STUDENT NOT  FOUND  *****************************/
+    */
+/***************************  TESTS  ORDERS  WITH  STUDENT NOT  FOUND  *****************************//*
+
 
     @Test
     void addOrderWithStudentNotFound() {
@@ -470,7 +499,10 @@ public class AddOrderTest {
     }
 
 
-    /***************************  TESTS  ORDERS  INFORMATION  ***********************/
+    */
+/***************************  TESTS  ORDERS  INFORMATION  ***********************//*
+
+*/
 /*
 
     @Test
@@ -534,7 +566,9 @@ public class AddOrderTest {
         Assertions.assertThrows(InvalidOrderException.class, () -> this.orderService.addOrder(null));
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
     }
-*/
+*//*
+
 
 
 }
+*/

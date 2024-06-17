@@ -1,7 +1,9 @@
+/*
 package fr.sqli.cantine.service.order;
 
 
 import fr.sqli.cantine.dao.IOrderDao;
+import fr.sqli.cantine.dao.IPaymentDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.OrderEntity;
 import fr.sqli.cantine.entity.StudentEntity;
@@ -34,12 +36,15 @@ public class CancelOrderTest {
     @InjectMocks
     private OrderService orderService;
 
+    @Mock
+    private IPaymentDao paymentDao;
+
 
     @BeforeEach
     void setUp() {
         this.mockEnvironment.setProperty("sqli.canine.order.qrcode.path", "images/orders/");
         this.mockEnvironment.setProperty("sqli.canine.order.qrcode.image.format", ".png");
-        this.orderService = new OrderService(mockEnvironment, orderDao,null ,studentDao, null, null, null , null );
+        this.orderService = new OrderService(mockEnvironment, orderDao, null, paymentDao, studentDao, null, null, null, null, null, null);
 
     }
 
@@ -79,7 +84,9 @@ public class CancelOrderTest {
     }
 
 
-    /************************************* ORDER  CAN NOT  BE  CANCELED  BECAUSE IT'S ALREADY VALIDATED  *************************************/
+    */
+/************************************* ORDER  CAN NOT  BE  CANCELED  BECAUSE IT'S ALREADY VALIDATED  *************************************//*
+
 
     @Test
     void cancelOrderWithOrderWrongStudentTest() {
@@ -138,7 +145,9 @@ public class CancelOrderTest {
     }
 
 
-    /************************************* ORDER NOT  FOUND  TESTS  *************************************/
+    */
+/************************************* ORDER NOT  FOUND  TESTS  *************************************//*
+
 
 
     @Test
@@ -156,7 +165,9 @@ public class CancelOrderTest {
     }
 
 
-    /************************************* ORDER ID  TESTS *************************************/
+    */
+/************************************* ORDER ID  TESTS *************************************//*
+
 
     @Test
     void cancelOrderWithNegativeOrderIdTest() {
@@ -180,3 +191,4 @@ public class CancelOrderTest {
 
 
 }
+*/

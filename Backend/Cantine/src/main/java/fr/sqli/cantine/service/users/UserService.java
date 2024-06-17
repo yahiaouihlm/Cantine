@@ -53,6 +53,10 @@ public class UserService {
 
     }
 
+    public  void  showStudent () {
+         this.iStudentDao.findAll().forEach(System.out::println);
+    }
+
     public void resetPassword(String userToken, String newPassword) throws InvalidTokenException, InvalidUserInformationException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
         if (userToken == null || userToken.trim().isEmpty()) {
             UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");

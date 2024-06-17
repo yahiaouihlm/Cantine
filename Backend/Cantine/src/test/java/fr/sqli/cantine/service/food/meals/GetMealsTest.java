@@ -1,6 +1,7 @@
 package fr.sqli.cantine.service.food.meals;
 
 import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
@@ -43,16 +44,19 @@ class GetMealsTest {
     @Mock
     MockEnvironment environment;
 
+    @Mock
+    IMenuDao iMenuDao;
+
 
     @BeforeEach
     void setUp() {
         this.environment = new MockEnvironment();
         this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
-        this.iMealService = new MealService(this.environment, this.iMealDao, this.imageService);
+        this.iMealService = new MealService(this.environment, this.iMealDao, this.imageService , iMenuDao);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("image-test");
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
-        this.mealEntity = new MealEntity("Meal 1 ", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum,imageEntity);
+        this.mealEntity = new MealEntity("Meal 1 ", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum, imageEntity);
         this.mealEntity.setId(1);
 
 
