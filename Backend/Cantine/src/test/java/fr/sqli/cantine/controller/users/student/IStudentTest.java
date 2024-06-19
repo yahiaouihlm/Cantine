@@ -1,14 +1,18 @@
-package fr.sqli.cantine.controller.student;
+package fr.sqli.cantine.controller.users.student;
 
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.StudentEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
 public interface IStudentTest {
+
+     String  STUDENT_EMAIL_EXAMPLE = "mocketDluffy@social.aston-ecole.com";
+    String STUDENT_SIGN_IN_URL ="http://localhost:8080/user/login";
 
     String STUDENT_BASIC_URL = "/cantine/student";
 
@@ -56,7 +60,7 @@ public interface IStudentTest {
             );
 
 
-      static StudentEntity createStudentEntity(String email , StudentClassEntity studentClassEntity){
+      static StudentEntity createStudentEntity(String email , StudentClassEntity studentClassEntity  , ImageEntity imageEntity){
           StudentEntity student  = new StudentEntity();
           student.setEmail(email);
             student.setFirstname("firstName");
@@ -64,14 +68,24 @@ public interface IStudentTest {
             student.setBirthdate(LocalDate.now());
             student.setTown("town");
             student.setPhone("0606060606");
-            student.setPassword("password");
-          ImageEntity imageEntity = new ImageEntity();
-            imageEntity.setImagename( IMAGE_NAME);
+            student.setPassword( new BCryptPasswordEncoder().encode("password"));
             student.setImage(imageEntity);
             student.setRegistrationDate(LocalDate.now());
-            student.setStatus(0);
+            student.setStatus(1);
             student.setWallet(new BigDecimal(0));
             student.setStudentClass(studentClassEntity);
             return student;
      }
+
+     static ImageEntity createImageEntity(){
+          ImageEntity imageEntity = new ImageEntity();
+          imageEntity.setImagename(IMAGE_NAME);
+          return imageEntity;
+      }
+
+      static StudentClassEntity createStudentClassEntity(){
+          StudentClassEntity studentClassEntity = new StudentClassEntity();
+          studentClassEntity.setName("class");
+          return studentClassEntity;
+      }
 }

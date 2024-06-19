@@ -1,4 +1,5 @@
-package fr.sqli.cantine.controller.admin.menus;
+/*
+package fr.sqli.cantine.controller.users.admin.menus;
 
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -60,11 +60,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     void initDB (){
-        var meal = IMenuTest.createMeal();
+        var meal = createMeal();
 
         this.mealIDSavedInDB = this.mealDao.save(meal).getId();;
 
-        var menu = IMenuTest.createMenu(List.of(meal));
+        var menu = createMenu(List.of(meal));
         this.menuSaved = this.menuDao.save(menu);
 
     }
@@ -82,7 +82,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
 
-    /************************************** Add Menu ****************************************/
+    */
+/************************************** Add Menu ****************************************//*
+
 
     @Test
     void addMenuTest() throws Exception {
@@ -97,7 +99,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.add("quantity", "10");
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
@@ -112,7 +114,9 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-    /************************************** Existing Menu ***********************************/
+    */
+/************************************** Existing Menu ***********************************//*
+
     @Test
     void addMenuWithExistingMenu3() throws Exception {
         //  get menu  saved in DB to  use it  in  the  test
@@ -122,7 +126,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("description", this.menuSaved.getDescription().toUpperCase());
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
 
@@ -137,7 +141,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("description", "T A C O  s  deS criP   tio      NMenu");
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -155,7 +159,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("description", this.menuSaved.getDescription());
         this.formData.set("mealIDs", String.valueOf(this.mealIDSavedInDB));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
 
@@ -169,14 +173,16 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
             this.formData.set("mealIDs", String.valueOf(mealID));
 
-       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+       var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
-    /*************************************** MealIDs *************************************/
+    */
+/*************************************** MealIDs *************************************//*
+
 
     @Test
     void addMenuWithInvalidMealIDs3() throws Exception {
@@ -187,7 +193,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -204,7 +210,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -221,7 +227,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -238,7 +244,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -255,7 +261,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -272,7 +278,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -285,14 +291,16 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
         this.formData.set("mealIDs", List.of(new String("1")).toString());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isNotFound()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NoMealFound"))));
     }
 
-    /************************************* Image *******************************************/
+    */
+/************************************* Image *******************************************//*
+
 
     @Test
     void addMenuWithInvalidImageFormat() throws Exception {
@@ -304,7 +312,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/svg",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
     }
@@ -318,7 +326,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 "image/png",                    // type MIME
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
     }
@@ -327,17 +335,19 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithOutImage() throws Exception {
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
     }
 
 
-    /*********************************** Price *******************************************/
+    */
+/*********************************** Price *******************************************//*
+
     @Test
     void addMenuTestWithTooLongPrice() throws Exception {
         this.formData.set("price", "1000.1");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighPrice"))));
@@ -346,7 +356,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithNegativePrice() throws Exception {
         this.formData.set("price", "-1.5");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativePrice"))));
@@ -356,7 +366,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     void addMenuTestWithInvalidPrice4() throws Exception {
         this.formData.set("price", ".5-");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -365,7 +375,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithInvalidPrice3() throws Exception {
         this.formData.set("price", "-1c");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -374,7 +384,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithInvalidPrice2() throws Exception {
         this.formData.set("price", "1.d");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -383,7 +393,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithInvalidPrice() throws Exception {
         this.formData.set("price", "0edez");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -392,7 +402,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWitEmptyPrice() throws Exception {
         this.formData.set("price", "");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
@@ -401,7 +411,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithNullPrice() throws Exception {
         this.formData.set("price", null);
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
@@ -411,20 +421,22 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     void addMenuTestWithOutPrice() throws Exception {
         this.formData.remove("price");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
     }
 
 
-    /*********************************** Quantity *******************************************/
+    */
+/*********************************** Quantity *******************************************//*
+
 
     @Test
     void addMenuTestWithQuantityOutBoundOfInteger() throws Exception {
         this.formData.set("quantity", "2000000000000000000000000000000000000000000000000000000000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -433,7 +445,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithTooLongQuantity() throws Exception {
         this.formData.set("quantity", Integer.toString(Integer.MAX_VALUE - 99));
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighQuantity"))));
@@ -442,7 +454,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithNegativeQuantity() throws Exception {
         this.formData.set("quantity", "-1");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativeQuantity"))));
@@ -451,7 +463,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithInvalidQuantity3() throws Exception {
         this.formData.set("quantity", "-1.2");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -460,7 +472,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithInvalidQuantity2() throws Exception {
         this.formData.set("quantity", "1.2");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -469,7 +481,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithInvalidQuantity() throws Exception {
         this.formData.set("quantity", "null");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
@@ -478,7 +490,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithEmptyQuantity() throws Exception {
         this.formData.set("quantity", "");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
@@ -487,7 +499,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuTestWithNullQuantity() throws Exception {
         this.formData.set("quantity", null);
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
@@ -497,21 +509,23 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     void addMenuTestWithOutQuantity() throws Exception {
         this.formData.remove("quantity");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
     }
 
 
-    /*********************************** Status *********************************************/
+    */
+/*********************************** Status *********************************************//*
+
     @Test
     void AddMenuTestWithOutSideStatusValue3() throws Exception {
         this.formData.set("status", "3 ");
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -524,7 +538,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -537,7 +551,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -549,7 +563,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("status", " ");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -561,7 +575,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("status", "-5rffr");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -573,7 +587,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("status", "564rffr");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -588,7 +602,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("status", "-1");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData)
 
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -600,7 +614,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("status", null);
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -612,7 +626,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.remove("status");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
@@ -620,13 +634,15 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-    /*********************************** Description ****************************************/
+    */
+/*********************************** Description ****************************************//*
+
     @Test
     void AddMealTestWithEmptyDescription() throws Exception {
 
         this.formData.set("description", "    "); // length  must be  < 3 without spaces
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
 
@@ -672,13 +688,15 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-    /*********************************** label ********************************************/
+    */
+/*********************************** label ********************************************//*
+
     @Test
     void AddMenuTestWithEmptyLabel() throws Exception {
 
         this.formData.set("label", "    "); // length  must be  < 3 without spaces
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL).file(this.imageData).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
 
@@ -726,3 +744,4 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 }//  end of class AddMenuTest
 
+*/

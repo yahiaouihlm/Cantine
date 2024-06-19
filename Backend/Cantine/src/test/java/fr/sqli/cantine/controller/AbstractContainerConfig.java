@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.stream.Collectors;
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -51,11 +52,7 @@ public class AbstractContainerConfig {
 
     protected  String  responseMessage(String responseMessage) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        if (responseMessage==null) {
-            jsonObject.put(this.responseMessage, "Response message is null in Method AbstractContainerConfig.responseMessage");
-        } else {
-            jsonObject.put(this.responseMessage, responseMessage);
-        }
+        jsonObject.put(this.responseMessage, Objects.requireNonNullElse(responseMessage, "Response message is null in Method AbstractContainerConfig.responseMessage"));
         return jsonObject.toString();
 
     }

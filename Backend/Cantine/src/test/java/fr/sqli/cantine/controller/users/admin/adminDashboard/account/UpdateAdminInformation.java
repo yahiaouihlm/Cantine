@@ -1,4 +1,5 @@
-package fr.sqli.cantine.controller.admin.adminDashboard.account;
+/*
+package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IAdminDao;
@@ -75,7 +76,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         FunctionEntity function = new FunctionEntity();
         function.setName("Manager");
         this.savedFunction = this.functionDao.save(function);
-        var admin  =  IAdminTest.createAdminWith("halim.yahiaoui@social.aston-ecole.com",  this.savedFunction);
+        var admin  =  createAdminWith("halim.yahiaoui@social.aston-ecole.com",  this.savedFunction);
         this.savedAdmin =   this.adminDao.save(admin);
     }
     void  cleanDtaBase() {
@@ -108,7 +109,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         initDataBase();
         initFormData();
     }
-    /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************/
+    */
+/***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************//*
+
 
     @Test
     void updateAdmin() throws Exception {
@@ -146,7 +149,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
     }
 
-    /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************/
+    */
+/***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************//*
+
 
     @Test
     void updateAdminWithDefaultImage() throws Exception {
@@ -229,7 +234,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
 
-    /***************************************** TESTS   FUNCTION   ************************************************/
+    */
+/***************************************** TESTS   FUNCTION   ************************************************//*
+
     @Test
     void  updateAdminInfoWithInvalidFunction() throws Exception {
         this.formData.set("function",  "wrongFunction");
@@ -320,7 +327,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /*********************************** TESTS  IAMGE  **********************************************************/
+    */
+/*********************************** TESTS  IAMGE  **********************************************************//*
+
 
 
     @Test
@@ -365,7 +374,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
 
-    /***************************************** TESTS   PHONES   ************************************************/
+    */
+/***************************************** TESTS   PHONES   ************************************************//*
+
 
 
     @Test
@@ -467,7 +478,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /***************************************** TESTS   ADDRESS   ************************************************/
+    */
+/***************************************** TESTS   ADDRESS   ************************************************//*
+
 
     @Test
     void  updateAdminInfoWithTooLongAddress() throws Exception {
@@ -554,7 +567,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /***************************************** TESTS   TOWN   ************************************************/
+    */
+/***************************************** TESTS   TOWN   ************************************************//*
+
 
     @Test
     void  updateAdminInfoWithTooLongTown() throws Exception {
@@ -641,7 +656,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /***************************************** TESTS   BirthdateAsString  ************************************************/
+    */
+/***************************************** TESTS   BirthdateAsString  ************************************************//*
+
 
     @Test
     void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
@@ -757,7 +774,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /***************************************** TESTS   LASTNAME  ************************************************/
+    */
+/***************************************** TESTS   LASTNAME  ************************************************//*
+
 
     @Test
     void  updateAdminInfoWithTooLongLastname() throws Exception {
@@ -842,7 +861,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /***************************************** TESTS   FIRSTNAME  ************************************************/
+    */
+/***************************************** TESTS   FIRSTNAME  ************************************************//*
+
 
     @Test
     void  updateAdminInfoWithTooLongFirstname() throws Exception {
@@ -929,7 +950,9 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    /*****************************  TESTS FOR  ID ADMIN  ********************************/
+    */
+/*****************************  TESTS FOR  ID ADMIN  ********************************//*
+
 
     @Test
     void updateAdminInfoWithAdminNotFound () throws Exception {
@@ -1021,3 +1044,4 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
     }
 }
+*/

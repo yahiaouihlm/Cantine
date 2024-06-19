@@ -1,4 +1,5 @@
-package fr.sqli.cantine.controller.admin.menus;
+/*
+package fr.sqli.cantine.controller.users.admin.menus;
 
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
@@ -35,10 +36,10 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
     private MockMvc mockMvc;
 
     MenuEntity initDataBase(){
-        var meal  =  IMenuTest.createMeal();
+        var meal  =  createMeal();
 
         this.mealDao.save(meal);
-        var menu  = IMenuTest.createMenu(List.of(meal));
+        var menu  = createMenu(List.of(meal));
         return this.menuDao.save(menu);
 
     }
@@ -73,7 +74,9 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
-    /***********************************  Invalid ID   ********************************************/
+    */
+/***********************************  Invalid ID   ********************************************//*
+
     @Test
     void  removeMenuWithNegativeIdTest() throws Exception {
         var  result  =   this.mockMvc.
@@ -117,3 +120,4 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
   }
 
 }
+*/

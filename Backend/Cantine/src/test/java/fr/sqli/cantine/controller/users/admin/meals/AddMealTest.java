@@ -1,6 +1,5 @@
-package fr.sqli.cantine.controller.admin.meals;
+package fr.sqli.cantine.controller.users.admin.meals;
 
-import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.IMealDao;
 import fr.sqli.cantine.entity.ImageEntity;

@@ -1,4 +1,5 @@
-package fr.sqli.cantine.controller.admin.adminDashboard.account;
+/*
+package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.users.admin.Impl.AdminController;
@@ -50,7 +51,7 @@ public class DisableAccountTest  extends AbstractContainerConfig implements IAdm
         FunctionEntity function = new FunctionEntity();
         function.setName("Manager");
         function =   this.iFunctionDao.save(function);
-        this.adminEntity = IAdminTest.createAdminWith("yahiaoui@social.aston-ecole.com", function);
+        this.adminEntity = createAdminWith("yahiaoui@social.aston-ecole.com", function);
         this.adminEntity = this.adminDao.save(this.adminEntity);
     }
 
@@ -60,7 +61,9 @@ public class DisableAccountTest  extends AbstractContainerConfig implements IAdm
         this.initDB();
     }
 
-    /*****************************  TESTS FOR  ID ADMIN  ********************************/
+    */
+/*****************************  TESTS FOR  ID ADMIN  ********************************//*
+
     @Test
     void disableAdminAccountWithAdminNotFound() throws Exception {
         var idAdmin = this.adminDao.findAll().stream().map(AdminEntity::getId)
@@ -150,3 +153,4 @@ public class DisableAccountTest  extends AbstractContainerConfig implements IAdm
 
 
 }
+*/

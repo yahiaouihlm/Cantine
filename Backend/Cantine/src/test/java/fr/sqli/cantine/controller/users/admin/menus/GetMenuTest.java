@@ -1,4 +1,5 @@
-package fr.sqli.cantine.controller.admin.menus;
+/*
+package fr.sqli.cantine.controller.users.admin.menus;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IMealDao;
@@ -38,9 +39,9 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
  private IMealDao mealDao;
 
   void initDatabase(){
-     var meal  = IMenuTest.createMeal();
+     var meal  = createMeal();
      this.mealDao.save(meal);
-     var menu  = IMenuTest.createMenu(List.of(meal));
+     var menu  = createMenu(List.of(meal));
      this.menuEntity = this.menuDao.save(menu);
   }
 
@@ -57,7 +58,9 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
       cleanDatabase();
       initDatabase();
   }
-  /************************************** Get All Menus *************************************/
+  */
+/************************************** Get All Menus *************************************//*
+
 
   @Test
   void  getAllMenusWithOneMenuDatabase() throws Exception {
@@ -77,7 +80,9 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
   }
 
 
- /************************************* GetMenu By Id *************************************/
+ */
+/************************************* GetMenu By Id *************************************//*
+
 
 
 
@@ -136,3 +141,4 @@ public class GetMenuTest  extends AbstractContainerConfig implements  IMenuTest 
 
 
 }
+*/

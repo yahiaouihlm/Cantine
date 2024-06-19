@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.menus;
+package fr.sqli.cantine.controller.users.admin.menus;
 
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;

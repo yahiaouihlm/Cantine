@@ -54,23 +54,9 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
 
 
 
-    @BeforeEach
-    public void studentLoginRequest() throws Exception {
-        cleanDataBase();
-        this.studentCreated = this.createStudentForLoginRequest();
-          this.studentBearerToken =  this.studentBearerToken();
-    }
 
-    @BeforeEach
-    public void  adminLoginRequest() throws Exception {
-        System.out.println("adminLoginRequest");
-        cleanDataBase();
-        this.adminCreated = this.createAdminForLoginRequest();
-        this.adminBearerToken =  this.adminBearerToken();
-    }
+    public String getStudentAuthToken() throws Exception {
 
-
-    public String studentBearerToken() throws Exception {
         var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + this.studentCreated.getEmail() + "\", \"password\": \"" + this.studentCreated.getPassword() + "\" }"))
@@ -88,27 +74,10 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
     }
 
 
-    public String adminBearerToken() throws Exception {
-        var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
-
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new Login(this.adminCreated.getEmail(), this.adminCreated.getPassword()))))
-
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn(); // Utilisez .andReturn() pour obtenir la réponse HTTP
-
-        String authorizationHeader = req.getResponse().getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Le jeton d'autorisation commence généralement par "Bearer "
-            String token = authorizationHeader.substring("Bearer ".length());
-            return token;
-        } else {
-            throw new Exception("Bearer token not found in the response header");
-        }
-    }
 
 
-    public final  StudentEntity createStudentForLoginRequest() {
+
+    private     StudentEntity createStudentForLoginRequest( IStudentDao iStudentDao) {
         var  studentClass = createStudentClass();
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setFirstname("student");
@@ -125,7 +94,7 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         imageEntity.setImagename("image");
         studentEntity.setImage(imageEntity);
         studentEntity.setStudentClass(studentClass);
-        return this.studentDao.save(studentEntity);
+        return iStudentDao.save(studentEntity);
     }
 
 
@@ -145,6 +114,24 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(adminFunction);
         return this.adminDao.save(adminEntity);
+    }
+
+    public String adminBearerToken() throws Exception {
+        var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(new Login(this.adminCreated.getEmail(), this.adminCreated.getPassword()))))
+
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn(); // Utilisez .andReturn() pour obtenir la réponse HTTP
+
+        String authorizationHeader = req.getResponse().getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Le jeton d'autorisation commence généralement par "Bearer "
+            String token = authorizationHeader.substring("Bearer ".length());
+            return token;
+        } else {
+            throw new Exception("Bearer token not found in the response header");
+        }
     }
 
 

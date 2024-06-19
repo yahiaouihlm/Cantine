@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.admin.adminDashboard.account;
+package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IAdminDao;

@@ -1,4 +1,5 @@
-package fr.sqli.cantine.controller.admin.menus;
+/*
+package fr.sqli.cantine.controller.users.admin.menus;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IMealDao;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -70,9 +70,9 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
     }
     void initDaBase () {
-        this.mealSaved =  IMenuTest.createMeal();
+        this.mealSaved =  createMeal();
         mealDao.save( this.mealSaved);
-        var menu = IMenuTest.createMenu(List.of( this.mealSaved));
+        var menu = createMenu(List.of( this.mealSaved));
         this.menuSaved =   menuDao.save(menu);
     }
 
@@ -94,7 +94,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
        this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
 
-       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+       var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                        .file(this.imageData)
                .params(this.formData)
                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -120,14 +120,16 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-    /**************************************** Update Menu  With  Valid  Data  without Image   ****************************************/
+    */
+/**************************************** Update Menu  With  Valid  Data  without Image   ****************************************//*
+
 
     @Test
     void  updateMenuWithOutImage() throws Exception {
 
             this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -140,7 +142,9 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-    /**************************************** Update Menu  With  Invalid  Image  ****************************************/
+    */
+/**************************************** Update Menu  With  Invalid  Image  ****************************************//*
+
 
   @Test
     void updateMenuWithInvalidImageFormat2() throws Exception {
@@ -153,7 +157,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
                 new FileInputStream(IMAGE_MENU_FOR_TEST_PATH));
 
         System.out.println("imageData.getContentType() = " + imageData.getContentType());
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -175,7 +179,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
         LOG.error("imageData.getContentType() = " + imageData.getSize());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -186,11 +190,13 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-    /**************************************  Update Menu  With Existing  Menu *************************************/
+    */
+/**************************************  Update Menu  With Existing  Menu *************************************//*
+
     @Test
     void updateMenuTestExistingMenuTest3() throws Exception {
         // create new Menu in  DataBase
-        MenuEntity menu =   IMenuTest.createMenu(List.of( this.mealSaved));
+        MenuEntity menu =   createMenu(List.of( this.mealSaved));
         menu.setLabel("Menu2");
         menu.setDescription("Menu  description  test 2");
         menu.setPrice(new BigDecimal("5"));
@@ -203,7 +209,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
         this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -213,7 +219,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestExistingMenuTest2() throws Exception {
         // create new Menu in  DataBase
-        MenuEntity menu =   IMenuTest.createMenu(List.of( this.mealSaved));
+        MenuEntity menu =   createMenu(List.of( this.mealSaved));
         menu.setLabel("Menu2");
         menu.setDescription("Menu  description  test 2");
         menu.setPrice(new BigDecimal("5"));
@@ -226,7 +232,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
         this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -236,7 +242,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestExistingMenuTest() throws Exception {
         // create new Menu in  DataBase
-        MenuEntity menu =   IMenuTest.createMenu(List.of( this.mealSaved));
+        MenuEntity menu =   createMenu(List.of( this.mealSaved));
         menu.setLabel("Menu2");
         menu.setDescription("Menu  description  test 2");
         menu.setPrice(new BigDecimal("5"));
@@ -249,7 +255,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
         this.formData.set("mealIDs", List.of(this.menuSaved.getMeals().get(0).getId()).toString());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -257,13 +263,15 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
-    /************************************** Update  Menu  With  Invalid Meals ID  **************************************/
+    */
+/************************************** Update  Menu  With  Invalid Meals ID  **************************************//*
+
 
     @Test
     void  addMenuWithInvalidMealIDs2() throws Exception {
         this.formData.remove("mealIDs" , "[1, 2]" );
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -274,7 +282,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void  addMenuWithInvalidMealIDs () throws Exception {
         this.formData.remove("mealIDs" , "jhnzserbj" );
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -286,7 +294,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.remove("mealIDs" , "" );
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -300,7 +308,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -311,7 +319,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.remove("mealIDs");
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -323,7 +331,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
         this.formData.set("mealIDs", List.of(new String("1")).toString());
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -333,7 +341,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void  updateMenuWithOutMeals() throws Exception {
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -341,11 +349,13 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
-    /*********************************** Price *******************************************/
+    */
+/*********************************** Price *******************************************//*
+
     @Test
     void updateMenuTestWithTooLongPriceTest() throws Exception {
         this.formData.set("price", "1000.1");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -357,7 +367,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithNegativePriceTest() throws Exception {
         this.formData.set("price", "-1.5");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -370,7 +380,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuTestWithInvalidPrice4Test() throws Exception {
         this.formData.set("price", ".5-");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -382,7 +392,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithInvalidPrice3Test() throws Exception {
         this.formData.set("price", "-1c");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -394,7 +404,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithInvalidPrice2Test() throws Exception {
         this.formData.set("price", "1.d");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -406,7 +416,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithInvalidPriceTest() throws Exception {
         this.formData.set("price", "0edez");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -418,7 +428,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWitEmptyPriceTest() throws Exception {
         this.formData.set("price", "");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -430,7 +440,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithNullPriceTest() throws Exception {
         this.formData.set("price", null);
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -443,7 +453,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuTestWithOutPriceTest() throws Exception {
         this.formData.remove("price");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -453,12 +463,14 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     }
 
 
-    /*********************************** Quantity *******************************************/
+    */
+/*********************************** Quantity *******************************************//*
+
 
     @Test
     void updateTestWithQuantityOutBoundOfIntegerTest() throws Exception {
         this.formData.set("quantity", "2000000000000000000000000000000000000000000000000000000000");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -469,7 +481,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithTooLongQuantityTest() throws Exception {
         this.formData.set("quantity", Integer.toString(Integer.MAX_VALUE - 99));
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -481,7 +493,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithNegativeQuantityTest() throws Exception {
         this.formData.set("quantity", "-1");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -493,7 +505,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithInvalidQuantity3Test() throws Exception {
         this.formData.set("quantity", "-1.2");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -505,7 +517,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithInvalidQuantity2Test() throws Exception {
         this.formData.set("quantity", "1.2");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -517,7 +529,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithInvalidQuantityTest() throws Exception {
         this.formData.set("quantity", "null");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -529,7 +541,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithEmptyQuantityTest() throws Exception {
         this.formData.set("quantity", "");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -541,7 +553,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void updateMenuTestWithNullQuantityTest() throws Exception {
         this.formData.set("quantity", null);
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL)
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -554,7 +566,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuTestWithOutQuantityTest() throws Exception {
         this.formData.remove("quantity");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -568,14 +580,16 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-    /*********************************** Status *********************************************/
+    */
+/*********************************** Status *********************************************//*
+
     @Test
     void updateMenuWithOutSideStatusValue3Test() throws Exception {
         this.formData.set("status", "3 ");
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -592,7 +606,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -609,7 +623,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -625,7 +639,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.set("status", " ");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -641,7 +655,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.set("status", "-5rffr");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -657,7 +671,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.set("status", "564rffr");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -673,7 +687,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.set("status", "-1");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -687,7 +701,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.set("status", null);
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -703,7 +717,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
         this.formData.remove("status");
 
         // when : call addMeal
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -716,13 +730,15 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-    /*********************************** Description ****************************************/
+    */
+/*********************************** Description ****************************************//*
+
     @Test
     void updateMenuWithEmptyDescriptionTest() throws Exception {
 
         this.formData.set("description", "    "); // length  must be  < 3 without spaces
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -736,7 +752,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuWithTooShortDescriptionTest() throws Exception {
         this.formData.set("description", "aau");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -748,7 +764,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuWithTooLongDescriptionTest() throws Exception {
         this.formData.set("description", "a".repeat(1701));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -760,7 +776,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuWithNullDescriptionTest() throws Exception {
         this.formData.set("description", null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -772,7 +788,7 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
     void updateMenuWithOutDescriptionTest() throws Exception {
         this.formData.remove("description");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData)
                 .params(this.formData)
                         .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -783,13 +799,15 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 
-    /*********************************************** LABEL *******************************************************/
+    */
+/*********************************************** LABEL *******************************************************//*
+
     @Test
     void updateMenuWithEmptyLabelTest() throws Exception {
 
         this.formData.set("label", "    "); // length  must be  < 3 without spaces
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, UPDATE_MENU_URL )
+        var result = this.mockMvc.perform(multipart(HttpMethod.PUT, UPDATE_MENU_URL )
                 .file(this.imageData).params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -851,3 +869,4 @@ public class UpdateMenuTest extends AbstractContainerConfig implements IMenuTest
 
 
 }
+*/

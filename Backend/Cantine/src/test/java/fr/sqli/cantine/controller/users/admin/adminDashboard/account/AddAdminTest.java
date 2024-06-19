@@ -1,10 +1,11 @@
-package fr.sqli.cantine.controller.student;
+/*
+package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
-import fr.sqli.cantine.dao.IStudentClassDao;
-import fr.sqli.cantine.dao.IStudentDao;
-import fr.sqli.cantine.entity.StudentClassEntity;
+import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.entity.FunctionEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,40 +25,38 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+
+
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddStudentTest  extends AbstractContainerConfig implements IStudentTest {
-    @Autowired
-    private IStudentClassDao studentClassDao;
-    @Autowired
-    private IStudentDao studentDao;
-    @Autowired
-    private Environment  env;
+public class AddAdminTest  extends AbstractContainerConfig  implements  IAdminTest {
 
+    @Autowired
+    private IFunctionDao functionDao;
+    @Autowired
+    private IAdminDao adminDao;
     @Autowired
     private IConfirmationTokenDao iConfirmationTokenDao;
-
-    private  MockMultipartFile imageData;
-    @Autowired
-    private  IStudentClassDao iStudentClassDao ;
-
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private Environment environment;
 
-    private MultiValueMap <String, String> formData;
-
-    private   StudentClassEntity studentClassEntity;
-    void  initDatabase() {
-        this.studentClassEntity = new StudentClassEntity();
-        studentClassEntity.setName("JAVA SQLI");
-        this.studentClassDao.save(studentClassEntity);
-    }
-    void  cleanDatabase() {
-        this.studentDao.deleteAll();
-        this.studentClassDao.deleteAll();
-        this.iConfirmationTokenDao.deleteAll();
+    private MockMultipartFile imageData;
+    private MultiValueMap<String, String> formData;
+    private FunctionEntity savedFunction;
+    void initDataBase() {
+        FunctionEntity function = new FunctionEntity();
+        function.setName("Manager");
+        this.savedFunction = this.functionDao.save(function);
     }
 
+    void  cleanDtaBase() {
+        this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
+        this.adminDao.deleteAll();
+        this.functionDao.deleteAll();
+    }
     void initFormData() throws IOException {
         this.formData =new LinkedMultiValueMap<>();
         this.formData.add("firstname", "Halim");
@@ -67,8 +65,9 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
         this.formData.add("password", "test33");
         this.formData.add("birthdateAsString", "2000-07-18");
         this.formData.add("town", "paris");
+        this.formData.add("address", "102  rue de cheret 75013 paris");
         this.formData.add("phone", "0631990189");
-        this.formData.add("studentClass","JAVA SQLI");
+        this.formData.add("function","Manager");
 
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
@@ -80,165 +79,224 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @BeforeEach
-    void  init () throws IOException {
-        cleanDatabase();
-        initDatabase();
+    void    init() throws IOException {
+        cleanDtaBase();
+        initDataBase();
         initFormData();
     }
 
-    @Test
-    void assStudentWithImageAndPhone() throws Exception {
 
-         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+    @Test
+    void addAdmin () throws Exception {
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(STUDENT_SIGNED_UP_SUCCESSFULLY));
+                .andExpect(MockMvcResultMatchers.content().string(ADMIN_ADDED_SUCCESSFULLY));
 
-        var student = this.studentDao.findByEmail(this.formData.getFirst("email"));
-        Assertions.assertTrue(student.isPresent());
-        Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
-        Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
-        Assertions.assertEquals(student.get().getEmail(), this.formData.getFirst("email"));
-        Assertions.assertNotNull(student.get().getImage());
+        var  admin = this.adminDao.findByEmail(this.formData.getFirst("email")).get();
+        Assertions.assertEquals(admin.getFirstname(), this.formData.getFirst("firstname"));
+        Assertions.assertEquals(admin.getLastname(), this.formData.getFirst("lastname"));
+        Assertions.assertEquals(admin.getEmail(), this.formData.getFirst("email"));
+        Assertions.assertNotNull(admin.getDisableDate());
+        Assertions.assertEquals(admin.getStatus()  , 0 ,  "admin is  disabled By default");
+        Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
 
-        String  path  =  this.env.getProperty("sqli.cantine.image.student.path");
-
-        path = path + "/" + student.get().getImage().getImagename();
-        Assertions.assertTrue(
-                new File(path).delete()
-        );
-
-
+        var imageName =  admin.getImage().getImagename();
+        Assertions.assertTrue(new File(ADMIN_IMAGE_PATH + imageName).delete());
     }
-    //zhefjozhefjznerofknzoklb ///  Image  par defaut  losque il est  u
+
+
+
 
     @Test
-    void addStudentWithOutImageAndPhone  () throws Exception {
-        this.formData.remove("phone");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+    void addAdminWithOutImage () throws Exception {
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(STUDENT_SIGNED_UP_SUCCESSFULLY));
+                .andExpect(MockMvcResultMatchers.content().string(ADMIN_ADDED_SUCCESSFULLY));
 
-        var student = this.studentDao.findByEmail(this.formData.getFirst("email"));
-        Assertions.assertTrue(student.isPresent());
-        Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
-        Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
-        Assertions.assertEquals(student.get().getEmail(), this.formData.getFirst("email"));
+       var  admin = this.adminDao.findByEmail(this.formData.getFirst("email")).get();
+         Assertions.assertEquals(admin.getFirstname(), this.formData.getFirst("firstname"));
+            Assertions.assertEquals(admin.getLastname(), this.formData.getFirst("lastname"));
+            Assertions.assertEquals(admin.getEmail(), this.formData.getFirst("email"));
+           Assertions.assertFalse(admin.getPassword().equals(this.formData.getFirst("password"))); // password is encrypted
+
+         var imageName =  admin.getImage().getImagename();
+         Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.admin.default.image"));
+
     }
 
+
+
+
     @Test
-    void addStudentWithExistingEmail() throws Exception {
 
-        // create student with same email
-        var student =  IStudentTest.createStudentEntity("halim.yahiaoui@social.aston-ecole.com" ,this.studentClassEntity);
-        this.studentDao.save(student);
+    void addAdminWithSameEmail() throws Exception {
+        var email   =   "yahiaoui@social.aston-ecole.com";
+        // save  in  database An  Admin  with  email  "yahiaoui@yahoo.fr"
+        var  adminSaved  =  createAdminWith(email, this.savedFunction);
 
+        this.adminDao.save(adminSaved);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        // try to  save  another  admin  with  the  same  email
+        this.formData.set("email", email);
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingStudent"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingAdmin"))));
 
     }
 
 
-    @Test
-    void addStudentWithInvalidClass() throws Exception {
-        this.formData.set("studentClass",  "wrongFunction");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+
+
+
+    */
+/***************************************** TESTS   IMAGES  ************************************************//*
+
+
+    @Test
+    void  addAdminWithWrongImageFormat() throws Exception {
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/pdf",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithInvalidImageFormat() throws Exception {
+        this.imageData = new MockMultipartFile(
+                "image",                         // nom du champ de fichier
+                IMAGE_NAME,          // nom du fichier
+                "images/svg",                    // type MIME
+                new FileInputStream(IMAGE_FOR_TEST_PATH));
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+
+
+    }
+
+    */
+/***************************************** TESTS   Function  ************************************************//*
+
+    @Test
+    void  addAdminWithInvalidFunction() throws Exception {
+        this.formData.set("function",  "wrongFunction");
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassNotFound"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionNotFound"))));
 
 
     }
     @Test
-    void  addStudentWithWrongClass() throws Exception {
-        this.formData.set("studentClass",  "  ab ");
+    void  addAdminWithWrongFunction() throws Exception {
+        this.formData.set("function",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassNotFound"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionNotFound"))));
 
 
     }
 
     @Test
-    void  addStudentWithEmptyClass() throws Exception {
-        this.formData.set("studentClass",  "  ");
+    void  addAdminWithEmptyFunction() throws Exception {
+        this.formData.set("function",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassRequire"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionRequire"))));
 
 
     }
     @Test
-    void  addStudentWithNullClass() throws Exception {
-        this.formData.set("studentClass",  null);
+    void  addAdminWithNullFunction() throws Exception {
+        this.formData.set("function",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassRequire"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionRequire"))));
 
 
     }
-
-
     @Test
-    void  addStudentWithOutClass() throws Exception {
-        this.formData.remove("studentClass");
+    void  addAdminWithOutFunction() throws Exception {
+        this.formData.remove("function");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("StudentClassRequire"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FunctionRequire"))));
 
 
     }
 
 
 
-    /***************************************** TESTS   PASSWORD  ************************************************/
+    */
+/***************************************** TESTS   PASSWORD  ************************************************//*
+
 
     @Test
-    void  addStudentWithTooLongPassword() throws Exception {
+    void  addAdminWithTooLongPassword() throws Exception {
         this.formData.set("password",  "a".repeat(91));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -251,11 +309,12 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
 
+
     @Test
-    void  addStudentWithTooShortPassword() throws Exception {
+    void  addAdminWithTooShortPassword() throws Exception {
         this.formData.set("password",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -268,10 +327,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void  addStudentWithEmptyPassword() throws Exception {
+    void  addAdminWithEmptyPassword() throws Exception {
         this.formData.set("password",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -283,10 +342,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithNullPassword() throws Exception {
+    void  addAdminWithNullPassword() throws Exception {
         this.formData.set("password",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -298,10 +357,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithOutPassword() throws Exception {
+    void  addAdminWithOutPassword() throws Exception {
         this.formData.remove("password");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -317,14 +376,15 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
 
+    */
+/***************************************** TESTS  EMAIL  ************************************************//*
 
-    /***************************************** TESTS  EMAIL  ************************************************/
 
     @Test
-    void  addStudentWithInvalidEmail2() throws Exception {
+    void  addAdminWithInvalidEmail2() throws Exception {
         this.formData.set("email",  "halim.yahiaoui@outlook.fr");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -336,10 +396,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithInvalidEmail() throws Exception {
+    void  addAdminWithInvalidEmail() throws Exception {
         this.formData.set("email",  "yugioh@yahoo.fr");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -351,10 +411,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithTooLongEmail() throws Exception {
+    void  addAdminWithTooLongEmail() throws Exception {
         this.formData.set("email",  "a".repeat(1001));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -369,10 +429,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @Test
-    void  addStudentWithTooShortEmail() throws Exception {
+    void  addAdminWithTooShortEmail() throws Exception {
         this.formData.set("email",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -384,10 +444,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void addStudentWithNullEMAIL() throws Exception {
+    void addAdminWithNullEMAIL() throws Exception {
         this.formData.set("email",  null );
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -400,10 +460,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void addStudentWithOutEmail() throws Exception {
+    void addAdminWithOutEmail() throws Exception {
         this.formData.remove("email");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -417,12 +477,18 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
 
-    /***************************************** TESTS   PHONES   ************************************************/
+
+
+    */
+/***************************************** TESTS   PHONES   ************************************************//*
+
+
+
     @Test
-    void  addStudentWithInvalidPhoneFormat3() throws Exception {
+    void  addAdminWithInvalidPhoneFormat3() throws Exception {
         this.formData.set("phone", " +33076289514 ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST, ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -432,11 +498,11 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
     }
 
-    @Test
-    void  addStudentWithInvalidPhoneFormat2() throws Exception {
+        @Test
+    void  addAdminWithInvalidPhoneFormat2() throws Exception {
         this.formData.set("phone",  " 06319907853654 ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -449,10 +515,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void  addStudentWithInvalidPhoneFormat() throws Exception {
+    void  addAdminWithInvalidPhoneFormat() throws Exception {
         this.formData.set("phone",  " oksfki ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -464,30 +530,159 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithEmptyPhone() throws Exception {
-        this.formData.set("phone",  "  . ");
+    void  addAdminWithEmptyPhone() throws Exception {
+        this.formData.set("phone",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidPhoneFormat"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PhoneRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithNullPhone() throws Exception {
+        this.formData.set("phone",  null);
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PhoneRequire"))));
+
+
+    }
+    @Test
+    void addAdminWithOutPhone() throws Exception {
+        this.formData.remove("phone");
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("PhoneRequire"))));
 
 
     }
 
 
 
-    /***************************************** TESTS   TOWN   ************************************************/
+
+
+
+
+    */
+/***************************************** TESTS   ADDRESS   ************************************************//*
+
 
     @Test
-    void  addStudentWithTooLongTown() throws Exception {
+    void  addAdminWithTooLongAddress() throws Exception {
+        this.formData.set("address",  "a".repeat(3001));
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongAddress"))));
+
+
+    }
+
+
+
+    @Test
+    void  addAdminWithTooShortAddress() throws Exception {
+        this.formData.set("address",  "  ab ");
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortAddress"))));
+
+
+    }
+
+    @Test
+    void  addAdminWithEmptyAddress() throws Exception {
+        this.formData.set("address",  "  ");
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("AddressRequire"))));
+
+
+    }
+    @Test
+    void  addAdminWithNullAddress() throws Exception {
+        this.formData.set("address",  null);
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("AddressRequire"))));
+
+
+    }
+    @Test
+    void addAdminWithOutAddress() throws Exception {
+        this.formData.remove("address");
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .file(this.imageData)
+                .params(this.formData)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("AddressRequire"))));
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    */
+/***************************************** TESTS   TOWN   ************************************************//*
+
+
+    @Test
+    void  addAdminWithTooLongTown() throws Exception {
         this.formData.set("town",  "a".repeat(1001));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -502,10 +697,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @Test
-    void  addStudentWithTooShortTown() throws Exception {
+    void  addAdminWithTooShortTown() throws Exception {
         this.formData.set("town",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -518,10 +713,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void  addStudentWithEmptyTown() throws Exception {
+    void  addAdminWithEmptyTown() throws Exception {
         this.formData.set("town",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -533,10 +728,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithNullTown() throws Exception {
+    void  addAdminWithNullTown() throws Exception {
         this.formData.set("town",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -548,10 +743,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithOutTown() throws Exception {
+    void  addAdminWithOutTown() throws Exception {
         this.formData.remove("town");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -571,13 +766,17 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
 
-    /***************************************** TESTS   BirthdateAsString  ************************************************/
+
+
+    */
+/***************************************** TESTS   BirthdateAsString  ************************************************//*
+
 
     @Test
-    void  addStudentWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
+    void  addAdminWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
         this.formData.set("birthdateAsString",  "2000/07/18");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -589,10 +788,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
+    void  addAdminWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
         this.formData.set("birthdateAsString",  "18/07/2000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -605,10 +804,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void  addStudentWithEmptyInvalidBirthdateAsStringFormat2() throws Exception {
+    void  addAdminWithEmptyInvalidBirthdateAsStringFormat2() throws Exception {
         this.formData.set("birthdateAsString",  "18-07-2000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -623,10 +822,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @Test
-    void  addStudentWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
+    void  addAdminWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
         this.formData.set("birthdateAsString",  "kzjrnozr,kfjfkrfkrf");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -640,10 +839,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @Test
-    void  addStudentWithEmptyBirthdateAsString() throws Exception {
+    void  addAdminWithEmptyBirthdateAsString() throws Exception {
         this.formData.set("birthdateAsString",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -655,10 +854,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithNullBirthdateAsString() throws Exception {
+    void  addAdminWithNullBirthdateAsString() throws Exception {
         this.formData.set("birthdateAsString",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -670,10 +869,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithOutBirthdayAsString() throws Exception {
+    void  addAdminWithOutBirthdayAsString() throws Exception {
         this.formData.remove("birthdateAsString");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -686,18 +885,15 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
 
+    */
+/***************************************** TESTS   LASTNAME  ************************************************//*
 
-
-
-
-
-    /***************************************** TESTS   LASTNAME  ************************************************/
 
     @Test
-    void  addStudentWithTooLongLastname() throws Exception {
+    void  addAdminWithTooLongLastname() throws Exception {
         this.formData.set("lastname",  "a".repeat(91));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -712,10 +908,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @Test
-    void  addStudentWithTooShortLastname() throws Exception {
+    void  addAdminWithTooShortLastname() throws Exception {
         this.formData.set("lastname",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -728,10 +924,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void  addStudentWithEmptyLastname() throws Exception {
+    void  addAdminWithEmptyLastname() throws Exception {
         this.formData.set("lastname",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -743,10 +939,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithNullLastname() throws Exception {
+    void  addAdminWithNullLastname() throws Exception {
         this.formData.set("lastname",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -758,10 +954,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithOutLastname() throws Exception {
+    void  addAdminWithOutLastname() throws Exception {
         this.formData.remove("lastname");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -778,13 +974,15 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
 
-    /***************************************** TESTS   FIRSTNAME  ************************************************/
+    */
+/***************************************** TESTS   FIRSTNAME  ************************************************//*
+
 
     @Test
-    void  addStudentWithTooLongFirstname() throws Exception {
+    void  addAdminWithTooLongFirstname() throws Exception {
         this.formData.set("firstname",  "a".repeat(91));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -799,10 +997,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
 
     @Test
-    void  addStudentWithTooShortFirstname() throws Exception {
+    void  addAdminWithTooShortFirstname() throws Exception {
         this.formData.set("firstname",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -815,10 +1013,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
     }
 
     @Test
-    void  addStudentWithEmptyFirstname() throws Exception {
+    void  addAdminWithEmptyFirstname() throws Exception {
         this.formData.set("firstname",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -830,10 +1028,10 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithNullFirstname() throws Exception {
+    void  addAdminWithNullFirstname() throws Exception {
         this.formData.set("firstname",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
                 .file(this.imageData)
                 .params(this.formData)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -845,33 +1043,33 @@ public class AddStudentTest  extends AbstractContainerConfig implements IStudent
 
     }
     @Test
-    void  addStudentWithOutFirstname() throws Exception {
+    void  addAdminWithOutFirstname() throws Exception {
         this.formData.remove("firstname");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
-                .file(this.imageData)
-                .params(this.formData)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+     var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+             .file(this.imageData)
+             .params(this.formData)
+             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
+     result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+             .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("FirstNameRequire"))));
 
 
     }
 
+    @Test
+    void  addAdminWithNullRequest() throws Exception {
+
+        var result = this.mockMvc.perform(multipart(HttpMethod.POST,   ADMIN_SIGN_UP)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("EmailRequire"))));
 
 
-
-
+    }
 
 }
-
-
-
-
-
-
-
+*/

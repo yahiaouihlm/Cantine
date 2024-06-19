@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.student;
+package fr.sqli.cantine.controller.users.student;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
@@ -57,7 +57,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
         this.studentClassEntity = new StudentClassEntity();
         studentClassEntity.setName("JAVA SQLI");
         this.studentClassDao.save(studentClassEntity);
-        this.studentEntity = IStudentTest.createStudentEntity("student", this.studentClassEntity);
+        this.studentEntity =IStudentTest.createStudentEntity("student", this.studentClassEntity, IStudentTest.createImageEntity());
         this.studentEntity = this.studentDao.save(this.studentEntity);
     }
 
