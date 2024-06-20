@@ -52,8 +52,8 @@ public class GetAdminTest extends AbstractContainerConfig implements  IAdminTest
         functionEntity.setName("Manager");
         functionEntity = functionDao.save(functionEntity);
 
-        this.adminEntity1 = IAdminTest.createAdminWith("halim@social.aston-ecole.com",functionEntity )  ;
-        this.adminEntity2 = IAdminTest.createAdminWith("yahiaoui@social.aston-ecole.com",functionEntity )  ;
+        this.adminEntity1 = IAdminTest.createAdminWith("halim@social.aston-ecole.com",functionEntity ,  IAdminTest.createImageEntity())  ;
+        this.adminEntity2 = IAdminTest.createAdminWith("yahiaoui@social.aston-ecole.com",functionEntity ,  IAdminTest.createImageEntity() )  ;
         this.adminEntity1 = adminDao.save(this.adminEntity1);
         this.adminEntity2 = adminDao.save(this.adminEntity2);
 

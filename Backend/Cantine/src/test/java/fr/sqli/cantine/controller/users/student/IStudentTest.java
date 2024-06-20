@@ -11,18 +11,20 @@ import java.util.Map;
 
 public interface IStudentTest {
 
-     String  STUDENT_EMAIL_EXAMPLE = "mocketDluffy@social.aston-ecole.com";
-    String STUDENT_SIGN_IN_URL ="http://localhost:8080/user/login";
+    String STUDENT_EMAIL_EXAMPLE = "mocketDluffy@social.aston-ecole.com";
+    String STUDENT_PASSWORD_EXAMPLE = "password";
+
+    String STUDENT_SIGN_IN_URL = "http://localhost:8080/user/login";
 
     String STUDENT_BASIC_URL = "/cantine/student";
 
-    String  GET_STUDENT_BY_ID = STUDENT_BASIC_URL + "/getStudent";
-    String  STUDENT_SIGN_UP = STUDENT_BASIC_URL +  "/signUp";
-    String UPDATE_STUDENT_INFO =STUDENT_BASIC_URL + "/update/studentInfo";
-    String  IMAGE_NAME = "imageForTest.jpg";
-    String IMAGE_FOR_TEST_PATH= "imagesTests/"+IMAGE_NAME;
+    String GET_STUDENT_BY_ID = STUDENT_BASIC_URL + "/getStudent";
+    String STUDENT_SIGN_UP = STUDENT_BASIC_URL + "/signUp";
+    String UPDATE_STUDENT_INFO = STUDENT_BASIC_URL + "/update/studentInfo";
+    String IMAGE_NAME = "imageForTest.jpg";
+    String IMAGE_FOR_TEST_PATH = "imagesTests/" + IMAGE_NAME;
 
-    String  STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
+    String STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
     String IMAGE_TEST_DIRECTORY_PATH = "imagesTests/";
@@ -49,7 +51,7 @@ public interface IStudentTest {
             Map.entry("PasswordRequire", "PASSWORD IS  REQUIRED"),
             Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
             Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
-               Map.entry("InvalidStudentClass", "INVALID STUDENT CLASS NAME"),
+            Map.entry("InvalidStudentClass", "INVALID STUDENT CLASS NAME"),
             Map.entry("StudentClassRequire", "STUDENT CLASS IS  REQUIRED"),
             Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND"),
             Map.entry("ExistingStudent", "THIS STUDENT IS ALREADY EXISTS"),
@@ -57,35 +59,35 @@ public interface IStudentTest {
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("StudentNotFound", "STUDENT NOT FOUND"),
             Map.entry("MissingPram", "MISSING PARAMETER")
-            );
+    );
 
 
-      static StudentEntity createStudentEntity(String email , StudentClassEntity studentClassEntity  , ImageEntity imageEntity){
-          StudentEntity student  = new StudentEntity();
-          student.setEmail(email);
-            student.setFirstname("firstName");
-            student.setLastname("lastName");
-            student.setBirthdate(LocalDate.now());
-            student.setTown("town");
-            student.setPhone("0606060606");
-            student.setPassword( new BCryptPasswordEncoder().encode("password"));
-            student.setImage(imageEntity);
-            student.setRegistrationDate(LocalDate.now());
-            student.setStatus(1);
-            student.setWallet(new BigDecimal(0));
-            student.setStudentClass(studentClassEntity);
-            return student;
-     }
+    static StudentEntity createStudentEntity(String email, StudentClassEntity studentClassEntity, ImageEntity imageEntity) {
+        StudentEntity student = new StudentEntity();
+        student.setEmail(email);
+        student.setFirstname("firstName");
+        student.setLastname("lastName");
+        student.setBirthdate(LocalDate.now());
+        student.setTown("town");
+        student.setPhone("0606060606");
+        student.setPassword(new BCryptPasswordEncoder().encode(STUDENT_PASSWORD_EXAMPLE));
+        student.setImage(imageEntity);
+        student.setRegistrationDate(LocalDate.now());
+        student.setStatus(1);
+        student.setWallet(new BigDecimal(0));
+        student.setStudentClass(studentClassEntity);
+        return student;
+    }
 
-     static ImageEntity createImageEntity(){
-          ImageEntity imageEntity = new ImageEntity();
-          imageEntity.setImagename(IMAGE_NAME);
-          return imageEntity;
-      }
+    static ImageEntity createImageEntity() {
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImagename(IMAGE_NAME);
+        return imageEntity;
+    }
 
-      static StudentClassEntity createStudentClassEntity(){
-          StudentClassEntity studentClassEntity = new StudentClassEntity();
-          studentClassEntity.setName("class");
-          return studentClassEntity;
-      }
+    static StudentClassEntity createStudentClassEntity() {
+        StudentClassEntity studentClassEntity = new StudentClassEntity();
+        studentClassEntity.setName("class");
+        return studentClassEntity;
+    }
 }
