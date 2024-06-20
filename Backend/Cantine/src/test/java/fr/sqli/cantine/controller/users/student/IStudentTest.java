@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface IStudentTest {
 
-    String STUDENT_EMAIL_EXAMPLE = "mocketDluffy@social.aston-ecole.com";
+    String STUDENT_EMAIL_EXAMPLE = "mockey.d.luffy@social.aston-ecole.com";
     String STUDENT_PASSWORD_EXAMPLE = "password";
 
     String STUDENT_SIGN_IN_URL = "http://localhost:8080/user/login";

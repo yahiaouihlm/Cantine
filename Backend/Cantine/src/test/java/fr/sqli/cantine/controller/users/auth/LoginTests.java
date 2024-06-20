@@ -42,7 +42,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     private StudentEntity studentEntity;
     private AdminEntity adminEntity;
 
-    private ObjectMapper ObjectMapper = new ObjectMapper();
+    private final ObjectMapper ObjectMapper = new ObjectMapper();
 
     private void cleanDataBase() {
         this.studentDao.deleteAll();
@@ -86,7 +86,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     void loginAdminWithInvalidAccount() throws Exception {
         var login = new Login();
         login.setEmail(IAdminTest.ADMIN_EMAIL_EXAMPLE);
-        login.setPassword(this.adminEntity.getPassword());
+        login.setPassword(IAdminTest.ADMIN_PASSWORD_EXAMPLE);
 
         //  update student  status  to  disabled
         this.adminEntity.setValidation(0);
@@ -106,7 +106,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     void loginAdminWithDisabledAccount() throws Exception {
         var login = new Login();
         login.setEmail(IAdminTest.ADMIN_EMAIL_EXAMPLE);
-        login.setPassword(this.adminEntity.getPassword());
+        login.setPassword(IAdminTest.ADMIN_PASSWORD_EXAMPLE);
 
         //  update student  status  to  disabled
         this.adminEntity.setStatus(0);
@@ -161,7 +161,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     @Test
     void loginAdminWithEmptyEmail() throws Exception {
         var login = new Login();
-        login.setPassword("password");
+        login.setPassword(IAdminTest.ADMIN_PASSWORD_EXAMPLE);
 
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_SIGN_IN_URL)
@@ -198,7 +198,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     void loginWithDisabledAccount() throws Exception {
         var login = new Login();
         login.setEmail(IStudentTest.STUDENT_EMAIL_EXAMPLE);
-        login.setPassword("password");
+        login.setPassword(IStudentTest.STUDENT_PASSWORD_EXAMPLE);
 
         //  update student  status  to  disabled
         this.studentEntity.setStatus(0);
@@ -253,7 +253,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     @Test
     void loginWithEmptyEmail() throws Exception {
         var login = new Login();
-        login.setPassword("password");
+        login.setPassword(IStudentTest.STUDENT_PASSWORD_EXAMPLE);
 
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, STUDENT_SIGN_IN_URL)

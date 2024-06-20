@@ -9,28 +9,38 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface IAdminTest {
-
-
-    String ADMIN_EMAIL_EXAMPLE = "mockeyDluffy@admin.fr";
+    String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
+    String ADMIN_EMAIL_EXAMPLE = "mockey.d.luffy@admin.fr";
     String ADMIN_PASSWORD_EXAMPLE = "password";
+    String ADMIN_SIGN_IN_URL = BASIC_CANTINE_ROOT_URL + "user/login";
 
-    String ADMIN_SIGN_IN_URL = "http://localhost:8080/user/login";
+    String ADMIN_FUNCTION = "Manager";
+
+    String ADMIN_SIGN_UP = BASIC_CANTINE_ROOT_URL + "cantine/admin/register";
+
 
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin/adminDashboard";
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
 
     String ADMIN_SEND_TOKEN_URL = ADMIN_DASH_BOARD_BASIC_URL + "/sendToken";
     String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/disableAdmin";
-    String ADMIN_SIGN_UP = ADMIN_DASH_BOARD_BASIC_URL + "/signUp";
+
     String GET_ADMIN_BY_ID = ADMIN_DASH_BOARD_BASIC_URL + "/getAdmin";
     String ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL + "/updateAdmin/info";
     String IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH = "imagesTests/" + IMAGE_NAME;
-    String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
     String ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
     String TOKEN_SENDED_SUCCESSFULLY = "TOKEN SENDED SUCCESSFULLY";
     String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
     String IMAGE_ADMIN_FOR_TEST_NAME = "ImageForTest.jpg";
+
+    Map <String, String> responseMap = Map.ofEntries(
+            Map.entry("AdminAddedSuccessfully", "ADMIN ADDED SUCCESSFULLY")
+            );
+
+
+
+
 
     //   exceptions messages
     Map<String, String> exceptionsMap = Map.ofEntries(
@@ -53,14 +63,14 @@ public interface IAdminTest {
             Map.entry("EmailRequire", "EMAIL IS  REQUIRED"),
             Map.entry("ShortEmail", "EMAIL MUST BE AT LEAST 5 CHARACTERS"),
             Map.entry("LongEmail", "EMAIL MUST BE LESS THAN 1000 CHARACTERS"),
-            Map.entry("InvalidEmailFormat", "YOUR EMAIL IS NOT VALID"),
+            Map.entry("InvalidEmailFormat", "INVALID EMAIL"),
             Map.entry("PasswordRequire", "PASSWORD IS  REQUIRED"),
             Map.entry("ShortPassword", "PASSWORD MUST BE AT LEAST 6 CHARACTERS"),
             Map.entry("LongPassword", "PASSWORD MUST BE LESS THAN 20 CHARACTERS"),
             Map.entry("FunctionRequire", "FUNCTION IS  REQUIRED"),
             Map.entry("FunctionNotFound", "YOUR FUNCTIONALITY IS NOT FOUND"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
-            Map.entry("ExistingAdmin", "THIS ADMIN IS ALREADY EXISTS"),
+            Map.entry("ExistingAdmin", "EMAIL IS ALREADY EXISTS"),
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
             Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
             Map.entry("InvalidId", "INVALID ID"),
