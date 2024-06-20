@@ -3,6 +3,8 @@ package fr.sqli.cantine.security.jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IStudentDao;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +26,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static fr.sqli.cantine.constants.Messages.ADMIN_ROLE;
+import static fr.sqli.cantine.constants.Messages.STUDENT_ROLE;
 import static java.util.Arrays.stream;
 
 /*TDOO: remove context  root  cantine on the url .*/
@@ -32,11 +36,14 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
 
     private final Environment environment;
-
+    private  final IAdminDao iAdminDao;
+    private  final IStudentDao iStudentDao;
 
     @Autowired
-    public JwtTokenVerifier(Environment environment) {
+    public JwtTokenVerifier(Environment environment, IAdminDao iAdminDao ,  IStudentDao iStudentDao) {
         this.environment = environment;
+        this.iAdminDao = iAdminDao;
+        this.iStudentDao = iStudentDao;
 
     }
 
@@ -64,7 +71,34 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
 
-                    /*TODO:  make the  request  to  database  to check  the  user   exists, not  disables....ect */
+                    String  userRole = roles[0];
+                    if  (STUDENT_ROLE.equals(userRole)){
+                         var student = iStudentDao.findByEmail(username);
+                         if  (student.isPresent()){
+                             if (student.get().getStatus()!=1) {
+                                     disabledAccountResponse(response);
+                                    return;
+                             }
+                         } else {
+                             userNotFoundResponse(response);
+                             return;
+                         }
+                    } else  if  (ADMIN_ROLE.equals(userRole)){
+                        var admin = iAdminDao.findByEmail(username);
+                        if  (admin.isPresent()){
+                            if (admin.get().getStatus()!=1  || admin.get().getValidation()!=1 ) {
+                                disabledAccountResponse(response);
+                                return;
+                            }
+                        } else {
+                            userNotFoundResponse(response);
+                            return;
+                        }
+                    } else {
+                        userNotFoundResponse(response);
+                        return;
+                    }
+
 
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
                     authentication.setDetails(authorities);
@@ -88,5 +122,21 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
     }
 
+
+    private   void  disabledAccountResponse (HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        Map<String, String> error = new HashMap<>();
+        error.put("exceptionMessage", "DISABLED_ACCOUNT");
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(response.getOutputStream(), error);
+    }
+
+    private  void userNotFoundResponse (HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        Map<String, String> error = new HashMap<>();
+        error.put("exceptionMessage", "USER_NOT_FOUND");
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(response.getOutputStream(), error);
+    }
 
 }
