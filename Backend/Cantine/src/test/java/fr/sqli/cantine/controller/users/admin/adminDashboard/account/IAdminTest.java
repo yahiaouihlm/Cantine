@@ -9,24 +9,21 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface IAdminTest {
+
     String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
-    String ADMIN_EMAIL_EXAMPLE = "mockey.d.luffy@admin.fr";
-    String ADMIN_PASSWORD_EXAMPLE = "password";
     String ADMIN_SIGN_IN_URL = BASIC_CANTINE_ROOT_URL + "user/login";
-
-    String ADMIN_FUNCTION = "Manager";
-
     String ADMIN_SIGN_UP = BASIC_CANTINE_ROOT_URL + "cantine/admin/register";
-
-
     String ADMIN_DASH_BOARD_BASIC_URL =BASIC_CANTINE_ROOT_URL +  "cantine/admin";
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
-
     String ADMIN_SEND_TOKEN_URL = ADMIN_DASH_BOARD_BASIC_URL + "/sendToken";
-    String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/disableAdmin";
-
+    String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/removeAccount";
     String GET_ADMIN_BY_ID = ADMIN_DASH_BOARD_BASIC_URL + "/getAdmin";
     String ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL + "/updateAdmin/info";
+
+
+    String ADMIN_EMAIL_EXAMPLE = "mockey.d.luffy@admin.fr";
+    String ADMIN_PASSWORD_EXAMPLE = "password";
+    String ADMIN_FUNCTION = "Manager";
     String IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH = "imagesTests/" + IMAGE_NAME;
     String ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
@@ -35,7 +32,8 @@ public interface IAdminTest {
     String IMAGE_ADMIN_FOR_TEST_NAME = "ImageForTest.jpg";
 
     Map <String, String> responseMap = Map.ofEntries(
-            Map.entry("AdminAddedSuccessfully", "ADMIN ADDED SUCCESSFULLY")
+            Map.entry("AdminAddedSuccessfully", "ADMIN ADDED SUCCESSFULLY"),
+            Map.entry("AdminDisabledSuccessfully", "ADMIN DISABLED SUCCESSFULLY")
             );
 
 

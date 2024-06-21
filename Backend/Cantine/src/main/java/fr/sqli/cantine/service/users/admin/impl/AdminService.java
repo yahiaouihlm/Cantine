@@ -140,7 +140,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void disableAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
+    public void removeAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
 
         IAdminService.checkUuIdValidity(adminUuid);
 

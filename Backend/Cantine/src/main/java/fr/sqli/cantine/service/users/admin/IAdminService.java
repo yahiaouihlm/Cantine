@@ -19,7 +19,7 @@ public interface IAdminService {
 
     AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
-    void disableAdminAccount(String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
+    void removeAdminAccount(String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException;
 

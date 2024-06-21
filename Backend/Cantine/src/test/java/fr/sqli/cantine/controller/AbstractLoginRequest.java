@@ -8,6 +8,8 @@ import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.Login;
+import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.StudentEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,11 +21,11 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 public class AbstractLoginRequest extends AbstractContainerConfig  implements IAdminTest , IStudentTest {
 
 
-     public  static  void saveAdmin(IAdminDao iAdminDao, IFunctionDao iFunctionDao) {
+     public  static AdminEntity saveAdmin(IAdminDao iAdminDao, IFunctionDao iFunctionDao) {
          // save  admin;
          var functionEntity = iFunctionDao.save(IAdminTest.createFunctionEntity());
          var adminEntity = IAdminTest.createAdminWith(IAdminTest.ADMIN_EMAIL_EXAMPLE, functionEntity, IAdminTest.createImageEntity());
-         iAdminDao.save(adminEntity);
+         return iAdminDao.save(adminEntity);
      }
 
 
@@ -64,11 +66,11 @@ public class AbstractLoginRequest extends AbstractContainerConfig  implements IA
 
 
 
-    public  static  void  saveAStudent(IStudentDao iStudentDao, IStudentClassDao iStudentClassDao){
+    public  static StudentEntity saveAStudent(IStudentDao iStudentDao, IStudentClassDao iStudentClassDao){
         // save  student;
         var studentClass = iStudentClassDao.save(IStudentTest.createStudentClassEntity());
         var studentEntity = IStudentTest.createStudentEntity(IStudentTest.STUDENT_EMAIL_EXAMPLE, studentClass, IAdminTest.createImageEntity());
-        iStudentDao.save(studentEntity);
+        return iStudentDao.save(studentEntity);
     }
 
 /*

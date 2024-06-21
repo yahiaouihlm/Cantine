@@ -18,20 +18,18 @@ import java.io.IOException;
 import java.util.List;
 
 
-
-
 public interface IAdminController {
 
     String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin";
 
     String ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT = "/getAdmin";
-    String ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT =  "/register";
+    String ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT = "/register";
 
-    String  ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT = "/updateAdmin/info";
+    String ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT = "/updateAdmin/info";
 
-    String  ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT = "/disableAccount";
+    String ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT = "/removeAccount";
 
-    String  ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT ="/getAllAdminFunctions";
+    String ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT = "/getAllAdminFunctions";
 
 
     /**************************** SERVER ANSWERS ************************************/
@@ -39,9 +37,8 @@ public interface IAdminController {
 
     String ADMIN_ADDED_SUCCESSFULLY = "ADMIN ADDED SUCCESSFULLY";
 
-   String  ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
-   String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
-
+    String ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
+    String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
 
 
     @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
@@ -49,18 +46,18 @@ public interface IAdminController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
-    ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid")  String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
+    ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
     ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException;
 
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
-    ResponseEntity<ResponseDtout> disableAdmin(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
+    ResponseEntity<ResponseDtout> removeAdminAccount(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
-     ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() ;
+    ResponseEntity<List<FunctionDtout>> getAllAdminFunctions();
 }

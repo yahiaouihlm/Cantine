@@ -14,7 +14,6 @@ import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -36,8 +35,8 @@ public class AdminController implements IAdminController {
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> disableAdmin(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
-        this.adminService.disableAdminAccount(adminUuid);
+    public ResponseEntity<ResponseDtout> removeAdminAccount(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
+        this.adminService.removeAdminAccount(adminUuid);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_DISABLED_SUCCESSFULLY));
     }
 

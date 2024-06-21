@@ -31,7 +31,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
     private IAdminDao adminDao;
     private IFunctionDao functionDao;
 
-    private static String authorizationToken;
+    private  String authorizationToken;
 
     @Autowired
     private IStudentDao iStudentDao;
@@ -63,7 +63,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
     void initDb() throws Exception {
 
         AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
-        authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
+        this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
 
         FunctionEntity functionEntity = new FunctionEntity();
@@ -85,7 +85,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + adminUuid)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk());
@@ -102,14 +102,14 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
             this.iStudentClassDao.deleteAll();
 
         AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
-        authorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+        this.authorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
 
         var adminUuid = this.adminEntity1.getUuid();
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + adminUuid)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -139,7 +139,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + "jjedh5")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -151,7 +151,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + null)
-                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -163,7 +163,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
     void getAdminByIDWithEmptyIdAdmin() throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + "")
-                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -177,7 +177,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
