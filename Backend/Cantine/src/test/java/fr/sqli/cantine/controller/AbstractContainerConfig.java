@@ -33,6 +33,7 @@ public class AbstractContainerConfig {
     }
 
 
+
     /**
      * return   String  witch contains exception message combined with right  key= "exceptionMessage" as json format
      *

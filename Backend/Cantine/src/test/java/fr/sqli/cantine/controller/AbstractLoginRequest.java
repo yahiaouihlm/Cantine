@@ -1,6 +1,7 @@
 package fr.sqli.cantine.controller;
 
 
+import fr.sqli.cantine.controller.users.admin.adminDashboard.account.IAdminTest;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
@@ -11,49 +12,51 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
-public class AbstractLoginRequest extends AbstractContainerConfig {
-
-    private String studentBearerToken;
-    private String adminBearerToken;
-
-    @Autowired
-    private IAdminDao adminDao;
-
-    @Autowired
-    private IStudentDao studentDao;
-
-    @Autowired
-    private IFunctionDao functionDao;
-
-    @Autowired
-    private IStudentClassDao studentClassDao;
+public class AbstractLoginRequest extends AbstractContainerConfig  implements IAdminTest {
 
 
-    @Autowired
-    private MockMvc mockMvc;
-    private StudentEntity studentCreated;
-    private AdminEntity adminCreated;
+     public  static  void  saveAdminAndStudent(IAdminDao iAdminDao, IFunctionDao iFunctionDao) {
+         // save  admin;
+         var functionEntity = iFunctionDao.save(IAdminTest.createFunctionEntity());
+         var adminEntity = IAdminTest.createAdminWith(IAdminTest.ADMIN_EMAIL_EXAMPLE, functionEntity, IAdminTest.createImageEntity());
+         iAdminDao.save(adminEntity);
+     }
 
-    //  delete  all  student  or admin  from  database
-    void cleanDataBase() {
-        this.studentDao.deleteAll();
-        this.adminDao.deleteAll();
-        this.studentClassDao.deleteAll();
-        this.functionDao.deleteAll();
+
+    public static String getAdminBearerToken(MockMvc mockMvc) throws Exception {
+        var login = new Login();
+        login.setEmail(IAdminTest.ADMIN_EMAIL_EXAMPLE);
+        login.setPassword(IAdminTest.ADMIN_PASSWORD_EXAMPLE);
+
+        var result = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_SIGN_IN_URL)
+                        .content(new ObjectMapper().writeValueAsString(login))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+
+        return jsonNode.get("Authorization").asText();
     }
 
 
 
+
+/*
 
     public String getStudentAuthToken() throws Exception {
 
@@ -155,7 +158,8 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         return adminBearerToken;
     }
 
-
+*/
 }
+
 
 

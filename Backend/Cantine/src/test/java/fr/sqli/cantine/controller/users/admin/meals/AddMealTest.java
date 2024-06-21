@@ -45,7 +45,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     private  String adminBearerToken;
 
      public AddMealTest () {
-         System.out.println(super.getAdminBearerToken());
+
    }
 
     public void initFormData() throws IOException {
@@ -389,7 +389,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidImageFormat"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidImageFormat"))));
 
     }
 
@@ -408,7 +408,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Image"))));
 
     }
 
@@ -419,7 +419,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Image"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Image"))));
 
 
     }
@@ -437,7 +437,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighPrice"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("HighPrice"))));
     }
 
     @Test
@@ -450,7 +450,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativePrice"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("NegativePrice"))));
     }
 
     @Test
@@ -464,7 +464,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -477,7 +477,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -490,7 +490,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -503,7 +503,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -516,7 +516,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Price"))));
     }
 
     @Test
@@ -529,7 +529,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Price"))));
     }
 
     @Test
@@ -543,7 +543,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Price"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Price"))));
     }
 
 
@@ -561,7 +561,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -574,7 +574,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("HighQuantity"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("HighQuantity"))));
     }
 
     @Test
@@ -587,7 +587,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("NegativeQuantity"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("NegativeQuantity"))));
     }
 
     @Test
@@ -600,7 +600,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -613,7 +613,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -626,7 +626,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -639,7 +639,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Quantity"))));
     }
 
     @Test
@@ -652,7 +652,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Quantity"))));
     }
 
     @Test
@@ -666,7 +666,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Quantity"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Quantity"))));
     }
 
 
@@ -685,7 +685,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("OutSideStatusValue"))));
     }
 
     @Test
@@ -702,7 +702,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("OutSideStatusValue"))));
     }
 
     @Test
@@ -719,7 +719,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("OutSideStatusValue"))));
     }
 
     @Test
@@ -735,7 +735,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Status"))));
     }
 
     @Test
@@ -751,7 +751,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -767,7 +767,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
     }
 
     @Test
@@ -782,7 +782,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("OutSideStatusValue"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("OutSideStatusValue"))));
     }
 
     @Test
@@ -798,7 +798,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Status"))));
     }
 
     @Test
@@ -814,7 +814,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Status"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Status"))));
     }
 
 
@@ -833,7 +833,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Description"))));
     }
 
 
@@ -853,7 +853,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongDescriptionLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("LongDescriptionLength"))));
     }
 
     @Test
@@ -869,7 +869,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Description"))));
     }
 
     @Test
@@ -887,7 +887,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Description"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Description"))));
     }
 
     @Test
@@ -904,7 +904,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortDescriptionLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("ShortDescriptionLength"))));
     }
 
 
@@ -925,7 +925,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Category"))));
     }
 
     @Test
@@ -945,7 +945,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         // then :
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongCategoryLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("LongCategoryLength"))));
     }
 
     @Test
@@ -961,7 +961,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Category"))));
     }
 
     @Test
@@ -978,7 +978,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortCategoryLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("ShortCategoryLength"))));
     }
 
     @Test
@@ -996,7 +996,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Category"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Category"))));
     }
 
 
@@ -1015,7 +1015,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Label"))));
 
     }
 
@@ -1033,7 +1033,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Label"))));
 
     }
 
@@ -1051,7 +1051,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ShortLabelLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("ShortLabelLength"))));
 
     }
 
@@ -1070,7 +1070,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("LongLabelLength"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("LongLabelLength"))));
 
 
     }
@@ -1090,7 +1090,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Label"))));
 
 
     }
@@ -1107,7 +1107,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("Label"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Label"))));
 
 
     }

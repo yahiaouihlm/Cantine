@@ -14,6 +14,7 @@ import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class AdminController implements IAdminController {
 
     @Override
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
     }

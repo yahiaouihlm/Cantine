@@ -19,7 +19,7 @@ public interface IAdminTest {
     String ADMIN_SIGN_UP = BASIC_CANTINE_ROOT_URL + "cantine/admin/register";
 
 
-    String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin/adminDashboard";
+    String ADMIN_DASH_BOARD_BASIC_URL =BASIC_CANTINE_ROOT_URL +  "cantine/admin";
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
 
     String ADMIN_SEND_TOKEN_URL = ADMIN_DASH_BOARD_BASIC_URL + "/sendToken";
@@ -73,7 +73,7 @@ public interface IAdminTest {
             Map.entry("ExistingAdmin", "EMAIL IS ALREADY EXISTS"),
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
             Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
-            Map.entry("InvalidId", "INVALID ID"),
+            Map.entry("InvalidUuId", "INVALID UUID"),
             Map.entry("AdminNotFound", "ADMIN NOT FOUND"),
             Map.entry("MissingPram", "MISSING PARAMETER"),
             Map.entry("InvalidEmail", "YOUR EMAIL IS NOT VALID"),
