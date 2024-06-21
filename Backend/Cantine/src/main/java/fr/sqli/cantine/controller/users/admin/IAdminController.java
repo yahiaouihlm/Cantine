@@ -11,10 +11,14 @@ import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+
+
+
 
 public interface IAdminController {
 
@@ -43,6 +47,7 @@ public interface IAdminController {
     @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     ResponseEntity<ResponseDtout> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
     ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid")  String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 

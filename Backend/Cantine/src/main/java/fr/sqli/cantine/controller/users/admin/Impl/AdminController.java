@@ -25,6 +25,7 @@ import static fr.sqli.cantine.controller.users.admin.IAdminController.ADMIN_DASH
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)
 @CrossOrigin(origins = "http://localhost:4200")
+
 public class AdminController implements IAdminController {
 
     private final AdminService adminService;
@@ -47,8 +48,7 @@ public class AdminController implements IAdminController {
     }
 
     @Override
-    @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     public ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
     }

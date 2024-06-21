@@ -2,14 +2,10 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.dao.IAdminDao;
-import fr.sqli.cantine.dao.IConfirmationTokenDao;
-import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,6 +33,12 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
     private static String authorizationToken;
 
+    @Autowired
+    private IStudentDao iStudentDao;
+
+    @Autowired
+    private IStudentClassDao iStudentClassDao;
+
     private AdminEntity adminEntity1;
     private AdminEntity adminEntity2;
 
@@ -60,7 +62,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
     void initDb() throws Exception {
 
-        AbstractLoginRequest.saveAdminAndStudent(this.adminDao, this.functionDao);
+        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
         authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
 
@@ -91,6 +93,26 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
         result.andExpect(MockMvcResultMatchers.jsonPath("firstname").value(CoreMatchers.is(this.adminEntity1.getFirstname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.adminEntity1.getLastname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.adminEntity1.getEmail())));
+    }
+
+
+    @Test
+    void getAdminByIdWithStudentAuthorizationToken() throws Exception {
+          this.iStudentDao.deleteAll();
+            this.iStudentClassDao.deleteAll();
+
+        AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        authorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+
+
+        var adminUuid = this.adminEntity1.getUuid();
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
+                        + paramReq + adminUuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, authorizationToken)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
 

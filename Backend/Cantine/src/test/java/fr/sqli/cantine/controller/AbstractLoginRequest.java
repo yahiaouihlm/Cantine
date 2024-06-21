@@ -2,33 +2,24 @@ package fr.sqli.cantine.controller;
 
 
 import fr.sqli.cantine.controller.users.admin.adminDashboard.account.IAdminTest;
+import fr.sqli.cantine.controller.users.student.IStudentTest;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.Login;
-import fr.sqli.cantine.entity.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
+public class AbstractLoginRequest extends AbstractContainerConfig  implements IAdminTest , IStudentTest {
 
 
-public class AbstractLoginRequest extends AbstractContainerConfig  implements IAdminTest {
-
-
-     public  static  void  saveAdminAndStudent(IAdminDao iAdminDao, IFunctionDao iFunctionDao) {
+     public  static  void saveAdmin(IAdminDao iAdminDao, IFunctionDao iFunctionDao) {
          // save  admin;
          var functionEntity = iFunctionDao.save(IAdminTest.createFunctionEntity());
          var adminEntity = IAdminTest.createAdminWith(IAdminTest.ADMIN_EMAIL_EXAMPLE, functionEntity, IAdminTest.createImageEntity());
@@ -54,7 +45,31 @@ public class AbstractLoginRequest extends AbstractContainerConfig  implements IA
     }
 
 
+    public static String getStudentBearerToken(MockMvc mockMvc) throws Exception {
+        var login = new Login();
+        login.setEmail(IStudentTest.STUDENT_EMAIL_EXAMPLE);
+        login.setPassword(IStudentTest.STUDENT_PASSWORD_EXAMPLE);
 
+        var result = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, STUDENT_SIGN_IN_URL)
+                        .content(new ObjectMapper().writeValueAsString(login))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+
+        return jsonNode.get("Authorization").asText();
+    }
+
+
+
+    public  static  void  saveAStudent(IStudentDao iStudentDao, IStudentClassDao iStudentClassDao){
+        // save  student;
+        var studentClass = iStudentClassDao.save(IStudentTest.createStudentClassEntity());
+        var studentEntity = IStudentTest.createStudentEntity(IStudentTest.STUDENT_EMAIL_EXAMPLE, studentClass, IAdminTest.createImageEntity());
+        iStudentDao.save(studentEntity);
+    }
 
 /*
 
