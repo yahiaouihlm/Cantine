@@ -40,7 +40,7 @@ public interface IAdminController {
     String ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
     String ADMIN_DISABLED_SUCCESSFULLY = "ADMIN DISABLED SUCCESSFULLY";
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     ResponseEntity<ResponseDtout> updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException;
 

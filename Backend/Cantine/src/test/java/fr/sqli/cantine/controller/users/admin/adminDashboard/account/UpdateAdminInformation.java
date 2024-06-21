@@ -1,7 +1,8 @@
-/*
+
 package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -31,31 +33,37 @@ import java.nio.file.Files;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UpdateAdminInformation  extends AbstractContainerConfig implements  IAdminTest {
-
+public class UpdateAdminInformation extends AbstractContainerConfig implements IAdminTest {
 
     @Autowired
+    private IImageDao imageDao;
+
     private IFunctionDao functionDao;
-    @Autowired
     private IAdminDao adminDao;
-
-    @Autowired
     private IConfirmationTokenDao iConfirmationTokenDao;
-    @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private IImageDao   imageDao;
-    @Autowired
-    private Environment environment;
+    private String authorizationToken;
+    private AdminEntity adminEntity;
 
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
     private FunctionEntity savedFunction;
     private AdminEntity savedAdmin;
 
+    @Autowired
+    public UpdateAdminInformation(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+        this.mockMvc = mockMvc;
+        this.adminDao = adminDao;
+        this.functionDao = functionDao;
+        this.iConfirmationTokenDao = iConfirmationTokenDao;
+        cleanDtaBase();
+        initDataBase();
+        initFormData();
+    }
+
+
     @BeforeAll
-    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+    static void copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
         String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_ADMIN_FOR_TEST_NAME;
         String destination = ADMIN_IMAGE_PATH + IMAGE_ADMIN_FOR_TEST_NAME;
         File sourceFile = new File(source);
@@ -72,29 +80,30 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     }
 
 
-    void initDataBase() {
-        FunctionEntity function = new FunctionEntity();
-        function.setName("Manager");
-        this.savedFunction = this.functionDao.save(function);
-        var admin  =  createAdminWith("halim.yahiaoui@social.aston-ecole.com",  this.savedFunction);
-        this.savedAdmin =   this.adminDao.save(admin);
+    void initDataBase() throws Exception {
+        this.adminEntity = AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+        this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
+
+
     }
-    void  cleanDtaBase() {
+
+    void cleanDtaBase() {
         this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
 
     }
+
     void initFormData() throws IOException {
-        this.formData =new LinkedMultiValueMap<>();
-        this.formData.add("id", "1");
+        this.formData = new LinkedMultiValueMap<>();
+        this.formData.add("uuid", this.adminEntity.getUuid());
         this.formData.add("firstname", "Halim");
         this.formData.add("lastname", "Yahiaoui");
         this.formData.add("birthdateAsString", "2000-07-18");
         this.formData.add("town", "paris");
         this.formData.add("address", "102  rue de cheret 75013 paris");
         this.formData.add("phone", "0631990189");
-        this.formData.add("function","Manager");
+        this.formData.add("function", this.adminEntity.getFunction().getName());
 
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
@@ -103,13 +112,7 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
                 new FileInputStream(IMAGE_FOR_TEST_PATH));
 
     }
-    @BeforeEach
-    void    init() throws IOException {
-        cleanDtaBase();
-        initDataBase();
-        initFormData();
-    }
-    */
+
 /***************************************** TESTS  UPDATE ADMIN  WITHOUT IMAGE  ************************************************//*
 
 
@@ -657,16 +660,17 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
     */
-/***************************************** TESTS   BirthdateAsString  ************************************************//*
+/***************************************** TESTS   BirthdateAsString  ************************************************/
 
 
     @Test
     void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat4() throws Exception {
         this.formData.set("birthdateAsString",  "2000/07/18");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -679,9 +683,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat3() throws Exception {
         this.formData.set("birthdateAsString",  "18/07/2000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -694,9 +699,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat2() throws Exception {
         this.formData.set("birthdateAsString",  "18-07-2000");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -712,9 +718,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithEmptyInvalidBirthdateAsStringFormat() throws Exception {
         this.formData.set("birthdateAsString",  "kzjrnozr,kfjfkrfkrf");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -729,9 +736,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithEmptyBirthdateAsString() throws Exception {
         this.formData.set("birthdateAsString",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -743,9 +751,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithNullBirthdateAsString() throws Exception {
         this.formData.set("birthdateAsString",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -757,9 +766,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithOutBirthdayAsString() throws Exception {
         this.formData.remove("birthdateAsString");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -774,17 +784,18 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    */
-/***************************************** TESTS   LASTNAME  ************************************************//*
+
+/***************************************** TESTS   LASTNAME  ************************************************/
 
 
     @Test
     void  updateAdminInfoWithTooLongLastname() throws Exception {
         this.formData.set("lastname",  "a".repeat(91));
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -800,9 +811,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithTooShortLastname() throws Exception {
         this.formData.set("lastname",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -815,9 +827,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithEmptyLastname() throws Exception {
         this.formData.set("lastname",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -830,9 +843,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithNullLastname() throws Exception {
         this.formData.set("lastname",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -844,9 +858,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithOutLastname() throws Exception {
         this.formData.remove("lastname");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -861,8 +876,8 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-    */
-/***************************************** TESTS   FIRSTNAME  ************************************************//*
+
+/***************************************** TESTS   FIRSTNAME  ************************************************/
 
 
     @Test
@@ -870,9 +885,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
         this.formData.set("firstname",  "a".repeat(91));
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -888,9 +904,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithTooShortFirstname() throws Exception {
         this.formData.set("firstname",  "  ab ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -903,9 +920,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithEmptyFirstname() throws Exception {
         this.formData.set("firstname",  "  ");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -917,9 +935,10 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
     void  updateAdminInfoWithNullFirstname() throws Exception {
         this.formData.set("firstname",  null);
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -928,13 +947,15 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
     }
+
     @Test
     void  updateAdminInfoWithOutFirstname() throws Exception {
         this.formData.remove("firstname");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -947,101 +968,89 @@ public class UpdateAdminInformation  extends AbstractContainerConfig implements 
 
 
 
-
-
-
-    */
-/*****************************  TESTS FOR  ID ADMIN  ********************************//*
+    /*****************************  TESTS FOR  ID ADMIN  ********************************/
 
 
     @Test
     void updateAdminInfoWithAdminNotFound () throws Exception {
-        var idMeal = this.adminDao.findAll().get(0).getId() + 1000;
-        this.formData.set("id" , String.valueOf(idMeal) );
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
+        var adminUuid = java.util.UUID.randomUUID().toString();
+        this.formData.set("uuid" , String.valueOf(adminUuid) );
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("AdminNotFound"))));
     }
-    @Test
-    void updateAdminInfoWithDoubleIdAdmin () throws Exception {
-        this.formData.set("id" , "1.5" );
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
-                .file(this.imageData)
-                .params(this.formData)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidParam"))));
-    }
+
     @Test
-    void updateAdminInfoWithNegativeIdAdmin () throws Exception {
-        this.formData.set("id" , "-5" );
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+    void updateAdminInfoWithInvalidIdAdmin () throws Exception {
+        this.formData.set("uuid" , "jjedh5" );
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
-    }
-    @Test
-    void updateAdminInfoWithInvalidIdAdmin () throws Exception {
-        this.formData.set("id" , "jjedh5" );
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
-                .file(this.imageData)
-                .params(this.formData)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
-
-        result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidParam"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidUuId"))));
     }
     @Test
     void updateAdminInfoWithNullIdAdmin () throws Exception {
-        this.formData.set("id" , null );
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
+        this.formData.set("uuid" , null );
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidUuId"))));
     }
     @Test
     void updateAdminInfoWithEmptyIdAdmin () throws Exception {
-        this.formData.set("id" , "");
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO )
+        this.formData.set("uuid" , "");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO )
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidUuId"))));
     }
     @Test
     void updateAdminInfoWithOutIdAdmin () throws Exception {
-        this.formData.remove("id");
+        this.formData.remove("uuid");
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidUuId"))));
     }
+
 
     @Test
     void updateAdminInfoNullReq () throws Exception {
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT,   ADMIN_UPDATE_INFO)
-
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   ADMIN_UPDATE_INFO)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidId"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("InvalidUuId"))));
+    }
+ @Test
+    void updateAdminInfoWithOutToken() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 }
-*/

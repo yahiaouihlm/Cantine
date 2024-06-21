@@ -19,7 +19,7 @@ public interface IAdminTest {
     String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/removeAccount";
     String GET_ADMIN_BY_ID = ADMIN_DASH_BOARD_BASIC_URL + "/getAdmin";
     String ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL + "/updateAdmin/info";
-
+    String ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT =  ADMIN_DASH_BOARD_BASIC_URL + "/getAllAdminFunctions";
 
     String ADMIN_EMAIL_EXAMPLE = "mockey.d.luffy@admin.fr";
     String ADMIN_PASSWORD_EXAMPLE = "password";

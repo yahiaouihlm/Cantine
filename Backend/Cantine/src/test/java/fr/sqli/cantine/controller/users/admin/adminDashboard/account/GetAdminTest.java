@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class GetAdminTest extends AbstractContainerConfig implements IAdminTest {
@@ -77,6 +80,43 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
 
     }
+    @Test
+    void getAllAdminFunctions  () throws Exception {
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+                .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(this.functionDao.findAll().size())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(CoreMatchers.is("MANAGER")));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(CoreMatchers.is(this.adminEntity1.getFunction().getName())));
+
+    }
+
+
+    @Test
+    void getAllAdminFunctionsWithStudentToken  () throws Exception {
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
+
+        AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+
+
+
 
     @Test
     void getAdminByIdTest() throws Exception {
@@ -89,10 +129,10 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("uuid").value(CoreMatchers.is(adminUuid)));
-        result.andExpect(MockMvcResultMatchers.jsonPath("firstname").value(CoreMatchers.is(this.adminEntity1.getFirstname())));
-        result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.adminEntity1.getLastname())));
-        result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.adminEntity1.getEmail())));
+        result.andExpect(jsonPath("uuid").value(CoreMatchers.is(adminUuid)));
+        result.andExpect(jsonPath("firstname").value(CoreMatchers.is(this.adminEntity1.getFirstname())));
+        result.andExpect(jsonPath("lastname").value(CoreMatchers.is(this.adminEntity1.getLastname())));
+        result.andExpect(jsonPath("email").value(CoreMatchers.is(this.adminEntity1.getEmail())));
     }
 
 
