@@ -15,7 +15,6 @@ public interface IAdminTest {
     String ADMIN_SIGN_UP = BASIC_CANTINE_ROOT_URL + "cantine/admin/register";
     String ADMIN_DASH_BOARD_BASIC_URL =BASIC_CANTINE_ROOT_URL +  "cantine/admin";
     String ADMIN_IMAGE_PATH = "images/persons/admin/";
-    String ADMIN_SEND_TOKEN_URL = ADMIN_DASH_BOARD_BASIC_URL + "/sendToken";
     String ADMIN_DISABLE_ACCOUNT = ADMIN_DASH_BOARD_BASIC_URL + "/removeAccount";
     String GET_ADMIN_BY_ID = ADMIN_DASH_BOARD_BASIC_URL + "/getAdmin";
     String ADMIN_UPDATE_INFO = ADMIN_DASH_BOARD_BASIC_URL + "/updateAdmin/info";
@@ -26,14 +25,15 @@ public interface IAdminTest {
     String ADMIN_FUNCTION = "Manager";
     String IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH = "imagesTests/" + IMAGE_NAME;
-    String ADMIN_INFO_UPDATED_SUCCESSFULLY = "ADMIN UPDATED SUCCESSFULLY";
-    String TOKEN_SENDED_SUCCESSFULLY = "TOKEN SENDED SUCCESSFULLY";
+
+
     String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
     String IMAGE_ADMIN_FOR_TEST_NAME = "ImageForTest.jpg";
 
     Map <String, String> responseMap = Map.ofEntries(
             Map.entry("AdminAddedSuccessfully", "ADMIN ADDED SUCCESSFULLY"),
-            Map.entry("AdminDisabledSuccessfully", "ADMIN DISABLED SUCCESSFULLY")
+            Map.entry("AdminDisabledSuccessfully", "ADMIN DISABLED SUCCESSFULLY"),
+            Map.entry("AdminUpdatedSuccessfully", "ADMIN UPDATED SUCCESSFULLY")
             );
 
 

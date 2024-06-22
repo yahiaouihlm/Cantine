@@ -47,7 +47,6 @@ public class AdminController implements IAdminController {
     }
 
     @Override
-
     public ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
     }
