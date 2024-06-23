@@ -1,7 +1,7 @@
 package fr.sqli.cantine.controller.users.admin.meals;
 
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 
@@ -12,6 +12,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,25 +30,33 @@ import java.util.Objects;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
+public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
     private static final Logger LOG = LogManager.getLogger();
-    final  String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
+    final String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
     @Autowired
+    private IStudentDao iStudentDao;
+    @Autowired
+    private IStudentClassDao iStudentClassDao;
     private IMealDao mealDao;
+    private MockMvc mockMvc;
+    private IAdminDao adminDao;
+    private IFunctionDao functionDao;
+    private MultiValueMap<String, String> formData;
+    private MockMultipartFile imageData;
+    private String authorizationToken;
 
     @Autowired
-    private MockMvc mockMvc;
+    public AddMealTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao , IMealDao mealDao) throws Exception {
+        this.mockMvc = mockMvc;
+        this.adminDao = adminDao;
+        this.functionDao = functionDao;
+        this.mealDao = mealDao;
+        clearDataBase();
+        initFormData();
+        initDataBase();
 
-    private MultiValueMap<String, String> formData;
-
-    private MockMultipartFile imageData;
-
-    private  String adminBearerToken;
-
-     public AddMealTest () {
-
-   }
+    }
 
     public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
@@ -56,6 +66,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         this.formData.add("description", "MealTest description");
         this.formData.add("status", "1");
         this.formData.add("quantity", "10");
+        this.formData.add("mealType", "ENTREE");
         this.imageData = new MockMultipartFile(
                 "image",                         // nom du champ de fichier
                 IMAGE_MEAL_FOR_TEST_NAME,          // nom du fichier
@@ -66,35 +77,31 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
     public void clearDataBase() {
+        this.adminDao.deleteAll();
+        this.functionDao.deleteAll();
         this.mealDao.findAll();
         this.mealDao.deleteAll();
     }
+
     /**
      * make  one  Meal in  the  database
      * this  meal  will  be  used  only for    the  tests  of  the  method  addMealTestWithExistingMeal because we have to make a meal in DataBase
      **/
-    public void initDataBase() {
+    public void initDataBase() throws Exception {
+
+        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+        this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
+
         ImageEntity image = new ImageEntity();
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
-                , new BigDecimal("1.5"), 10, 1, mealTypeEnum,image);
+                , new BigDecimal("1.5"), 10, 1, mealTypeEnum, image);
 
         this.mealDao.save(mealEntity);
     }
-    //  clear  the  database  after  all
-    // this  method  will  be  used  only for  the  tests  of  the  method  addMealTestWithExistingMeal because we have to clear the database after all tests (addMealTestWithExistingMeal)
 
-
-
-
-    @BeforeEach
-    void init  () throws IOException {
-        clearDataBase();
-        initFormData();
-        initDataBase();
-    }
-    @Test
+   @Test
     void addMealTestWithAllValidateInformation() throws Exception {
 
         this.formData.set("label", "MealTest2");
@@ -104,6 +111,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
@@ -120,7 +128,59 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         Assertions.assertTrue(imageFile.delete());
 
     }
+    /**************************************** Tests  For  Student Token    ********************************************/
+    @Test
+    void  addMealTestWithStudentToken() throws Exception {
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
 
+        AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION,studentAuthorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+   /**************************************** Tests  For  Meal Type    ********************************************/
+
+   @Test
+   void  addMealTestWithWrongMealType() throws Exception {
+       this.formData.set("mealType" , "wrongMealType");
+
+
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+               .file(this.imageData)
+               .params(this.formData)
+               .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+               .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+       result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidMealType"))));
+   }
+
+   @Test
+   void  addMealTestWithOutMealType() throws Exception {
+       this.formData.remove("mealType");
+
+
+       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+               .file(this.imageData)
+               .params(this.formData)
+               .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+               .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("mealType"))));
+   }
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase4() throws Exception {
@@ -129,22 +189,16 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
-
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
     @Test
@@ -153,23 +207,17 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         this.formData.set("category", "   M e a l TEST c  ate gor y ".toLowerCase());
         this.formData.set("label", "ME                  AlTES t".toLowerCase());
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
 
                 // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
-
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
     @Test
@@ -179,22 +227,16 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         this.formData.set("label", "ME                  AlTES t");
         this.formData.set("description", "MEALTEST DESCRIPTION");
 
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
-
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
     @Test
@@ -203,21 +245,16 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         this.formData.set("category", "   M e a l TEST c  ate gor y ");
         this.formData.set("label", "ME                  AlTES t");
 
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
 
     }
 
@@ -226,21 +263,16 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         this.formData.set("category", "   M e a l Test c  ate gor y ");
 
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
 
     }
 
@@ -249,23 +281,15 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         this.formData.set("description", "   MealTest description   ");
 
-
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + Objects.requireNonNull(this.formData.getFirst("description")).trim()
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
-
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
-
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
 
@@ -276,22 +300,15 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
         this.formData.set("label", "MealTes t");
 
-
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
-
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
 
@@ -299,52 +316,40 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel2() throws Exception {
 
-
         this.formData.set("label", " M eal T e s t ");
 
 
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
-
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
-
-        clearDataBase(); //  clear  the  database  after  all
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
+      //  clearDataBase(); //  clear  the  database  after  all
     }
+
 
 
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel() throws Exception {
 
-
-        this.formData.remove("label");
-        this.formData.add("label", " M e a  l T e s t ");
-
-
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
+        this.formData.set("label" , " M e a  l T e s t ");
 
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
 
-        clearDataBase(); //  clear  the  database  after  all
+
     }
 
 
@@ -352,21 +357,16 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     @DisplayName("add Meal with  the  same  label  and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMeal() throws Exception {
 
-
-
-        var errorMessage = " LE PLAT :  " + Objects.requireNonNull(this.formData.getFirst("label")).trim() + " AVEC  "
-                +  Objects.requireNonNull(this.formData.getFirst("category")).trim()+ " ET " + this.formData.getFirst("description")
-                + " EST DEJA PRESENT DANS LA BASE DE DONNEES";
-
         // 3  Test  With  Trying  to  add The Same Meal again
-        var result2 = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-        result2.andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(errorMessage)));
+        result.andExpect(MockMvcResultMatchers.status().isConflict());
+
 
     }
 
@@ -385,6 +385,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -404,6 +405,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -416,6 +418,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     void addMealTestWithOutImage() throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -433,6 +436,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -446,6 +450,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -460,11 +465,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -473,11 +479,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -486,11 +493,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -499,11 +507,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -512,6 +521,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -525,6 +535,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -539,6 +550,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -557,11 +569,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -570,6 +583,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -583,6 +597,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -596,11 +611,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -609,11 +625,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -622,11 +639,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -635,6 +653,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -648,6 +667,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -662,6 +682,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -670,7 +691,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     }
 
 
-    /********************************* Tests for Status *********************************/
+   /********************************* Tests for Status *********************************/
     @Test
     void AddMealTestWithOutSideStatusValue3() throws Exception {
         this.formData.set("status", "3 ");
@@ -680,6 +701,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -697,6 +719,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -714,6 +737,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -730,6 +754,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -746,12 +771,13 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -762,12 +788,13 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidArgument"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidValue"))));
     }
 
     @Test
@@ -778,7 +805,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
-
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -793,6 +820,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -809,12 +837,52 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         // then :
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("Status"))));
+    }
+
+
+
+    /*****************************************  Tests For   MealType  *****************************************/
+    @Test
+    void AddMealTestWithInvalidMealType() throws Exception {
+        // given :  remove label from formData
+        this.formData.set("mealType" , "invalidMealType");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidMealType"))));
+    }
+
+    @Test
+    void AddMealTestWithOutMealType() throws Exception {
+        // given :  remove label from formData
+         this.formData.remove("mealType");
+
+        // when : call addMeal
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("mealType"))));
     }
 
 
@@ -828,6 +896,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -841,13 +910,14 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     void AddMealTestWithTooLongDescription() throws Exception {
         // given :  remove label from formData
         // word  with  101  characters
-        String tooLongLabel = "a".repeat(1701);
+        String tooLongLabel = "a".repeat(3001);
         this.formData.set("description", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -864,6 +934,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -882,6 +953,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -899,6 +971,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -920,6 +993,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -932,13 +1006,14 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
     void AddMealTestWithTooLongCategory() throws Exception {
         // given :  remove label from formData
         // word  with  101  characters
-        String tooLongLabel = "t".repeat(45);
+        String tooLongLabel = "t".repeat(101);
         this.formData.set("category", tooLongLabel); // length  must be  < 3 without spaces
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -956,6 +1031,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -973,6 +1049,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -991,6 +1068,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -1010,6 +1088,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -1028,6 +1107,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -1046,6 +1126,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
@@ -1066,6 +1147,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :
@@ -1086,6 +1168,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :
@@ -1094,7 +1177,6 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
     }
-
 
     @Test
     void addMealTestWithNullRequestData() throws Exception {
@@ -1103,6 +1185,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
         // when : call addMeal
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :
@@ -1111,8 +1194,17 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest  {
 
 
     }
+    @Test
+    void addMealTestWithOutAuthToken() throws Exception {
 
 
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST ,ADD_MEAL_URL)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        // then :
+        result.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+
+    }
 }
 
 

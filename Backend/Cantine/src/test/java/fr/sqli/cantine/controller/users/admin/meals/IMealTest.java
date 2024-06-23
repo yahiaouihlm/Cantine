@@ -4,8 +4,8 @@ import java.util.Map;
 
 public interface IMealTest {
 
-    //  Meal Tests messages  Errors and Success
-    String BASIC_MEAL_URL = "/cantine/api/admin/meals";
+    String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
+    String BASIC_MEAL_URL = BASIC_CANTINE_ROOT_URL + "cantine/admin/api/meals";
     String  BASIC_MEAL_URL_API =  "/cantine/api/meals";
 
         String GET_ALL_MEALS_URL = BASIC_MEAL_URL_API + "/getAll";
@@ -34,13 +34,15 @@ public interface IMealTest {
             Map.entry("Quantity", "QUANTITY_IS_MANDATORY"),
             Map.entry("Status", "STATUS_IS_MANDATORY"),
             Map.entry("Image", "IMAGE_IS_MANDATORY"),
+            Map.entry("mealType", "MEAL_TYPE_IS_MANDATORY"),
+            Map.entry("InvalidMealType", "MEAL_TYPE_IS_INVALID"),
             Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
             Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
             Map.entry("ShortDescriptionLength", "DESCRIPTION_IS_TOO_SHORT"),
             Map.entry("LongDescriptionLength", "DESCRIPTION_IS_TOO_LONG"),
             Map.entry("ShortCategoryLength", "CATEGORY_IS_TOO_SHORT"),
             Map.entry("LongCategoryLength", "CATEGORY_IS_TOO_LONG"),
-            Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
+            Map.entry("InvalidValue", "INVALID VALUE"),
             Map.entry("OutSideStatusValue", "STATUS MUST BE 0 OR 1 FOR ACTIVE OR INACTIVE"),
             Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
             Map.entry("HighQuantity", "QUANTITY_IS_TOO_HIGH"),
