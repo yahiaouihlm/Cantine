@@ -118,7 +118,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminAddedSuccessfully"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("MealAddedSuccessfully"))));
 
         var admin = this.adminDao.findByEmail(this.formData.getFirst("email"));
         Assertions.assertTrue(admin.isPresent());

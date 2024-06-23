@@ -26,6 +26,17 @@ public interface IMealTest {
 
     String IMAGE_MEAL_DIRECTORY_PATH = "images/meals/";
     String   IMAGE_MEAL_FOR_TEST_PATH = IMAGE_MEAL_TEST_DIRECTORY_PATH +IMAGE_MEAL_FOR_TEST_NAME;
+
+
+    Map <String, String> responseMap = Map.ofEntries(
+            Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY")
+    );
+
+
+
+
+
+
     final Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("Label", "LABEL_IS_MANDATORY"),
             Map.entry("Category", "CATEGORY_IS_MANDATORY"),

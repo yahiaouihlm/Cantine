@@ -26,14 +26,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
     private static final Logger LOG = LogManager.getLogger();
-    final String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
+
     @Autowired
     private IStudentDao iStudentDao;
     @Autowired
@@ -114,8 +113,8 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-        result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json( super.responseMessage(MEAL_ADDED_SUCCESSFULLY)));
+       result.andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(IMealTest.responseMap.get("MealAddedSuccessfully"))));
 
         //  clear  the  database  after
         //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
