@@ -62,9 +62,12 @@ public interface IMealController {
 
     @GetMapping(value = GET_ONLY_MEALS_IN_DELETION_PROCESS_URL)
     ResponseEntity<List<MealDtOut>> getMealsInDeletionProcess();
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = ENDPOINT_GET_ALL_MEAL)
     ResponseEntity<List<MealDtOut>> getAllMeal();
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
     ResponseEntity<MealDtOut> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, InvalidFoodInformationException;
 

@@ -5,12 +5,16 @@ import java.util.Map;
 public interface IMealTest {
 
     String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
-    String BASIC_MEAL_URL = BASIC_CANTINE_ROOT_URL + "cantine/admin/api/meals";
-    String  BASIC_MEAL_URL_API =  "/cantine/api/meals";
 
-        String GET_ALL_MEALS_URL = BASIC_MEAL_URL_API + "/getAll";
+    String BASIC_MEAL_URL = BASIC_CANTINE_ROOT_URL + "cantine/admin/api/meals";
+
 
     final  String GET_ONE_MEAL_URL = BASIC_MEAL_URL + "/get";
+    String GET_ALL_MEALS_URL = BASIC_MEAL_URL + "/getAll";
+
+    String GET_UNAVAILABLE_MEALS_URL = BASIC_MEAL_URL + "/getUnavailableMeals";
+
+
     final String ADD_MEAL_URL = BASIC_MEAL_URL + "/add";
 
     final String DELETE_MEAL_URL = BASIC_MEAL_URL + "/delete";
@@ -62,8 +66,8 @@ public interface IMealTest {
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
-            Map.entry("missingParam", "MISSING PARAMETER"),
-            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID"),
+            Map.entry("InvalidMealUuid", "INVALID MEAL UUID"),
+            Map.entry("mealNotFound", "NO MEAL WAS FOUND"),
             Map.entry("InvalidID", "THE ID  CAN NOT BE NULL OR LESS THAN 0")
 
     );
