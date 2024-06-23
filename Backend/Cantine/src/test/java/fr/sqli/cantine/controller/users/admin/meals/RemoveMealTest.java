@@ -1,6 +1,7 @@
 package fr.sqli.cantine.controller.users.admin.meals;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
+import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.controller.users.student.IStudentTest;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.*;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -22,101 +24,96 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RemoveMealTest extends AbstractContainerConfig implements IMealTest {
 
-    final String paramReq = "?" + "idMeal" + "=";
+    final String paramReq = "?" + "uuidMeal" + "=";
     //"THE ID CAN NOT BE NULL OR LESS THAN 0"
-    final String MEAL_DELETED_SUCCESSFULLY = "MEAL DELETED SUCCESSFULLY";
-    @Autowired
     private IMealDao mealDao;
-
     @Autowired
     private IMenuDao menuDao;
-    @Autowired
+    private IAdminDao adminDao;
+    private IFunctionDao functionDao;
     private MockMvc mockMvc;
-    @Autowired
-    private IStudentClassDao studentClassDao;
-    @Autowired
-    private IStudentDao studentDao;
+    private IStudentClassDao iStudentClassDao;
+    private IStudentDao iStudentDao;
 
-    @Autowired
+    private String authorizationToken;
+
     private IOrderDao orderDao;
-    private List<MealEntity> meals;
 
+    @Autowired
+    public RemoveMealTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IMealDao mealDao, IStudentDao iStudentDao, IStudentClassDao iStudentClassDao, IOrderDao iOrderDao) throws Exception {
+        this.mockMvc = mockMvc;
+        this.adminDao = adminDao;
+        this.functionDao = functionDao;
+        this.mealDao = mealDao;
+        this.iStudentDao = iStudentDao;
+        this.iStudentClassDao = iStudentClassDao;
+        this.orderDao = iOrderDao;
+        cleanUp();
+        initDB();
+    }
 
+    public void initDB() throws Exception {
 
+        // create  Admin and get token
+        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+        this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
-
-    public void initDB() {
         ImageEntity image = new ImageEntity();
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
-        ImageEntity image1 = new ImageEntity();
-        image1.setImagename(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
-        MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
-        this.meals =
-                List.of(
-                        new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1, 1,mealTypeEnum, image),
-                        new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1, 1, mealTypeEnum, image1)
-                );
-        this.mealDao.saveAll(meals);
-    }
 
+
+        MealEntity mealEntity = new MealEntity("platNotAvailable", "MealTest category", "MealTest description"
+                , new BigDecimal("1.5"), 10, 1, MealTypeEnum.getMealTypeEnum("ENTREE"), image);
+        this.mealDao.save(mealEntity);
+
+    }
 
     void cleanUp() {
-        this.orderDao.deleteAll();
-        this.studentDao.deleteAll();
-        this.studentClassDao.deleteAll();
-        this.menuDao.deleteAll();
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
         this.mealDao.deleteAll(); // clean  data  after  each  test
+        this.adminDao.deleteAll();
+        this.functionDao.deleteAll();
     }
+
     @BeforeAll
-    static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
+    static void copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
         String source = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
         String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
         File sourceFile = new File(source);
         File destFile = new File(destination);
-        if  (!destFile.exists())
+        if (!destFile.exists())
             Files.copy(sourceFile.toPath(), destFile.toPath());
     }
 
 
 
-
-    @BeforeEach
-    void init (){
-       this.cleanUp();
-        this.initDB();
-    }
-    BufferedImage saveTestFile() throws IOException {
-        File image = new File(IMAGE_MEAL_FOR_TEST_PATH);
-        return ImageIO.read(image);
-    }
-
     @Test
     void removeMealTest() throws Exception {
+        copyImageTestFromTestDirectoryToImageMenuDirectory();
         var mealToRemove = this.mealDao.findAll().get(0);
 
 
-
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + mealToRemove.getId()));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + mealToRemove.getUuid())
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
 
         result.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(MEAL_DELETED_SUCCESSFULLY)));
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("MealDeletedSuccessfully"))));
 
-        Assertions.assertEquals(1, this.mealDao.findAll().size());
-        var  image =  mealToRemove.getImage().getImagename();
+        Assertions.assertEquals(0, this.mealDao.findAll().size());
+        var image = mealToRemove.getImage().getImagename();
         Assertions.assertFalse(new File(IMAGE_MEAL_DIRECTORY_PATH + image).exists());
-
-
 
     }
 
-    /*  TODO whe We Make Menu */
     @Test
     void removeMealInAssociationWithMenu() throws Exception {
         var idMealToRemove = this.mealDao.findAll().get(0);
@@ -131,25 +128,26 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
         menuEntity.setImage(image);
         menuEntity.setMeals(List.of(idMealToRemove));
-        var   removeMeal   =   this.menuDao.save(menuEntity);
+        this.menuDao.save(menuEntity);
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId()));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getUuid())
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
-   var resultReq = " Le  Plat  \" " + removeMeal.getLabel() + " \"  Ne  Pas Etre  Supprimé  Car  Il  Est  Present  Dans  d'autres  Menu(s)" ;
         result.andExpect(status().isConflict())
-                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(resultReq)));
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealCanNotBeDeletedMenu"))));
     }
 
-/*
+
     @Test
     void removeMealInAssociationWithOrder() throws Exception {
 
-        StudentClassEntity studentClassEntity = new StudentClassEntity();
-        studentClassEntity.setName("class1");
-        studentClassEntity =  this.studentClassDao.save(studentClassEntity);
-       var student   =    IStudentTest.createStudentEntity("yahiaoui@gmail.com" , studentClassEntity);
-       student = this.studentDao.save(student);
-        var  idMealToRemove = this.mealDao.findAll().get(0);
+
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
+
+        var student = AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+
+        var idMealToRemove = this.mealDao.findAll().get(0);
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setStudent(student);
         orderEntity.setQRCode("qrcode");
@@ -157,73 +155,85 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         orderEntity.setCreationDate(LocalDate.now());
         orderEntity.setMeals(List.of(idMealToRemove));
         orderEntity.setStatus(1);
-       orderEntity.setCreationTime(new Time(System.currentTimeMillis()));
-       this.orderDao.save(orderEntity);
+        orderEntity.setCreationTime(new Time(System.currentTimeMillis()));
+        this.orderDao.save(orderEntity);
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId()));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getUuid())
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
-        result.andExpect(status().isConflict());
+        result.andExpect(status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealCanNotBeDeletedOrder"))));
+
+        this.orderDao.deleteAll();
+    }
+
+
+    @Test
+    void removeMealTestWithStudentToken() throws Exception {
+
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
+
+        AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + java.util.UUID.randomUUID().toString())
+                .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken));
+
+        result.andExpect(status().isForbidden());
 
     }
-*/
-
 
 
     @Test
     void removeMealTestWithMealNotFound() throws Exception {
 
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + (Integer.MAX_VALUE - 10)));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + java.util.UUID.randomUUID().toString())
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealNotFound"))));
 
     }
 
-    @Test
-    void removeMealTestWithNegativeID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +this.paramReq+"-5"));
-
-        result.andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidParameter"))));
-
-    }
-
-
-    @Test
-    void removeMealTestWithInValidID2() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL +this.paramReq+ "1000000000000000000000000000000000000000000"));
-
-        result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
-
-    }
 
     @Test
     void removeMealTestWithInvalidID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq+"ozzedoz"));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + "ozzedoz")
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
-        result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidMealUuid"))));
 
     }
 
 
     @Test
     void removeMealTestWithNullID() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq + null    ));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + null)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
-        result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidArgument"))));
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidMealUuid"))));
 
     }
 
     @Test
     void removeMealTestWithOutId() throws Exception {
-        var result = this.mockMvc.perform(delete(DELETE_MEAL_URL + this.paramReq  ));
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
 
-        result.andExpect(status().isNotAcceptable())
-                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("missingParam"))));
+        result.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(exceptionMessage(exceptionsMap.get("InvalidMealUuid"))));
+
+    }
+
+
+    @Test
+    void removeMealTestWithOutAuthToken() throws Exception {
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + java.util.UUID.randomUUID().toString()));
+        result.andExpect(status().isUnauthorized());
 
     }
 
