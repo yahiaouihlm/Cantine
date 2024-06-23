@@ -93,6 +93,14 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
             Files.copy(sourceFile.toPath(), destFile.toPath());
     }
 
+    @AfterAll
+    static   void  removeImageOfTestIFExist (){
+        String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
+        File destFile = new File(destination);
+        if (destFile.exists()) {
+            destFile.delete();
+        }
+    }
 
 
     @Test

@@ -42,6 +42,7 @@ public interface IMealController {
 
 
     /*------------------ METHODS ------------------*/
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
