@@ -190,7 +190,7 @@ public class MenuService implements IMenuService {
 
         var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
             MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE getMenuByUuId METHOD ", menuUuid);
-            return new FoodNotFoundException("NO MENU WAS FOUND");
+            return new FoodNotFoundException("MENU NOT FOUND");
         });
 
 

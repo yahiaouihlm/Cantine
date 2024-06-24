@@ -4,10 +4,7 @@ package fr.sqli.cantine.controller.users.admin.menus;
 import com.auth0.jwt.interfaces.Header;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.dao.IAdminDao;
-import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dao.IMealDao;
-import fr.sqli.cantine.dao.IMenuDao;
+import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MealTypeEnum;
@@ -38,6 +35,10 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     private final String paramReq = "?" + "uuidMenu" + "=";
 
+    @Autowired
+    private IStudentDao iStudentDao;
+    @Autowired
+    private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
     private MockMvc mockMvc;
     private IMealDao mealDao;
@@ -84,13 +85,11 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-
-
     @Test
     @Rollback(value = true)
-    void  getAllMenusInProcessOfDeletion() throws Exception {
-         this.menuSaved.setStatus(2);
-         this.menuDao.save(this.menuSaved);
+    void getAllMenusInProcessOfDeletion() throws Exception {
+        this.menuSaved.setStatus(2);
+        this.menuDao.save(this.menuSaved);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONLY_MENUS_IN_DELETION_PROCESS_URL)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
@@ -101,66 +100,80 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
+    /************************************** Get All Menus *************************************/
 
-/************************************** Get All Menus *************************************/
 
+    @Test
+    void getAllMenusWithOneMenuDatabase() throws Exception {
 
-  @Test
-  void  getAllMenusWithOneMenuDatabase() throws Exception {
-
-      var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_MENUS_URL)
-              .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
-      result.andExpect(MockMvcResultMatchers.status().isOk());
-      result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(1)));
-      result.andExpect(MockMvcResultMatchers.jsonPath("$[0].label").value(CoreMatchers.is(this.menuSaved.getLabel())));
-      result.andExpect(MockMvcResultMatchers.jsonPath("$[0].description", CoreMatchers.is(this.menuSaved.getDescription())));
-  }
-
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_MENUS_URL)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(CoreMatchers.is(1)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$[0].label").value(CoreMatchers.is(this.menuSaved.getLabel())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$[0].description", CoreMatchers.is(this.menuSaved.getDescription())));
+    }
 
 
     /************************************* GetMenu By Id *************************************/
 
 
     @Test
-    void getMenuByIdTestWithStudentAuth () throws Exception {
-        var  mealUuid= this.menuSaved.getUuid(); // id must be not exist in database
-        var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL+ this.paramReq +mealUuid )
+    void getMenuByIdWithStudentToken() throws Exception {
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
+
+        AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + this.menuSaved.getUuid())
+                .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken));
+
+
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getMenuByIdTest() throws Exception {
+        var mealUuid = this.menuSaved.getUuid(); // id must be not exist in database
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + mealUuid)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
-        result.andExpect( status().isOk());
+        result.andExpect(status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.uuid", CoreMatchers.is(mealUuid)));
         result.andExpect(MockMvcResultMatchers.jsonPath("$.label", CoreMatchers.is(this.menuSaved.getLabel())));
         result.andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(this.menuSaved.getDescription())));
     }
 
 
+    @Test
+    void getMenuByIdWithInvalidId() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + "1.2")
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
+        result.andExpect(status().isBadRequest())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidMenuID"))));
+    }
 
- @Test
- void getMenuByIdWithInvalidId () throws Exception {
-     var  result  =   this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL+ this.paramReq + "1.2" )
-             .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
-     result.andExpect( status().isBadRequest())
-             .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidMenuID"))));
- }
+    @Test
+    void getMenuByIdWithInvalidUUd() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders
+                .get(GET_ONE_MENU_URL + this.paramReq + java.util.UUID.randomUUID().toString())
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
- @Test
- void getMenuByIdWithInvalidUUd () throws Exception {
-     var  result  =   this.mockMvc.perform(MockMvcRequestBuilders
-             .get(GET_ONE_MENU_URL+ this.paramReq + java.util.UUID.randomUUID().toString()   )
-             .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
+        result.andExpect(status().isNotFound())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("MenuNotFound"))));
+    }
 
-     result.andExpect( status().isNotFound())
-             .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("MenuNotFound"))));
- }
- @Test
- void getMenuByIdWithNullId () throws Exception {
-     var  result  =   this.mockMvc.perform(MockMvcRequestBuilders
-             .get(GET_ONE_MENU_URL+ this.paramReq + null )
-             .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
+    @Test
+    void getMenuByIdWithNullId() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders
+                .get(GET_ONE_MENU_URL + this.paramReq + null)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
-     result.andExpect( status().isBadRequest())
-             .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidMenuID"))));
- }
+        result.andExpect(status().isBadRequest())
+                .andExpect(content().string(super.exceptionMessage(exceptionsMap.get("InvalidMenuID"))));
+    }
 
     @Test
     void getMenuByIdWithOutID() throws Exception {

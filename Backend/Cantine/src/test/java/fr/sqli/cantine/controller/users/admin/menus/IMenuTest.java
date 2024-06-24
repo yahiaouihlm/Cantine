@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface IMenuTest {
+
+
+
     final  String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
     final  String BASE_MENU_URL  = BASIC_CANTINE_ROOT_URL +   "/cantine/admin/api/menus";
     String  BASIC_MENU_URL_API =  "/cantine/api/menus";
@@ -58,7 +61,7 @@ public interface IMenuTest {
             Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE"),
             Map.entry("missingParam", "MISSING PARAMETER"),
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
-            Map.entry("MenuNotFound", "NO MENU WAS FOUND"),
+            Map.entry("MenuNotFound", "MENU NOT FOUND"),
             Map.entry("MenuWithOutMeals", "THE MENU DOESN'T CONTAIN ANY MEAL"),
             Map.entry("NoMealInTheMenu", "THE MENU DOESN'T CONTAIN ANY MEAL"),
             Map.entry("MealNotFoundOnMenu", "NO MEAL WAS FOUND"),
@@ -71,7 +74,8 @@ public interface IMenuTest {
 
 
     Map <String, String> responseMap = Map.ofEntries(
-            Map.entry("MenuAddedSuccessfully", "MENU ADDED SUCCESSFULLY")
+            Map.entry("MenuAddedSuccessfully", "MENU ADDED SUCCESSFULLY"),
+            Map.entry("MenuDeletedSuccessfully",  "MENU DELETED SUCCESSFULLY")
 
     );
 
