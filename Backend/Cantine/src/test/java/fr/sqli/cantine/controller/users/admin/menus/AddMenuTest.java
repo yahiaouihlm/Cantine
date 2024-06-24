@@ -5,10 +5,7 @@ package fr.sqli.cantine.controller.users.admin.menus;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.controller.users.admin.meals.IMealTest;
-import fr.sqli.cantine.dao.IAdminDao;
-import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dao.IMealDao;
-import fr.sqli.cantine.dao.IMenuDao;
+import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +35,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
-    private static final Logger LOG = LogManager.getLogger();;
+    private static final Logger LOG = LogManager.getLogger();
+    ;
+    @Autowired
+    private IStudentDao iStudentDao;
+    @Autowired
+    private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
 
     private IMealDao mealDao;
@@ -103,7 +105,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
 
-/************************************** Add Menu ****************************************/
+    /************************************** Add Menu ****************************************/
 
 
     @Test
@@ -122,7 +124,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         ObjectMapper objectMapper = new ObjectMapper();
         this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(meals.stream().map(AbstractEntity::getUuid).toList()));
 
-    //    this.formData.add("listOfMealsAsString", " [\"" + meals.get(0).getUuid() +","+meals.get(1).getUuid() + "\" ] ");
+        //    this.formData.add("listOfMealsAsString", " [\"" + meals.get(0).getUuid() +","+meals.get(1).getUuid() + "\" ] ");
 
 
         var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
@@ -136,15 +138,15 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
         MenuEntity menuEntity = this.menuDao.findAll().stream() // we know that  there is  only 2 menu
-                                   .filter(menu ->menu.getLabel().equals("MenuTest")).limit(1).toList().get(0);
-         var imageName = menuEntity.getImage().getImagename();
+                .filter(menu -> menu.getLabel().equals("MenuTest")).limit(1).toList().get(0);
+        var imageName = menuEntity.getImage().getImagename();
 
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).delete());
     }
 
 
-/************************************** Existing Menu ***********************************/
+    /************************************** Existing Menu ***********************************/
 
     @Test
     void addMenuWithExistingMenu3() throws Exception {
@@ -153,7 +155,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("label", this.menuSaved.getLabel().toLowerCase());
         this.formData.set("price", this.menuSaved.getPrice().toString() + "0000");
         this.formData.set("description", this.menuSaved.getDescription().toUpperCase());
-        this.formData.add("listOfMealsAsString", " [\"" +java.util.UUID.randomUUID() + "\" ] ");
+        this.formData.add("listOfMealsAsString", " [\"" + java.util.UUID.randomUUID() + "\" ] ");
 
         var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
@@ -172,7 +174,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("label", "T  A     c    o      S  ");
         this.formData.set("price", this.menuSaved.getPrice().toString() + "0000");
         this.formData.set("description", "T A C O  s  deS criP   tio      NMenu");
-        this.formData.add("listOfMealsAsString", " [\"" +java.util.UUID.randomUUID() + "\" ] ");
+        this.formData.add("listOfMealsAsString", " [\"" + java.util.UUID.randomUUID() + "\" ] ");
 
         var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
@@ -181,6 +183,26 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isConflict()).andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("ExistingMenu"))));
+
+    }
+
+    @Test
+    void addMenuTestWithStudentToken() throws Exception {
+
+        this.iStudentDao.deleteAll();
+        this.iStudentClassDao.deleteAll();
+
+        AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
+
+
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION,studentAuthorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        result.andExpect(MockMvcResultMatchers.status().isForbidden());
 
     }
 
@@ -192,7 +214,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.set("label", this.menuSaved.getLabel());
         this.formData.set("price", this.menuSaved.getPrice().toString());
         this.formData.set("description", this.menuSaved.getDescription());
-        this.formData.add("listOfMealsAsString", " [\"" +java.util.UUID.randomUUID() + "\" ] ");
+        this.formData.add("listOfMealsAsString", " [\"" + java.util.UUID.randomUUID() + "\" ] ");
 
         var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
@@ -205,21 +227,21 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     @Test
-   void addMenuWithUnavailableMeal() throws Exception {
-        var  meals   =  this.mealDao.findAll();
+    void addMenuWithUnavailableMeal() throws Exception {
+        var meals = this.mealDao.findAll();
         meals.get(0).setStatus(0);
-       var  mealID  =  this.mealDao.save(meals.get(0)).getUuid();
-       // this.formData.add("listOfMealsAsString", " [\"" +mealID +  "," +meals.get(1).getUuid()+   "\" ] ");
+        var mealID = this.mealDao.save(meals.get(0)).getUuid();
+        // this.formData.add("listOfMealsAsString", " [\"" +mealID +  "," +meals.get(1).getUuid()+   "\" ] ");
         ObjectMapper objectMapper = new ObjectMapper();
 
-        this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(List.of( mealID, meals.get(1).getUuid())));
+        this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(List.of(mealID, meals.get(1).getUuid())));
 
 
-       var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
+        var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
                 .file(this.imageData)
                 .params(this.formData)
-               .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
-               .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -251,7 +273,6 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("fewMealInTheMenu"))));
     }
-
 
 
     @Test

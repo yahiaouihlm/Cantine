@@ -27,9 +27,9 @@ public interface IMenuTest {
 
     final String GET_ONE_MENU_URL = BASE_MENU_URL + "/get";
 
-    final  String  GET_ALL_MENUS_URL = BASIC_MENU_URL_API + "/getAll";
+    final  String  GET_ALL_MENUS_URL = BASE_MENU_URL + "/getAll";
 
-
+    String GET_ONLY_MENUS_IN_DELETION_PROCESS_URL = BASE_MENU_URL +"/getMenusInDeletionProcess";
     /********************** Image **************************/
     String  IMAGE_MENU_FOR_TEST_NAME = "ImageForTest.jpg";
 
@@ -58,14 +58,15 @@ public interface IMenuTest {
             Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE"),
             Map.entry("missingParam", "MISSING PARAMETER"),
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
-            Map.entry("MenuNotFound", "NO MENU WAS FOUND WITH THIS ID "),
+            Map.entry("MenuNotFound", "NO MENU WAS FOUND"),
             Map.entry("MenuWithOutMeals", "THE MENU DOESN'T CONTAIN ANY MEAL"),
             Map.entry("NoMealInTheMenu", "THE MENU DOESN'T CONTAIN ANY MEAL"),
             Map.entry("MealNotFoundOnMenu", "NO MEAL WAS FOUND"),
             Map.entry("UnavailableMeal", "THE UNAVAILABLE OR DELETED  MEAL CAN NOT BE ADDED TO  MENU"),
    Map.entry("InvalidMealID", "INVALID MEAL UUID"),
             Map.entry("fewMealInTheMenu", "FEW MEALS IN THE MENU"),
-            Map.entry("MenuUpdatedSuccessfully", "MENU UPDATED SUCCESSFULLY")
+
+            Map.entry("InvalidMenuID", "INVALID MENU UUID")
     );
 
 

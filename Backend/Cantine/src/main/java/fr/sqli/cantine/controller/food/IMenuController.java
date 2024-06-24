@@ -53,10 +53,11 @@ public interface IMenuController {
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
     ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws InvalidFoodInformationException, FoodNotFoundException;
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = ENDPOINT_GET_ALL_MENU)
     public  ResponseEntity<List<MenuDtOut>> getAllMenu();
 
@@ -66,6 +67,7 @@ public interface IMenuController {
     @GetMapping(value = ENDPOINT_GET_ONLY_UNAVAILABLE_MENUS)
     ResponseEntity<List<MenuDtOut>> getUnavailableMenus();
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = GET_ONLY_MENUS_IN_DELETION_PROCESS_URL)
     ResponseEntity<List<MenuDtOut>> getMenusInDeletionProcess();
 
