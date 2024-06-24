@@ -34,7 +34,8 @@ public interface IMealTest {
 
     Map <String, String> responseMap = Map.ofEntries(
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
-            Map.entry("MealDeletedSuccessfully", "MEAL DELETED SUCCESSFULLY")
+            Map.entry("MealDeletedSuccessfully", "MEAL DELETED SUCCESSFULLY"),
+            Map.entry("MealUpdatedSuccessfully", "MEAL UPDATED SUCCESSFULLY")
     );
 
 
@@ -68,7 +69,7 @@ public interface IMealTest {
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("InvalidMealUuid", "INVALID MEAL UUID"),
-            Map.entry("mealNotFound", "NO MEAL WAS FOUND"),
+            Map.entry("mealNotFound", "NO MEAL WAS FOUND WITH THIS ID"),
             Map.entry("mealCanNotBeDeletedOrder", "THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)"
                     +"PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT"),
             Map.entry("mealCanNotBeDeletedMenu", "THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S) " +
