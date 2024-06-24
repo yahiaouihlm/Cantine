@@ -2,6 +2,7 @@ package fr.sqli.cantine.controller.users.admin.menus;
 
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.entity.MenuEntity;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,7 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface IMenuTest {
-    final  String BASE_MENU_URL  =  "/cantine/api/admin/menus";
+    final  String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
+    final  String BASE_MENU_URL  = BASIC_CANTINE_ROOT_URL +   "/cantine/admin/api/menus";
     String  BASIC_MENU_URL_API =  "/cantine/api/menus";
     final  String DIRECTORY_IMAGE_MENU = "images/menus/";
     final  String  UPDATE_MENU_URL = BASE_MENU_URL + "/update";
@@ -37,7 +39,7 @@ public interface IMenuTest {
     String   IMAGE_MENU_FOR_TEST_PATH = IMAGE_MENU_DIRECTORY_TESTS_PATH +IMAGE_MENU_FOR_TEST_NAME;
     Map<String, String> exceptionsMap = Map.ofEntries(
             Map.entry("Label", "LABEL_IS_MANDATORY"),
-            Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
+            Map.entry("InvalidValue", "INVALID VALUE"),
             Map.entry("LongLabelLength", "LABEL_IS_TOO_LONG"),
             Map.entry("ShortLabelLength", "LABEL_IS_TOO_SHORT"),
             Map.entry("Description", "DESCRIPTION_IS_MANDATORY"),
@@ -58,19 +60,20 @@ public interface IMenuTest {
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("MenuNotFound", "NO MENU WAS FOUND WITH THIS ID "),
             Map.entry("MenuWithOutMeals", "THE MENU DOESN'T CONTAIN ANY MEAL"),
-            Map.entry("NoMealFound", "NO MEAL WAS FOUND WITH THIS ID"),
+            Map.entry("NoMealInTheMenu", "THE MENU DOESN'T CONTAIN ANY MEAL"),
+            Map.entry("MealNotFoundOnMenu", "NO MEAL WAS FOUND"),
+            Map.entry("UnavailableMeal", "THE UNAVAILABLE OR DELETED  MEAL CAN NOT BE ADDED TO  MENU"),
+   Map.entry("InvalidMealID", "INVALID MEAL UUID"),
+            Map.entry("fewMealInTheMenu", "FEW MEALS IN THE MENU"),
             Map.entry("MenuUpdatedSuccessfully", "MENU UPDATED SUCCESSFULLY")
     );
 
 
-     /* @BeforeAll
-      static void  checkExistingTestFiles () {
-          File image = new File(IMAGE_MENU_FOR_TEST_PATH);
-            if (!image.exists()) {
-               throw  new RuntimeException("The image ' ImageMenuForTest ' for test doesn't exist");
-            }
-      }
-*/
+    Map <String, String> responseMap = Map.ofEntries(
+            Map.entry("MenuAddedSuccessfully", "MENU ADDED SUCCESSFULLY")
+
+    );
+
 
     @BeforeAll
     static void  copyImageTestFromTestDirectoryToImageMenuDirectory() throws IOException {
@@ -105,7 +108,7 @@ public interface IMenuTest {
         imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = createMealWith("MealTest"  , "MealTest  description","MealTest  category", new BigDecimal(10.0) , 1 , 10 , imageEntity);
-
+         mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
         return  mealEntity ;
     }
 

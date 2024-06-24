@@ -64,7 +64,7 @@ public class MealService implements IMealService {
 
         var meal = this.mealDao.findByUuid(mealDtoIn.getUuid()).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getUuid());
-            return new FoodNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
+            return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
 
 
