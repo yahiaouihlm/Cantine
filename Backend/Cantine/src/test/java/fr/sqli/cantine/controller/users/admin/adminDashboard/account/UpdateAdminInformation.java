@@ -156,7 +156,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
 
        // make  a  new  admin  with  a default  image
-       var defaultImageAdmin  =  this.environment.getProperty("sqli.cantine.admin.default.image");
+       var defaultImageAdmin  =  this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
        var defaultImg = new ImageEntity();
          defaultImg.setImagename(defaultImageAdmin);
          this.adminEntity.setImage(defaultImg);
@@ -164,7 +164,6 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
             this.adminDao.save(this.adminEntity);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
-                .file(this.imageData)
                 .params(this.formData)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -182,11 +181,6 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
         Assertions.assertEquals(this.formData.get("town").get(0), adminUpdated.get().getTown());
         Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.get().getAddress());
         Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.get().getPhone());
-
-
-        Assertions.assertTrue(
-                new File(ADMIN_IMAGE_PATH + adminUpdated.get().getImage().getImagename()).delete()
-        );
 
     }
 

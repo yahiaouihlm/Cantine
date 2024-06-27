@@ -10,13 +10,13 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface IStudentTest {
-
+    String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
     String STUDENT_EMAIL_EXAMPLE = "mockey.d.luffy@social.aston-ecole.com";
     String STUDENT_PASSWORD_EXAMPLE = "password";
 
     String STUDENT_SIGN_IN_URL = "http://localhost:8080/user/login";
 
-    String STUDENT_BASIC_URL = "/cantine/student";
+    String STUDENT_BASIC_URL = BASIC_CANTINE_ROOT_URL + "cantine/user/student";
 
     String GET_STUDENT_BY_ID = STUDENT_BASIC_URL + "/getStudent";
     String STUDENT_SIGN_UP = STUDENT_BASIC_URL + "/signUp";
@@ -24,7 +24,6 @@ public interface IStudentTest {
     String IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH = "imagesTests/" + IMAGE_NAME;
 
-    String STUDENT_SIGNED_UP_SUCCESSFULLY = "STUDENT SAVED SUCCESSFULLY";
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
     String IMAGE_TEST_DIRECTORY_PATH = "imagesTests/";
@@ -54,12 +53,18 @@ public interface IStudentTest {
             Map.entry("InvalidStudentClass", "INVALID STUDENT CLASS NAME"),
             Map.entry("StudentClassRequire", "STUDENT CLASS IS  REQUIRED"),
             Map.entry("StudentClassNotFound", "STUDENT CLASS NOT FOUND"),
-            Map.entry("ExistingStudent", "THIS STUDENT IS ALREADY EXISTS"),
+            Map.entry("ExistingStudent", "EMAIL IS ALREADY EXISTS"),
             Map.entry("InvalidStudentId", "INVALID STUDENT ID"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("StudentNotFound", "STUDENT NOT FOUND"),
             Map.entry("MissingPram", "MISSING PARAMETER")
     );
+
+
+    Map <String, String> responseMap = Map.ofEntries(
+            Map.entry("StudentAddedSuccessfully", "STUDENT SAVED SUCCESSFULLY")
+    );
+
 
 
     static StudentEntity createStudentEntity(String email, StudentClassEntity studentClassEntity, ImageEntity imageEntity) {
