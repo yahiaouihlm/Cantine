@@ -24,8 +24,8 @@ public class ImageEntity  implements Serializable {
    // private List<MenuEntity> menus;
 
     //bi-directional many-to-one association to PlatEntity
-    @OneToMany(mappedBy="image")
-    private List<MealEntity> plats;
+    /*@OneToMany(mappedBy="image")
+    private List<MealEntity> plats;*/
 
     //bi-directional many-to-one association to UserEntity
   //  @OneToMany(mappedBy="image")
@@ -50,14 +50,14 @@ public class ImageEntity  implements Serializable {
     }
 
 
-    public List<MealEntity> getPlats() {
+  /*  public List<MealEntity> getPlats() {
         return plats;
     }
 
     public void setPlats(List<MealEntity> plats) {
         this.plats = plats;
     }
-
+*/
    /* public List<UserEntity> getUsers() {
         return users;
     }
