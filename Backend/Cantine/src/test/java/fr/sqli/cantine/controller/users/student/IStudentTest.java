@@ -24,7 +24,7 @@ public interface IStudentTest {
     String IMAGE_NAME = "imageForTest.jpg";
     String IMAGE_FOR_TEST_PATH = "imagesTests/" + IMAGE_NAME;
 
-    String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
+
 
     String IMAGE_TEST_DIRECTORY_PATH = "imagesTests/";
     String IMAGE_FOR_TEST_NAME = "ImageForTest.jpg";
@@ -62,7 +62,8 @@ public interface IStudentTest {
 
 
     Map <String, String> responseMap = Map.ofEntries(
-            Map.entry("StudentAddedSuccessfully", "STUDENT SAVED SUCCESSFULLY")
+            Map.entry("StudentAddedSuccessfully", "STUDENT SAVED SUCCESSFULLY"),
+            Map.entry("StudentUpdatedSuccessfully", "STUDENT UPDATED SUCCESSFULLY")
     );
 
 

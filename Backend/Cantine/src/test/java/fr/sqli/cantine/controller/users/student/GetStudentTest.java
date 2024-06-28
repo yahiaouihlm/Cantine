@@ -2,6 +2,8 @@ package fr.sqli.cantine.controller.users.student;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
+import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.StudentClassEntity;
@@ -24,8 +26,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class GetStudentTest extends AbstractContainerConfig implements IStudentTest {
     final String paramReq = "?" + "studentUuid" + "=";
 
+    @Autowired
+    private IAdminDao adminDao;
+    @Autowired
+    private IFunctionDao functionDao;
     private IStudentClassDao studentClassDao;
-
     private MockMvc mockMvc;
     private IStudentDao studentDao;
     private StudentEntity studentEntity;
@@ -67,6 +72,23 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
         result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.studentEntity.getLastname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.studentEntity.getEmail())));
     }
+
+
+    @Test
+    void getStudentByIDWithAdminAuthToken() throws Exception {
+
+        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+        String  adminAuthToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
+
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_STUDENT_BY_ID
+                        + paramReq + java.util.UUID.randomUUID())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION,adminAuthToken)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
 
 
     /*****************************  TESTS FOR  ID Student  ********************************/
