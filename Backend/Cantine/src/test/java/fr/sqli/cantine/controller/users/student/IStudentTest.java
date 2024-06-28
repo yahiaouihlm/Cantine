@@ -57,7 +57,7 @@ public interface IStudentTest {
             Map.entry("InvalidStudentId", "INVALID STUDENT ID"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("StudentNotFound", "STUDENT NOT FOUND"),
-            Map.entry("MissingPram", "MISSING PARAMETER")
+            Map.entry("InvalidUuid", "INVALID UUID")
     );
 
 
