@@ -32,10 +32,10 @@ CREATE TABLE IF NOT EXISTS  "studentclass" (
 -- -----------------------------------------------------
 
 
-CREATE TABLE IF NOT EXISTS "function" (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(300) NOT NULL,
-    unique(name)
+    CREATE TABLE IF NOT EXISTS "function" (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(300) NOT NULL,
+        unique(name)
     );
 
 -- -----------------------------------------------------
@@ -89,7 +89,8 @@ CREATE  TABLE IF NOT EXISTS "admin" (
       FOREIGN KEY (function_id) REFERENCES "function" (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
       FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
     )
-
+-- -----------------------------------------------------
+CREATE TYPE TransactionType AS ENUM ('REFUNDS', 'DEDUCTION', 'ADDITION', 'OTHERS');
 -- -----------------------------------------------------
 -- Table `cantiniere`.`payment`
 -- -----------------------------------------------------
@@ -106,8 +107,8 @@ CREATE  TABLE IF NOT EXISTS "admin" (
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (admin_id) REFERENCES admin (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 
-)
-CREATE TYPE TransactionType AS ENUM ('REFUNDS', 'DEDUCTION', 'ADDITION', 'OTHERS');
+);
+
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`order`
@@ -120,7 +121,7 @@ CREATE table  if NOT EXISTS  st_order(
      creation_date DATE NOT NULL,
      creation_time TIME NOT NULL,
      price DECIMAL(5,2) NOT NULL,
-     status INT  NOT NULL DEFAULT 0   ,   /*0 basic statas  1=validate By Admin, 2=taken */
+     status INT  NOT NULL DEFAULT 0   ,   /*0 basic statE  1=validate By Admin, 2=taken */
      isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
      qr_code VARCHAR(1000), /* pour faire le qr code  we just make  the  path  to real  image  */
      unique(qr_code),
@@ -152,7 +153,6 @@ CREATE TABLE IF NOT EXISTS meal(
     CHECK (price >= 0),
     unique (label, description, category),
     FOREIGN KEY (image_idimage) REFERENCES image(idimage) ON DELETE NO ACTION ON UPDATE NO ACTION
-    FOREIGN KEY (meal_type) REFERENCES mealType(id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 
 
