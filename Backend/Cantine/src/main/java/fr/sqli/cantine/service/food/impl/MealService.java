@@ -39,7 +39,6 @@ public class MealService implements IMealService {
     private final String MEALS_IMAGES_PATH;
     private final IImageService imageService;
 
-
     @Autowired
     public MealService(Environment env, IMealDao mealDao, IImageService imageService ,  IMenuDao menuDao) {
         this.mealDao = mealDao;
@@ -48,8 +47,6 @@ public class MealService implements IMealService {
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
         this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.meals.path");
     }
-
-
     @Override
     public MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
 
@@ -58,7 +55,7 @@ public class MealService implements IMealService {
             throw new InvalidFoodInformationException("THE MEAL CAN NOT BE NULL");
         }
         IMealService.checkMealUuidValidity(mealDtoIn.getUuid());
-        mealDtoIn.toMealEntityWithoutImage();
+        mealDtoIn.checkMealInfoValidityWithoutImage();
         var meal = this.mealDao.findByUuid(mealDtoIn.getUuid()).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getUuid());
             return new FoodNotFoundException("NO MEAL WAS FOUND");

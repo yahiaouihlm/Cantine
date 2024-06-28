@@ -1,6 +1,5 @@
 package fr.sqli.cantine.service.order;
 
-import com.google.zxing.WriterException;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
@@ -13,7 +12,6 @@ import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
-import fr.sqli.cantine.service.qrcode.QrCodeGenerator;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
@@ -25,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class AddMealTest {
-
+    final String MEALS_IMAGES_PATH = "images/meals";
     MealEntity mealEntity;
     MealDtoIn mealDtoIn;
     @Mock
@@ -42,7 +42,7 @@ public class AddMealTest {
     private IMenuDao iMenuDao;
     @Mock
     private MockEnvironment env;
-
+    // init  data
     @BeforeEach
     public void setUp() {
         String categoryMeal = " Frites ";
@@ -71,33 +71,30 @@ public class AddMealTest {
         this.mealDtoIn.setImage(new MockMultipartFile("oldImage", "image.jpg", "text/plain", "Spring Framework".getBytes()));
 
     }
-
+    // clean  data
     @AfterEach
     void clean() {
         this.mealDtoIn = null;
         this.mealEntity = null;
         this.mealService = null;
     }
-
-
     @Test
     @DisplayName("Test the addMeal method with valid meal information and valid image")
-    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException {
-
+    public void AddMealWihValidInformationTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
         //  spaces  from  the  label  is   removed
         Mockito.when(this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription())).thenReturn(Optional.empty());
 
         String imageName = "test-image.jpg";
-        Mockito.when(imageService.uploadImage(mealDtoIn.getImage(), "images/meals")).thenReturn(imageName);
+        Mockito.when(imageService.uploadImage(mealDtoIn.getImage(), MEALS_IMAGES_PATH)).thenReturn(imageName);
 
         // Mock database save
-
         Mockito.when(this.mealDao.save(Mockito.any(MealEntity.class))).thenReturn(mealEntity);
 
-
         // Call the method
-        MealEntity result = this.mealService.addMeal(this.mealDtoIn);
 
+        MealEntity result = Assertions.assertDoesNotThrow(() -> {
+            return this.mealService.addMeal(this.mealDtoIn);
+        });
         // Verify the result
         Assertions.assertNotNull(result);
         Assertions.assertEquals(mealDtoIn.getLabel(), result.getLabel());
@@ -107,7 +104,7 @@ public class AddMealTest {
 
         Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
         Mockito.verify(mealDao, Mockito.times(1)).save(Mockito.any(MealEntity.class));  //  we  can not  make save(this.mealEntity) because  the  new mealEntity object will  be saved  and  not (this.mealEntity)
-        Mockito.verify(imageService, Mockito.times(1)).uploadImage(mealDtoIn.getImage(), "images/meals");
+        Mockito.verify(imageService, Mockito.times(1)).uploadImage(mealDtoIn.getImage(), MEALS_IMAGES_PATH);
     }
 
 
