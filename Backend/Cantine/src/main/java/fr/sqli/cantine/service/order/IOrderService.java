@@ -20,7 +20,7 @@ public interface IOrderService {
 
     void submitOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException;
 
-    void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
+    void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
 
     void  cancelOrderByAdmin(String orderUuid) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException, UserNotFoundException;
     void cancelOrderByStudent(String orderUuid) throws InvalidOrderException, OrderNotFoundException, UnableToCancelOrderException, UserNotFoundException, MessagingException;

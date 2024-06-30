@@ -12,6 +12,7 @@ import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,8 +44,10 @@ public interface IOrderController {
     ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException;
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
     ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(@RequestParam("studentUuid") String studentUuid , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, InvalidUserInformationException, UserNotFoundException;
+
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     @PostMapping(ADD_ORDER_URL)
-    ResponseEntity <ResponseDtout> addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
+    ResponseEntity <ResponseDtout> addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
 
     @GetMapping(STUDENT_ORDER_HISTORY)
     ResponseEntity<List<OrderDtOut>> getStudentOrdersHistory(@RequestParam("studentUuid") String studentUuid) throws UserNotFoundException;

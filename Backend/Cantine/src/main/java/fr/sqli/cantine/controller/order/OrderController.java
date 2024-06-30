@@ -51,7 +51,7 @@ public class OrderController  implements IOrderController{
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> addOrderByStudent(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
+    public ResponseEntity<ResponseDtout> addOrderByStudent(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
         this.orderService.addOrderByStudent(orderDtoIn) ;
         return ResponseEntity.ok( new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }

@@ -11,7 +11,7 @@ import fr.sqli.cantine.service.mailer.OrderEmailSender;
 import fr.sqli.cantine.service.order.exception.InsufficientBalanceException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderLimitExceededException;
-import fr.sqli.cantine.service.order.exception.UnavailableFoodException;
+import fr.sqli.cantine.service.order.exception.UnavailableFoodForOrderException;
 
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
@@ -90,7 +90,7 @@ public class AddOrderTest {
     }
 
     @Test
-    void addOrderWithTheSomePrice() throws UserNotFoundException, TaxNotFoundException, InvalidOrderException, InvalidFoodInformationException, MessagingException, OrderLimitExceededException, FoodNotFoundException, InsufficientBalanceException, InvalidUserInformationException, UnavailableFoodException {
+    void addOrderWithTheSomePrice() throws UserNotFoundException, TaxNotFoundException, InvalidOrderException, InvalidFoodInformationException, MessagingException, OrderLimitExceededException, FoodNotFoundException, InsufficientBalanceException, InvalidUserInformationException, UnavailableFoodForOrderException {
 
         // Init
         MealEntity meal1 = new MealEntity();
@@ -353,7 +353,7 @@ public class AddOrderTest {
         Mockito.when(this.menuDao.findByUuid(menuIdFound)).thenReturn(Optional.of(menuEntity));
         Mockito.when(authentication.getPrincipal()).thenReturn(studentEntity.getEmail());
 
-        Assertions.assertThrows(UnavailableFoodException.class, () -> this.orderService.addOrderByStudent(this.orderDtoIn));
+        Assertions.assertThrows(UnavailableFoodForOrderException.class, () -> this.orderService.addOrderByStudent(this.orderDtoIn));
 
         Mockito.verify(this.menuDao, Mockito.times(1)).findByUuid(menuIdFound);
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());
@@ -381,7 +381,7 @@ public class AddOrderTest {
         Mockito.when(this.mealDao.findByUuid(mealIdFound)).thenReturn(Optional.of(mealEntity));
 
 
-        Assertions.assertThrows(UnavailableFoodException.class, () -> this.orderService.addOrderByStudent(this.orderDtoIn));
+        Assertions.assertThrows(UnavailableFoodForOrderException.class, () -> this.orderService.addOrderByStudent(this.orderDtoIn));
 
         Mockito.verify(this.mealDao, Mockito.times(1)).findByUuid(mealIdFound);
         Mockito.verify(this.orderDao, Mockito.times(0)).save(Mockito.any());

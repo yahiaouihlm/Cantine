@@ -125,7 +125,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, InvalidOrderException, UnavailableFoodException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
+    public void addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
         if (orderDtoIn == null) {
             OrderService.LOG.error("INVALID ORDER ORDER IS NULL");
             throw new InvalidOrderException("INVALID ORDER");
@@ -144,8 +144,8 @@ public class OrderService implements IOrderService {
         var totalPrice = BigDecimal.ZERO;
 
         if (orderDtoIn.getMealsId() != null && orderDtoIn.getMenusId() != null && orderDtoIn.getMealsId().isEmpty() && orderDtoIn.getMenusId().isEmpty()) {
-            OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
-            throw new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS ");
+            OrderService.LOG.error("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS");
+            throw new InvalidOrderException("INVALID ORDER  THERE  IS NO  MEALS  OR  MENUS");
         }
         if (orderDtoIn.getMealsId() != null && orderDtoIn.getMealsId().size() > MAXIMUM_ORDER_PER_DAY) {
             OrderService.LOG.error("INVALID ORDER  MAXIMUM ORDER PER DAY IS  : " + MAXIMUM_ORDER_PER_DAY);
@@ -167,12 +167,12 @@ public class OrderService implements IOrderService {
             for (var mealId : orderDtoIn.getMealsId()) {
                 var meal = this.mealDao.findByUuid(mealId).orElseThrow(() -> {
                     OrderService.LOG.error("MEAL WITH UUID = {} NOT FOUND", mealId);
-                    return new FoodNotFoundException("MEAL WITH  ID = " + mealId + " NOT FOUND");
+                    return new FoodNotFoundException("MEAL NOT FOUND");
                 });
 
                 if (meal.getStatus() == 0 || meal.getStatus() == 2) {
                     OrderService.LOG.error("MEAL WITH  ID  = {} AND LABEL= {} IS NOT AVAILABLE OR REMOVED", mealId, meal.getLabel());
-                    throw new UnavailableFoodException("MEAL  : " + meal.getLabel() + " IS UNAVAILABLE OR REMOVED");
+                    throw new UnavailableFoodForOrderException("MEAL  : " + meal.getLabel() + " IS UNAVAILABLE OR REMOVED");
                 }
                 meals.add(meal);
                 totalPrice = totalPrice.add(meal.getPrice());
@@ -184,12 +184,12 @@ public class OrderService implements IOrderService {
             for (var menuId : orderDtoIn.getMenusId()) {
                 var menu = this.menuDao.findByUuid(menuId).orElseThrow(() -> {
                     OrderService.LOG.error("MENU WITH  ID  = {} NOT FOUND", menuId);
-                    return new FoodNotFoundException("MENU WITH  ID: " + menuId + " NOT FOUND");
+                    return new FoodNotFoundException("MENU NOT FOUND");
                 });
 
                 if (menu.getStatus() == 0 || menu.getStatus() == 2) {
                     OrderService.LOG.error("MENU WITH  ID  = {} AND  LABEL = {} IS NOT AVAILABLE OR DELETED", menuId, menu.getLabel());
-                    throw new UnavailableFoodException("MENU  : " + menu.getLabel() + " IS UNAVAILABLE OR REMOVED");
+                    throw new UnavailableFoodForOrderException("MENU  : " + menu.getLabel() + " IS UNAVAILABLE OR REMOVED");
                 }
                 menus.add(menu);
                 totalPrice = totalPrice.add(menu.getPrice());
