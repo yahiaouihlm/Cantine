@@ -18,6 +18,7 @@ export class OrderDashboardComponent implements OnInit {
     private WOULD_YOU_LIKE_TO_SUBMIT_THE_ORDER = "Voulez vous Vraiment valider cette Commande ?";
     private ORDER_SUBMITTED_SUCCESSFULLY = "Commande  Validé avec succes  ! ";
 
+    isLoading = false;
     constructor(private adminOrderService: AdminOrderService, private matDialog: MatDialog, private   router : Router) {
     }
 
@@ -32,7 +33,7 @@ export class OrderDashboardComponent implements OnInit {
                    .then(window.location.reload);
      }
 
-    validateOrder(orderId: string) {
+        validateOrder(orderUuid: string) {
 
         const result = this.matDialog.open(ValidatorDialogComponent, {
             data: {message: this.WOULD_YOU_LIKE_TO_SUBMIT_THE_ORDER},
@@ -41,7 +42,8 @@ export class OrderDashboardComponent implements OnInit {
 
         result.afterClosed().subscribe((result) => {
             if (result != undefined && result == true) {
-                this.submitOrder(orderId);
+                this.isLoading = true;
+                this.submitOrder(orderUuid);
             } else {
                 return;
             }
@@ -52,6 +54,7 @@ export class OrderDashboardComponent implements OnInit {
 
     submitOrder(orderId: string) {
         this.adminOrderService.submitOrder(orderId).subscribe(data => {
+            this.isLoading = false;
             window.location.reload();
         });
     }

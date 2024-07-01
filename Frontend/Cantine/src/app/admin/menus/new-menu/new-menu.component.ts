@@ -87,8 +87,7 @@ export class NewMenuComponent {
         formData.append("image", this.image);
         formData.append('status', this.newMenu.controls['status'].value === "available" ? "1" : "0");
         formData.append("listOfMealsAsString", JSON.stringify(mealsIds));
-        console.log("form  data  of meals : ");
-        console.log(formData.get("listOfMealsAsString"));
+
 
         this.menusService.addMenu(formData).subscribe({
             next: (response) => {
