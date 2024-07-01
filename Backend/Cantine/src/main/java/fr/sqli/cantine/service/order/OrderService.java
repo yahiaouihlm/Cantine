@@ -1,5 +1,6 @@
 package fr.sqli.cantine.service.order;
 
+import com.google.zxing.WriterException;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
@@ -7,10 +8,10 @@ import fr.sqli.cantine.entity.*;
 
 import fr.sqli.cantine.service.mailer.OrderEmailSender;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
+import fr.sqli.cantine.service.order.qrcode.QrCodeGenerator;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.mailer.ConfirmationOrderSender;
 import fr.sqli.cantine.service.order.exception.*;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,14 +51,12 @@ public class OrderService implements IOrderService {
 
     private final IMenuDao menuDao;
     private final OrderEmailSender orderEmailSender;
-    private final ConfirmationOrderSender confirmationOrderSender; /*TODO a  supprimé  */
     private final UserEmailSender userEmailSender;
     private final IPaymentDao paymentDao;
 
     @Autowired
     public OrderService(Environment env, IOrderDao orderDao, IAdminDao adminDao, IPaymentDao iPaymentDao, IStudentDao studentDao, IMealDao mealDao,
-                        IMenuDao menuDao, ITaxDao taxDao, UserEmailSender userEmailSender, OrderEmailSender orderEmailSender,
-                        ConfirmationOrderSender confirmationOrderSender) {
+                        IMenuDao menuDao, ITaxDao taxDao, UserEmailSender userEmailSender, OrderEmailSender orderEmailSender) {
         this.orderDao = orderDao;
         this.adminDao = adminDao;
         this.studentDao = studentDao;
@@ -65,7 +65,6 @@ public class OrderService implements IOrderService {
         this.taxDao = taxDao;
         this.paymentDao = iPaymentDao;
         this.orderEmailSender = orderEmailSender;
-        this.confirmationOrderSender = confirmationOrderSender;
         this.userEmailSender = userEmailSender;
         this.ORDER_QR_CODE_PATH = env.getProperty("sqli.canine.order.qrcode.path");
         this.ORDER_QR_CODE_IMAGE_FORMAT = env.getProperty("sqli.canine.order.qrcode.image.format");
@@ -83,45 +82,43 @@ public class OrderService implements IOrderService {
 
 
     @Override
-    public void submitOrder(Integer orderId) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException {
-        if (orderId == null) {
-            OrderService.LOG.error("ORDER ID  IS NULL IN   Submit  Order  ");
-            throw new InvalidOrderException("INVALID ORDER  ID ");
-        }
-        var ordered = this.orderDao.findById(orderId);
-        if (ordered.isEmpty()) {
-            OrderService.LOG.error("  NO  ORDER  HAS  BEEN   FOUND  IN 'submit Order   function ' ");
-            throw new OrderNotFoundException("ORDER  NOT  FOUND ");
-        }
-        var order = ordered.get();
+    public void submitOrder(String orderUuid) throws InvalidOrderException, OrderNotFoundException, CancelledOrderException, MessagingException, IOException, WriterException {
 
-        if (!order.getCreationDate().equals(LocalDate.now())) {
+        if (orderUuid == null || orderUuid.trim().length() < 10) {
+            OrderService.LOG.error("INVALID ORDER ID");
+            throw new InvalidOrderException("INVALID ORDER ID");
+        }
+        var orderEntity = this.orderDao.findByUuid(orderUuid).orElseThrow(() -> {
+            OrderService.LOG.error("NO  ORDER  HAS  BEEN   FOUND  IN 'submit Order   function '  With  Order  ID  = {} ", orderUuid);
+            return new OrderNotFoundException("ORDER  NOT FOUND");
+        });
+
+        if (!orderEntity.getCreationDate().equals(LocalDate.now())) {
             OrderService.LOG.error("ORDER  CAN NOT BE  SUBMITTED ");
             throw new CancelledOrderException("EXPIRED ORDER");
         }
 
-        if (order.isCancelled()) {
-            OrderService.LOG.error(" ORDER  HAS BEEN  CANCLLED ");
-            throw new CancelledOrderException(" ORDER IS   CANCELLED ");
+        if (orderEntity.isCancelled()) {
+            OrderService.LOG.error(" ORDER  HAS BEEN  CANCELLED ");
+            throw new CancelledOrderException(" ORDER IS  ALREADY CANCELLED ");
         }
-  /*    create the  QrCode  and  save  the  order  in  the  database
+
         String token = "qrcode" + UUID.randomUUID();
         orderEntity.setQRCode(token + this.ORDER_QR_CODE_IMAGE_FORMAT);
 
-    String qrCodeData = "Student  : " + student.getFirstname() + " " + student.getLastname() +
-                "\n" + " Student Email : " + student.getEmail() +
-                "\n" + " Order Id :" + order.getId() +
-                "\n" + " Order Price : " + order.getPrice() + "£" +
-                "\n" + " Created At  " + order.getCreationDate() + " " + order.getCreationTime();
+        String qrCodeData = "Student  : " + orderEntity.getStudent().getFirstname() + " " + orderEntity.getStudent().getLastname() +
+                "\n" + " Student Email : " + orderEntity.getStudent().getEmail() +
+                "\n" + " Order Id :" + orderEntity.getUuid() +
+                "\n" + " Order Price : " + orderEntity.getPrice() + "£" +
+                "\n" + " Created At  " + orderEntity.getCreationDate() + " " + orderEntity.getCreationTime();
 
         var filePath = this.ORDER_QR_CODE_PATH + token + this.ORDER_QR_CODE_IMAGE_FORMAT;
         QrCodeGenerator.generateQrCode(qrCodeData, filePath);
-*/
 
-        order.setStatus(1);
-        this.orderDao.save(order);
-        this.confirmationOrderSender.sendSubmittedOrder(order);
 
+        orderEntity.setStatus(1);
+        this.orderDao.save(orderEntity);
+        this.orderEmailSender.validatedOrderByAdmin(orderEntity.getStudent(), orderEntity ,  filePath);
     }
 
     @Override
@@ -250,7 +247,7 @@ public class OrderService implements IOrderService {
             throw new InvalidOrderException("INVALID ORDER ID");
         }
         var adminEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var admin  =  this.adminDao.findByEmail(adminEmail.toString()).orElseThrow(() -> {
+        var admin = this.adminDao.findByEmail(adminEmail.toString()).orElseThrow(() -> {
             OrderService.LOG.error("INVALID ADMIN INFORMATION");
             return new InvalidUserInformationException("INVALID ADMIN INFORMATION");
         });

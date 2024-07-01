@@ -31,7 +31,7 @@ public interface IStudentController {
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
 
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
+
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
     ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 

@@ -86,7 +86,7 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
                 .header(HttpHeaders.AUTHORIZATION,adminAuthToken)
                 .accept(MediaType.APPLICATION_JSON));
 
-        result.andExpect(MockMvcResultMatchers.status().isForbidden());
+        result.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 

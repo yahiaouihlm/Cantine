@@ -38,13 +38,15 @@ public interface IOrderController {
 
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(ADMIN_CANCEL_ORDER)
     ResponseEntity<ResponseDtout> cancelOrder (@RequestParam("orderUuid") String orderUuid) throws OrderNotFoundException, UserNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, InvalidUserInformationException;
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(ADMIN_SUBMIT_ORDER)
-    ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderId") Integer orderId) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException;
+    ResponseEntity<ResponseDtout> submitOrder (@RequestParam("orderUuid") String orderUuid) throws OrderNotFoundException, InvalidOrderException, MessagingException, CancelledOrderException, IOException, WriterException;
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
     ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(@RequestParam("studentUuid") String studentUuid , @RequestParam("date") LocalDate date) throws OrderNotFoundException, InvalidOrderException, InvalidUserInformationException, UserNotFoundException;
-
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     @PostMapping(ADD_ORDER_URL)
     ResponseEntity <ResponseDtout> addOrderByStudent(OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException;
