@@ -13,13 +13,12 @@ public interface IOrderTest {
     String BASIC_ORDER_URL = "http://localhost:8080/";
     String ORDER_BASIC_URL = BASIC_ORDER_URL + "order/";
 
-
+    String CANCEL_ORDER_BY_ADMIN_URL = ORDER_BASIC_URL + "admin/cancelOrder";
     String CANCEL_ORDER_URL = ORDER_BASIC_URL + "/cancel";
     String ADD_ORDER_URL = ORDER_BASIC_URL + "student/add";
 
 
     String ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
-    String ORDER_ADDED_SUCCESSFULLY = "ORDER ADDED SUCCESSFULLY";
 
 
     Map<String, String> exceptionsMap = Map.ofEntries(
@@ -46,8 +45,7 @@ public interface IOrderTest {
 
     Map <String, String> responseMap = Map.ofEntries(
             Map.entry("OrderAddedSuccessfully", "ORDER ADDED SUCCESSFULLY"),
-            Map.entry("MealDeletedSuccessfully", "MEAL DELETED SUCCESSFULLY"),
-            Map.entry("MealUpdatedSuccessfully", "MEAL UPDATED SUCCESSFULLY")
+            Map.entry("OrderCancelledSuccessfully", "ORDER CANCELLED SUCCESSFULLY")
     );
 
 

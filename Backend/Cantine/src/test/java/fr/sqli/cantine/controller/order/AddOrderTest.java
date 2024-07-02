@@ -71,8 +71,6 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
         this.mealDao.deleteAll();
         this.menuDao.deleteAll();
         this.taxDao.deleteAll();
-
-
     }
 
     void initDB() throws Exception {
