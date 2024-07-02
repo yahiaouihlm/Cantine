@@ -56,6 +56,7 @@ public interface IOrderController {
     @GetMapping(ADMIN_GET_ALL_ORDERS_BY_DAY)
     ResponseEntity<List<OrderDtOut>> getOrdersByDate(@RequestParam("date") LocalDate date) throws InvalidUserInformationException, InvalidOrderException;
 
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     @PostMapping(CANCEL_ORDER_URL)
     ResponseEntity<ResponseDtout> cancelOrderByStudent(@RequestParam("orderUuid")String  orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException;
 

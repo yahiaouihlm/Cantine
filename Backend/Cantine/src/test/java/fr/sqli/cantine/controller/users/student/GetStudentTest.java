@@ -26,9 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class GetStudentTest extends AbstractContainerConfig implements IStudentTest {
     final String paramReq = "?" + "studentUuid" + "=";
 
-    @Autowired
     private IAdminDao adminDao;
-    @Autowired
     private IFunctionDao functionDao;
     private IStudentClassDao studentClassDao;
     private MockMvc mockMvc;
@@ -37,10 +35,12 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
     private String authorizationToken;
 
     @Autowired
-    public GetStudentTest(IStudentDao iStudentDao, IStudentClassDao iStudentClassDao, MockMvc mockMvc) throws Exception {
+    public GetStudentTest(IAdminDao iAdminDao , IFunctionDao iFunctionDao , IStudentDao iStudentDao, IStudentClassDao iStudentClassDao, MockMvc mockMvc) throws Exception {
         this.studentDao = iStudentDao;
         this.studentClassDao = iStudentClassDao;
         this.mockMvc = mockMvc;
+        this.adminDao = iAdminDao;
+        this.functionDao = iFunctionDao;
         cleanUpDb();
         initDB();
     }
@@ -48,7 +48,9 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
 
     void cleanUpDb() {
         this.studentDao.deleteAll();
+        this.functionDao.deleteAll();
         this.studentClassDao.deleteAll();
+        this.adminDao.deleteAll();
     }
 
 
@@ -81,7 +83,7 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
         String  adminAuthToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_STUDENT_BY_ID
-                        + paramReq + java.util.UUID.randomUUID())
+                        + paramReq + this.studentEntity.getUuid())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION,adminAuthToken)
                 .accept(MediaType.APPLICATION_JSON));

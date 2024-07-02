@@ -12,9 +12,8 @@ public interface IOrderTest {
 
     String BASIC_ORDER_URL = "http://localhost:8080/";
     String ORDER_BASIC_URL = BASIC_ORDER_URL + "order/";
-
     String CANCEL_ORDER_BY_ADMIN_URL = ORDER_BASIC_URL + "admin/cancelOrder";
-    String CANCEL_ORDER_URL = ORDER_BASIC_URL + "/cancel";
+    String CANCEL_ORDER_BY_STUDENT_URL = ORDER_BASIC_URL + "student/cancel";
     String ADD_ORDER_URL = ORDER_BASIC_URL + "student/add";
 
 
