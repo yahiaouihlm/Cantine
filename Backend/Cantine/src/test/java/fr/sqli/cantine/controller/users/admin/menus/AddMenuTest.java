@@ -52,19 +52,20 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     private MultiValueMap<String, String> formData;
 
     private MockMultipartFile imageData;
-
+    private IOrderDao orderDao;
     private IAdminDao adminDao;
     private MenuEntity menuEntitySavedInDB;
     private String authorizationToken;
     private MenuEntity menuSaved;
 
     @Autowired
-    public AddMenuTest(MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IAdminDao adminDao) throws Exception {
+    public AddMenuTest( IOrderDao iOrderDao,MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IAdminDao adminDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.menuDao = menuDao;
         this.mealDao = mealDao;
         this.functionDao = functionDao;
+        this.orderDao = iOrderDao;
         cleanDB();
         initFormData();
         initDB();
@@ -98,6 +99,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     }
 
     void cleanDB() {
+        this.orderDao.deleteAll();
         this.menuDao.deleteAll();
         this.mealDao.deleteAll();
         this.adminDao.deleteAll();
@@ -188,7 +190,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuTestWithStudentToken() throws Exception {
-
+        this.orderDao.deleteAll();
         this.iStudentDao.deleteAll();
         this.iStudentClassDao.deleteAll();
 

@@ -33,14 +33,12 @@ import java.nio.file.Files;
 public class UpdateAdminInformation extends AbstractContainerConfig implements IAdminTest {
 
     @Autowired
-    private IImageDao imageDao;
-    @Autowired
     private IStudentDao studentDao;
     @Autowired
     private IStudentClassDao studentClassDao;
     @Autowired
     private Environment environment;
-
+    private IOrderDao orderDao;
     private IFunctionDao functionDao;
     private IAdminDao adminDao;
     private IConfirmationTokenDao iConfirmationTokenDao;
@@ -54,11 +52,12 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
     private AdminEntity savedAdmin;
 
     @Autowired
-    public UpdateAdminInformation(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+    public UpdateAdminInformation(IOrderDao iOrderDao ,MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
         this.iConfirmationTokenDao = iConfirmationTokenDao;
+        this.orderDao = iOrderDao;
         cleanDtaBase();
         initDataBase();
         initFormData();
@@ -91,6 +90,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
     }
 
     void cleanDtaBase() {
+        this.orderDao.deleteAll();
         this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();

@@ -36,7 +36,6 @@ import static fr.sqli.cantine.controller.users.admin.meals.IMealTest.IMAGE_MEAL_
 public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     @Autowired
     private Environment env;
-    @Autowired
     private IOrderDao iOrderDao;
     private IMealDao mealDao;
     private IMenuDao menuDao;
@@ -52,13 +51,14 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     private OrderDtoIn orderDtoIn;
 
     @Autowired
-    public AddOrderTest(IStudentDao studentDao, IStudentClassDao studentClassDao, MockMvc mockMvc, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao) throws Exception {
+    public AddOrderTest( IOrderDao iOrderDao , IStudentDao studentDao, IStudentClassDao studentClassDao, MockMvc mockMvc, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao) throws Exception {
         this.studentDao = studentDao;
         this.studentClassDao = studentClassDao;
         this.mockMvc = mockMvc;
         this.mealDao = mealDao;
         this.menuDao = menuDao;
         this.taxDao = taxDao;
+        this.iOrderDao = iOrderDao;
         cleanDB();
         initDB();
         initRequestData();
@@ -66,6 +66,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     }
 
     void cleanDB() {
+        this.iOrderDao.deleteAll();
         this.studentDao.deleteAll();
         this.studentClassDao.deleteAll();
         this.mealDao.deleteAll();

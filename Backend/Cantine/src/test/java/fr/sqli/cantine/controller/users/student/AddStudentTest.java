@@ -2,6 +2,7 @@ package fr.sqli.cantine.controller.users.student;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
+import fr.sqli.cantine.dao.IOrderDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.StudentClassEntity;
@@ -32,6 +33,7 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
     private IStudentClassDao studentClassDao;
     private IStudentDao studentDao;
     private Environment env;
+    private IOrderDao iOrderDao;
     private IConfirmationTokenDao iConfirmationTokenDao;
     private MockMultipartFile imageData;
     private IStudentClassDao iStudentClassDao;
@@ -40,12 +42,13 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
     private StudentClassEntity studentClassEntity;
 
     @Autowired
-    public AddStudentTest(IStudentDao studentDao, IStudentClassDao studentClassDao, IConfirmationTokenDao iConfirmationTokenDao, Environment env, MockMvc mockMvc) throws IOException {
+    public AddStudentTest(IOrderDao iOrderDao, IStudentDao studentDao, IStudentClassDao studentClassDao, IConfirmationTokenDao iConfirmationTokenDao, Environment env, MockMvc mockMvc) throws IOException {
         this.studentDao = studentDao;
         this.studentClassDao = studentClassDao;
         this.mockMvc = mockMvc;
         this.iConfirmationTokenDao = iConfirmationTokenDao;
         this.env = env;
+        this.iOrderDao = iOrderDao;
         cleanDatabase();
         initDatabase();
         initFormData();
@@ -53,6 +56,7 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
     }
 
     void cleanDatabase() {
+        this.iOrderDao.deleteAll();
         this.iConfirmationTokenDao.deleteAll();
         this.studentDao.deleteAll();
         this.studentClassDao.deleteAll();

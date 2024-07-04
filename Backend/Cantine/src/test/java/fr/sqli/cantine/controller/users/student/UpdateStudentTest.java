@@ -167,8 +167,8 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithAdminAuthToken() throws Exception {
-
-        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+         if  (this.adminDao.findAll().isEmpty())
+                 AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
         String adminAuthToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
 

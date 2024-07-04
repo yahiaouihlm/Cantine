@@ -118,7 +118,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("MealAddedSuccessfully"))));
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminAddedSuccessfully"))));
 
         var admin = this.adminDao.findByEmail(this.formData.getFirst("email"));
         Assertions.assertTrue(admin.isPresent());
@@ -130,7 +130,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
         Assertions.assertNotEquals(admin.get().getPassword(), this.formData.getFirst("password")); // password is encrypted
 
         var imageName = admin.get().getImage().getImagename();
-        Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.admin.default.image"));
+        Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.default.persons.admin.imagename"));
 
     }
 

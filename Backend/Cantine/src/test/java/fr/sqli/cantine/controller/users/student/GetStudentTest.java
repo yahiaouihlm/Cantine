@@ -39,8 +39,8 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
         this.studentDao = iStudentDao;
         this.studentClassDao = iStudentClassDao;
         this.mockMvc = mockMvc;
-        this.adminDao = iAdminDao;
         this.functionDao = iFunctionDao;
+        this.adminDao = iAdminDao;
         cleanUpDb();
         initDB();
     }
@@ -48,9 +48,9 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
 
     void cleanUpDb() {
         this.studentDao.deleteAll();
+        this.adminDao.deleteAll();
         this.functionDao.deleteAll();
         this.studentClassDao.deleteAll();
-        this.adminDao.deleteAll();
     }
 
 

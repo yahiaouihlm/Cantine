@@ -39,6 +39,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     private IStudentClassDao iStudentClassDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
+    private IOrderDao orderDao;
     private IAdminDao adminDao;
     private IFunctionDao functionDao;
     private MultiValueMap<String, String> formData;
@@ -46,11 +47,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     private String authorizationToken;
 
     @Autowired
-    public AddMealTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao , IMealDao mealDao) throws Exception {
+    public AddMealTest(IOrderDao iOrderDao, MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao , IMealDao mealDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
         this.mealDao = mealDao;
+        this.orderDao = iOrderDao;
         clearDataBase();
         initFormData();
         initDataBase();
@@ -76,6 +78,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
 
     public void clearDataBase() {
+       this.orderDao.deleteAll();
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
         this.mealDao.findAll();
@@ -130,6 +133,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     /**************************************** Tests  For  Student Token    ********************************************/
     @Test
     void  addMealTestWithStudentToken() throws Exception {
+       this.orderDao.deleteAll();
         this.iStudentDao.deleteAll();
         this.iStudentClassDao.deleteAll();
 
