@@ -137,8 +137,6 @@ public class AdminService implements IAdminService {
         this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
         this.userEmailSender.sendNotificationToSuperAdminAboutAdminRegistration(adminEntity, URL);
     }
-
-
     @Override
     public void removeAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
 
@@ -155,7 +153,6 @@ public class AdminService implements IAdminService {
         admin.setDisableDate(LocalDate.now());
         this.adminDao.save(admin);
     }
-
     @Override
     public AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         IAdminService.checkUuIdValidity(adminUuid);
@@ -172,7 +169,6 @@ public class AdminService implements IAdminService {
         }
         return new AdminDtout(admin, this.ADMIN_IMAGE_URL);
     }
-
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException {
         if (adminDtoIn == null) {
@@ -232,12 +228,10 @@ public class AdminService implements IAdminService {
         this.adminDao.save(adminEntity);
 
     }
-
     @Override
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());
     }
-
     @Override
     public void existingEmail(String adminEmail) throws ExistingUserException {
         if (this.adminDao.findByEmail(adminEmail).isPresent() || this.studentDao.findByEmail(adminEmail).isPresent()) {
@@ -245,10 +239,18 @@ public class AdminService implements IAdminService {
         }
     }
 
+    @Override
+    public AdminEntity findByUsername(String username) throws UserNotFoundException {
+         return this.adminDao.findByEmail(username)
+                 .orElseThrow(() -> new UserNotFoundException("ADMIN NOT FOUND"));
+    }
+
+
     @Autowired
     public void setStudentDao(IStudentDao studentDao) {
         this.studentDao = studentDao;
     }
+
 
 
 }

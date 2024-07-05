@@ -3,6 +3,9 @@ package fr.sqli.cantine.security.jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.sqli.cantine.constants.Messages;
+import fr.sqli.cantine.service.users.admin.impl.AdminService;
+import fr.sqli.cantine.service.users.student.Impl.StudentService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,24 +22,25 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.stream;
 
-/*TDOO: remove context  root  cantine on the url .*/
+
 @Component
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
 
     private final Environment environment;
+    private final AdminService adminService;
+    private final StudentService studentService;
 
 
     @Autowired
-    public JwtTokenVerifier(Environment environment) {
+    public JwtTokenVerifier(Environment environment, AdminService adminService, StudentService studentService) {
         this.environment = environment;
+        this.adminService = adminService;
+        this.studentService = studentService;
 
     }
 
@@ -50,9 +54,8 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
                 String token = authorizationHeader.replace("Bearer ", "");
                 try {
-
-                    String secretKey = "sqli.cantine.jwt.secret";
-
+                    String secretKey = this.environment.getProperty("sqli.cantine.jwt.secret");
+                    assert secretKey != null;
                     Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
@@ -63,15 +66,26 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
-
-                    /*TODO:  make the  request  to  database  to check  the  user   exists, not  disables....ect */
-
+                    if (Arrays.asList(roles).contains(Messages.ADMIN_ROLE)) {
+                        var admin = this.adminService.findByUsername(username);
+                        if (admin.getStatus() != 1 || admin.getValidation() != 1) {
+                            throw new Exception("Account not activated");
+                        }
+                    }
+                    else if (Arrays.asList(roles).contains(Messages.STUDENT_ROLE)) {
+                        var student = this.studentService.findStudentByUserName(username);
+                        if (student.getStatus() != 1) {
+                            throw new Exception("Account not activated");
+                        }
+                    } else {
+                        throw new Exception("Invalid role");
+                    }
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
                     authentication.setDetails(authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
                     filterChain.doFilter(request, response);
+
+
                 } catch (Exception e) {
                     response.addHeader("error", e.getMessage());
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

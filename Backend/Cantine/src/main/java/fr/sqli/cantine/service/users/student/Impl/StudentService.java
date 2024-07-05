@@ -182,6 +182,14 @@ public class StudentService implements IStudentService {
                 .toList();
     }
 
+    @Override
+    public StudentEntity findStudentByUserName(String username) throws UserNotFoundException {
+        return this.studentDao.findByEmail(username).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT  WITH  EMAIL = {}  IS  NOT  FOUND", username);
+            return new UserNotFoundException("STUDENT NOT FOUND");
+        });
+    }
+
 
     public void existingEmail(String adminEmail) throws ExistingUserException {
         if (this.studentDao.findByEmail(adminEmail).isPresent() || this.adminDao.findByEmail(adminEmail).isPresent()) {

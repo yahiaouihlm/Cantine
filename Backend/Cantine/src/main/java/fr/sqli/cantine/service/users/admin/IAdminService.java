@@ -4,6 +4,7 @@ import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 
+import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -35,5 +36,6 @@ public interface IAdminService {
         }
     }
 
+    public AdminEntity findByUsername(String username) throws UserNotFoundException;
 
 }
