@@ -1,0 +1,37 @@
+services:
+  database:
+    container_name: database
+    image: postgres:15.2
+    restart: always
+    environment:
+      - "POSTGRES_USER=adminCantine"
+      - "POSTGRES_PASSWORD=halim"
+      - "POSTGRES_DB=cantine"
+    ports:
+      - "5432:5432"
+
+  back:
+    depends_on:
+      - database
+    build:
+      context: ../gamelife
+    environment:
+      - "SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/cantine?stringtype=unspecified"
+      - "SPRING_DATASOURCE_USERNAME=adminCantine"
+      - "SPRING_DATASOURCE_PASSWORD=halim"
+      - "SPRING_PROFILES_ACTIVE=dev"
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ../.m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+  front:
+    build: ../../Front/gamelife
+    restart: always
+    ports:
+      - 4200:80
+    depends_on:
+      - back
