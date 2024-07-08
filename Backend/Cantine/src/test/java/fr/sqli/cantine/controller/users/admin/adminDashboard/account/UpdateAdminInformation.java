@@ -70,7 +70,8 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
         String destination = ADMIN_IMAGE_PATH + IMAGE_ADMIN_FOR_TEST_NAME;
         File sourceFile = new File(source);
         File destFile = new File(destination);
-        Files.copy(sourceFile.toPath(), destFile.toPath());
+        if  (!destFile.exists())
+          Files.copy(sourceFile.toPath(), destFile.toPath());
     }
 
     @AfterAll

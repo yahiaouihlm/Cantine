@@ -125,7 +125,7 @@ public class MenuService implements IMenuService {
 
         // check that the menu is not used in the orders
 
-        if (menu.getOrders() != null && menu.getOrders().size() > 0) {
+        if (menu.getOrders() != null && !menu.getOrders().isEmpty()) {
             menu.setStatus(3);
             this.menuDao.save(menu);
             MenuService.LOG.error("THE MENU WITH UUID = {} IS USED IN THE ORDERS CAN NOT BE DELETED", menuUuid);

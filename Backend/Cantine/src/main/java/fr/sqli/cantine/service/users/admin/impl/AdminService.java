@@ -238,19 +238,15 @@ public class AdminService implements IAdminService {
             throw new ExistingUserException("EMAIL IS ALREADY EXISTS");
         }
     }
-
     @Override
     public AdminEntity findByUsername(String username) throws UserNotFoundException {
          return this.adminDao.findByEmail(username)
                  .orElseThrow(() -> new UserNotFoundException("ADMIN NOT FOUND"));
     }
-
-
     @Autowired
     public void setStudentDao(IStudentDao studentDao) {
         this.studentDao = studentDao;
     }
-
 
 
 }

@@ -36,17 +36,12 @@ export class NewMealComponent implements OnInit {
     constructor(private mealServiceService: MealsService, private matDialog: MatDialog, private router: Router) {
     }
 
-    /** TODO : make  loadingTemplate in  the   center of  the  page   in  html   in reponsive  mode  */
-
     ngOnInit(): void {
         if (!Malfunctions.checkAdminConnectivityAndMakeRedirection(this.router)) {
             return;
         }
     }
-
     onSubmit() {
-
-
         this.submitted = true;
         if (this.newMeal.invalid) {
             return;
@@ -55,12 +50,8 @@ export class NewMealComponent implements OnInit {
         if (this.newMeal.controls["price"].value > 50) {
             alert(this.ATTENTION_MEAL_PRICE)
         }
-
         this.confirmAndSendNewMeal();
-
     }
-
-
     goBack(): void {
         this.router.navigate([IConstantsURL.ADMIN_MEALS_URL]).then(r => window.location.reload());
     }
