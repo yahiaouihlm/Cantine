@@ -3,7 +3,7 @@ import {connection} from "../../shared-module/functions/connection";
 import {IConstantsURL} from "../../shared-module/constants/IConstantsURL";
 import {Router} from "@angular/router";
 import {Observable, of} from "rxjs";
-import {Meal} from "../../shared-module/models/meals";
+import {Meal} from "../../shared-module/models/meal";
 import {CoreCantineService} from "../core-cantine.service";
 
 @Component({

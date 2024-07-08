@@ -34,7 +34,7 @@ public interface IStudentController {
     ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     @PostMapping(UPDATE_STUDENT_INFO_ENDPOINT)
-    ResponseEntity<ResponseDtout> updateStudentInformation(@ModelAttribute  StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
+    ResponseEntity<ResponseDtout> updateStudentInformation(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
 
     @PostMapping(STUDENT_SIGN_UP_ENDPOINT)
     ResponseEntity<ResponseDtout> signUpStudent(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException;

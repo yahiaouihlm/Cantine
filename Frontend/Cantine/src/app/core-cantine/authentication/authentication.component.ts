@@ -54,7 +54,7 @@ export class AuthenticationComponent  implements  OnInit{
                     this.isLoading = false
                     const authObjectJSON = JSON.stringify(response);
                     localStorage.setItem('authObject', authObjectJSON);
-                    console.log("response", response)
+
                     if (response.role === IConstantsMessages.ADMIN_ROLE) {
                         this.router.navigate([IConstantsURL.ADMIN_HOME_URL]).then(() => {
                             window.location.reload();
