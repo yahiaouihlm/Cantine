@@ -2,6 +2,7 @@ package fr.sqli.cantine.service.food.meals;
 
 
 import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.*;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
@@ -37,6 +38,9 @@ class RemoveMealTest {
     private MealService mealService;
 
     @Mock
+    private IMenuDao menuDao;
+
+    @Mock
     private MockEnvironment env;
 
     @BeforeEach
@@ -44,7 +48,7 @@ class RemoveMealTest {
         env = new MockEnvironment();
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
         env.setProperty("sqli.cantine.images.meals.path", "images/meals");
-        mealService = new MealService(env, mealDao, imageService);
+        mealService = new MealService(env, mealDao, imageService , menuDao);
 
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("image-test");

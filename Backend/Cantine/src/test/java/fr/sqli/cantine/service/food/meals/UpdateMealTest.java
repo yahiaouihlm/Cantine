@@ -2,6 +2,7 @@ package fr.sqli.cantine.service.food.meals;
 
 
 import fr.sqli.cantine.dao.IMealDao;
+import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
@@ -39,7 +40,8 @@ public class UpdateMealTest {
     private IImageService imageService;
     @InjectMocks
     private MealService mealService;
-
+    @Mock
+    private IMenuDao menuDao;
     @Mock
     private MockEnvironment env;
 
@@ -52,7 +54,7 @@ public class UpdateMealTest {
         env.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/cantine/download/images/meals/");
         env.setProperty("sqli.cantine.images.meals.path", "images/meals");
 
-        mealService = new MealService(env, mealDao, imageService);
+        mealService = new MealService(env, mealDao, imageService ,  menuDao);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImagename("oldImage");
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -32,12 +33,12 @@ import java.util.stream.Collectors;
 
 public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordAuthenticationFilter {
     private static final Logger LOG = LogManager.getLogger();
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final Environment environment;
 
-    public static final String JWT_COOKIE_NAME = "JWT_TOKEN";
-
-    public JwtUsernameAndPasswordAuthenticationFiler(AuthenticationManager authenticationManager) {
+    public JwtUsernameAndPasswordAuthenticationFiler(AuthenticationManager authenticationManager , Environment environment) {
         this.authenticationManager = authenticationManager;
+        this.environment = environment;
         setFilterProcessesUrl("/user/login");
     }
 
@@ -140,7 +141,9 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordA
     /*TODO change  the  place of  key to application.properties */
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String key = "sqli.cantine.jwt.secret";
+        String key = this.environment.getProperty("sqli.cantine.jwt.secret");
+
+        assert key != null;
         Algorithm algorithm = Algorithm.HMAC256(key.getBytes());
 
         String jwtAccessToken = JWT.create()

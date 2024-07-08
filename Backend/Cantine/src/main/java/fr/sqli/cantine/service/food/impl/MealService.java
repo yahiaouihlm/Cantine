@@ -39,7 +39,6 @@ public class MealService implements IMealService {
     private final String MEALS_IMAGES_PATH;
     private final IImageService imageService;
 
-
     @Autowired
     public MealService(Environment env, IMealDao mealDao, IImageService imageService ,  IMenuDao menuDao) {
         this.mealDao = mealDao;
@@ -48,8 +47,6 @@ public class MealService implements IMealService {
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
         this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.meals.path");
     }
-
-
     @Override
     public MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
 
@@ -57,16 +54,12 @@ public class MealService implements IMealService {
             MealService.LOG.debug("THE MEAL_DTO_IN CAN NOT BE NULL IN THE updateMeal METHOD ");
             throw new InvalidFoodInformationException("THE MEAL CAN NOT BE NULL");
         }
-
         IMealService.checkMealUuidValidity(mealDtoIn.getUuid());
-
-        mealDtoIn.toMealEntityWithoutImage();
-
+        mealDtoIn.checkMealInfoValidityWithoutImage();
         var meal = this.mealDao.findByUuid(mealDtoIn.getUuid()).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getUuid());
-            return new FoodNotFoundException("NO MEAL WAS FOUND WITH THIS ID");
+            return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
-
 
         meal.setLabel(mealDtoIn.getLabel().trim());
         meal.setCategory(mealDtoIn.getCategory().trim());
@@ -84,14 +77,11 @@ public class MealService implements IMealService {
                 throw new ExistingFoodException("THE MEAL WITH A LABEL = " + mealDtoIn.getLabel() + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
             }
         }
-
         // if  the  image is  not  null  we  update  the  image of  the  meal
         if (mealDtoIn.getImage() != null && !mealDtoIn.getImage().isEmpty() && mealDtoIn.getImage().getSize() > 0) {
             var oldImageName = meal.getImage().getImagename();
             var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(), MEALS_IMAGES_PATH);
-
             meal.getImage().setImagename(newImageName);
-
         }
         meal.setStatus(mealDtoIn.getStatus());
         if (mealDtoIn.getStatus() == 0) {
@@ -100,8 +90,6 @@ public class MealService implements IMealService {
                 this.menuDao.save(menu);
             }
         }
-
-
         return this.mealDao.save(meal);
     }
 

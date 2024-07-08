@@ -4,6 +4,7 @@ import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 
+import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -17,24 +18,24 @@ import java.util.List;
 public interface IAdminService {
 
 
-    AdminDtout getAdminByUuID(String  adminUuid) throws InvalidUserInformationException,  UserNotFoundException;
+    AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
-     void disableAdminAccount(String  adminUuid) throws InvalidUserInformationException, UserNotFoundException;
+    void removeAdminAccount(String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
+    void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException;
 
+    void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException;
 
+    List<FunctionDtout> getAllAdminFunctions();
 
-     void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException;
-     void signUp (AdminDtoIn  adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException;
-    List<FunctionDtout> getAllAdminFunctions() ;
-    //public void sendToken(String email) throws AdminNotFound, InvalidPersonInformationException, MessagingException, AccountAlreadyActivatedException;
-    void existingEmail(String  adminEmail ) throws  ExistingUserException;
+    void existingEmail(String adminEmail) throws ExistingUserException;
 
-    static   void  checkUuIdValidity(String adminUuid) throws InvalidUserInformationException {
+    static void checkUuIdValidity(String adminUuid) throws InvalidUserInformationException {
         if (adminUuid == null || adminUuid.isBlank() || adminUuid.length() < 20) {
             throw new InvalidUserInformationException("INVALID UUID");
         }
     }
 
+    public AdminEntity findByUsername(String username) throws UserNotFoundException;
 
 }

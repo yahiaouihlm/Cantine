@@ -18,7 +18,6 @@ public interface IOrderDao  extends JpaRepository<OrderEntity , Integer> {
 
     public List<OrderEntity> findByStudentOrderByCreationDateDesc(StudentEntity student);
     public Optional<OrderEntity> findByUuid(String uuid);
-    public List<OrderEntity> findByStudentId(Integer studentId);
     public List<OrderEntity> findByCreationDate(LocalDate creationDate);
     public List<OrderEntity>findByStudentUuidAndCreationDate(String studentUuid, LocalDate creationDate);
 }

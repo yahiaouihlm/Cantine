@@ -23,11 +23,11 @@ export class AdminOrderService {
     }
 
 
-    submitOrder(orderId: string) {
+    submitOrder(orderUuid: string) {
         let token = Malfunctions.getTokenFromLocalStorage();
         const headers = new HttpHeaders().set('Authorization', token);
-        ;  // const params = new HttpParams().set('orderId', orderId);
-        const params = new HttpParams().set('orderId', orderId)
+        // const params = new HttpParams().set('orderUuid', orderUuid);
+        const params = new HttpParams().set('orderUuid', orderUuid)
         return this.httpClient.post <NormalResponse>(this.ADMIN_SUBMIT_ORDER, null, {
             headers: headers,
             params: params
@@ -41,7 +41,7 @@ export class AdminOrderService {
         let token = Malfunctions.getTokenFromLocalStorage();
         let date = Malfunctions.getCurrentDate();
         const headers = new HttpHeaders().set('Authorization', token);
-        const params = new HttpParams().set('date', "2024-03-26");
+        const params = new HttpParams().set('date', date);
         return this.httpClient.get<Order[]>(this.GET_ORDERS_BY_DAY, {headers: headers, params: params}).pipe(
             catchError((error) => this.handleError(error))
 

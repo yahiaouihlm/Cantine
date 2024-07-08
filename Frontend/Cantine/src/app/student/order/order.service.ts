@@ -32,7 +32,6 @@ export class OrderService {
         )
     }
 
-
     getOrdersOfDay() {
         let studentId = Malfunctions.getUserIdFromLocalStorage();
         let date = Malfunctions.getCurrentDate();

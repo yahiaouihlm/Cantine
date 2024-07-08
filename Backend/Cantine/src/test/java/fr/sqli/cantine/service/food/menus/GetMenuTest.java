@@ -4,6 +4,7 @@ import fr.sqli.cantine.dao.IMenuDao;
 import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
+import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
@@ -59,6 +60,7 @@ class GetMenuTest {
         this.mealEntity.setCategory("Frites");
         this.mealEntity.setDescription("first Meal To  Test");
         this.mealEntity.setLabel("Meal 1");
+        this.mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
         this.mealEntity.setImage(new ImageEntity());
 
 

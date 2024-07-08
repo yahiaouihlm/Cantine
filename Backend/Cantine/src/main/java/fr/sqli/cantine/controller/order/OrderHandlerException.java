@@ -41,8 +41,8 @@ public class OrderHandlerException {
 
     //  one meal or  menu is not available
 
-    @ExceptionHandler(UnavailableFoodException.class)
-    public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(UnavailableFoodException e) {
+    @ExceptionHandler(UnavailableFoodForOrderException.class)
+    public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(UnavailableFoodForOrderException e) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ExceptionDtout(e.getMessage()));
     }
 

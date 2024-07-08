@@ -125,7 +125,7 @@ public class MenuService implements IMenuService {
 
         // check that the menu is not used in the orders
 
-        if (menu.getOrders() != null && menu.getOrders().size() > 0) {
+        if (menu.getOrders() != null && !menu.getOrders().isEmpty()) {
             menu.setStatus(3);
             this.menuDao.save(menu);
             MenuService.LOG.error("THE MENU WITH UUID = {} IS USED IN THE ORDERS CAN NOT BE DELETED", menuUuid);
@@ -190,7 +190,7 @@ public class MenuService implements IMenuService {
 
         var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
             MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE getMenuByUuId METHOD ", menuUuid);
-            return new FoodNotFoundException("NO MENU WAS FOUND");
+            return new FoodNotFoundException("MENU NOT FOUND");
         });
 
 

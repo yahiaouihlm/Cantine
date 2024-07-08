@@ -11,6 +11,7 @@ import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -30,9 +31,11 @@ public interface IStudentController {
     String STUDENT_INFO_UPDATED_SUCCESSFULLY = "STUDENT UPDATED SUCCESSFULLY";
 
 
+
     @GetMapping(GET_STUDENT_BY_ID_ENDPOINT)
     ResponseEntity<StudentDtout> getStudentByUuid(@RequestParam("studentUuid") String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     @PostMapping(UPDATE_STUDENT_INFO_ENDPOINT)
     ResponseEntity<ResponseDtout> updateStudentInformation(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException;
 

@@ -9,6 +9,7 @@ import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -45,16 +46,19 @@ public interface IMenuController {
     @PostMapping(value = ENDPOINT_UPDATE_MENU_URL,  consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> update (MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = ENDPOINT_DELETE_MENU_URL)
     public ResponseEntity<ResponseDtout> deleteMenu(@RequestParam("uuidMenu")String uuidMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = ENDPOINT_ADD_MENU_URL , consumes = MULTIPART_FORM_DATA_VALUE )
     ResponseEntity<ResponseDtout>  addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws InvalidFoodInformationException, FoodNotFoundException;
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = ENDPOINT_GET_ALL_MENU)
     public  ResponseEntity<List<MenuDtOut>> getAllMenu();
 
@@ -64,6 +68,7 @@ public interface IMenuController {
     @GetMapping(value = ENDPOINT_GET_ONLY_UNAVAILABLE_MENUS)
     ResponseEntity<List<MenuDtOut>> getUnavailableMenus();
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = GET_ONLY_MENUS_IN_DELETION_PROCESS_URL)
     ResponseEntity<List<MenuDtOut>> getMenusInDeletionProcess();
 

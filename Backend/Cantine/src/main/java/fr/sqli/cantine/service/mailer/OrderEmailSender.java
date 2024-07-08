@@ -29,6 +29,24 @@ public class OrderEmailSender {
         this.environment = environment;
     }
 
+    public  void  validatedOrderByAdmin (UserEntity student,  OrderEntity order ,  String  path) throws MessagingException {
+        Context context = new Context();
+
+        context.setVariable("firstname", student.getFirstname());
+        context.setVariable("lastname", student.getLastname());
+        context.setVariable("orderUuid", order.getUuid());
+        context.setVariable("orderDate", order.getCreationDate());
+        context.setVariable("orderTotalPrice", order.getPrice());
+
+        context.setVariable("sqliImage", this.environment.getProperty("sqli.cantine.confirmation.email.sqli.image.url"));
+        context.setVariable("cantineLogo", this.environment.getProperty("sqli.cantine.confirmation.email.cantiere.logo.url"));
+        context.setVariable("astonLogo", this.environment.getProperty("sqli.cantine.confirmation.email.aston.logo.url"));
+
+
+        String body = templateEngine.process("validated-order-notification", context);
+        this.emailSenderService.sendWithAttachedImage(student.getEmail(), "Votre  Commande  est prête", body , path);
+    }
+
     public void  cancelledOrderByAdmin (UserEntity student, OrderEntity order) throws MessagingException {
         Context context = new Context();
 
@@ -63,7 +81,6 @@ public class OrderEmailSender {
         String body = templateEngine.process("cancelled-order-notification", context);
         this.emailSenderService.send(student.getEmail(), "Votre  Commande été Annuler  avec succes", body);
     }
-
     public void  confirmOrder(UserEntity student, OrderEntity order ,  BigDecimal tax) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", student.getFirstname());
@@ -87,7 +104,6 @@ public class OrderEmailSender {
         String body = templateEngine.process("confirmation-order-template", context);
         this.emailSenderService.send(student.getEmail(), "Confiramtion de  votre  commande", body);
     }
-
     public void sendNotificationForSmallStudentWallet(UserEntity user) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", user.getFirstname());

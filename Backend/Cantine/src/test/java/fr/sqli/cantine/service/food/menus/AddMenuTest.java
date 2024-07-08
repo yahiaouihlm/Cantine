@@ -81,8 +81,6 @@ public class AddMenuTest {
     }
 
 
-
-
     @Test
     void addMenuWithFewMealsTest() throws InvalidFoodInformationException, FoodNotFoundException {
         this.menuDtoIn.setUuid(java.util.UUID.randomUUID().toString());
@@ -90,10 +88,8 @@ public class AddMenuTest {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setUuid(mealUuid);
         mealEntity.setStatus(1);
-        this.menuDtoIn.setMealUuids(Collections.singletonList(mealUuid));
 
-
-
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + mealUuid + "\" ] ");
 
         Mockito.when(this.iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menuDtoIn.getLabel().trim(), this.menuDtoIn.getDescription(), this.menuDtoIn.getPrice()))
                 .thenReturn(Optional.empty());
@@ -101,12 +97,13 @@ public class AddMenuTest {
         Mockito.when(this.iMealService.getMealEntityByUUID(mealUuid)).thenReturn(mealEntity);
 
 
-
-        Assertions.assertThrows(InvalidFoodInformationException.class , () -> this.menuService.addMenu(this.menuDtoIn));
+        Assertions.assertThrows(InvalidFoodInformationException.class, () -> this.menuService.addMenu(this.menuDtoIn));
     }
+
     @Test
     void addMenuWithExistingMenu() {
-        this.menuDtoIn.setMealUuids(List.of(java.util.UUID.randomUUID().toString()));
+        // allow the  meal parsing  by the service
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + java.util.UUID.randomUUID() + "\" ] ");
         Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menuDtoIn.getLabel().trim(), this.menuDtoIn.getDescription(), this.menuDtoIn.getPrice())).thenReturn(Optional.of(new MenuEntity()));
         Assertions.assertThrows(ExistingFoodException.class, () -> this.menuService.addMenu(this.menuDtoIn));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
@@ -122,7 +119,8 @@ public class AddMenuTest {
         meal.setLabel("label test");
         meal.setId(1);
         meal.setStatus(0);
-        this.menuDtoIn.setMealUuids(List.of(uuid));
+        // allow the  meal parsing  by the service
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + uuid + "\" ] ");
 
         Mockito.when(iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menuDtoIn.getLabel().trim(), this.menuDtoIn.getDescription(), this.menuDtoIn.getPrice())).thenReturn(Optional.empty());
 

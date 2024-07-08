@@ -6,40 +6,38 @@ import fr.sqli.cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
 import fr.sqli.cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
 import fr.sqli.cantine.security.jwt.JwtTokenVerifier;
 import fr.sqli.cantine.security.jwt.JwtUsernameAndPasswordAuthenticationFiler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private AppUserService appUserService;
-    private JwtTokenVerifier jwtTokenVerifier;
-    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
-    private StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new StoneAuthenticationFailureHandler();
-    private ObjectMapper objectMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AppUserService appUserService;
+    private final JwtTokenVerifier jwtTokenVerifier;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new StoneAuthenticationFailureHandler();
+    private final Environment environment;
 
-    public SecurityConfig(AppUserService appUserService, CustomAccessDeniedHandler customAccessDeniedHandler,
+    public SecurityConfig(AppUserService appUserService, CustomAccessDeniedHandler customAccessDeniedHandler, Environment environment,
                           CustomAuthenticationEntryPoint customAuthenticationEntryPoint, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenVerifier jwtTokenVerifier) {
 
         this.appUserService = appUserService;
@@ -47,6 +45,7 @@ public class SecurityConfig {
         this.jwtTokenVerifier = jwtTokenVerifier;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.environment = environment;
 
     }
 
@@ -78,7 +77,7 @@ public class SecurityConfig {
                         })
 
                 .authenticationProvider(authenticationProvider())
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager()))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager() , this.environment))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(this.customAuthenticationEntryPoint)

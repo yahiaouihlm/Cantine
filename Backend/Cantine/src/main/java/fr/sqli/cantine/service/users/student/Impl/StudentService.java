@@ -48,14 +48,14 @@ public class StudentService implements IStudentService {
 
 
     private IAdminDao adminDao;
-
+    @Autowired
     public StudentService(IStudentDao studentDao, IStudentClassDao iStudentClassDao, Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder, ImageService imageService, UserService userService) {
         this.iStudentClassDao = iStudentClassDao;
         this.studentDao = studentDao;
         this.environment = environment;
         this.userService = userService;
-        this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.student.default.image");
+        this.DEFAULT_STUDENT_IMAGE = this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
         this.IMAGES_STUDENT_PATH = this.environment.getProperty("sqli.cantine.image.student.path");
         this.EMAIL_STUDENT_DOMAIN = this.environment.getProperty("sqli.cantine.admin.email.domain");
         this.EMAIL_STUDENT_REGEX = "^[a-zA-Z0-9._-]+@" + this.EMAIL_STUDENT_DOMAIN + "$";
@@ -182,11 +182,19 @@ public class StudentService implements IStudentService {
                 .toList();
     }
 
+    @Override
+    public StudentEntity findStudentByUserName(String username) throws UserNotFoundException {
+        return this.studentDao.findByEmail(username).orElseThrow(() -> {
+            StudentService.LOG.error("STUDENT  WITH  EMAIL = {}  IS  NOT  FOUND", username);
+            return new UserNotFoundException("STUDENT NOT FOUND");
+        });
+    }
+
 
     public void existingEmail(String adminEmail) throws ExistingUserException {
         if (this.studentDao.findByEmail(adminEmail).isPresent() || this.adminDao.findByEmail(adminEmail).isPresent()) {
             StudentService.LOG.error("THE  USER  WITH  EMAIL = {}  IS  ALREADY  EXISTS", adminEmail);
-            throw new ExistingUserException(" EMAIL IS ALREADY EXISTS");
+            throw new ExistingUserException("EMAIL IS ALREADY EXISTS");
         }
     }
 

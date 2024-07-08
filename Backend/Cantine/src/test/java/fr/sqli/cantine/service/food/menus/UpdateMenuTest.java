@@ -77,7 +77,7 @@ public class UpdateMenuTest {
                 "ImageMenuForTest.jpg",          // nom du fichier
                 "image/jpg",                    // type MIME
                 new FileInputStream("imagesTests/ImageForTest.jpg")));
-        this.menuDtoIn.setMealUuids(Collections.singletonList("1"));
+
 
     }
 
@@ -90,7 +90,7 @@ public class UpdateMenuTest {
         MealEntity mealEntity = new MealEntity();
         mealEntity.setUuid(mealUuid);
         mealEntity.setStatus(1);
-        this.menuDtoIn.setMealUuids(Collections.singletonList(mealUuid));
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + mealUuid + "\" ] ");
 
 
         Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.of(this.menuEntity));
@@ -114,7 +114,7 @@ public class UpdateMenuTest {
         this.menuEntity.setPrice(BigDecimal.valueOf(1.5));
         this.menuEntity.setId(1);
         this.menuEntity.setImage(new ImageEntity());
-        this.menuDtoIn.setMealUuids(Collections.singletonList(uuid));
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + uuid+ "\" ] ");
 
         MealEntity mealEntity = new MealEntity();
         mealEntity.setUuid(uuid);
@@ -132,7 +132,7 @@ public class UpdateMenuTest {
         MenuEntity existingMenu = new MenuEntity();
         existingMenu.setUuid(java.util.UUID.randomUUID().toString());
         existingMenu.setId(10);
-
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + java.util.UUID.randomUUID() + "\" ] ");
         Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.of(this.menuEntity));
 
 
@@ -146,6 +146,7 @@ public class UpdateMenuTest {
     }
     @Test
     void  updateMenuWithMenuNotFoundTest () {
+        this.menuDtoIn.setListOfMealsAsString(" [\"" + java.util.UUID.randomUUID() + "\" ] ");
         Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.empty());
         Assertions.assertThrows(FoodNotFoundException.class , () -> this.menuService.updateMenu(this.menuDtoIn));
         Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(this.menuDtoIn.getUuid());

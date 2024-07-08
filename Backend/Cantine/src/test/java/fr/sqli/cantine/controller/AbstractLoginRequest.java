@@ -1,76 +1,82 @@
 package fr.sqli.cantine.controller;
 
 
+import fr.sqli.cantine.controller.users.admin.adminDashboard.account.IAdminTest;
+import fr.sqli.cantine.controller.users.student.IStudentTest;
 import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.dto.in.users.Login;
-import fr.sqli.cantine.entity.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.StudentEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
+public class AbstractLoginRequest extends AbstractContainerConfig  implements IAdminTest , IStudentTest {
 
 
-public class AbstractLoginRequest extends AbstractContainerConfig {
-
-    private String studentBearerToken;
-    private String adminBearerToken;
-
-    @Autowired
-    private IAdminDao adminDao;
-
-    @Autowired
-    private IStudentDao studentDao;
-
-    @Autowired
-    private IFunctionDao functionDao;
-
-    @Autowired
-    private IStudentClassDao studentClassDao;
+     public  static AdminEntity saveAdmin(IAdminDao iAdminDao, IFunctionDao iFunctionDao) {
+         // save  admin;
+         var functionEntity = iFunctionDao.save(IAdminTest.createFunctionEntity());
+         var adminEntity = IAdminTest.createAdminWith(IAdminTest.ADMIN_EMAIL_EXAMPLE, functionEntity, IAdminTest.createImageEntity());
+         return iAdminDao.save(adminEntity);
+     }
 
 
-    @Autowired
-    private MockMvc mockMvc;
-    private StudentEntity studentCreated;
-    private AdminEntity adminCreated;
+    public static String getAdminBearerToken(MockMvc mockMvc) throws Exception {
+        var login = new Login();
+        login.setEmail(IAdminTest.ADMIN_EMAIL_EXAMPLE);
+        login.setPassword(IAdminTest.ADMIN_PASSWORD_EXAMPLE);
 
-    //  delete  all  student  or admin  from  database
-    void cleanDataBase() {
-        this.studentDao.deleteAll();
-        this.adminDao.deleteAll();
-        this.studentClassDao.deleteAll();
-        this.functionDao.deleteAll();
+        var result = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_SIGN_IN_URL)
+                        .content(new ObjectMapper().writeValueAsString(login))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+
+        return jsonNode.get("Authorization").asText();
+    }
+
+
+    public static String getStudentBearerToken(MockMvc mockMvc) throws Exception {
+        var login = new Login();
+        login.setEmail(IStudentTest.STUDENT_EMAIL_EXAMPLE);
+        login.setPassword(IStudentTest.STUDENT_PASSWORD_EXAMPLE);
+
+        var result = mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, STUDENT_SIGN_IN_URL)
+                        .content(new ObjectMapper().writeValueAsString(login))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+
+        return jsonNode.get("Authorization").asText();
     }
 
 
 
-    @BeforeEach
-    public void studentLoginRequest() throws Exception {
-        cleanDataBase();
-        this.studentCreated = this.createStudentForLoginRequest();
-          this.studentBearerToken =  this.studentBearerToken();
+    public  static StudentEntity saveAStudent(IStudentDao iStudentDao, IStudentClassDao iStudentClassDao){
+        // save  student;
+        var studentClass = iStudentClassDao.save(IStudentTest.createStudentClassEntity());
+        var studentEntity = IStudentTest.createStudentEntity(IStudentTest.STUDENT_EMAIL_EXAMPLE, studentClass, IAdminTest.createImageEntity());
+        return iStudentDao.save(studentEntity);
     }
 
-    @BeforeEach
-    public void  adminLoginRequest() throws Exception {
-        System.out.println("adminLoginRequest");
-        cleanDataBase();
-        this.adminCreated = this.createAdminForLoginRequest();
-        this.adminBearerToken =  this.adminBearerToken();
-    }
+/*
 
+    public String getStudentAuthToken() throws Exception {
 
-    public String studentBearerToken() throws Exception {
         var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + this.studentCreated.getEmail() + "\", \"password\": \"" + this.studentCreated.getPassword() + "\" }"))
@@ -88,27 +94,10 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
     }
 
 
-    public String adminBearerToken() throws Exception {
-        var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
-
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new Login(this.adminCreated.getEmail(), this.adminCreated.getPassword()))))
-
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn(); // Utilisez .andReturn() pour obtenir la réponse HTTP
-
-        String authorizationHeader = req.getResponse().getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Le jeton d'autorisation commence généralement par "Bearer "
-            String token = authorizationHeader.substring("Bearer ".length());
-            return token;
-        } else {
-            throw new Exception("Bearer token not found in the response header");
-        }
-    }
 
 
-    public final  StudentEntity createStudentForLoginRequest() {
+
+    private     StudentEntity createStudentForLoginRequest( IStudentDao iStudentDao) {
         var  studentClass = createStudentClass();
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setFirstname("student");
@@ -125,7 +114,7 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         imageEntity.setImagename("image");
         studentEntity.setImage(imageEntity);
         studentEntity.setStudentClass(studentClass);
-        return this.studentDao.save(studentEntity);
+        return iStudentDao.save(studentEntity);
     }
 
 
@@ -145,6 +134,24 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(adminFunction);
         return this.adminDao.save(adminEntity);
+    }
+
+    public String adminBearerToken() throws Exception {
+        var req = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(new Login(this.adminCreated.getEmail(), this.adminCreated.getPassword()))))
+
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn(); // Utilisez .andReturn() pour obtenir la réponse HTTP
+
+        String authorizationHeader = req.getResponse().getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Le jeton d'autorisation commence généralement par "Bearer "
+            String token = authorizationHeader.substring("Bearer ".length());
+            return token;
+        } else {
+            throw new Exception("Bearer token not found in the response header");
+        }
     }
 
 
@@ -168,7 +175,8 @@ public class AbstractLoginRequest extends AbstractContainerConfig {
         return adminBearerToken;
     }
 
-
+*/
 }
+
 
 

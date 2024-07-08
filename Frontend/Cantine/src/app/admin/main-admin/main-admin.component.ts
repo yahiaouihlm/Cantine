@@ -4,18 +4,19 @@ import {User} from "../../sharedmodule/models/user";
 import {Router} from "@angular/router";
 import { IConstantsURL} from "../../sharedmodule/constants/IConstantsURL";
 import {AdminService} from "../dashbord/admin.service";
+import {AdminOrderService} from "../orders/admin-order.service";
 
 @Component({
     selector: 'app-main-admin',
     templateUrl: './main-admin.component.html',
     styleUrls: ["../../../assets/styles/main.component.scss"],
-    providers: [AdminService]
+    providers: [AdminService ,  AdminOrderService]
 })
 export class MainAdminComponent implements OnInit {
     isConnected = false;
-
+    numberOfOrders = 0;
      admin = new User();
-    constructor(private router: Router , private adminService: AdminService) {
+    constructor(private router: Router , private adminService: AdminService, private adminOrderService: AdminOrderService) {
     }
 
     ngOnInit(): void {
@@ -28,6 +29,17 @@ export class MainAdminComponent implements OnInit {
       this.adminService.getAdminById(adminId).subscribe((admin) => {
             this.admin = admin;
             this.isConnected = true;
+        });
+        this.getNumberOfOrder();
+    }
+
+
+    getNumberOfOrder()  : void  {
+        this.adminOrderService.getOrdersByDate().subscribe((orders) => {
+            this.numberOfOrders = orders.filter(
+                order=> order.status == 0
+            ).length;
+
         });
     }
 

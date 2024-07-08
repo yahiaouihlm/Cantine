@@ -65,7 +65,7 @@ public class AdminService implements IAdminService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
         this.userEmailSender = userEmailSender;
-        this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.admin.default.image"); //  default  image  name  for  admin
+        this.DEFAULT_ADMIN_IMAGE_NAME = environment.getProperty("sqli.cantine.default.persons.admin.imagename"); //  default  image  name  for  admin
         this.ADMIN_IMAGE_PATH = environment.getProperty("sqli.cantine.image.admin.path"); //  path  to  admin image  directory
         this.ADMIN_IMAGE_URL = environment.getProperty("sqli.cantine.images.url.admin"); //  url  to  admin image  directory
         this.EMAIL_ADMIN_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -137,10 +137,8 @@ public class AdminService implements IAdminService {
         this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
         this.userEmailSender.sendNotificationToSuperAdminAboutAdminRegistration(adminEntity, URL);
     }
-
-
     @Override
-    public void disableAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
+    public void removeAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
 
         IAdminService.checkUuIdValidity(adminUuid);
 
@@ -155,7 +153,6 @@ public class AdminService implements IAdminService {
         admin.setDisableDate(LocalDate.now());
         this.adminDao.save(admin);
     }
-
     @Override
     public AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         IAdminService.checkUuIdValidity(adminUuid);
@@ -172,7 +169,6 @@ public class AdminService implements IAdminService {
         }
         return new AdminDtout(admin, this.ADMIN_IMAGE_URL);
     }
-
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException {
         if (adminDtoIn == null) {
@@ -232,19 +228,21 @@ public class AdminService implements IAdminService {
         this.adminDao.save(adminEntity);
 
     }
-
     @Override
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());
     }
-
     @Override
     public void existingEmail(String adminEmail) throws ExistingUserException {
         if (this.adminDao.findByEmail(adminEmail).isPresent() || this.studentDao.findByEmail(adminEmail).isPresent()) {
             throw new ExistingUserException("EMAIL IS ALREADY EXISTS");
         }
     }
-
+    @Override
+    public AdminEntity findByUsername(String username) throws UserNotFoundException {
+         return this.adminDao.findByEmail(username)
+                 .orElseThrow(() -> new UserNotFoundException("ADMIN NOT FOUND"));
+    }
     @Autowired
     public void setStudentDao(IStudentDao studentDao) {
         this.studentDao = studentDao;

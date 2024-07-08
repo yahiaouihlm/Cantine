@@ -3,6 +3,7 @@ package fr.sqli.cantine.service.users.student;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
+import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
@@ -25,9 +26,14 @@ public interface IStudentService {
 
     List<StudentClassDtout> getAllStudentClass();
 
+    public StudentEntity findStudentByUserName(String username) throws UserNotFoundException;
+
+
     static void checkUuIdValidity(String studentUuid) throws InvalidUserInformationException {
         if (studentUuid == null || studentUuid.isBlank() || studentUuid.length() < 20) {
             throw new InvalidUserInformationException("INVALID UUID");
         }
     }
+
+
 }

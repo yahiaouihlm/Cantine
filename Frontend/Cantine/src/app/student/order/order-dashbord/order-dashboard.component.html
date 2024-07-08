@@ -59,7 +59,7 @@
             <div class="col-md-2">
                 <span><strong>Prix total : </strong> {{order.price}} € </span>
             </div>
-            <div class="col-md-2" *ngIf="!order.cancelled">
+            <div class="col-md-2" *ngIf="!order.cancelled && order.status !=1" >
                 <button class="btn btn-success" (click)="cancelOrder(order.uuid)">Annuler</button>
             </div>
             <div class="col-md-2" *ngIf="order.cancelled">
