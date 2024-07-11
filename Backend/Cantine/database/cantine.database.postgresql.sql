@@ -9,9 +9,10 @@ CREATE TABLE IF NOT EXISTS tax (
 
 
 CREATE TABLE IF NOT EXISTS image(
-    idimage SERIAL PRIMARY KEY,
-    imageName VARCHAR(400) NOT NULL
+    id UUID PRIMARY KEY,
+    name VARCHAR(400) NOT NULL
 );
+
 
 
 -- -----------------------------------------------------
@@ -19,12 +20,11 @@ CREATE TABLE IF NOT EXISTS image(
 -- -----------------------------------------------------
 
 
-CREATE TABLE IF NOT EXISTS  "studentclass" (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS  studentClass (
+    id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     unique(name)
-
-);
+ );
 
 
 -- -----------------------------------------------------
@@ -32,11 +32,51 @@ CREATE TABLE IF NOT EXISTS  "studentclass" (
 -- -----------------------------------------------------
 
 
-    CREATE TABLE IF NOT EXISTS "function" (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(300) NOT NULL,
-        unique(name)
+CREATE TABLE IF NOT EXISTS  adminFunction (
+    id UUID PRIMARY KEY,
+    name VARCHAR(300) NOT NULL,
+    unique(name)
+);
+
+-- -----------------------------------------------------
+-- Table `cantiniere`.`adminService`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS luser (
+    id  UUID PRIMARY KEY,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    birthdate DATE NOT NULL,
+    registration_date DATE NOT NULL,
+    email VARCHAR(1000) NOT NULL,
+    password VARCHAR(2000) NOT NULL,
+    Wallet DECIMAL(5,2),
+    town VARCHAR(1000) NOT NULL,
+    address VARCHAR(3000) NOT NULL,
+    phone VARCHAR(50) ,
+    function_id UUID,
+    class_id UUID,
+    image_id UUID NOT NULL,
+    status INT  NOT NULL  DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
+    disable_date DATE DEFAULT NULL,   /*  if disable_date  is  not  null that  mean  it's   removed admin   */
+    validation INT   DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
+    unique(email),
+    check (status IN (0,1)),
+    FOREIGN KEY (function_id) REFERENCES adminFunction (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (class_id)    REFERENCES studentClass  (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (image_id)    REFERENCES image         (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
+
+-- -----------------------------------------------------
+-- Table `cantiniere`.`role`
+-- -----------------------------------------------------
+CREATE TABLE role (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    label VARCHAR(200) NOT NULL,
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES luser (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`Student`
