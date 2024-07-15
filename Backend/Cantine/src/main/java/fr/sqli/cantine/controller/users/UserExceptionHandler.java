@@ -8,8 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.management.relation.RoleNotFoundException;
+
 @ControllerAdvice
 public class UserExceptionHandler {
+
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ExceptionDtout> handleUnknownUser(RoleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout(e.getMessage()));
+    }
 
 
     @ExceptionHandler(UnknownUser.class)

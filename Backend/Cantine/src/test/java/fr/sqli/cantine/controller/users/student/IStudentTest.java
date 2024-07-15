@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller.users.student;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
@@ -68,8 +69,8 @@ public interface IStudentTest {
 
 
 
-    static StudentEntity createStudentEntity(String email, StudentClassEntity studentClassEntity, ImageEntity imageEntity) {
-        StudentEntity student = new StudentEntity();
+    static UserEntity createStudentEntity(String email, StudentClassEntity studentClassEntity, ImageEntity imageEntity) {
+        UserEntity student = new UserEntity();
         student.setEmail(email);
         student.setFirstname("firstName");
         student.setLastname("lastName");
@@ -87,7 +88,7 @@ public interface IStudentTest {
 
     static ImageEntity createImageEntity() {
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_NAME);
+        imageEntity.setName(IMAGE_NAME);
         return imageEntity;
     }
 

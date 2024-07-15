@@ -15,7 +15,7 @@ public class MenuDtOut  extends  AbstractFoodDtOut{
 
     public MenuDtOut(MenuEntity menu , String menuUrlImage, String mealUrlImage) {
 
-        super(menu.getUuid(),menu.getLabel(),menu.getDescription(),menu.getPrice(),menu.getQuantity(),menu.getStatus(),menu.getImage(),   menuUrlImage);
+        super(menu.getId(),menu.getLabel(),menu.getDescription(),menu.getPrice(),menu.getQuantity(),menu.getStatus(),menu.getImage(),   menuUrlImage);
         this.meals = menu.getMeals().stream().map(meal -> new MealDtOut(meal,mealUrlImage)).toList();
     }
 

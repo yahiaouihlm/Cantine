@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class AdminController implements IAdminController {
 
 
     @Override
-    public ResponseEntity<ResponseDtout> signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, AdminFunctionNotFoundException {
+    public ResponseEntity<ResponseDtout> signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, AdminFunctionNotFoundException, RoleNotFoundException {
         this.adminService.signUp(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }

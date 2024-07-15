@@ -87,7 +87,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         var meal = this.mealDao.save(IMenuTest.createMeal());
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal(10.0), 1, 10, imageEntity);
         mealEntity.setMealType(MealTypeEnum.ENTREE);
@@ -124,7 +124,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
         var meals = this.mealDao.findAll();
         ObjectMapper objectMapper = new ObjectMapper();
-        this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(meals.stream().map(AbstractEntity::getUuid).toList()));
+        this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(meals.stream().map(AbstractEntity::getId).toList()));
 
         //    this.formData.add("listOfMealsAsString", " [\"" + meals.get(0).getUuid() +","+meals.get(1).getUuid() + "\" ] ");
 
@@ -141,7 +141,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
         MenuEntity menuEntity = this.menuDao.findAll().stream() // we know that  there is  only 2 menu
                 .filter(menu -> menu.getLabel().equals("MenuTest")).limit(1).toList().get(0);
-        var imageName = menuEntity.getImage().getImagename();
+        var imageName = menuEntity.getImage().getName();
 
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
         Assertions.assertTrue(new File(DIRECTORY_IMAGE_MENU + imageName).delete());
@@ -232,11 +232,11 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     void addMenuWithUnavailableMeal() throws Exception {
         var meals = this.mealDao.findAll();
         meals.get(0).setStatus(0);
-        var mealID = this.mealDao.save(meals.get(0)).getUuid();
+        var mealID = this.mealDao.save(meals.get(0)).getId();
         // this.formData.add("listOfMealsAsString", " [\"" +mealID +  "," +meals.get(1).getUuid()+   "\" ] ");
         ObjectMapper objectMapper = new ObjectMapper();
 
-        this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(List.of(mealID, meals.get(1).getUuid())));
+        this.formData.add("listOfMealsAsString", objectMapper.writeValueAsString(List.of(mealID, meals.get(1).getId())));
 
 
         var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
@@ -263,7 +263,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         this.formData.add("status", "1");
         this.formData.add("quantity", "10");
 
-        this.formData.add("listOfMealsAsString", " [\"" + this.mealDao.findAll().get(0).getUuid() + "\" ] ");
+        this.formData.add("listOfMealsAsString", " [\"" + this.mealDao.findAll().get(0).getId() + "\" ] ");
 
 
         var result = this.mockMvc.perform(multipart(ADD_MENU_URL)
@@ -279,7 +279,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void addMenuWithInvalidMealIDsnOTFound() throws Exception {
-        List<String> mealsUuid = this.mealDao.findAll().stream().map(AbstractEntity::getUuid).toList();
+        List<String> mealsUuid = this.mealDao.findAll().stream().map(AbstractEntity::getId).toList();
         this.formData.add("listOfMealsAsString", " [\"" + java.util.UUID.randomUUID() + "," + mealsUuid.get(0) + "\" ] ");
 
 
@@ -389,7 +389,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     @Test
     void addMenuWithInvalidImageName() throws Exception {
 
-        List<String> mealsUuid = this.mealDao.findAll().stream().map(AbstractEntity::getUuid).toList();
+        List<String> mealsUuid = this.mealDao.findAll().stream().map(AbstractEntity::getId).toList();
         this.formData.add("listOfMealsAsString", mealsUuid.get(0) + "," + mealsUuid.get(1));
 
         this.imageData = new MockMultipartFile("wrongImageName",                         // nom du champ de fichier

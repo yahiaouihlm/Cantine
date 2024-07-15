@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    public ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws UserNotFoundException, InvalidStudentClassException, MessagingException, InvalidFormatImageException, AccountActivatedException, RemovedAccountException, InvalidImageException, InvalidUserInformationException, StudentClassNotFoundException, ImagePathException, IOException, ExistingUserException {
+    public ResponseEntity<ResponseDtout> signUpStudent(StudentDtoIn studentDtoIn) throws UserNotFoundException, InvalidStudentClassException, MessagingException, InvalidFormatImageException, AccountActivatedException, RemovedAccountException, InvalidImageException, InvalidUserInformationException, StudentClassNotFoundException, ImagePathException, IOException, ExistingUserException, RoleNotFoundException {
         this.studentService.signUpStudent(studentDtoIn);
         return ResponseEntity.ok(new ResponseDtout(STUDENT_SIGNED_UP_SUCCESSFULLY));
     }

@@ -8,6 +8,7 @@ import fr.sqli.cantine.service.order.exception.CancelledOrderException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.exception.OrderNotFoundException;
 import fr.sqli.cantine.service.order.exception.UnableToCancelOrderException;
+import fr.sqli.cantine.service.order.impl.OrderService;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -92,7 +93,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
         Mockito.when(this.adminDao.findByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
 
         Mockito.when(this.studentDao.findByUuid(this.orderEntity.getStudent().getUuid())).thenReturn(Optional.empty());
@@ -102,7 +103,7 @@ public class CancelOrderTest {
         });
 
         Mockito.verify(this.studentDao, Mockito.times(1)).findByUuid(this.orderEntity.getStudent().getUuid());
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 
@@ -119,7 +120,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
         Mockito.when(this.adminDao.findByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
 
@@ -128,7 +129,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 
@@ -144,7 +145,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
         Mockito.when(this.adminDao.findByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
 
@@ -153,7 +154,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 
@@ -168,7 +169,7 @@ public class CancelOrderTest {
 
 
         Mockito.when(this.adminDao.findByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.empty());
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.empty());
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
 
         Assertions.assertThrows(OrderNotFoundException.class, () -> {
@@ -176,7 +177,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 
@@ -229,7 +230,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
 
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
         Mockito.when(authentication.getPrincipal()).thenReturn(this.studentEntity.getEmail());
 
         Mockito.when(this.studentDao.findByUuid(this.orderEntity.getStudent().getUuid())).thenReturn(Optional.empty());
@@ -239,7 +240,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.studentDao, Mockito.times(1)).findByUuid(this.orderEntity.getStudent().getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
@@ -256,7 +257,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
 
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.studentEntity.getEmail());
 
@@ -265,7 +266,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 
@@ -279,7 +280,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
 
-        Mockito.when(this.orderDao.findByUuid(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getUuid())).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.studentEntity.getEmail());
 
@@ -288,7 +289,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(this.orderEntity.getUuid());
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getUuid());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 
@@ -303,7 +304,7 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
 
-        Mockito.when(this.orderDao.findByUuid(orderUuid)).thenReturn(Optional.of(this.orderEntity));
+        Mockito.when(this.orderDao.findOrderById(orderUuid)).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(java.util.UUID.randomUUID().toString());
 
@@ -312,7 +313,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(orderUuid);
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(orderUuid);
     }
 
     @Test
@@ -324,7 +325,7 @@ public class CancelOrderTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        Mockito.when(this.orderDao.findByUuid(orderUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.orderDao.findOrderById(orderUuid)).thenReturn(Optional.empty());
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.studentEntity.getEmail());
         Assertions.assertThrows(OrderNotFoundException.class, () -> {
@@ -332,7 +333,7 @@ public class CancelOrderTest {
         });
 
 
-        Mockito.verify(this.orderDao, Mockito.times(1)).findByUuid(orderUuid);
+        Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(orderUuid);
     }
 
     @Test

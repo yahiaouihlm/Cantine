@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
+public interface IMenuDao extends JpaRepository<MenuEntity, String> {
 
 
     @Query(value = "SELECT menu FROM MenuEntity menu WHERE (" +
@@ -34,7 +34,8 @@ public interface IMenuDao extends JpaRepository<MenuEntity, Integer> {
     @Query(value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.status=2")
     List<MenuEntity> getMenusInDeletionProcess();
 
-    Optional<MenuEntity> findByUuid(String uuid);
+    @Query(value = "SELECT menu  FROM MenuEntity  menu  WHERE menu.id=?1")
+    Optional<MenuEntity> findMenuById(String id);
 
 
     List<MenuEntity> findMenuEntitiesByLabel(String label);

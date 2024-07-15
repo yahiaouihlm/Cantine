@@ -8,11 +8,15 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Check;
 
 @Entity
-@Table(name="menu", uniqueConstraints={
-        @UniqueConstraint(columnNames={"label", "description", "price"})
+@Getter
+@Setter
+@Table(name = "menu", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"label", "description", "price"})
 
 })
 public class MenuEntity extends AbstractEntity implements Serializable {
@@ -23,8 +27,8 @@ public class MenuEntity extends AbstractEntity implements Serializable {
 
     @Column(nullable = false, length = 3002)
     private String description;
-   @Column(name ="creation_date",  nullable = false )
-   private LocalDate createdDate;
+    @Column(name = "creation_date", nullable = false)
+    private LocalDate createdDate;
 
 
     @Column(nullable = false, precision = 5, scale = 2)
@@ -36,27 +40,27 @@ public class MenuEntity extends AbstractEntity implements Serializable {
     private Integer status;
 
     //bi-directional many-to-many association to CommandeEntity
-    @ManyToMany(fetch =  FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name="st_order_has_menu",
-            joinColumns={@JoinColumn(name="menu_idmenu", nullable=false)},
-            inverseJoinColumns={@JoinColumn(name="order_idorder", nullable=false)}
+            name = "lorder_has_menu",
+            joinColumns = {@JoinColumn(name = "menu_id", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "order_id", nullable = false)}
     )
 
     private List<OrderEntity> orders;
 
     //bi-directional many-to-one association to ImageEntity
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_idimage", nullable = false)
+    @JoinColumn(name = "image_id", nullable = false)
     private ImageEntity image;
 
     //bi-directional many-to-many association to PlatEntity
 
     @ManyToMany()
     @JoinTable(
-            name = " menu_has_meal",
-            joinColumns = {@JoinColumn(name = "menu_idmenu", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "meal_idmeal", nullable = false)}
+            name = "menu_has_meal",
+            joinColumns = {@JoinColumn(name = "menu_id", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "meal_id", nullable = false)}
     )
 
     private List<MealEntity> meals;
@@ -69,7 +73,7 @@ public class MenuEntity extends AbstractEntity implements Serializable {
     @Check(constraints = "quantity > 0")
     private Integer quantity;
 
-    public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image , Set<MealEntity> meals) {
+    public MenuEntity(String label, String description, BigDecimal price, Integer status, Integer quantity, ImageEntity image, Set<MealEntity> meals) {
         super();
         this.label = label;
         this.description = description;
@@ -81,101 +85,8 @@ public class MenuEntity extends AbstractEntity implements Serializable {
         this.meals = new ArrayList<>(meals);
     }
 
-    public MenuEntity() {}
-
-    public String getLabel() {
-        return label;
+    public MenuEntity() {
     }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public ImageEntity getImage() {
-        return image;
-    }
-
-    public void setImage(ImageEntity image) {
-        this.image = image;
-    }
-
-    public List<MealEntity> getMeals() {
-        return meals;
-    }
-
-    public void setMeals(List<MealEntity> meals) {
-        this.meals = meals;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public List<OrderEntity> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderEntity> orders) {
-        this.orders = orders;
-    }
 }
 
-  /*  public List<QuantiteEntity> getQuantites() {
-        return this.quantites;
-    }
-
-    public void setQuantites(List<QuantiteEntity> quantites) {
-        this.quantites = quantites;
-    }
-
-    public QuantiteEntity addQuantite(QuantiteEntity quantite) {
-        getQuantites().add(quantite);
-        quantite.setMenu(this);
-
-        return quantite;
-    }
-
-    public QuantiteEntity removeQuantite(QuantiteEntity quantite) {
-        getQuantites().remove(quantite);
-        quantite.setMenu(null);
-
-        return quantite;
-    }
-
-}*/

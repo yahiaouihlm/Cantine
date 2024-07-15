@@ -2,43 +2,22 @@ package fr.sqli.cantine.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Table(name="studentclass")
-public class StudentClassEntity {
+@Table(name = "studentClass")
+@Setter
+@Getter
+public class StudentClassEntity extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer id;
-
-    @Column(name = "name", unique = true,   nullable=false, length=99)
-    private   String name  ;
-
+    @Column(name = "name", unique = true, nullable = false, length = 99)
+    private String name;
 
 
     @OneToMany(mappedBy = "studentClass")
-    private List<StudentEntity> students;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
+    private List<UserEntity> students;
 
 }

@@ -3,9 +3,8 @@ package fr.sqli.cantine.controller.users.student;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
-import fr.sqli.cantine.entity.ImageEntity;
-import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,7 +43,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     private Environment env;
     private MockMultipartFile imageData;
     private MockMvc mockMvc;
-    private StudentEntity studentEntity;
+    private UserEntity studentEntity;
     private MultiValueMap<String, String> formData;
     private String authorizationToken;
 
@@ -113,7 +112,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithImage() throws Exception {
-        this.formData.set("uuid", this.studentEntity.getUuid());
+        this.formData.set("uuid", this.studentEntity.get());
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -124,7 +123,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("StudentUpdatedSuccessfully"))));
 
-        var student = this.studentDao.findById(this.studentEntity.getId());
+        var student = this.studentDao.findStudentById(this.studentEntity.getId());
         Assertions.assertTrue(student.isPresent());
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));
@@ -155,7 +154,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("StudentUpdatedSuccessfully"))));
 
 
-        var student = this.studentDao.findById(this.studentEntity.getId());
+        var student = this.studentDao.findStudentById(this.studentEntity.getId());
         Assertions.assertTrue(student.isPresent());
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));

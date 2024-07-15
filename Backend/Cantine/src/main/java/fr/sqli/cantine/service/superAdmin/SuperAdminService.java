@@ -45,7 +45,7 @@ public class SuperAdminService {
         if (taxDtoIn.getTaxValue() == null || taxDtoIn.getTaxValue().compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidTaxException("TAX VALUE IS REQUIRED");
         }
-        if  (this.iTaxDao.findAll().size() > 0){
+        if  (!this.iTaxDao.findAll().isEmpty()){
             throw  new ExistingTax("TAX VALUE ALREADY EXISTS");
         }
         TaxEntity taxEntity = new TaxEntity();

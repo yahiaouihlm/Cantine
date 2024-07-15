@@ -179,7 +179,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordA
         idToken.put("Firstname", user.getFirstname());
         idToken.put("LastName", user.getLastname());
         idToken.put("email", username);
-        idToken.put("id", user.getUuid());
+        idToken.put("id", user.getId());
         idToken.put("image", user.getImage());
 
         idToken.put("role", role[0].toString()); // pas  une

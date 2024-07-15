@@ -54,10 +54,10 @@ public class MealService implements IMealService {
             MealService.LOG.debug("THE MEAL_DTO_IN CAN NOT BE NULL IN THE updateMeal METHOD ");
             throw new InvalidFoodInformationException("THE MEAL CAN NOT BE NULL");
         }
-        IMealService.checkMealUuidValidity(mealDtoIn.getUuid());
+        IMealService.checkMealUuidValidity(mealDtoIn.getId());
         mealDtoIn.checkMealInfoValidityWithoutImage();
-        var meal = this.mealDao.findByUuid(mealDtoIn.getUuid()).orElseThrow(() -> {
-            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getUuid());
+        var meal = this.mealDao.findMealById(mealDtoIn.getId()).orElseThrow(() -> {
+            MealService.LOG.debug("NO MEAL WAS FOUND WITH AN ID = {} IN THE updateMeal METHOD ", mealDtoIn.getId());
             return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
 
@@ -72,16 +72,16 @@ public class MealService implements IMealService {
         Optional<MealEntity> mealEntity = this.getMealWithLabelAndCategoryAndDescription(meal.getLabel(), meal.getCategory(), meal.getDescription());
         // if  we  find another  meal with  different  uuid  tha mean the  updated  meal  is  already  present  in  the  database we have to  throw  an  ExistingMealException
         if (mealEntity.isPresent()) {
-            if (!mealEntity.get().getUuid().equals(meal.getUuid())) {
+            if (!mealEntity.get().getId().equals(meal.getId())) {
                 MealService.LOG.debug("THE MEAL WITH A LABEL = {} AND A CATEGORY = {} AND A DESCRIPTION = {} IS ALREADY PRESENT IN THE DATABASE", mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription());
                 throw new ExistingFoodException("THE MEAL WITH A LABEL = " + mealDtoIn.getLabel() + " AND A CATEGORY = " + mealDtoIn.getCategory() + " AND A DESCRIPTION = " + mealDtoIn.getDescription() + " IS ALREADY EXIST");
             }
         }
         // if  the  image is  not  null  we  update  the  image of  the  meal
         if (mealDtoIn.getImage() != null && !mealDtoIn.getImage().isEmpty() && mealDtoIn.getImage().getSize() > 0) {
-            var oldImageName = meal.getImage().getImagename();
+            var oldImageName = meal.getImage().getName();
             var newImageName = this.imageService.updateImage(oldImageName, mealDtoIn.getImage(), MEALS_IMAGES_PATH);
-            meal.getImage().setImagename(newImageName);
+            meal.getImage().setName(newImageName);
         }
         meal.setStatus(mealDtoIn.getStatus());
         if (mealDtoIn.getStatus() == 0) {
@@ -98,7 +98,7 @@ public class MealService implements IMealService {
 
         IMealService.checkMealUuidValidity(uuid);
 
-        var meal = this.mealDao.findByUuid(uuid).orElseThrow(() -> {
+        var meal = this.mealDao.findMealById(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE removeMeal METHOD ", uuid);
             return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
@@ -109,7 +109,7 @@ public class MealService implements IMealService {
         }
 
         // check  if  meal is  not present in  any menu ( we can not delete a meal in association with a menu)
-        if (meal.getMenus() != null && meal.getMenus().size() > 0) {
+        if (meal.getMenus() != null && !meal.getMenus().isEmpty()) {
             MealService.LOG.debug("THE MEAL WITH AN UUID = {} IS PRESENT IN an  OTHER MENU(S) AND CAN NOT BE DELETED ", uuid);
 
             // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
@@ -127,7 +127,7 @@ public class MealService implements IMealService {
         }
 
         // check  if  meal is  not present in  any order ( we can not delete a meal in association with an order)
-        if (meal.getOrders() != null && meal.getOrders().size() > 0) {
+        if (meal.getOrders() != null && !meal.getOrders().isEmpty()) {
             MealService.LOG.debug("THE MENU WITH AN UUID = {} IS PRESENT IN A ORDER AND CAN NOT BE DELETED ", uuid);
 
             // make  the  status 2  it's mean  that the  meal  it  will  be removed  by  batch  traitement
@@ -140,7 +140,7 @@ public class MealService implements IMealService {
 
 
         var image = meal.getImage();
-        this.imageService.deleteImage(image.getImagename(), MEALS_IMAGES_PATH);
+        this.imageService.deleteImage(image.getName(), MEALS_IMAGES_PATH);
 
         this.mealDao.delete(meal);
         return meal;
@@ -165,7 +165,7 @@ public class MealService implements IMealService {
         MultipartFile image = mealDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, MEALS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(imageName);
+        imageEntity.setName(imageName);
 
         MealEntity meal = new MealEntity(mealDtoIn.getLabel(), mealDtoIn.getCategory(), mealDtoIn.getDescription(), mealDtoIn.getPrice(), mealDtoIn.getQuantity(), mealDtoIn.getStatus(),mealDtoIn.getMealTypeEnum() ,imageEntity);
 
@@ -226,7 +226,7 @@ public class MealService implements IMealService {
     public MealEntity getMealEntityByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
         IMealService.checkMealUuidValidity(uuid);
 
-        return this.mealDao.findByUuid(uuid).orElseThrow(() -> {
+        return this.mealDao.findMealById(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE getMealEntityByUUID METHOD", uuid);
             return new FoodNotFoundException("NO MEAL WAS FOUND");
         });

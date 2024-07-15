@@ -1,17 +1,17 @@
 package fr.sqli.cantine.service.users.admin.impl;
 
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IRoleDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 
+import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
-import fr.sqli.cantine.service.users.UserService;
+import fr.sqli.cantine.service.users.user.impl.UserService;
 import fr.sqli.cantine.service.users.admin.IAdminService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;
@@ -28,10 +28,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
 
 @Service
 public class AdminService implements IAdminService {
@@ -40,27 +43,26 @@ public class AdminService implements IAdminService {
     final String DEFAULT_ADMIN_IMAGE_NAME;
     final String CONFIRMATION_TOKEN_URL;
     final String ADMIN_IMAGE_URL;
-
     final String ADMIN_IMAGE_PATH;  //  path  to  admin image  directory
     final String EMAIL_ADMIN_REGEX;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ImageService imageService;
     private final IFunctionDao functionDao;
-    private final IAdminDao adminDao;
     private final UserService userService;
-    private IStudentDao studentDao;
+    private final IUserDao userDao;
+    private  final IRoleDao roleDao;
     private UserEmailSender userEmailSender;
 
     @Autowired
-    public AdminService(IAdminDao adminDao, IFunctionDao functionDao, ImageService imageService
+    public AdminService(IUserDao iUserDao,IRoleDao roleDao ,IFunctionDao functionDao, ImageService imageService
             , Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , UserService userService
             , UserEmailSender userEmailSender
     ) {
-
+        this.roleDao = roleDao;
         this.imageService = imageService;
-        this.adminDao = adminDao;
+        this.userDao = iUserDao;
         this.functionDao = functionDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
@@ -78,7 +80,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, RemovedAccountException, AccountActivatedException {
+    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, RemovedAccountException, AccountActivatedException, RoleNotFoundException {
 
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
@@ -109,13 +111,13 @@ public class AdminService implements IAdminService {
         if (adminDtoIn.getImage() != null && !adminDtoIn.getImage().isEmpty()) {
             MultipartFile image = adminDtoIn.getImage();
             var imageName = this.imageService.uploadImage(image, ADMIN_IMAGE_PATH);
-            imageEntity.setImagename(imageName);
+            imageEntity.setName(imageName);
 
         } else {
-            imageEntity.setImagename(this.DEFAULT_ADMIN_IMAGE_NAME);
+            imageEntity.setName(this.DEFAULT_ADMIN_IMAGE_NAME);
         }
 
-        AdminEntity adminEntity = new AdminEntity();
+        UserEntity adminEntity = new UserEntity();
         adminEntity.setFirstname(adminDtoIn.getFirstname());
         adminEntity.setLastname(adminDtoIn.getLastname());
         adminEntity.setBirthdate(adminDtoIn.getBirthdate());
@@ -129,9 +131,14 @@ public class AdminService implements IAdminService {
         adminEntity.setImage(imageEntity);
         adminEntity.setRegistrationDate(LocalDate.now());
         adminEntity.setValidation(0);
+        adminEntity.setRoles(List.of(this.roleDao.findByLabel(ADMIN_ROLE_LABEL).orElseThrow(() -> {
+                    AdminService.LOG.error("ROLE {} NOT  FOUND WHILE SIGNUP", ADMIN_ROLE_LABEL);
+                    return new RoleNotFoundException("ROLE NOT FOUND");
+                }
+        )));
 
         // save admin
-        this.adminDao.save(adminEntity);
+        this.userDao.save(adminEntity);
 
         String URL = this.SERVER_ADDRESS + "/cantine/superAdmin/newAdmins";
         this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
@@ -142,7 +149,7 @@ public class AdminService implements IAdminService {
 
         IAdminService.checkUuIdValidity(adminUuid);
 
-        var admin = this.adminDao.findByUuid(adminUuid).orElseThrow(
+        var admin = this.userDao.findAdminById(adminUuid).orElseThrow(
                 () -> {
                     AdminService.LOG.error("ADMIN  NOT  FOUND  IN DISABLE  ADMIN  ACCOUNT  WITH  UUID = {}", adminUuid);
                     return new UserNotFoundException("ADMIN NOT FOUND");
@@ -151,13 +158,13 @@ public class AdminService implements IAdminService {
 
         admin.setStatus(0);
         admin.setDisableDate(LocalDate.now());
-        this.adminDao.save(admin);
+        this.userDao.save(admin);
     }
     @Override
     public AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         IAdminService.checkUuIdValidity(adminUuid);
 
-        var admin = this.adminDao.findByUuid(adminUuid).orElseThrow(
+        var admin = this.userDao.findAdminById(adminUuid).orElseThrow(
                 () -> {
                     AdminService.LOG.error("ADMIN  NOT  FOUND  IN GET  ADMIN  BY  UUID  WITH  UUID = {}", adminUuid);
                     return new UserNotFoundException("ADMIN NOT FOUND");
@@ -176,7 +183,7 @@ public class AdminService implements IAdminService {
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
         }
 
-        IAdminService.checkUuIdValidity(adminDtoIn.getUuid());
+        IAdminService.checkUuIdValidity(adminDtoIn.getId());
 
         if (adminDtoIn.getEmail() != null || adminDtoIn.getPassword() != null) {
             AdminService.LOG.error("INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED IN  updateAdminInfo");
@@ -195,7 +202,7 @@ public class AdminService implements IAdminService {
         }
 
 
-        var adminEntity = this.adminDao.findByUuid(adminDtoIn.getUuid()).orElseThrow(
+        var adminEntity = this.userDao.findAdminById(adminDtoIn.getId()).orElseThrow(
                 () -> new UserNotFoundException("ADMIN NOT FOUND")
         );
         adminEntity.setAddress(adminDtoIn.getAddress().trim());
@@ -212,20 +219,20 @@ public class AdminService implements IAdminService {
             MultipartFile image = adminDtoIn.getImage();
             String imageName;
             // check  if the image  to  delete  is  the  default image  or  not
-            if (adminEntity.getImage().getImagename().equals(DEFAULT_ADMIN_IMAGE_NAME)) {
+            if (adminEntity.getImage().getName().equals(DEFAULT_ADMIN_IMAGE_NAME)) {
                 imageName = this.imageService.uploadImage(image, ADMIN_IMAGE_PATH);
                 AdminService.LOG.info("IMAGE  UPLOADED  SUCCESSFULLY  WITH  NAME = {}", imageName);
             } else {
-                var oldImageName = adminEntity.getImage().getImagename();
+                var oldImageName = adminEntity.getImage().getName();
                 imageName = this.imageService.updateImage(oldImageName, image, ADMIN_IMAGE_PATH);
             }
             ImageEntity imageEntity = new ImageEntity();
-            imageEntity.setImagename(imageName);
+            imageEntity.setName(imageName);
             adminEntity.setImage(imageEntity);
 
         }
 
-        this.adminDao.save(adminEntity);
+        this.userDao.save(adminEntity);
 
     }
     @Override
@@ -234,19 +241,16 @@ public class AdminService implements IAdminService {
     }
     @Override
     public void existingEmail(String adminEmail) throws ExistingUserException {
-        if (this.adminDao.findByEmail(adminEmail).isPresent() || this.studentDao.findByEmail(adminEmail).isPresent()) {
+        if (this.userDao.findUserByEmail(adminEmail).isPresent()) {
             throw new ExistingUserException("EMAIL IS ALREADY EXISTS");
         }
     }
     @Override
-    public AdminEntity findByUsername(String username) throws UserNotFoundException {
-         return this.adminDao.findByEmail(username)
+    public UserEntity findByUsername(String username) throws UserNotFoundException {
+         return this.userDao.findAdminById(username)
                  .orElseThrow(() -> new UserNotFoundException("ADMIN NOT FOUND"));
     }
-    @Autowired
-    public void setStudentDao(IStudentDao studentDao) {
-        this.studentDao = studentDao;
-    }
+
 
 
 }

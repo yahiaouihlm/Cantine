@@ -1,12 +1,16 @@
 package fr.sqli.cantine.dto.out.person;
 
-import fr.sqli.cantine.entity.AdminEntity;
-import fr.sqli.cantine.entity.StudentEntity;
+
+import fr.sqli.cantine.entity.UserEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDate;
 
+@Setter
+@Getter
 public class TransactionDtout {
 
     private  AdminDtout admin;
@@ -21,53 +25,12 @@ public class TransactionDtout {
 
 
 
-    public TransactionDtout(AdminEntity admin, StudentEntity student, BigDecimal amount, LocalDate paymentDate , Time paymentTime) {
+    public TransactionDtout(UserEntity admin, UserEntity student, BigDecimal amount, LocalDate paymentDate , Time paymentTime) {
         this.admin = new AdminDtout(admin ,  "IMAGE_IS_NOT_NEEDED");
         this.student = new StudentDtout(student , "IMAGE_IS_NOT_NEEDED");
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.paymentTime =  paymentTime;
-    }
-
-
-    public AdminDtout getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(AdminDtout admin) {
-        this.admin = admin;
-    }
-
-    public StudentDtout getStudent() {
-        return student;
-    }
-
-    public void setStudent(StudentDtout student) {
-        this.student = student;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public Time getPaymentTime() {
-        return paymentTime;
-    }
-
-    public void setPaymentTime(Time paymentTime) {
-        this.paymentTime = paymentTime;
     }
 
 

@@ -110,7 +110,7 @@ public interface IMenuTest {
     static  MealEntity createMeal  () {
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = createMealWith("MealTest"  , "MealTest  description","MealTest  category", new BigDecimal(10.0) , 1 , 10 , imageEntity);
          mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
@@ -138,7 +138,7 @@ public interface IMenuTest {
         menuEntity.setMeals(mealAssociated);
         menuEntity.setCreatedDate(LocalDate.now());
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         menuEntity.setImage(imageEntity);
 

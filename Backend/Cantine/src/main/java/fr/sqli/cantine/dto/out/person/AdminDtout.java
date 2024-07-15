@@ -1,13 +1,14 @@
 package fr.sqli.cantine.dto.out.person;
 
-import fr.sqli.cantine.entity.AdminEntity;
+
+import fr.sqli.cantine.entity.UserEntity;
 
 public class AdminDtout extends AbstractPersonDtout{
 
    private  String function;
 
-    public AdminDtout(AdminEntity adminEntity , String  imageUrl){
-            super.setUuid(adminEntity.getUuid());
+    public AdminDtout(UserEntity adminEntity , String  imageUrl){
+            super.setId(adminEntity.getId());
             super.setFirstname(adminEntity.getFirstname());
             super.setLastname(adminEntity.getLastname());
             super.setEmail(adminEntity.getEmail());
@@ -15,7 +16,7 @@ public class AdminDtout extends AbstractPersonDtout{
             super.setAddress(adminEntity.getAddress());
             super.setTown(adminEntity.getTown());
             super.setPhone(adminEntity.getPhone());
-            super.setImage(imageUrl + adminEntity.getImage().getImagename());
+            super.setImage(imageUrl + adminEntity.getImage().getName());
             this.setFunction(adminEntity.getFunction().getName());
     }
 

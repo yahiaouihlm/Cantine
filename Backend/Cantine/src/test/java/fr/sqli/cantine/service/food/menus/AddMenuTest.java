@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,7 +82,7 @@ public class AddMenuTest {
 
     @Test
     void addMenuWithFewMealsTest() throws InvalidFoodInformationException, FoodNotFoundException {
-        this.menuDtoIn.setUuid(java.util.UUID.randomUUID().toString());
+        this.menuDtoIn.setId(java.util.UUID.randomUUID().toString());
         String mealUuid = java.util.UUID.randomUUID().toString();
         MealEntity mealEntity = new MealEntity();
         mealEntity.setUuid(mealUuid);

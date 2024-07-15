@@ -1,43 +1,37 @@
 package fr.sqli.cantine.security;
 
-import fr.sqli.cantine.dao.IAdminDao;
-import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IUserDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class AppUserService  implements UserDetailsService {
 
-
-    private IAdminDao  iAdminDao ;
-
-    private IStudentDao iStudentDao ;
-
+    private static final Logger LOG = LogManager.getLogger();
+    private final  IUserDao iUserDao ;
+    private final Environment environment;
 
     @Autowired
-    public  AppUserService  ( IAdminDao iAdminDao , IStudentDao iStudentDao ){
-        this.iAdminDao = iAdminDao ;
-        this.iStudentDao = iStudentDao ;
+    public  AppUserService  (IUserDao iUserDao ,  Environment environment){
+        this.iUserDao = iUserDao;
+        this.environment = environment;
     }
-
-
-
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if  (username == null || username.isEmpty())
-            throw  new UsernameNotFoundException("user not found");
-
-        if (iAdminDao.findByEmail(username).isPresent()){
-            return new myUserDetails(iAdminDao.findByEmail(username).get());
-        }
-        else  if (iStudentDao.findByEmail(username).isPresent()){
-            return  new myUserDetails(iStudentDao.findByEmail(username).get());
-        }
-        throw  new UsernameNotFoundException("user not found");
+        if (username == null || username.isEmpty())
+            throw new UsernameNotFoundException("USER NOT  FOUND");
+        var user = this.iUserDao.findUserByEmail(username).orElseThrow(() -> {
+            AppUserService.LOG.error("USER NOT  FOUND {} WHILE TRYING TO CONNECT IN AppUserService.loadUserByUsername", username);
+            return new UsernameNotFoundException("USER NOT  FOUND");
+        });
+        return new myUserDetails(user,this.environment);
     }
 }

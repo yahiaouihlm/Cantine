@@ -6,7 +6,6 @@ import fr.sqli.cantine.dao.IOrderDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IStudentDao;
 import fr.sqli.cantine.entity.StudentClassEntity;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +101,7 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("StudentAddedSuccessfully"))));
 
-        var student = this.studentDao.findByEmail(this.formData.getFirst("email"));
+        var student = this.studentDao.findStudentByEmail(this.formData.getFirst("email"));
         Assertions.assertTrue(student.isPresent());
 
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
@@ -130,7 +129,7 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("StudentAddedSuccessfully"))));
 
-        var student = this.studentDao.findByEmail(this.formData.getFirst("email"));
+        var student = this.studentDao.findStudentByEmail(this.formData.getFirst("email"));
         Assertions.assertTrue(student.isPresent());
         Assertions.assertEquals(student.get().getFirstname(), this.formData.getFirst("firstname"));
         Assertions.assertEquals(student.get().getLastname(), this.formData.getFirst("lastname"));

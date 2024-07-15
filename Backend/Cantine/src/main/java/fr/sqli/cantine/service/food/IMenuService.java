@@ -18,39 +18,39 @@ import java.util.Optional;
 public interface IMenuService {
     static final Logger LOG = LogManager.getLogger();
 
-  static void checkMenuUuidValidity(String uuid ) throws InvalidFoodInformationException {
-     if (uuid == null || uuid.isEmpty() || uuid.isBlank() ||  uuid.length() < 20 ) {
-       IMenuService.LOG.error("THE MENU UUID CAN NOT BE NULL OR EMPTY OR LESS THAN 20 CHARACTERS ");
-       throw new InvalidFoodInformationException("INVALID MENU UUID");
-     }
-  }
+    static void checkMenuUuidValidity(String uuid) throws InvalidFoodInformationException {
+        if (uuid == null || uuid.isBlank() || uuid.length() < 20) {
+            IMenuService.LOG.error("THE MENU UUID CAN NOT BE NULL OR EMPTY OR LESS THAN 20 CHARACTERS ");
+            throw new InvalidFoodInformationException("INVALID MENU UUID");
+        }
+    }
 
 
-  public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
+    public MenuEntity updateMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException;
 
 
-  public MenuEntity removeMenu(String menuUuid) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException;
+    public MenuEntity removeMenu(String menuUuid) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException;
 
 
-  public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
+    public MenuEntity addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException;
 
 
-  public MenuDtOut getMenuByUuId(String menuUuid) throws InvalidFoodInformationException, FoodNotFoundException;
+    public MenuDtOut getMenuByUuId(String menuUuid) throws InvalidFoodInformationException, FoodNotFoundException;
 
 
-  List<MenuDtOut> searchMenuByLabel(String label);
-  List<String> searchLablesOfMenuContainsTerm(String label);
+    List<MenuDtOut> searchMenuByLabel(String label);
 
-   List<MenuDtOut> getAvailableMenu();
-   List<MenuDtOut> getAllMenus();
+    List<String> searchLablesOfMenuContainsTerm(String label);
+
+    List<MenuDtOut> getAvailableMenu();
+
+    List<MenuDtOut> getAllMenus();
 
     List<MenuDtOut> getMenusInDeletionProcess();
 
     List<MenuDtOut> getUnavailableMenus();
 
-  public Optional<MenuEntity> getMenuWithLabelAndDescriptionAndPrice(String label, String description, BigDecimal price) ;
-
-
+    public Optional<MenuEntity> getMenuWithLabelAndDescriptionAndPrice(String label, String description, BigDecimal price);
 
 
 }

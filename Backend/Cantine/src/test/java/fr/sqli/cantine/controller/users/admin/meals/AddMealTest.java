@@ -95,7 +95,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
         this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
                 , new BigDecimal("1.5"), 10, 1, mealTypeEnum, image);
@@ -125,7 +125,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
         var meal = this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("MealTest2", "MealTest2 category", "MealTest2 description");
         Assertions.assertTrue(meal.isPresent());
-        var imageName = meal.get().getImage().getImagename();
+        var imageName = meal.get().getImage().getName();
         var  imageFile = new File(IMAGE_MEAL_DIRECTORY_PATH + imageName);
         Assertions.assertTrue(imageFile.delete());
 

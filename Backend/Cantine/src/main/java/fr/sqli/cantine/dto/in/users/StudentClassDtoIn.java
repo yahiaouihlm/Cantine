@@ -3,10 +3,14 @@ package fr.sqli.cantine.dto.in.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class StudentClassDtoIn {
 
-     private  Integer  id ;
+     private  String  id ;
 
      private  String  name ;
 
@@ -31,21 +35,10 @@ public class StudentClassDtoIn {
       }
       @JsonIgnore
       public  void checkIdValidity () throws InvalidStudentClassException {
-          if (this.id == null || this.id <0) {
+          if (this.id == null || this.id.length() < 10) {
               throw new InvalidStudentClassException("INVALID STUDENT CLASS ID");
           }
       }
 
-     public String getName() {
-          return name;
-     }
 
-     public void setName(String name) {
-          this.name = name;
-     }
-
-
-        public Integer getId() {
-            return id;
-        }
 }

@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -78,7 +79,7 @@ public interface IAdminTest {
             Map.entry("EnableAccount", "YOUR ACCOUNT IS ALREADY ENABLED")
     );
 
-    static AdminEntity createAdminWith(String email, FunctionEntity functionEntity, ImageEntity imageEntity) {
+    static UserEntity createAdminWith(String email, FunctionEntity functionEntity, ImageEntity imageEntity) {
 
         AdminEntity adminEntity = new AdminEntity();
         adminEntity.setEmail(email);

@@ -2,38 +2,20 @@ package fr.sqli.cantine.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Setter
+@Getter
 @Entity
-@Table(name="tax")
+@Table(name = "tax")
+public class TaxEntity extends AbstractEntity implements Serializable {
 
-public class TaxEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer id;
-
-    @Column(nullable=false, precision=3, scale=2)
+    @Column(nullable = false, precision = 3, scale = 2)
     private BigDecimal tax;
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public BigDecimal getTax() {
-        return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
-    }
 }

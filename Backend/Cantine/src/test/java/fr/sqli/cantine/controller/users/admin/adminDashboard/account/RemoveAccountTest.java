@@ -2,25 +2,18 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.controller.users.admin.Impl.AdminController;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.AdminEntity;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 
 @SpringBootTest
@@ -78,7 +71,7 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminDisabledSuccessfully"))));
 
-        var admin = this.adminDao.findByUuid(adminUuid);
+        var admin = this.adminDao.findById(adminUuid);
         Assertions.assertTrue(admin.isPresent());
 
         Assertions.assertEquals(0, admin.get().getStatus());

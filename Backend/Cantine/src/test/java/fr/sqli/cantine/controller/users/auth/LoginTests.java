@@ -7,6 +7,7 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.users.Login;
 import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     @Autowired
     private MockMvc mockMvc;
 
-    private StudentEntity studentEntity;
-    private AdminEntity adminEntity;
+    private UserEntity studentEntity;
+    private UserEntity adminEntity;
 
     private final ObjectMapper ObjectMapper = new ObjectMapper();
 

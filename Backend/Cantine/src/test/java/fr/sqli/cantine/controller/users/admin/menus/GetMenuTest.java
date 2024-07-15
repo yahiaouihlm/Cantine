@@ -66,7 +66,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
         var meal = this.mealDao.save(IMenuTest.createMeal());
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal(10.0), 1, 10, imageEntity);
         mealEntity.setMealType(MealTypeEnum.ENTREE);
@@ -127,7 +127,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
         var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + this.menuSaved.getUuid())
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + this.menuSaved.getId())
                 .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken));
 
 
@@ -136,7 +136,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void getMenuByIdTest() throws Exception {
-        var mealUuid = this.menuSaved.getUuid(); // id must be not exist in database
+        var mealUuid = this.menuSaved.getId(); // id must be not exist in database
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + mealUuid)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 

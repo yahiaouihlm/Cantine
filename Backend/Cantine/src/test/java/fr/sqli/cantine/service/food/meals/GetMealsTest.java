@@ -81,12 +81,12 @@ class GetMealsTest {
         Assertions.assertEquals(2, result.size());
 
         /** first element of List  */
-        Assertions.assertEquals(ListToGetAsDtout.get(0).getUuid(), result.get(0).getUuid());
+        Assertions.assertEquals(ListToGetAsDtout.get(0).getId(), result.get(0).getId());
         Assertions.assertEquals(ListToGetAsDtout.get(0).getDescription(), result.get(0).getDescription());
 
 
         /** second element of List  */
-        Assertions.assertEquals(ListToGetAsDtout.get(1).getUuid(), result.get(1).getUuid());
+        Assertions.assertEquals(ListToGetAsDtout.get(1).getId(), result.get(1).getId());
         Assertions.assertEquals(ListToGetAsDtout.get(1).getDescription(), result.get(1).getDescription());
 
         Mockito.verify(this.iMealDao, times(1)).findAll();
@@ -114,17 +114,17 @@ class GetMealsTest {
         String uuidMealToFind = this.mealEntity.getUuid();
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
-        Mockito.when(this.iMealDao.findByUuid(uuidMealToFind)).thenReturn(Optional.of(this.mealEntity));
+        Mockito.when(this.iMealDao.findMealById(uuidMealToFind)).thenReturn(Optional.of(this.mealEntity));
 
         MealDtOut resultTest = this.iMealService.getMealByUUID(uuidMealToFind);
 
         MealDtOut shouldResult = new MealDtOut(this.mealEntity, urlMealImage);
 
-        Assertions.assertEquals(shouldResult.getUuid(), resultTest.getUuid());
+        Assertions.assertEquals(shouldResult.getId(), resultTest.getId());
         Assertions.assertEquals(shouldResult.getCategory(), resultTest.getCategory());
         Assertions.assertEquals(shouldResult.getPrice(), resultTest.getPrice());
 
-        Mockito.verify(this.iMealDao, times(1)).findByUuid(uuidMealToFind);
+        Mockito.verify(this.iMealDao, times(1)).findMealById(uuidMealToFind);
     }
 
     @Test
@@ -132,14 +132,14 @@ class GetMealsTest {
     void getMealByUuidWithNotFoundUUID() {
         String uuidMeal = java.util.UUID.randomUUID().toString();
 
-        Mockito.when(this.iMealDao.findByUuid(uuidMeal)).thenReturn(Optional.empty());
+        Mockito.when(this.iMealDao.findMealById(uuidMeal)).thenReturn(Optional.empty());
 
 
         Assertions.assertThrows(FoodNotFoundException.class, () -> {
             this.iMealService.getMealByUUID(uuidMeal);
         });
 
-        Mockito.verify(this.iMealDao, times(1)).findByUuid(uuidMeal);
+        Mockito.verify(this.iMealDao, times(1)).findMealById(uuidMeal);
     }
 
 
@@ -150,7 +150,7 @@ class GetMealsTest {
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.iMealService.getMealByUUID(uuidMeal);
         });
-        Mockito.verify(this.iMealDao, times(0)).findByUuid(Mockito.anyString());
+        Mockito.verify(this.iMealDao, times(0)).findMealById(Mockito.anyString());
     }
 
     @Test
@@ -160,7 +160,7 @@ class GetMealsTest {
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.iMealService.getMealByUUID(uuidMeal);
         });
-        Mockito.verify(this.iMealDao, times(0)).findByUuid(Mockito.anyString());
+        Mockito.verify(this.iMealDao, times(0)).findMealById(Mockito.anyString());
     }
 
 
@@ -170,7 +170,7 @@ class GetMealsTest {
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> {
             this.iMealService.getMealByUUID(null);
         });
-        Mockito.verify(this.iMealDao, times(0)).findByUuid(Mockito.anyString());
+        Mockito.verify(this.iMealDao, times(0)).findMealById(Mockito.anyString());
     }
 
 

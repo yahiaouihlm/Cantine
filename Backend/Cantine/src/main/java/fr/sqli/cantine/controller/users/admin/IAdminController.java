@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public interface IAdminController {
     ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException;
 
     @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
-    ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException;
+    ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, RoleNotFoundException;
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

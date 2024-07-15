@@ -139,7 +139,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         // add other tests  to  check if the meal is updated in database
 
 
-        var updatedMeal = this.mealDao.findByUuid(mealUuid);
+        var updatedMeal = this.mealDao.findMealById(mealUuid);
         Assertions.assertTrue(updatedMeal.isPresent());
 
         Assertions.assertEquals(this.formData.getFirst("label"), updatedMeal.get().getLabel());
@@ -166,7 +166,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
         // add other tests  to  check if the meal is updated in database
 
-        var updatedMeal = this.mealDao.findByUuid(mealUuid);
+        var updatedMeal = this.mealDao.findMealById(mealUuid);
         Assertions.assertTrue(updatedMeal.isPresent());
         Assertions.assertEquals(this.formData.getFirst("label"), updatedMeal.get().getLabel());
         Assertions.assertEquals(this.formData.getFirst("category"), updatedMeal.get().getCategory());

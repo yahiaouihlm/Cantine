@@ -11,7 +11,7 @@ public class MealDtOut extends AbstractFoodDtOut {
 
 
     public MealDtOut(MealEntity meal, String mealUrlImage) {
-        super(meal.getUuid(), meal.getLabel(), meal.getDescription(), meal.getPrice(), meal.getQuantity(), meal.getStatus(), meal.getImage(), mealUrlImage);
+        super(meal.getId(), meal.getLabel(), meal.getDescription(), meal.getPrice(), meal.getQuantity(), meal.getStatus(), meal.getImage(), mealUrlImage);
         this.category = meal.getCategory();
         this.mealType = meal.getMealType().name();
     }

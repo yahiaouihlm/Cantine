@@ -55,13 +55,13 @@ public class MenuService implements IMenuService {
             throw new InvalidFoodInformationException("THE MENU CAN NOT BE NULL");
         }
 
-        IMenuService.checkMenuUuidValidity(menuDtoIn.getUuid());
+        IMenuService.checkMenuUuidValidity(menuDtoIn.getId());
 
         menuDtoIn.checkMenuInformationsWithOutImage();
 
 
-        var menuEntity = this.menuDao.findByUuid(menuDtoIn.getUuid()).orElseThrow(() -> {
-            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE updateMenu METHOD ", menuDtoIn.getUuid());
+        var menuEntity = this.menuDao.findMenuById(menuDtoIn.getId()).orElseThrow(() -> {
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE updateMenu METHOD ", menuDtoIn.getId());
             return new FoodNotFoundException("NO MENU WAS FOUND");
         });
 
@@ -69,7 +69,7 @@ public class MenuService implements IMenuService {
         var menuUpdatedDoesExist = this.getMenuWithLabelAndDescriptionAndPrice(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
 
         if (menuUpdatedDoesExist.isPresent()) {
-            if (menuUpdatedDoesExist.get().getId().intValue() != menuEntity.getId().intValue()) {
+            if (!menuUpdatedDoesExist.get().getId().equals(menuEntity.getId())) {
                 MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
                 throw new ExistingFoodException("THE MENU ALREADY EXISTS");
             }
@@ -104,9 +104,9 @@ public class MenuService implements IMenuService {
         menuEntity.setMeals(new ArrayList<>(mealsInMenu));
 
         if (menuDtoIn.getImage() != null && !menuDtoIn.getImage().isEmpty() && menuDtoIn.getImage().getSize() > 0) {
-            var oldImageName = menuEntity.getImage().getImagename();
+            var oldImageName = menuEntity.getImage().getName();
             var newImageName = this.imageService.updateImage(oldImageName, menuDtoIn.getImage(), this.MENUS_IMAGES_PATH);
-            menuEntity.getImage().setImagename(newImageName);
+            menuEntity.getImage().setName(newImageName);
         }
 
         return this.menuDao.save(menuEntity);
@@ -118,7 +118,7 @@ public class MenuService implements IMenuService {
 
         IMenuService.checkMenuUuidValidity(menuUuid);
 
-        var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
+        var menu = this.menuDao.findMenuById(menuUuid).orElseThrow(() -> {
             MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE removeMenu METHOD ", menuUuid);
             return new FoodNotFoundException("MENU NOT FOUND");
         });
@@ -134,7 +134,7 @@ public class MenuService implements IMenuService {
         }
 
 
-        var imageName = menu.getImage().getImagename();
+        var imageName = menu.getImage().getName();
         this.imageService.deleteImage(imageName, this.MENUS_IMAGES_PATH);
         this.menuDao.delete(menu);
         return menu;
@@ -175,7 +175,7 @@ public class MenuService implements IMenuService {
         MultipartFile image = menuDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(imageName);
+        imageEntity.setName(imageName);
 
         var menuEntity = new MenuEntity(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice(), menuDtoIn.getStatus(), menuDtoIn.getQuantity(), imageEntity, mealsInMenu);
 
@@ -188,7 +188,7 @@ public class MenuService implements IMenuService {
 
         IMenuService.checkMenuUuidValidity(menuUuid);
 
-        var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
+        var menu = this.menuDao.findMenuById(menuUuid).orElseThrow(() -> {
             MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE getMenuByUuId METHOD ", menuUuid);
             return new FoodNotFoundException("MENU NOT FOUND");
         });

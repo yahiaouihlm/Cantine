@@ -2,7 +2,6 @@ package fr.sqli.cantine.service.mailer;
 
 
 import fr.sqli.cantine.entity.OrderEntity;
-import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ public class OrderEmailSender {
     private final SpringTemplateEngine templateEngine;
 
     private final Environment environment;
+
     @Autowired
     public OrderEmailSender(EmailSenderService emailSenderService, SpringTemplateEngine templateEngine, Environment environment) {
         this.emailSenderService = emailSenderService;
@@ -29,12 +29,12 @@ public class OrderEmailSender {
         this.environment = environment;
     }
 
-    public  void  validatedOrderByAdmin (UserEntity student,  OrderEntity order ,  String  path) throws MessagingException {
+    public void validatedOrderByAdmin(UserEntity student, OrderEntity order, String path) throws MessagingException {
         Context context = new Context();
 
         context.setVariable("firstname", student.getFirstname());
         context.setVariable("lastname", student.getLastname());
-        context.setVariable("orderUuid", order.getUuid());
+        context.setVariable("orderUuid", order.getId());
         context.setVariable("orderDate", order.getCreationDate());
         context.setVariable("orderTotalPrice", order.getPrice());
 
@@ -44,15 +44,15 @@ public class OrderEmailSender {
 
 
         String body = templateEngine.process("validated-order-notification", context);
-        this.emailSenderService.sendWithAttachedImage(student.getEmail(), "Votre  Commande  est prête", body , path);
+        this.emailSenderService.sendWithAttachedImage(student.getEmail(), "Votre  Commande  est prête", body, path);
     }
 
-    public void  cancelledOrderByAdmin (UserEntity student, OrderEntity order) throws MessagingException {
+    public void cancelledOrderByAdmin(UserEntity student, OrderEntity order) throws MessagingException {
         Context context = new Context();
 
         context.setVariable("firstname", student.getFirstname());
         context.setVariable("lastname", student.getLastname());
-        context.setVariable("orderUuid", order.getUuid());
+        context.setVariable("orderUuid", order.getId());
         context.setVariable("orderDate", order.getCreationDate());
         context.setVariable("orderTotalPrice", order.getPrice());
 
@@ -64,12 +64,13 @@ public class OrderEmailSender {
         String body = templateEngine.process("cancelled-order-notification-by-admin", context);
         this.emailSenderService.send(student.getEmail(), "Votre  Commande été Annuler", body);
     }
-    public void  cancelledOrder (UserEntity student, OrderEntity order) throws MessagingException {
+
+    public void cancelledOrder(UserEntity student, OrderEntity order) throws MessagingException {
         Context context = new Context();
 
         context.setVariable("firstname", student.getFirstname());
         context.setVariable("lastname", student.getLastname());
-        context.setVariable("orderUuid", order.getUuid());
+        context.setVariable("orderUuid", order.getId());
         context.setVariable("orderDate", order.getCreationDate());
         context.setVariable("orderTotalPrice", order.getPrice());
 
@@ -81,12 +82,13 @@ public class OrderEmailSender {
         String body = templateEngine.process("cancelled-order-notification", context);
         this.emailSenderService.send(student.getEmail(), "Votre  Commande été Annuler  avec succes", body);
     }
-    public void  confirmOrder(UserEntity student, OrderEntity order ,  BigDecimal tax) throws MessagingException {
+
+    public void confirmOrder(UserEntity student, OrderEntity order, BigDecimal tax) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", student.getFirstname());
         context.setVariable("lastname", student.getLastname());
 
-        context.setVariable("orderUuid", order.getUuid());
+        context.setVariable("orderUuid", order.getId());
         context.setVariable("orderDate", order.getCreationDate());
         context.setVariable("orderTotalPrice", order.getPrice());
         context.setVariable("orderItems", order);
@@ -104,6 +106,7 @@ public class OrderEmailSender {
         String body = templateEngine.process("confirmation-order-template", context);
         this.emailSenderService.send(student.getEmail(), "Confiramtion de  votre  commande", body);
     }
+
     public void sendNotificationForSmallStudentWallet(UserEntity user) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", user.getFirstname());

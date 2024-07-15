@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.users.impl;
 
 import fr.sqli.cantine.controller.users.IUserController;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.users.UserService;
+import fr.sqli.cantine.service.users.user.impl.UserService;
 import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;

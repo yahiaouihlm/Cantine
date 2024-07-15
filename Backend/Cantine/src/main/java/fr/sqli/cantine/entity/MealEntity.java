@@ -5,10 +5,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Check;
 
 
 @Entity
+@Getter
+@Setter
 @Table(name="meal", uniqueConstraints={
         @UniqueConstraint(columnNames={"label", "description", "category"})
 
@@ -45,17 +49,17 @@ public class MealEntity  extends AbstractEntity implements Serializable {
     @JoinTable(
             name="menu_has_meal"
             , joinColumns={
-            @JoinColumn(name="meal_idmeal", nullable=false)
+            @JoinColumn(name="meal_id", nullable=false)
     }
             , inverseJoinColumns={
-            @JoinColumn(name="menu_idmenu", nullable=false)
+            @JoinColumn(name="menu_id", nullable=false)
     }
     )
     private List<MenuEntity> menus;
 
     //bi-directional many-to-one association to ImageEntity
     @ManyToOne(cascade =  CascadeType.ALL)
-    @JoinColumn(name="image_idimage", nullable=false)
+    @JoinColumn(name="image_id", nullable=false)
     private ImageEntity image;
 
     @Enumerated(EnumType.STRING)
@@ -64,12 +68,12 @@ public class MealEntity  extends AbstractEntity implements Serializable {
     //bi-directional many-to-many association to CommandeEntity
    @ManyToMany( fetch =  FetchType.LAZY)
     @JoinTable(
-            name="st_order_has_meal"
+            name="lorder_has_meal"
             , joinColumns={
-            @JoinColumn(name="meal_idmeal", nullable=false)
+            @JoinColumn(name="meal_id", nullable=false)
     }
             , inverseJoinColumns={
-            @JoinColumn(name="order_idorder", nullable=false)
+            @JoinColumn(name="order_id", nullable=false)
     }
     )
     private List<OrderEntity> orders;
@@ -89,127 +93,8 @@ public class MealEntity  extends AbstractEntity implements Serializable {
         this.image = image;
     }
 
+
     public MealEntity() {
-        super();
+
     }
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public ImageEntity getImage() {
-        return image;
-    }
-
-    public void setImage(ImageEntity image) {
-        this.image = image;
-    }
-
-    public List<MenuEntity> getMenus() {
-        return menus;
-    }
-
-    public void setMenus(List<MenuEntity> menus) {
-        this.menus = menus;
-    }
-
-    public List<OrderEntity> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderEntity> orders) {
-        this.orders = orders;
-    }
-
-    public MealTypeEnum getMealType() {
-        return mealType;
-    }
-
-    public void setMealType(MealTypeEnum mealType) {
-        this.mealType = mealType;
-    }
-
-
-    /* public List<OrderEntity> getCommandes() {
-        return this.commandes;
-    }
-
-    public void setCommandes(List<OrderEntity> commandes) {
-        this.commandes = commandes;
-    }
-
-    public List<QuantiteEntity> getQuantites() {
-        return this.quantites;
-    }
-
-    public void setQuantites(List<QuantiteEntity> quantites) {
-        this.quantites = quantites;
-    }
-
-    public QuantiteEntity addQuantite(QuantiteEntity quantite) {
-        getQuantites().add(quantite);
-        quantite.setPlat(this);
-
-        return quantite;
-    }
-
-    public QuantiteEntity removeQuantite(QuantiteEntity quantite) {
-        getQuantites().remove(quantite);
-        quantite.setPlat(null);
-
-        return quantite;
-    }
-
-    public List<MenuEntity> getMenus() {
-        return this.menus;
-    }
-
-    public void setMenus(List<MenuEntity> menus) {
-        this.menus = menus;
-    }
-*/
-
 }

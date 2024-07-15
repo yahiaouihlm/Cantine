@@ -1,7 +1,7 @@
 package fr.sqli.cantine.dto.in.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
 import lombok.Getter;
@@ -15,9 +15,9 @@ public class StudentDtoIn extends AbstractUsersDtoIn {
 
 
     @JsonIgnore
-    public StudentEntity toStudentEntity() throws InvalidUserInformationException, InvalidStudentClassException {
+    public UserEntity toStudentEntity() throws InvalidUserInformationException, InvalidStudentClassException {
         super.ValidatePersonInformationWithOutPhone();
-        StudentEntity student = new StudentEntity();
+        UserEntity student = new UserEntity();
         if (super.getPhone() != null && !super.getPhone().trim().isEmpty()) {
             super.phoneValidator();
             student.setPhone(super.getPhone().trim());

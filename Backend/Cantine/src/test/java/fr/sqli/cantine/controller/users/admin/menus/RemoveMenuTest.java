@@ -59,7 +59,7 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
         var meal = this.mealDao.save(IMenuTest.createMeal());
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal("10.0"), 1, 10, imageEntity);
         mealEntity.setMealType(MealTypeEnum.ENTREE);
@@ -81,14 +81,14 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void removeMenuWithExistingMenu() throws Exception {
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(DELETE_MENU_URL + this.paramReq + menuSaved.getUuid())
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(DELETE_MENU_URL + this.paramReq + menuSaved.getId())
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(IMenuTest.responseMap.get("MenuDeletedSuccessfully"))));
 
         //check  if  the image  is  really   deleted
-        var imageName = menuSaved.getImage().getImagename();
+        var imageName = menuSaved.getImage().getName();
         Assertions.assertFalse(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
     }
 

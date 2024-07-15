@@ -62,7 +62,7 @@ public class UpdateAdminInfoTests {
         this.environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
         this.environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
         this.adminDtoIn = new AdminDtoIn();
-        this.adminDtoIn.setUuid(java.util.UUID.randomUUID().toString());
+        this.adminDtoIn.setId(java.util.UUID.randomUUID().toString());
         this.adminDtoIn.setFirstname("firstName");
         this.adminDtoIn.setLastname("lastName");
         this.adminDtoIn.setFunction("function");
@@ -374,12 +374,12 @@ public class UpdateAdminInfoTests {
  @Test
  void  updateAdminInformationWithNotFoundAdmin () throws InvalidUserInformationException {
      String adminUuid = java.util.UUID.randomUUID().toString();
-     this.adminDtoIn.setUuid(adminUuid);
+     this.adminDtoIn.setId(adminUuid);
      FunctionEntity function = new FunctionEntity();
         function.setId(1);
         function.setName(this.adminDtoIn.getFunction());
 
-     Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
+     Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.empty());
      Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(function));
 
      Assertions.assertThrows(UserNotFoundException.class, () -> {
@@ -391,14 +391,14 @@ public class UpdateAdminInfoTests {
  }
      @Test
    void updateAdminWithInvalidUuid (){
-         this.adminDtoIn.setUuid("ehbrerfrfr");
+         this.adminDtoIn.setId("ehbrerfrfr");
          assertThrows(InvalidUserInformationException.class, () -> {
               this.adminService.updateAdminInfo( this.adminDtoIn);
          });
   }
     @Test
      void updateAdminInfoWithNullUuid (){
-        this.adminDtoIn.setUuid(null);
+        this.adminDtoIn.setId(null);
         assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.updateAdminInfo( this.adminDtoIn);
         });

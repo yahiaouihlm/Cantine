@@ -65,9 +65,9 @@ public class DisableAccount {
     @Test  /** No Exception thrown  **/
     void  disabledAccountWithValidAdmin () throws UserNotFoundException, InvalidUserInformationException {
         String  adminUuid =  java.util.UUID.randomUUID().toString() ;
-        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.of(this.adminEntity));
+        Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.of(this.adminEntity));
         this.adminService.removeAdminAccount(adminUuid);
-        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(1)).save(this.adminEntity);
 
     }
@@ -86,13 +86,13 @@ public class DisableAccount {
          String  adminUuid =  java.util.UUID.randomUUID().toString() ;
 
 
-        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> {
             this.adminService.removeAdminAccount(adminUuid);
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test

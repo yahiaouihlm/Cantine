@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IMealDao extends JpaRepository<MealEntity, Integer> {
+public interface IMealDao extends JpaRepository<MealEntity, String> {
     /**
      * the  method  is  used  to  find  a  meal  by  its  label and  its  category and  its  description ignoring  the  case of  the  characters and  the  spaces
      *
@@ -44,7 +44,8 @@ public interface IMealDao extends JpaRepository<MealEntity, Integer> {
     @Query( value = "SELECT meal  FROM MealEntity  meal  WHERE meal.status=2")
     List<MealEntity> getMealsInDeletionProcess();
 
-    Optional<MealEntity>findByUuid(String uuid);
+    @Query( value = "SELECT meal  FROM MealEntity  meal  WHERE meal.id=?1")
+    Optional<MealEntity> findMealById(String id);
 
 
 }

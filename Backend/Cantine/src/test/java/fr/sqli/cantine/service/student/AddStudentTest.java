@@ -101,10 +101,10 @@ class AddStudentTest {
      @Test
      void addStudentWithExistingEmailTest() throws IOException {
          Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
-         Mockito.when(this.studentDao.findByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
+         Mockito.when(this.studentDao.findStudentByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
          assertThrows(ExistingUserException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
             Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
-         Mockito.verify(this.studentDao, Mockito.times(1)).findByEmail(this.studentDtoIn.getEmail());
+         Mockito.verify(this.studentDao, Mockito.times(1)).findStudentByEmail(this.studentDtoIn.getEmail());
          Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
      }
     /****************************  TESTS FOR STUDENT CLASS  ************************************/

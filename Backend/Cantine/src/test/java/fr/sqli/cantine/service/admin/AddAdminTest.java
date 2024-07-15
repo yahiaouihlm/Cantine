@@ -102,7 +102,7 @@ class AddAdminTest {
     void addAdminWithExitingEmailInStudentTable() throws InvalidUserInformationException {
         this.studentDao = Mockito.mock(IStudentDao.class);
         this.adminService.setStudentDao(this.studentDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
-        Mockito.when(this.studentDao.findByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
+        Mockito.when(this.studentDao.findStudentByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(functionEntity));
         assertThrows(ExistingUserException.class, () -> this.adminService.signUp(this.adminDtoIn));
 

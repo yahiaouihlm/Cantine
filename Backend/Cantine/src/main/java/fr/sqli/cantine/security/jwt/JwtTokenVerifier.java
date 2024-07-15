@@ -3,9 +3,8 @@ package fr.sqli.cantine.security.jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.sqli.cantine.constants.Messages;
-import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.student.Impl.StudentService;
+import fr.sqli.cantine.constants.ConstCantine;
+import fr.sqli.cantine.service.users.user.impl.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,15 +31,13 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
 
     private final Environment environment;
-    private final AdminService adminService;
-    private final StudentService studentService;
+    private final UserService userService;
 
 
     @Autowired
-    public JwtTokenVerifier(Environment environment, AdminService adminService, StudentService studentService) {
+    public JwtTokenVerifier(UserService userService, Environment environment) {
+        this.userService = userService;
         this.environment = environment;
-        this.adminService = adminService;
-        this.studentService = studentService;
 
     }
 
@@ -66,19 +63,19 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
-                    if (Arrays.asList(roles).contains(Messages.ADMIN_ROLE)) {
-                        var admin = this.adminService.findByUsername(username);
-                        if (admin.getStatus() != 1 || admin.getValidation() != 1) {
-                            throw new Exception("Account not activated");
+
+                    var user = this.userService.findUser(username);
+
+                    if (user.getRoles().stream().anyMatch(role -> role.getLabel().equals(ConstCantine.ADMIN_ROLE_LABEL))) {
+                        if (user.getStatus() != 1 || user.getValidation() != 1) {
+                            throw new Exception("ACCOUNT NOT ACTIVATED");
                         }
-                    }
-                    else if (Arrays.asList(roles).contains(Messages.STUDENT_ROLE)) {
-                        var student = this.studentService.findStudentByUserName(username);
-                        if (student.getStatus() != 1) {
-                            throw new Exception("Account not activated");
+                    } else if (user.getRoles().stream().anyMatch(role -> role.getLabel().equals(ConstCantine.STUDENT_ROLE_LABEL))) {
+                        if (user.getStatus() != 1) {
+                            throw new Exception("ACCOUNT NOT ACTIVATED");
                         }
                     } else {
-                        throw new Exception("Invalid role");
+                        throw new Exception("ACCOUNT NOT ACTIVATED");
                     }
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
                     authentication.setDetails(authorities);
