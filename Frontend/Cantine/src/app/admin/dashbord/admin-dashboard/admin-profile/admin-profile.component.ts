@@ -79,7 +79,7 @@ export class AdminProfileComponent implements OnInit {
         }
         this.isLoading = true;
         const formData = new FormData();
-        formData.append('uuid', this.admin.uuid);
+        formData.append('id', this.admin.id);
         formData.append('firstname', this.adminUpdated.value.firstName);
         formData.append('lastname', this.adminUpdated.value.lastName);
         formData.append('birthdateAsString', this.adminUpdated.value.birthDate);

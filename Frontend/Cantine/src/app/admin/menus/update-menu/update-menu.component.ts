@@ -96,10 +96,10 @@ export class UpdateMenuComponent implements OnInit {
     editMenu() {
         let mealsIds: string[] = []
         this.mealsContainMenu.forEach((meal) => {
-            mealsIds.push(meal.uuid);
+            mealsIds.push(meal.id);
         });
         const menu = new FormData();
-        menu.append("uuid", this.menu.uuid);
+        menu.append("id", this.menu.id);
         menu.append('label', this.updatedMenu.controls["label"].value);
         menu.append('description', this.updatedMenu.controls["description"].value);
         menu.append('price', this.updatedMenu.controls["price"].value);
@@ -189,7 +189,7 @@ export class UpdateMenuComponent implements OnInit {
     }
 
     deleteMenu () {
-        this.menuService.removeMenu(this.menu.uuid).subscribe({
+        this.menuService.removeMenu(this.menu.id).subscribe({
             next: (data) => {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: this.MENU_REMOVED_SUCCESSFULLY},

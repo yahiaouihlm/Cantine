@@ -60,7 +60,7 @@ export class StudentsHandlerComponent implements OnInit{
 
     goToStudentProfile() {
         const navigationExtras: NavigationExtras = {
-            queryParams: {studentUuid: this.student.uuid}
+            queryParams: {studentUuid: this.student.id}
         };
 
         this.router.navigate([IConstantsURL.ADMIN_STUDENT_PROFILE_URL], navigationExtras).then(r => window.location.reload());
