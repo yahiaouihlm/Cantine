@@ -168,7 +168,7 @@ public class StudentService implements IStudentService {
 
         }
         studentEntity.setImage(imageEntity);
-        studentEntity.setRoles(List.of(new RoleEntity(ConstCantine.ADMIN_ROLE_LABEL, ConstCantine.STUDENT_ROLE_DESCRIPTION, studentEntity)));
+        studentEntity.setRoles(List.of(new RoleEntity(ConstCantine.STUDENT_ROLE_LABEL, ConstCantine.STUDENT_ROLE_DESCRIPTION, studentEntity)));
         this.userDao.save(studentEntity);
         this.userService.sendConfirmationLink(studentEntity.getEmail());
     }

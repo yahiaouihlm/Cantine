@@ -1,8 +1,9 @@
 package fr.sqli.cantine.service.admin;
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IRoleDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
@@ -38,7 +39,7 @@ public class UpdateAdminInfoTests {
     private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     @Mock
     private ImageService imageService;
 
@@ -52,6 +53,8 @@ public class UpdateAdminInfoTests {
     private AdminService adminService;
     private FunctionEntity functionEntity;
     private AdminDtoIn adminDtoIn;
+    @Mock
+    private IRoleDao iRoleDao;
 
     @BeforeEach
     void setUp() throws IOException, FileNotFoundException {
@@ -76,7 +79,7 @@ public class UpdateAdminInfoTests {
                 "images/png",                    // type MIME
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),  null, null);
+        this.adminService = new AdminService(adminDao,this.iRoleDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),  null, null);
 
     }
 
@@ -376,7 +379,7 @@ public class UpdateAdminInfoTests {
      String adminUuid = java.util.UUID.randomUUID().toString();
      this.adminDtoIn.setId(adminUuid);
      FunctionEntity function = new FunctionEntity();
-        function.setId(1);
+        function.setId(java.util.UUID.randomUUID().toString());
         function.setName(this.adminDtoIn.getFunction());
 
      Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.empty());

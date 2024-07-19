@@ -3,7 +3,7 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
-import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,20 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
 
     private final String paramReq = "?" + "adminUuid" + "=";
 
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao iFunctionDao;
     private IConfirmationTokenDao iConfirmationTokenDao;
     private MockMvc mockMvc;
-    private AdminEntity adminEntity;
+    private UserEntity adminEntity;
     private String authorizationToken;
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
 
 
     @Autowired
-    public RemoveAccountTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+    public RemoveAccountTest(MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.iFunctionDao = functionDao;
@@ -60,7 +60,7 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
 
     @Test
     void removeAdminAccountWithValidateAdminUuid() throws Exception {
-        var adminUuid = this.adminEntity.getUuid();
+        var adminUuid = this.adminEntity.getId();
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_DISABLE_ACCOUNT
                         + paramReq + adminUuid)
@@ -88,7 +88,7 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
         var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_DISABLE_ACCOUNT
-                        + paramReq + this.adminEntity.getUuid())
+                        + paramReq + this.adminEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken)
                 .accept(MediaType.APPLICATION_JSON));

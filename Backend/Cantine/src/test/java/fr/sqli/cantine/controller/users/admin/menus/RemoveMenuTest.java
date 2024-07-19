@@ -30,19 +30,19 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
 
     final String paramReq = "?" + "uuidMenu" + "=";
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
     private IFunctionDao functionDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private String authorizationToken;
     private MenuEntity menuSaved;
 
     @Autowired
-    public RemoveMenuTest(MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IAdminDao adminDao) throws Exception {
+    public RemoveMenuTest(MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IUserDao adminDao) throws Exception {
         this.mockMvc = mockMvc;
         this.menuDao = menuDao;
         this.mealDao = mealDao;

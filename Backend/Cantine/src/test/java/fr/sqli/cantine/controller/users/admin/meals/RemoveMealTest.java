@@ -36,18 +36,18 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     private IMealDao mealDao;
     @Autowired
     private IMenuDao menuDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private MockMvc mockMvc;
     private IStudentClassDao iStudentClassDao;
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
 
     private String authorizationToken;
 
     private IOrderDao orderDao;
 
     @Autowired
-    public RemoveMealTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IMealDao mealDao, IStudentDao iStudentDao, IStudentClassDao iStudentClassDao, IOrderDao iOrderDao) throws Exception {
+    public RemoveMealTest(MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IMealDao mealDao, IUserDao iStudentDao, IStudentClassDao iStudentClassDao, IOrderDao iOrderDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
@@ -66,7 +66,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
 
         MealEntity mealEntity = new MealEntity("platNotAvailable", "MealTest category", "MealTest description"
@@ -109,7 +109,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         var mealToRemove = this.mealDao.findAll().get(0);
 
 
-        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + mealToRemove.getUuid())
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + mealToRemove.getId())
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
 
@@ -117,7 +117,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("MealDeletedSuccessfully"))));
 
         Assertions.assertEquals(0, this.mealDao.findAll().size());
-        var image = mealToRemove.getImage().getImagename();
+        var image = mealToRemove.getImage().getName();
         Assertions.assertFalse(new File(IMAGE_MEAL_DIRECTORY_PATH + image).exists());
 
     }
@@ -133,12 +133,12 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         menuEntity.setStatus(1);
         menuEntity.setCreatedDate(LocalDate.now());
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         menuEntity.setImage(image);
         menuEntity.setMeals(List.of(idMealToRemove));
         this.menuDao.save(menuEntity);
 
-        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getUuid())
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId())
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isConflict())
@@ -166,7 +166,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         orderEntity.setCreationTime(new Time(System.currentTimeMillis()));
         this.orderDao.save(orderEntity);
 
-        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getUuid())
+        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId())
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isConflict())

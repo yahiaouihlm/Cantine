@@ -1,13 +1,12 @@
 package fr.sqli.cantine.service.admin;
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IRoleDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
-import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.exceptions.AdminFunctionNotFoundException;
 import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
@@ -42,7 +41,7 @@ class AddAdminTest {
     private static final Logger LOG = LogManager.getLogger();
     final String IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     @Mock
     private ImageService imageService;
     private IConfirmationTokenDao iConfirmationToken;
@@ -52,9 +51,11 @@ class AddAdminTest {
     private MockEnvironment environment;
     @InjectMocks
     private AdminService adminService;
+   @Mock
+    private IRoleDao role ;
 
     @Mock
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
     private FunctionEntity functionEntity;
     private AdminDtoIn adminDtoIn;
 
@@ -83,7 +84,7 @@ class AddAdminTest {
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
         this.functionEntity = new FunctionEntity();
-        this.adminService = new AdminService(adminDao, functionDao, imageService, this.environment, new BCryptPasswordEncoder(), null, null);
+        this.adminService = new AdminService(adminDao,this.role ,functionDao, imageService, this.environment, new BCryptPasswordEncoder(), null, null);
 
     }
 
@@ -92,7 +93,7 @@ class AddAdminTest {
     void addAdminWithExisingEmailTest() throws InvalidUserInformationException {
         this.adminDtoIn.setEmail("yahiaouihlm@gmail.com");
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(functionEntity));
-        Mockito.when(this.adminDao.findByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new AdminEntity()));
+        Mockito.when(this.adminDao.findAdminByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new UserEntity()));
 
         assertThrows(ExistingUserException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
@@ -100,14 +101,14 @@ class AddAdminTest {
 
     @Test
     void addAdminWithExitingEmailInStudentTable() throws InvalidUserInformationException {
-        this.studentDao = Mockito.mock(IStudentDao.class);
-        this.adminService.setStudentDao(this.studentDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
-        Mockito.when(this.studentDao.findStudentByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
+        this.studentDao = Mockito.mock(IUserDao.class);
+        //this.adminService.set(this.studentDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
+        Mockito.when(this.studentDao.findStudentByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new UserEntity()));
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(functionEntity));
         assertThrows(ExistingUserException.class, () -> this.adminService.signUp(this.adminDtoIn));
 
         Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
-        Mockito.verify(this.adminDao, Mockito.times(1)).findByEmail(this.adminDtoIn.getEmail());
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminByEmail(this.adminDtoIn.getEmail());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
 

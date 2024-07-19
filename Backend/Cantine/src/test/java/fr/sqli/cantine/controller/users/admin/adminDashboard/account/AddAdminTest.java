@@ -1,9 +1,9 @@
 package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.FunctionEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
     @Autowired
     private IFunctionDao functionDao;
     @Autowired
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     @Autowired
     private IConfirmationTokenDao iConfirmationTokenDao;
     @Autowired
@@ -92,7 +92,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminAddedSuccessfully"))));
 
-        var admin = this.adminDao.findByEmail(this.formData.getFirst("email"));
+        var admin = this.adminDao.findAdminById(this.formData.getFirst("email"));
         Assertions.assertTrue(admin.isPresent());
 
 
@@ -103,7 +103,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
         Assertions.assertEquals(admin.get().getStatus(), 0, "admin is  disabled By default");
         Assertions.assertNotEquals(admin.get().getPassword(), this.formData.getFirst("password")); // password is encrypted
 
-        var imageName = admin.get().getImage().getImagename();
+        var imageName = admin.get().getImage().getName();
         Assertions.assertTrue(new File(ADMIN_IMAGE_PATH + imageName).delete());
     }
 
@@ -120,7 +120,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminAddedSuccessfully"))));
 
-        var admin = this.adminDao.findByEmail(this.formData.getFirst("email"));
+        var admin = this.adminDao.findAdminByEmail(this.formData.getFirst("email"));
         Assertions.assertTrue(admin.isPresent());
 
 
@@ -129,7 +129,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
         Assertions.assertEquals(admin.get().getEmail(), this.formData.getFirst("email"));
         Assertions.assertNotEquals(admin.get().getPassword(), this.formData.getFirst("password")); // password is encrypted
 
-        var imageName = admin.get().getImage().getImagename();
+        var imageName = admin.get().getImage().getName();
         Assertions.assertEquals(imageName, environment.getProperty("sqli.cantine.default.persons.admin.imagename"));
 
     }

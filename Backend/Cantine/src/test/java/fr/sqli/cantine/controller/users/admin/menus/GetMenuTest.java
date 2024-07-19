@@ -36,20 +36,20 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
     private final String paramReq = "?" + "uuidMenu" + "=";
 
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
     private MockMvc mockMvc;
     private IMealDao mealDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private String authorizationToken;
     private MenuEntity menuSaved;
 
 
     @Autowired
-    public GetMenuTest(IAdminDao adminDao, IMenuDao menuDao, IMealDao mealDao, MockMvc mockMvc, IFunctionDao functionDao) throws Exception {
+    public GetMenuTest(IUserDao adminDao, IMenuDao menuDao, IMealDao mealDao, MockMvc mockMvc, IFunctionDao functionDao) throws Exception {
         this.adminDao = adminDao;
         this.menuDao = menuDao;
         this.mealDao = mealDao;

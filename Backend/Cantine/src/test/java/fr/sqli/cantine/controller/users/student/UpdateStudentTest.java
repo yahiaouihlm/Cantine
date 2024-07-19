@@ -3,7 +3,6 @@ package fr.sqli.cantine.controller.users.student;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
-import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +34,11 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     private IConfirmationTokenDao iConfirmationTokenDao;
 
     @Autowired
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     @Autowired
     private IFunctionDao functionDao;
     private IStudentClassDao studentClassDao;
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
     private Environment env;
     private MockMultipartFile imageData;
     private MockMvc mockMvc;
@@ -48,7 +47,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     private String authorizationToken;
 
     @Autowired
-    public UpdateStudentTest(IStudentDao iStudentDao, IStudentClassDao iStudentClassDao, MockMvc mockMvc, Environment env) throws Exception {
+    public UpdateStudentTest(IUserDao iStudentDao, IStudentClassDao iStudentClassDao, MockMvc mockMvc, Environment env) throws Exception {
         this.studentDao = iStudentDao;
         this.studentClassDao = iStudentClassDao;
         this.mockMvc = mockMvc;
@@ -112,7 +111,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithImage() throws Exception {
-        this.formData.set("uuid", this.studentEntity.get());
+        this.formData.set("id", this.studentEntity.getId());
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -131,7 +130,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
         String path = this.env.getProperty("sqli.cantine.image.student.path");
 
-        path = path + "/" + student.get().getImage().getImagename();
+        path = path + "/" + student.get().getImage().getName();
 
         Assertions.assertTrue(
                 new File(path).delete()
@@ -143,7 +142,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     @Test
     void updateStudentWithOutImage() throws Exception {
 
-        this.formData.set("uuid", this.studentEntity.getUuid());
+        this.formData.set("uuid", this.studentEntity.getId());
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .params(this.formData)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)

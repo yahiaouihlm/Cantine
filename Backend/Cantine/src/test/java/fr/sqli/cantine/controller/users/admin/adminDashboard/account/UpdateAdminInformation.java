@@ -33,14 +33,14 @@ import java.nio.file.Files;
 public class UpdateAdminInformation extends AbstractContainerConfig implements IAdminTest {
 
     @Autowired
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
     @Autowired
     private IStudentClassDao studentClassDao;
     @Autowired
     private Environment environment;
     private IOrderDao orderDao;
     private IFunctionDao functionDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IConfirmationTokenDao iConfirmationTokenDao;
     private MockMvc mockMvc;
     private String authorizationToken;
@@ -52,7 +52,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
     private UserEntity savedAdmin;
 
     @Autowired
-    public UpdateAdminInformation(IOrderDao iOrderDao ,MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+    public UpdateAdminInformation(IOrderDao iOrderDao ,MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;

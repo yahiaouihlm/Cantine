@@ -52,7 +52,7 @@ class GetMenuTest {
 
 
         this.mealEntity = new MealEntity();  //  a meal
-        this.mealEntity.setId(1);
+        this.mealEntity.setId(java.util.UUID.randomUUID().toString());
         this.mealEntity.setStatus(1);
         this.mealEntity.setPrice(BigDecimal.valueOf(1.3));
         this.mealEntity.setQuantity(1);
@@ -64,8 +64,7 @@ class GetMenuTest {
 
 
         this.menuEntity = new MenuEntity(); // a menu
-        this.menuEntity.setUuid(java.util.UUID.randomUUID().toString());
-        this.menuEntity.setId(1);
+        this.menuEntity.setId(java.util.UUID.randomUUID().toString());
         this.menuEntity.setStatus(1);
         this.menuEntity.setPrice(BigDecimal.valueOf(1.3));
         this.menuEntity.setQuantity(1);
@@ -80,13 +79,12 @@ class GetMenuTest {
 
     @Test
     void getMenuByIdWithValidateUuid() throws InvalidFoodInformationException, FoodNotFoundException {
-        Mockito.when(iMenuDao.findMenuById(this.menuEntity.getUuid())).thenReturn(Optional.of(this.menuEntity));
+        Mockito.when(iMenuDao.findMenuById(this.menuEntity.getId())).thenReturn(Optional.of(this.menuEntity));
 
-        var  result  =  this.menuService.getMenuByUuId(this.menuEntity.getUuid());
+        var  result  =  this.menuService.getMenuByUuId(this.menuEntity.getId());
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getDescription(), this.menuEntity.getDescription());
-        Assertions.assertEquals(this.menuEntity.getUuid() , this.menuEntity.getUuid());
-        Mockito.verify(iMenuDao, Mockito.times(1)).findMenuById(this.menuEntity.getUuid());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findMenuById(this.menuEntity.getId());
 
     }
 
@@ -119,7 +117,7 @@ class GetMenuTest {
     void getAllMenusWithTwoMenuTest() {
 
         var menuEntity2 = new MenuEntity(); // a menu
-        menuEntity2.setId(1);
+        menuEntity2.setId(java.util.UUID.randomUUID().toString());
         menuEntity2.setStatus(1);
         menuEntity2.setPrice(BigDecimal.valueOf(1.3));
         menuEntity2.setQuantity(1);

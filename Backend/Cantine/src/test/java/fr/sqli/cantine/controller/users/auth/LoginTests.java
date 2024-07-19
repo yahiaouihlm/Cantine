@@ -5,8 +5,6 @@ import fr.sqli.cantine.controller.users.admin.adminDashboard.account.IAdminTest;
 import fr.sqli.cantine.controller.users.student.IStudentTest;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.users.Login;
-import fr.sqli.cantine.entity.AdminEntity;
-import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
 
 
     @Autowired
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
 
     @Autowired
     private IStudentClassDao istudentClassDao;
@@ -34,7 +32,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
     @Autowired
     private IImageDao imageDao;
     @Autowired
-    private IAdminDao iAdminDao;
+    private IUserDao iAdminDao;
     @Autowired
     private IFunctionDao iFunctionDao;
     @Autowired
@@ -80,7 +78,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("{   \"Firstname\":\"" + this.adminEntity.getFirstname() + "\" , \"email\":\"" + this.adminEntity.getEmail() + "\",  \"id\":\"" + this.adminEntity.getUuid() + "\"    ,\"status\":\"OK\"}"));
+                .andExpect(MockMvcResultMatchers.content().json("{   \"Firstname\":\"" + this.adminEntity.getFirstname() + "\" , \"email\":\"" + this.adminEntity.getEmail() + "\",  \"id\":\"" + this.adminEntity.getId() + "\"    ,\"status\":\"OK\"}"));
     }
 
     @Test
@@ -192,7 +190,7 @@ public class LoginTests extends AbstractLoginRequest implements IStudentTest, IA
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("{   \"Firstname\":\"" + this.studentEntity.getFirstname() + "\" , \"email\":\"" + this.studentEntity.getEmail() + "\",  \"id\":\"" + this.studentEntity.getUuid() + "\"    ,\"status\":\"OK\"}"));
+                .andExpect(MockMvcResultMatchers.content().json("{   \"Firstname\":\"" + this.studentEntity.getFirstname() + "\" , \"email\":\"" + this.studentEntity.getEmail() + "\",  \"id\":\"" + this.studentEntity.getId() + "\"    ,\"status\":\"OK\"}"));
     }
 
     @Test

@@ -1,12 +1,13 @@
 package fr.sqli.cantine.service.admin;
 
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.dao.IRoleDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.images.ImageService;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class GetAdminTest {
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     @Mock
     private ImageService imageService;
    private IConfirmationTokenDao iConfirmationToken;
@@ -41,10 +42,12 @@ public class GetAdminTest {
     private MockEnvironment environment;
     @InjectMocks
     private AdminService adminService;
+    @Mock
+    private IRoleDao iRoleDao;
 
     @BeforeEach
     void  setUp (){
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),null ,  null);
+        this.adminService = new AdminService(adminDao, this.iRoleDao , functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),null ,  null);
 
     }
 
@@ -53,12 +56,11 @@ public class GetAdminTest {
     void  getAdminByUuidTest () throws InvalidUserInformationException, UserNotFoundException {
         var adminUuid = java.util.UUID.randomUUID().toString() ;
         FunctionEntity functionEntity = new FunctionEntity();
-        functionEntity.setId(1);
+        functionEntity.setId(java.util.UUID.randomUUID().toString());
         functionEntity.setName("test-function");
 
-        AdminEntity adminEntity = new AdminEntity();
-        adminEntity.setId(1);
-        adminEntity.setUuid(adminUuid);
+        UserEntity adminEntity = new UserEntity();
+        adminEntity.setId(java.util.UUID.randomUUID().toString());
         adminEntity.setFirstname("firstname");
         adminEntity.setLastname("lastname");
         adminEntity.setEmail("email@test.fr");
@@ -67,16 +69,16 @@ public class GetAdminTest {
         adminEntity.setTown("town");
         adminEntity.setPhone("0631990180");
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_TESTS_PATH);
+        imageEntity.setName(IMAGE_TESTS_PATH);
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(functionEntity);
         adminEntity.setStatus(1);
         adminEntity.setValidation(1);
-        Mockito.when(this.adminDao.findById(adminEntity.getUuid())).thenReturn(Optional.of(adminEntity));
+        Mockito.when(this.adminDao.findById(adminEntity.getId())).thenReturn(Optional.of(adminEntity));
 
         var  result =  this.adminService.getAdminByUuID(adminUuid);
 
-        Assertions.assertEquals(result.getId(), adminEntity.getUuid());
+        Assertions.assertEquals(result.getId(), adminEntity.getId());
         Assertions.assertEquals(result.getFirstname(), adminEntity.getFirstname());
         Assertions.assertEquals(result.getLastname(), adminEntity.getLastname());
         Assertions.assertEquals(result.getEmail(), adminEntity.getEmail());
@@ -85,7 +87,7 @@ public class GetAdminTest {
         Assertions.assertEquals(result.getTown(), adminEntity.getTown());
         Assertions.assertEquals(result.getPhone(), adminEntity.getPhone());
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminEntity.getUuid());
+        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminEntity.getId());
 
 
     }
@@ -94,12 +96,12 @@ public class GetAdminTest {
     void  getAdminByUuidWithInvalideAdmin() throws InvalidUserInformationException {
         var adminUuid = java.util.UUID.randomUUID().toString() ;
         FunctionEntity functionEntity = new FunctionEntity();
-        functionEntity.setId(1);
+        functionEntity.setId(java.util.UUID.randomUUID().toString());
         functionEntity.setName("test-function");
 
-        AdminEntity adminEntity = new AdminEntity();
-        adminEntity.setId(1);
-        adminEntity.setUuid(adminUuid);
+        UserEntity adminEntity = new UserEntity();
+        adminEntity.setId(java.util.UUID.randomUUID().toString());
+        adminEntity.setId(adminUuid);
         adminEntity.setFirstname("firstname");
         adminEntity.setLastname("lastname");
         adminEntity.setEmail("email@test.fr");
@@ -108,7 +110,7 @@ public class GetAdminTest {
         adminEntity.setTown("town");
         adminEntity.setPhone("0631990180");
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_TESTS_PATH);
+        imageEntity.setName(IMAGE_TESTS_PATH);
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(functionEntity);
         adminEntity.setStatus(1);
@@ -128,12 +130,11 @@ public class GetAdminTest {
     void  getAdminByUuidWithInvalidAdminStatus () throws InvalidUserInformationException {
         var adminUuid = java.util.UUID.randomUUID().toString() ;
         FunctionEntity functionEntity = new FunctionEntity();
-        functionEntity.setId(1);
+        functionEntity.setId(java.util.UUID.randomUUID().toString());
         functionEntity.setName("test-function");
 
-        AdminEntity adminEntity = new AdminEntity();
-        adminEntity.setId(1);
-        adminEntity.setUuid(adminUuid);
+        UserEntity adminEntity = new UserEntity();
+        adminEntity.setId(java.util.UUID.randomUUID().toString());
         adminEntity.setFirstname("firstname");
         adminEntity.setLastname("lastname");
         adminEntity.setEmail("email@test.fr");
@@ -142,7 +143,7 @@ public class GetAdminTest {
         adminEntity.setTown("town");
         adminEntity.setPhone("0631990180");
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_TESTS_PATH);
+        imageEntity.setName(IMAGE_TESTS_PATH);
         adminEntity.setImage(imageEntity);
         adminEntity.setFunction(functionEntity);
         adminEntity.setStatus(0);

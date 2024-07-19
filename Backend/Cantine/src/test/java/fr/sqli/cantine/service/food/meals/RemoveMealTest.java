@@ -51,10 +51,10 @@ class RemoveMealTest {
         mealService = new MealService(env, mealDao, imageService , menuDao);
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image-test");
+        imageEntity.setName("image-test");
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         this.mealEntity = new MealEntity("Meal 1", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1,mealTypeEnum, imageEntity);
-        this.mealEntity.setId(1);
+        this.mealEntity.setId(java.util.UUID.randomUUID().toString());
 
 
         this.mealDtoIn = new MealDtoIn();
@@ -83,18 +83,18 @@ class RemoveMealTest {
 
         this.mealEntity.setMenus(List.of()); //  empty list of  menu
 
-        Mockito.when(mealDao.findMealById(this.mealEntity.getUuid())).thenReturn(Optional.of(mealEntity));
+        Mockito.when(mealDao.findMealById(this.mealEntity.getId())).thenReturn(Optional.of(mealEntity));
 
-        Mockito.doNothing().when(this.imageService).deleteImage(this.mealEntity.getImage().getImagename(), this.env.getProperty("sqli.cantine.images.meals.path"));
-        var result = mealService.deleteMeal(this.mealEntity.getUuid());
+        Mockito.doNothing().when(this.imageService).deleteImage(this.mealEntity.getImage().getName(), this.env.getProperty("sqli.cantine.images.meals.path"));
+        var result = mealService.deleteMeal(this.mealEntity.getId());
 
         // tests
         Assertions.assertNotNull(result);
         Assertions.assertEquals(this.mealEntity.getLabel(), result.getLabel());
 
-        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getUuid());
+        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getId());
         Mockito.verify(mealDao, Mockito.times(1)).delete(this.mealEntity);
-        Mockito.verify(imageService, Mockito.times(1)).deleteImage(this.mealEntity.getImage().getImagename(), "images/meals");
+        Mockito.verify(imageService, Mockito.times(1)).deleteImage(this.mealEntity.getImage().getName(), "images/meals");
 
     }
 
@@ -104,12 +104,12 @@ class RemoveMealTest {
 
         this.mealEntity.setOrders(List.of(new OrderEntity())); //  add a order to  meal
 
-        Mockito.when(mealDao.findMealById(this.mealEntity.getUuid())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
+        Mockito.when(mealDao.findMealById(this.mealEntity.getId())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
         Assertions.assertThrows(RemoveFoodException.class,
-                () -> mealService.deleteMeal(this.mealEntity.getUuid())); // the meal is in association with menu
+                () -> mealService.deleteMeal(this.mealEntity.getId())); // the meal is in association with menu
 
-        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getUuid());
+        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getId());
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).deleteImage(Mockito.any(String.class), Mockito.any(String.class));
     }
@@ -119,12 +119,12 @@ class RemoveMealTest {
     void removeMealTestWithMealInAssociationWithOneMenuTest() throws ImagePathException {
         this.mealEntity.setMenus(List.of(new MenuEntity())); //  add a menu to  meal
 
-        Mockito.when(mealDao.findMealById(this.mealEntity.getUuid())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
+        Mockito.when(mealDao.findMealById(this.mealEntity.getId())).thenReturn(Optional.of(this.mealEntity)); // the meal is found
 
         Assertions.assertThrows(RemoveFoodException.class,
-                () -> mealService.deleteMeal(this.mealEntity.getUuid())); // the meal is in association with menu
+                () -> mealService.deleteMeal(this.mealEntity.getId())); // the meal is in association with menu
 
-        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getUuid());
+        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getId());
         Mockito.verify(mealDao, Mockito.times(0)).delete(this.mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).deleteImage(Mockito.any(String.class), Mockito.any(String.class));
     }

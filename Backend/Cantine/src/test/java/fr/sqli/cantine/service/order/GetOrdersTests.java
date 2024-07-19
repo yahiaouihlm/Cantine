@@ -1,8 +1,7 @@
 package fr.sqli.cantine.service.order;
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IOrderDao;
-import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.*;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
 import fr.sqli.cantine.service.order.impl.OrderService;
@@ -34,19 +33,19 @@ public class GetOrdersTests {
     @Mock
     private Environment environment;
     @Mock
-    private IAdminDao iAdminDao;
+    private IUserDao iAdminDao;
     @Mock
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @InjectMocks
     private OrderService orderService;
-    private StudentEntity studentEntity;
+    private UserEntity studentEntity;
 
     @BeforeEach
     void setUp() {
-        this.studentEntity = new StudentEntity();
-        this.studentEntity.setUuid("1234567890");
+        this.studentEntity = new UserEntity();
+        this.studentEntity.setId(java.util.UUID.randomUUID().toString());
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
+        imageEntity.setName("image");
         this.studentEntity.setImage(imageEntity);
         StudentClassEntity studentClassEntity = new StudentClassEntity();
         studentClassEntity.setName("class");
@@ -68,12 +67,12 @@ public class GetOrdersTests {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        AdminEntity adminEntity = new AdminEntity();
+        UserEntity adminEntity = new UserEntity();
         adminEntity.setEmail("admin@email.com");
 
 
         Mockito.when(authentication.getPrincipal()).thenReturn(adminEntity.getEmail());
-        Mockito.when(this.iAdminDao.findByEmail(adminEntity.getEmail())).thenReturn(Optional.empty());
+        Mockito.when(this.iAdminDao.findAdminByEmail(adminEntity.getEmail())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(InvalidUserInformationException.class, () -> this.orderService.getOrdersByDate(date));
     }
@@ -89,7 +88,7 @@ public class GetOrdersTests {
     @Test
     void getStudentOrdersWithStudentNotFound() {
         String studentUuid = java.util.UUID.randomUUID().toString();
-        Mockito.when(this.iStudentDao.findByUuid(studentUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.iStudentDao.findStudentById(studentUuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> this.orderService.getStudentOrder(studentUuid));
 

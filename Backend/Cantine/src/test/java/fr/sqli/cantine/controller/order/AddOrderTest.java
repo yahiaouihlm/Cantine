@@ -41,17 +41,17 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     private IMenuDao menuDao;
     private ITaxDao taxDao;
     private MockMvc mockMvc;
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
     private IStudentClassDao studentClassDao;
     private String authorizationToken;
-    private StudentEntity studentEntity;
+    private UserEntity studentEntity;
     private MealEntity mealEntity;
     private MealEntity mealEntity2;
     private MenuEntity menuEntity;
     private OrderDtoIn orderDtoIn;
 
     @Autowired
-    public AddOrderTest( IOrderDao iOrderDao , IStudentDao studentDao, IStudentClassDao studentClassDao, MockMvc mockMvc, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao) throws Exception {
+    public AddOrderTest( IOrderDao iOrderDao , IUserDao studentDao, IStudentClassDao studentClassDao, MockMvc mockMvc, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao) throws Exception {
         this.studentDao = studentDao;
         this.studentClassDao = studentClassDao;
         this.mockMvc = mockMvc;
@@ -80,13 +80,13 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
 
 
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
         ImageEntity image2 = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
         ImageEntity image3 = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         var mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description", new BigDecimal("1.5"), 10, 1, mealTypeEnum, image);
@@ -107,9 +107,9 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
 
     void initRequestData() throws JsonProcessingException {
         this.orderDtoIn = new OrderDtoIn();
-        this.orderDtoIn.setStudentUuid(this.studentEntity.getUuid());
-        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getUuid(), this.mealEntity2.getUuid()));
-        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getUuid()));
+        this.orderDtoIn.setStudentUuid(this.studentEntity.getId());
+        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId(), this.mealEntity2.getId()));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId()));
 
     }
 
@@ -132,14 +132,14 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
 
         var savedOrder = this.iOrderDao.findAll().get(0);
 
-        Assertions.assertEquals(savedOrder.getStudent().getUuid(), this.orderDtoIn.getStudentUuid());
+        Assertions.assertEquals(savedOrder.getStudent().getId(), this.orderDtoIn.getStudentUuid());
 
         var totalPrice = this.mealEntity.getPrice().add(this.mealEntity2.getPrice()).add(this.menuEntity.getPrice()).add(this.taxDao.findAll().get(0).getTax());
         Assertions.assertEquals(totalPrice, savedOrder.getPrice());
 
         var newStudentWallet = this.studentEntity.getWallet().subtract(totalPrice);
 
-        Assertions.assertEquals(newStudentWallet, this.studentDao.findByUuid(this.studentEntity.getUuid()).get().getWallet());
+        Assertions.assertEquals(newStudentWallet, this.studentDao.findStudentById(this.studentEntity.getId()).get().getWallet());
         this.iOrderDao.deleteAll();
     }
 
@@ -195,7 +195,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     @Test
     void addOrderWitMenuNotFoundTest() throws Exception {
 
-        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getUuid(), java.util.UUID.randomUUID().toString()));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId(), java.util.UUID.randomUUID().toString()));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
                 ).contentType(MediaType.APPLICATION_JSON)
@@ -211,7 +211,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     @Test
     void addOrderWitMealNotFoundTest() throws Exception {
 
-        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getUuid(), java.util.UUID.randomUUID().toString()));
+        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId(), java.util.UUID.randomUUID().toString()));
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
                 ).contentType(MediaType.APPLICATION_JSON)
@@ -228,11 +228,11 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     @Test
     void addOrderWitExceedMenuAndMealsOrderLimitTest() throws Exception {
         this.orderDtoIn.setMealsId(IntStream.range(0, 11)
-                .mapToObj(i -> i % 2 == 0 ? this.mealEntity.getUuid() : this.mealEntity2.getUuid())
+                .mapToObj(i -> i % 2 == 0 ? this.mealEntity.getId() : this.mealEntity2.getId())
                 .collect(Collectors.toList()));
 
         this.orderDtoIn.setMenusId(IntStream.range(0, 10)
-                .mapToObj(i -> this.mealEntity.getUuid())
+                .mapToObj(i -> this.mealEntity.getId())
                 .collect(Collectors.toList()));
 
 
@@ -250,7 +250,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     void addOrderWitExceedMenuOrderLimitTest() throws Exception {
         this.orderDtoIn.setMealsId(List.of());
         this.orderDtoIn.setMenusId(IntStream.range(0, 21)
-                .mapToObj(i -> this.mealEntity.getUuid())
+                .mapToObj(i -> this.mealEntity.getId())
                 .collect(Collectors.toList()));
 
 
@@ -269,7 +269,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     void addOrderWitExceedMealOrderLimitTest() throws Exception {
         this.orderDtoIn.setMenusId(List.of());
         this.orderDtoIn.setMealsId(IntStream.range(0, 21)
-                .mapToObj(i -> i % 2 == 0 ? this.mealEntity.getUuid() : this.mealEntity2.getUuid())
+                .mapToObj(i -> i % 2 == 0 ? this.mealEntity.getId() : this.mealEntity2.getId())
                 .collect(Collectors.toList()));
 
 
@@ -290,7 +290,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     void addOrderWithRemovedMenu() throws Exception {
         this.menuEntity.setStatus(2);
         this.menuDao.save(this.menuEntity);
-        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getUuid()));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId()));
         String exceptionMessage = "MENU  : " + this.menuEntity.getLabel() + " IS UNAVAILABLE OR REMOVED";
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
@@ -308,7 +308,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     void addOrderWithUnavailableMenu() throws Exception {
         this.menuEntity.setStatus(0);
         this.menuDao.save(this.menuEntity);
-        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getUuid()));
+        this.orderDtoIn.setMenusId(List.of(this.menuEntity.getId()));
 
         String exceptionMessage = "MENU  : " + this.menuEntity.getLabel() + " IS UNAVAILABLE OR REMOVED";
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
@@ -326,7 +326,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     void addOrderWithRemovedMeal() throws Exception {
         this.mealEntity.setStatus(2);
         this.mealDao.save(this.mealEntity);
-        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getUuid(), this.mealEntity2.getUuid()));
+        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId(), this.mealEntity2.getId()));
 
         String exceptionMessage = "MEAL  : " + this.mealEntity.getLabel() + " IS UNAVAILABLE OR REMOVED";
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL
@@ -344,7 +344,7 @@ public class AddOrderTest extends AbstractLoginRequest implements IOrderTest {
     void addOrderWithUnavailableMeal() throws Exception {
         this.mealEntity.setStatus(0);
         this.mealDao.save(this.mealEntity);
-        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getUuid(), this.mealEntity2.getUuid()));
+        this.orderDtoIn.setMealsId(List.of(this.mealEntity.getId(), this.mealEntity2.getId()));
 
         String exceptionMessage = "MEAL  : " + this.mealEntity.getLabel() + " IS UNAVAILABLE OR REMOVED";
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADD_ORDER_URL

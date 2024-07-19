@@ -3,8 +3,8 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,22 +31,22 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
     @Autowired
     private Environment environment;
     private MockMvc mockMvc;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
 
     private  String authorizationToken;
 
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
 
     @Autowired
     private IStudentClassDao iStudentClassDao;
 
-    private AdminEntity adminEntity1;
-    private AdminEntity adminEntity2;
+    private UserEntity adminEntity1;
+    private UserEntity adminEntity2;
 
     @Autowired
-    public GetAdminTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+    public GetAdminTest(MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
@@ -120,7 +120,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
     @Test
     void getAdminByIdTest() throws Exception {
-        var adminUuid = this.adminEntity1.getUuid();
+        var adminUuid = this.adminEntity1.getId();
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + adminUuid)
@@ -145,7 +145,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
         this.authorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
 
-        var adminUuid = this.adminEntity1.getUuid();
+        var adminUuid = this.adminEntity1.getId();
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
                         + paramReq + adminUuid)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -228,7 +228,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
     @Test
     void getAdminWithInvalidAuthorizationToken() throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
-                        + paramReq + this.adminEntity1.getUuid())
+                        + paramReq + this.adminEntity1.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "InvalidToken")
                 .accept(MediaType.APPLICATION_JSON));
@@ -239,7 +239,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
     @Test
     void getAdminWithOutAuthorizationToken() throws Exception {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ADMIN_BY_ID
-                        + paramReq + this.adminEntity1.getUuid())
+                        + paramReq + this.adminEntity1.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 

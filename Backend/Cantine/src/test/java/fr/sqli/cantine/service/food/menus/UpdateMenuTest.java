@@ -60,7 +60,7 @@ public class UpdateMenuTest {
         this.menuEntity.setLabel("Test label");
         this.menuEntity.setDescription("Test description");
         this.menuEntity.setPrice(BigDecimal.valueOf(1.5));
-        this.menuEntity.setId(1);
+        this.menuEntity.setId(java.util.UUID.randomUUID().toString());
         this.menuEntity.setImage(new ImageEntity());
 
         this.menuDtoIn =  new MenuDtoIn();
@@ -87,7 +87,7 @@ public class UpdateMenuTest {
         this.menuDtoIn.setImage(null);
         String mealUuid = java.util.UUID.randomUUID().toString();
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setUuid(mealUuid);
+        mealEntity.setId(mealUuid);
         mealEntity.setStatus(1);
         this.menuDtoIn.setListOfMealsAsString(" [\"" + mealUuid + "\" ] ");
 
@@ -111,12 +111,12 @@ public class UpdateMenuTest {
         this.menuEntity.setLabel("Test label");
         this.menuEntity.setDescription("Test description");
         this.menuEntity.setPrice(BigDecimal.valueOf(1.5));
-        this.menuEntity.setId(1);
+        this.menuEntity.setId(java.util.UUID.randomUUID().toString());
         this.menuEntity.setImage(new ImageEntity());
         this.menuDtoIn.setListOfMealsAsString(" [\"" + uuid+ "\" ] ");
 
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setUuid(uuid);
+        mealEntity.setId(uuid);
         mealEntity.setStatus(0);
 
 
@@ -129,8 +129,8 @@ public class UpdateMenuTest {
     @Test
     void  updateMenuWithExistingMenuTest () {
         MenuEntity existingMenu = new MenuEntity();
-        existingMenu.setUuid(java.util.UUID.randomUUID().toString());
-        existingMenu.setId(10);
+        existingMenu.setId(java.util.UUID.randomUUID().toString());
+        existingMenu.setId(java.util.UUID.randomUUID().toString());
         this.menuDtoIn.setListOfMealsAsString(" [\"" + java.util.UUID.randomUUID() + "\" ] ");
         Mockito.when(iMenuDao.findMenuById(this.menuDtoIn.getId())).thenReturn(Optional.of(this.menuEntity));
 

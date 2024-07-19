@@ -38,7 +38,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
     private static final Logger LOG = LogManager.getLogger();
     ;
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
@@ -53,13 +53,13 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     private MockMultipartFile imageData;
     private IOrderDao orderDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private MenuEntity menuEntitySavedInDB;
     private String authorizationToken;
     private MenuEntity menuSaved;
 
     @Autowired
-    public AddMenuTest( IOrderDao iOrderDao,MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IAdminDao adminDao) throws Exception {
+    public AddMenuTest( IOrderDao iOrderDao,MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IUserDao adminDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.menuDao = menuDao;

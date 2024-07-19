@@ -1,13 +1,12 @@
 package fr.sqli.cantine.service.student;
 
 
-import fr.sqli.cantine.dao.IAdminDao;
+import fr.sqli.cantine.dao.IRoleDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
-import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
-import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
@@ -41,23 +40,25 @@ class AddStudentTest {
     @Mock
     private IStudentClassDao iStudentClassDao;
     @Mock
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
     @Mock
     private ImageService imageService;
     @InjectMocks
     private StudentService studentService;
     @Mock
     private MockEnvironment environment;
+    @Mock
+    private IRoleDao roleDao;
 
     @Mock
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private StudentClassEntity studentClassEntity;
     private StudentDtoIn studentDtoIn ;
 
     @BeforeEach
      void  setUp  () throws IOException {
          this.studentClassEntity = new StudentClassEntity();
-         this.studentClassEntity.setId(1);
+         this.studentClassEntity.setId(java.util.UUID.randomUUID().toString());
          this.studentClassEntity.setName("SQLI JAVA");
          this.environment = new MockEnvironment();
          this.environment.setProperty("sqli.cantine.admin.default.image","defaultAdminImageName");
@@ -79,20 +80,20 @@ class AddStudentTest {
                  "images/png",                    // type MIME
                  new FileInputStream(IMAGE_TESTS_PATH)));
          ;  // contenu du fichier
-         this.studentService = new StudentService(this.studentDao,this.iStudentClassDao,this.environment , new BCryptPasswordEncoder(),this.imageService,  null );
+         this.studentService = new StudentService(this.studentDao, this.roleDao , this.iStudentClassDao, this.environment , new BCryptPasswordEncoder(),this.imageService,  null );
 
      }
 
     @Test
     void addStudentWithExitingEmailInAdminTable()  {
-        this.adminDao = Mockito.mock(IAdminDao.class);
-        this.studentService.setAdminDao(this.adminDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
-        Mockito.when(this.adminDao.findByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new AdminEntity()));
+        this.adminDao = Mockito.mock(IUserDao.class);
+       // this.studentService.set(this.adminDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
+        Mockito.when(this.adminDao.findAdminByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new UserEntity()));
         Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
         assertThrows(ExistingUserException.class, ()-> this.studentService.signUpStudent(this.studentDtoIn));
 
         Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
-        Mockito.verify(this.adminDao, Mockito.times(1)).findByEmail(this.studentDtoIn.getEmail());
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminByEmail(this.studentDtoIn.getEmail());
         Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
     }
 
@@ -101,7 +102,7 @@ class AddStudentTest {
      @Test
      void addStudentWithExistingEmailTest() throws IOException {
          Mockito.when(this.iStudentClassDao.findByName(this.studentDtoIn.getStudentClass())).thenReturn(Optional.of(this.studentClassEntity));
-         Mockito.when(this.studentDao.findStudentByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new StudentEntity()));
+         Mockito.when(this.studentDao.findStudentByEmail(this.studentDtoIn.getEmail())).thenReturn(Optional.of(new UserEntity()));
          assertThrows(ExistingUserException.class, () -> this.studentService.signUpStudent(this.studentDtoIn));
             Mockito.verify(this.iStudentClassDao, Mockito.times(1)).findByName(this.studentDtoIn.getStudentClass());
          Mockito.verify(this.studentDao, Mockito.times(1)).findStudentByEmail(this.studentDtoIn.getEmail());

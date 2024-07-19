@@ -56,7 +56,7 @@ public interface IOrderTest {
         mealEntity.setPrice(BigDecimal.valueOf(5.0));
         mealEntity.setQuantity(10);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
+        imageEntity.setName("image");
         mealEntity.setImage(imageEntity);
         mealEntity.setStatus(1);
         mealEntity.setCategory("category");
@@ -71,7 +71,7 @@ public interface IOrderTest {
         menuEntity.setPrice(BigDecimal.valueOf(5.0));
         menuEntity.setQuantity(10);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
+        imageEntity.setName("image");
         menuEntity.setCreatedDate(LocalDate.now());
         menuEntity.setImage(imageEntity);
         menuEntity.setStatus(1);
@@ -81,8 +81,8 @@ public interface IOrderTest {
         return menuEntity;
     }
 
-    static StudentEntity createStudent(String email, StudentClassEntity studentClassEntity) {
-        StudentEntity studentEntity = new StudentEntity();
+    static UserEntity createStudent(String email, StudentClassEntity studentClassEntity) {
+        UserEntity studentEntity = new UserEntity();
         studentEntity.setStudentClass(studentClassEntity);
         studentEntity.setFirstname("firstname");
         studentEntity.setLastname("lastname");
@@ -91,7 +91,7 @@ public interface IOrderTest {
         studentEntity.setStatus(1);
         studentEntity.setTown("town");
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image");
+        imageEntity.setName("image");
         studentEntity.setImage(imageEntity);
         studentEntity.setBirthdate(LocalDate.now());
         studentEntity.setRegistrationDate(LocalDate.now());

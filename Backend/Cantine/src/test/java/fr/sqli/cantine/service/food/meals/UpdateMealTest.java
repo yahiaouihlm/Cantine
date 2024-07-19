@@ -56,16 +56,16 @@ public class UpdateMealTest {
 
         mealService = new MealService(env, mealDao, imageService ,  menuDao);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("oldImage");
+        imageEntity.setName("oldImage");
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         this.mealEntity = new MealEntity(mealLabel, categoryMeal, descriptionMeal, BigDecimal.valueOf(1.3), 1, 1,mealTypeEnum, imageEntity);
 
 
         this.mealEntity.setImage(imageEntity);
-        this.mealEntity.setId(1);
+        this.mealEntity.setId(java.util.UUID.randomUUID().toString());
 
         this.mealDtoIn = new MealDtoIn();
-        this.mealDtoIn.setId(this.mealEntity.getUuid());
+        this.mealDtoIn.setId(this.mealEntity.getId());
         this.mealDtoIn.setLabel(mealLabel);
         this.mealDtoIn.setCategory(categoryMeal);
         this.mealDtoIn.setDescription(descriptionMeal);
@@ -92,26 +92,26 @@ public class UpdateMealTest {
         //init
         this.mealDtoIn.setLabel("Meal 1 Updated");
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("newImage");
+        imageEntity.setName("newImage");
         MockMultipartFile multipartFile = new MockMultipartFile("oldImage", "test.txt", "text/plain", "Spring Framework".getBytes());
         this.mealDtoIn.setImage(multipartFile);
 
 
         // when
         Mockito.when(imageService.updateImage("oldImage", this.mealDtoIn.getImage(), "images/meals")).thenReturn("newImage");
-        Mockito.when(mealDao.findMealById(this.mealEntity.getUuid())).thenReturn(Optional.of(mealEntity));
+        Mockito.when(mealDao.findMealById(this.mealEntity.getId())).thenReturn(Optional.of(mealEntity));
         Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(mealEntity));
         Mockito.when(mealDao.save(mealEntity)).thenReturn(mealEntity);
 
-        this.mealDtoIn.setId(this.mealEntity.getUuid());
+        this.mealDtoIn.setId(this.mealEntity.getId());
         var result = mealService.updateMeal(mealDtoIn);
 
         // the spaces in label are removed in  MealDtoIn  and saved in database with spaces
         Assertions.assertEquals("Meal 1 Updated", result.getLabel());
         Assertions.assertEquals("Frites", result.getCategory());
-        Assertions.assertEquals("newImage", result.getImage().getImagename());
+        Assertions.assertEquals("newImage", result.getImage().getName());
         Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase("Meal 1 Updated", mealEntity.getCategory(), mealEntity.getDescription());
-        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getUuid());
+        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getId());
         Mockito.verify(mealDao, Mockito.times(1)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(1)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
     }
@@ -144,18 +144,18 @@ public class UpdateMealTest {
     @DisplayName("Update Meal With Valid ID But Existing Meal after update")
     void updateMealTestWithExistingMealAfterUpdate() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException {
 
-        Mockito.when(mealDao.findMealById(this.mealEntity.getUuid())).thenReturn(Optional.of(mealEntity));
+        Mockito.when(mealDao.findMealById(this.mealEntity.getId())).thenReturn(Optional.of(mealEntity));
         // when  we  submit the  modification  of  the  meal, and we  check if  the  meal  already  exists  in  the  database we return  another  meal  with  the  another id
         Mockito.when(mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealEntity.getLabel(), mealEntity.getCategory(), mealEntity.getDescription())).thenReturn(Optional.of(new MealEntity() {{
-            setUuid(java.util.UUID.randomUUID().toString());
+            setId(java.util.UUID.randomUUID().toString());
         }}));
 
-        this.mealDtoIn.setId(this.mealEntity.getUuid());
+        this.mealDtoIn.setId(this.mealEntity.getId());
         Assertions.assertThrows(ExistingFoodException.class, () -> {
             this.mealService.updateMeal(mealDtoIn);
         });
         Mockito.verify(mealDao, Mockito.times(1)).findByLabelAndAndCategoryAndDescriptionIgnoreCase(this.mealEntity.getLabel(), mealEntity.getCategory(), mealEntity.getDescription());
-        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getUuid());
+        Mockito.verify(mealDao, Mockito.times(1)).findMealById(this.mealEntity.getId());
         Mockito.verify(mealDao, Mockito.times(0)).save(mealEntity);
         Mockito.verify(imageService, Mockito.times(0)).updateImage(Mockito.anyString(), Mockito.any(MultipartFile.class), Mockito.anyString());
     }

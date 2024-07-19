@@ -2,7 +2,6 @@ package fr.sqli.cantine.controller.users.student;
 
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
-import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

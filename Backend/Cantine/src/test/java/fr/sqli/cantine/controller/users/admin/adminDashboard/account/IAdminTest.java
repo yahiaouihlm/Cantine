@@ -1,6 +1,5 @@
 package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.UserEntity;
@@ -81,7 +80,7 @@ public interface IAdminTest {
 
     static UserEntity createAdminWith(String email, FunctionEntity functionEntity, ImageEntity imageEntity) {
 
-        AdminEntity adminEntity = new AdminEntity();
+        UserEntity adminEntity = new UserEntity();
         adminEntity.setEmail(email);
         adminEntity.setFunction(functionEntity);
         adminEntity.setFirstname("firstName");
@@ -103,7 +102,7 @@ public interface IAdminTest {
 
     static ImageEntity createImageEntity() {
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_NAME);
+        imageEntity.setName(IMAGE_NAME);
         return imageEntity;
     }
 

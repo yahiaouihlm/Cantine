@@ -2,14 +2,12 @@ package fr.sqli.cantine.controller.users.student;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
-import fr.sqli.cantine.dao.IStudentDao;
-import fr.sqli.cantine.entity.StudentClassEntity;
-import fr.sqli.cantine.entity.StudentEntity;
+import fr.sqli.cantine.dao.IUserDao;
+import fr.sqli.cantine.entity.UserEntity;
+import org.apache.catalina.User;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,16 +24,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class GetStudentTest extends AbstractContainerConfig implements IStudentTest {
     final String paramReq = "?" + "studentUuid" + "=";
 
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private IStudentClassDao studentClassDao;
     private MockMvc mockMvc;
-    private IStudentDao studentDao;
-    private StudentEntity studentEntity;
+    private IUserDao studentDao;
+    private UserEntity studentEntity;
     private String authorizationToken;
 
     @Autowired
-    public GetStudentTest(IAdminDao iAdminDao , IFunctionDao iFunctionDao , IStudentDao iStudentDao, IStudentClassDao iStudentClassDao, MockMvc mockMvc) throws Exception {
+    public GetStudentTest(IUserDao iAdminDao , IFunctionDao iFunctionDao , IUserDao iStudentDao, IStudentClassDao iStudentClassDao, MockMvc mockMvc) throws Exception {
         this.studentDao = iStudentDao;
         this.studentClassDao = iStudentClassDao;
         this.mockMvc = mockMvc;
@@ -63,13 +61,13 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
     void getStudentByIdTest() throws Exception {
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_STUDENT_BY_ID
-                        + paramReq + this.studentEntity.getUuid())
+                        + paramReq + this.studentEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION,this.authorizationToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("uuid").value(CoreMatchers.is(this.studentEntity.getUuid())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("uuid").value(CoreMatchers.is(this.studentEntity.getId())));
         result.andExpect(MockMvcResultMatchers.jsonPath("firstname").value(CoreMatchers.is(this.studentEntity.getFirstname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.studentEntity.getLastname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.studentEntity.getEmail())));
@@ -83,7 +81,7 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
         String  adminAuthToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_STUDENT_BY_ID
-                        + paramReq + this.studentEntity.getUuid())
+                        + paramReq + this.studentEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION,adminAuthToken)
                 .accept(MediaType.APPLICATION_JSON));

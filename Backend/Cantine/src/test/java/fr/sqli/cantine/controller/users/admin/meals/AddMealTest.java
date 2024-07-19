@@ -34,20 +34,20 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
     private IOrderDao orderDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private MultiValueMap<String, String> formData;
     private MockMultipartFile imageData;
     private String authorizationToken;
 
     @Autowired
-    public AddMealTest(IOrderDao iOrderDao, MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao , IMealDao mealDao) throws Exception {
+    public AddMealTest(IOrderDao iOrderDao, MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao , IMealDao mealDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;

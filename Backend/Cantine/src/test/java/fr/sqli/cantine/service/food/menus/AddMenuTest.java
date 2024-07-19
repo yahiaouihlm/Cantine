@@ -85,7 +85,7 @@ public class AddMenuTest {
         this.menuDtoIn.setId(java.util.UUID.randomUUID().toString());
         String mealUuid = java.util.UUID.randomUUID().toString();
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setUuid(mealUuid);
+        mealEntity.setId(mealUuid);
         mealEntity.setStatus(1);
 
         this.menuDtoIn.setListOfMealsAsString(" [\"" + mealUuid + "\" ] ");
@@ -114,9 +114,9 @@ public class AddMenuTest {
     void AddMenuWithUnalienableMeal() throws Exception {
         String uuid = java.util.UUID.randomUUID().toString();
         MealEntity meal = new MealEntity();
-        meal.setUuid(uuid);
+        meal.setId(uuid);
         meal.setLabel("label test");
-        meal.setId(1);
+        meal.setId(java.util.UUID.randomUUID().toString());
         meal.setStatus(0);
         // allow the  meal parsing  by the service
         this.menuDtoIn.setListOfMealsAsString(" [\"" + uuid + "\" ] ");

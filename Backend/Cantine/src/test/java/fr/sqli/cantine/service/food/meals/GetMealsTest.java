@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.times;
 
@@ -54,10 +55,10 @@ class GetMealsTest {
         this.environment.setProperty("sqli.cantine.images.url.meals", "http://localhost:8080/images/meals/");
         this.iMealService = new MealService(this.environment, this.iMealDao, this.imageService , iMenuDao);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image-test");
+        imageEntity.setName("image-test");
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         this.mealEntity = new MealEntity("Meal 1 ", "Frites", "first Meal To  Test", BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum, imageEntity);
-        this.mealEntity.setId(1);
+        this.mealEntity.setId(java.util.UUID.randomUUID().toString());
 
 
     }
@@ -67,13 +68,12 @@ class GetMealsTest {
     void getAllMealsWithListOf2Elements() {
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         var meal2 = new MealEntity("Meal 2 ", "Frites", "firt Meal To  Test 2   ", BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum, new ImageEntity());
-        ;
-        meal2.setId(2);
+        meal2.setId(java.util.UUID.randomUUID().toString());
 
 
         final var ListToFindAsEntity = List.of(this.mealEntity, meal2);
 
-        final var ListToGetAsDtout = List.of(this.mealEntity, meal2).stream().map(meal -> new MealDtOut(meal, this.environment.getProperty("sqli.cantine.images.url.meals"))).toList();
+        final var ListToGetAsDtout = Stream.of(this.mealEntity, meal2).map(meal -> new MealDtOut(meal, this.environment.getProperty("sqli.cantine.images.url.meals"))).toList();
 
         Mockito.when(this.iMealDao.findAll()).thenReturn(ListToFindAsEntity);
         var result = this.iMealService.getAllMeals();
@@ -111,7 +111,7 @@ class GetMealsTest {
     @Test
     @DisplayName("Test  getMealWithUuid with valid ID  return a Meal Instanced By Mockito ")
     void geMealWithValidUUID() throws InvalidFoodInformationException, FoodNotFoundException {
-        String uuidMealToFind = this.mealEntity.getUuid();
+        String uuidMealToFind = this.mealEntity.getId();
         final String urlMealImage = this.environment.getProperty("sqli.cantine.images.url.meals");
 
         Mockito.when(this.iMealDao.findMealById(uuidMealToFind)).thenReturn(Optional.of(this.mealEntity));
