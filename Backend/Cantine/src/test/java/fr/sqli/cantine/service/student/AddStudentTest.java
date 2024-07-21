@@ -30,6 +30,7 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;

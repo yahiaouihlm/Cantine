@@ -2,6 +2,7 @@ package fr.sqli.cantine.service.order;
 
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.OrderEntity;
+import fr.sqli.cantine.entity.RoleEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.order.exception.CancelledOrderException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
@@ -25,6 +26,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,11 +36,9 @@ public class CancelOrderTest {
     private IMenuDao menuDao;
     @Mock
     private IMealDao mealDao;
-    @Mock
-    private IUserDao studentDao;
 
     @Mock
-    private IUserDao adminDao;
+    private IUserDao userDao;
 
     @Mock
     private Environment environment;
@@ -64,6 +64,7 @@ public class CancelOrderTest {
         this.adminEntity.setFirstname("John");
         this.adminEntity.setLastname("Doe");
         this.adminEntity.setEmail("admin@admin.com");
+        this.adminEntity.setRoles(List.of(new RoleEntity("ADMIN" ,"ADMIN", adminEntity)));
 
 
         this.orderEntity = new OrderEntity();
@@ -91,17 +92,17 @@ public class CancelOrderTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        Mockito.when(this.adminDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
-        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId())).thenReturn(Optional.of(this.orderEntity));
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
+        Mockito.when(this.userDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId())).thenReturn(Optional.of(this.orderEntity));
 
-        Mockito.when(this.studentDao.findStudentById(this.orderEntity.getStudent().getId())).thenReturn(Optional.empty());
+        Mockito.when(this.userDao.findStudentById(this.orderEntity.getStudent().getId())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> {
             this.orderService.cancelOrderByAdmin(this.orderEntity.getId());
         });
 
-        Mockito.verify(this.studentDao, Mockito.times(1)).findStudentById(this.orderEntity.getStudent().getId());
+        Mockito.verify(this.userDao, Mockito.times(1)).findStudentById(this.orderEntity.getStudent().getId());
         Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getId());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
@@ -118,7 +119,7 @@ public class CancelOrderTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        Mockito.when(this.adminDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
+        Mockito.when(this.userDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
         Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId())).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
@@ -143,7 +144,7 @@ public class CancelOrderTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        Mockito.when(this.adminDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
+        Mockito.when(this.userDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
         Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId())).thenReturn(Optional.of(this.orderEntity));
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
@@ -165,10 +166,12 @@ public class CancelOrderTest {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
+        Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
 
-
-        Mockito.when(this.adminDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.of(this.adminEntity));
-        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId())).thenReturn(Optional.empty());
+        Mockito.when(this.userDao.findAdminByEmail(this.adminEntity.getEmail()))
+                .thenReturn(Optional.of(this.adminEntity));
+        Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId()))
+                .thenReturn(Optional.empty());
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
 
         Assertions.assertThrows(OrderNotFoundException.class, () -> {
@@ -178,6 +181,8 @@ public class CancelOrderTest {
 
         Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getId());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
+
+
     }
 
     @Test
@@ -190,13 +195,13 @@ public class CancelOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
         Mockito.when(authentication.getPrincipal()).thenReturn(this.adminEntity.getEmail());
-        Mockito.when(this.adminDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.empty());
+        Mockito.when(this.userDao.findAdminByEmail(this.adminEntity.getEmail())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(InvalidUserInformationException.class, () -> {
             this.orderService.cancelOrderByAdmin(orderUuid);
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminByEmail(this.adminEntity.getEmail());
+        Mockito.verify(this.userDao, Mockito.times(1)).findAdminByEmail(this.adminEntity.getEmail());
     }
 
     @Test
@@ -232,7 +237,7 @@ public class CancelOrderTest {
         Mockito.when(this.orderDao.findOrderById(this.orderEntity.getId())).thenReturn(Optional.of(this.orderEntity));
         Mockito.when(authentication.getPrincipal()).thenReturn(this.studentEntity.getEmail());
 
-        Mockito.when(this.studentDao.findStudentById(this.orderEntity.getStudent().getId())).thenReturn(Optional.empty());
+        Mockito.when(this.userDao.findStudentById(this.orderEntity.getStudent().getId())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> {
             this.orderService.cancelOrderByStudent(this.orderEntity.getId());
@@ -240,7 +245,7 @@ public class CancelOrderTest {
 
 
         Mockito.verify(this.orderDao, Mockito.times(1)).findOrderById(this.orderEntity.getId());
-        Mockito.verify(this.studentDao, Mockito.times(1)).findStudentById(this.orderEntity.getStudent().getId());
+        Mockito.verify(this.userDao, Mockito.times(1)).findStudentById(this.orderEntity.getStudent().getId());
         Mockito.verify(this.orderDao, Mockito.times(0)).save(this.orderEntity);
     }
 

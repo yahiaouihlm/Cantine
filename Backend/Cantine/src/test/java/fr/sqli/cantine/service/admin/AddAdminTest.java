@@ -6,16 +6,18 @@ import fr.sqli.cantine.dao.IRoleDao;
 import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.RoleEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.exceptions.AdminFunctionNotFoundException;
-import fr.sqli.cantine.service.users.exceptions.ExistingUserException;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
+import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;
 
+import fr.sqli.cantine.service.users.user.impl.UserService;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,13 +29,16 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
 
+import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class AddAdminTest {
@@ -41,7 +46,7 @@ class AddAdminTest {
     private static final Logger LOG = LogManager.getLogger();
     final String IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private IUserDao adminDao;
+    private IUserDao userDao;
     @Mock
     private ImageService imageService;
     private IConfirmationTokenDao iConfirmationToken;
@@ -51,13 +56,12 @@ class AddAdminTest {
     private MockEnvironment environment;
     @InjectMocks
     private AdminService adminService;
-   @Mock
-    private IRoleDao role ;
-
     @Mock
-    private IUserDao studentDao;
+    private IRoleDao role;
     private FunctionEntity functionEntity;
     private AdminDtoIn adminDtoIn;
+    @InjectMocks
+    private UserService userService;
 
     @BeforeEach
     void setUp() throws IOException, FileNotFoundException {
@@ -84,33 +88,20 @@ class AddAdminTest {
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
         this.functionEntity = new FunctionEntity();
-        this.adminService = new AdminService(adminDao,this.role ,functionDao, imageService, this.environment, new BCryptPasswordEncoder(), null, null);
+        this.adminService = new AdminService(userDao, this.role, functionDao, imageService, this.environment, new BCryptPasswordEncoder(), null, null);
 
     }
 
 
     @Test
-    void addAdminWithExisingEmailTest() throws InvalidUserInformationException {
-        this.adminDtoIn.setEmail("yahiaouihlm@gmail.com");
+    void addAdminWithOutRoleTest() throws InvalidUserInformationException {
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(functionEntity));
-        Mockito.when(this.adminDao.findAdminByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new UserEntity()));
 
-        assertThrows(ExistingUserException.class, () -> this.adminService.signUp(this.adminDtoIn));
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        assertThrows(RoleNotFoundException.class, () -> this.adminService.signUp(this.adminDtoIn));
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
-    @Test
-    void addAdminWithExitingEmailInStudentTable() throws InvalidUserInformationException {
-        this.studentDao = Mockito.mock(IUserDao.class);
-        //this.adminService.set(this.studentDao); // inject mock  because the  adminDao  is  not  injected  with  setter method
-        Mockito.when(this.studentDao.findStudentByEmail(this.adminDtoIn.getEmail())).thenReturn(Optional.of(new UserEntity()));
-        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(functionEntity));
-        assertThrows(ExistingUserException.class, () -> this.adminService.signUp(this.adminDtoIn));
 
-        Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
-        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminByEmail(this.adminDtoIn.getEmail());
-        Mockito.verify(this.studentDao, Mockito.times(0)).save(Mockito.any());
-    }
 
     /****************************  TESTS FOR FUNCTIONS  ************************************/
     @Test
@@ -119,7 +110,7 @@ class AddAdminTest {
         this.adminDtoIn.setFunction("");
         assertThrows(InvalidUserInformationException.class, () -> this.adminDtoIn.getFunction());
 
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -129,7 +120,7 @@ class AddAdminTest {
         Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.empty());
         assertThrows(AdminFunctionNotFoundException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -140,7 +131,7 @@ class AddAdminTest {
 
         assertThrows(InvalidUserInformationException.class, () -> this.adminDtoIn.getFunction());
 
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     /****************************  TESTS FOR Phone  ************************************/
@@ -176,7 +167,7 @@ class AddAdminTest {
         this.adminDtoIn.setPassword("a".repeat(21));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -184,7 +175,7 @@ class AddAdminTest {
         this.adminDtoIn.setPassword("a".repeat(5));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -192,7 +183,7 @@ class AddAdminTest {
         this.adminDtoIn.setPassword("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -200,7 +191,7 @@ class AddAdminTest {
         this.adminDtoIn.setPassword(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -211,7 +202,7 @@ class AddAdminTest {
         this.adminDtoIn.setBirthdateAsString("18/07/2000");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -219,7 +210,7 @@ class AddAdminTest {
         this.adminDtoIn.setBirthdateAsString("a".repeat(2001));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -227,7 +218,7 @@ class AddAdminTest {
         this.adminDtoIn.setBirthdateAsString("ab");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -235,7 +226,7 @@ class AddAdminTest {
         this.adminDtoIn.setBirthdateAsString("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -243,7 +234,7 @@ class AddAdminTest {
         this.adminDtoIn.setBirthdateAsString(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -253,7 +244,7 @@ class AddAdminTest {
         this.adminDtoIn.setAddress("a".repeat(3001));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -261,7 +252,7 @@ class AddAdminTest {
         this.adminDtoIn.setAddress("ab");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -269,7 +260,7 @@ class AddAdminTest {
         this.adminDtoIn.setAddress("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -277,7 +268,7 @@ class AddAdminTest {
         this.adminDtoIn.setAddress(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -287,7 +278,7 @@ class AddAdminTest {
         this.adminDtoIn.setTown("a".repeat(2001));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -295,7 +286,7 @@ class AddAdminTest {
         this.adminDtoIn.setTown("nm");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -303,7 +294,7 @@ class AddAdminTest {
         this.adminDtoIn.setTown("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -311,7 +302,7 @@ class AddAdminTest {
         this.adminDtoIn.setTown(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -330,7 +321,7 @@ class AddAdminTest {
 
 
         Mockito.verify(this.functionDao, Mockito.times(1)).findByName(this.adminDtoIn.getFunction());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -339,7 +330,7 @@ class AddAdminTest {
         this.adminDtoIn.setEmail("a".repeat(1001));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -348,7 +339,7 @@ class AddAdminTest {
         this.adminDtoIn.setEmail("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -356,7 +347,7 @@ class AddAdminTest {
         this.adminDtoIn.setEmail(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -367,7 +358,7 @@ class AddAdminTest {
         this.adminDtoIn.setLastname("a".repeat(91));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -375,7 +366,7 @@ class AddAdminTest {
         this.adminDtoIn.setLastname("ab");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -383,7 +374,7 @@ class AddAdminTest {
         this.adminDtoIn.setLastname("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -391,7 +382,7 @@ class AddAdminTest {
         this.adminDtoIn.setLastname(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -401,7 +392,7 @@ class AddAdminTest {
         this.adminDtoIn.setFirstname("a".repeat(91));
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -409,7 +400,7 @@ class AddAdminTest {
         this.adminDtoIn.setFirstname("ab");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -417,7 +408,7 @@ class AddAdminTest {
         this.adminDtoIn.setFirstname("   ");
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
     @Test
@@ -425,7 +416,7 @@ class AddAdminTest {
         this.adminDtoIn.setFirstname(null);
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(this.adminDtoIn));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 
@@ -433,7 +424,7 @@ class AddAdminTest {
     void addAdminWithNullRequest() throws IOException {
         assertThrows(InvalidUserInformationException.class, () -> this.adminService.signUp(null));
         Mockito.verify(this.functionDao, Mockito.times(0)).findByName(Mockito.anyString());
-        Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
+        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
     }
 
 

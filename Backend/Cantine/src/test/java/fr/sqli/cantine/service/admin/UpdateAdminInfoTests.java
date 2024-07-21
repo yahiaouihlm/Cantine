@@ -382,7 +382,7 @@ public class UpdateAdminInfoTests {
         function.setId(java.util.UUID.randomUUID().toString());
         function.setName(this.adminDtoIn.getFunction());
 
-     Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.empty());
+     Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.empty());
      Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(function));
 
      Assertions.assertThrows(UserNotFoundException.class, () -> {

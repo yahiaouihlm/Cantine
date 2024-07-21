@@ -60,7 +60,7 @@ public class GetAdminTest {
         functionEntity.setName("test-function");
 
         UserEntity adminEntity = new UserEntity();
-        adminEntity.setId(java.util.UUID.randomUUID().toString());
+        adminEntity.setId(adminUuid);
         adminEntity.setFirstname("firstname");
         adminEntity.setLastname("lastname");
         adminEntity.setEmail("email@test.fr");
@@ -74,7 +74,7 @@ public class GetAdminTest {
         adminEntity.setFunction(functionEntity);
         adminEntity.setStatus(1);
         adminEntity.setValidation(1);
-        Mockito.when(this.adminDao.findById(adminEntity.getId())).thenReturn(Optional.of(adminEntity));
+        Mockito.when(this.adminDao.findAdminById(adminEntity.getId())).thenReturn(Optional.of(adminEntity));
 
         var  result =  this.adminService.getAdminByUuID(adminUuid);
 
@@ -87,7 +87,7 @@ public class GetAdminTest {
         Assertions.assertEquals(result.getTown(), adminEntity.getTown());
         Assertions.assertEquals(result.getPhone(), adminEntity.getPhone());
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminEntity.getId());
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminById(adminEntity.getId());
 
 
     }
@@ -116,12 +116,12 @@ public class GetAdminTest {
         adminEntity.setStatus(1);
         adminEntity.setValidation(0);
 
-        Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.of(adminEntity));
+        Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.of(adminEntity));
         Assertions.assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.getAdminByUuID(adminUuid)  ;
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminById(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -149,12 +149,12 @@ public class GetAdminTest {
         adminEntity.setStatus(0);
         adminEntity.setValidation(1);
 
-        Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.of(adminEntity));
+        Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.of(adminEntity));
         Assertions.assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.getAdminByUuID(adminUuid)  ;
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminById(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
 
     }
@@ -162,12 +162,12 @@ public class GetAdminTest {
     @Test
     void  getAdminByUuidWithNotFoundAdmin () throws InvalidUserInformationException {
         String adminUuid = java.util.UUID.randomUUID().toString();
-        Mockito.when(this.adminDao.findById(adminUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.empty());
         Assertions.assertThrows(UserNotFoundException.class, () -> {
             this.adminService.getAdminByUuID(adminUuid)  ;
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findById(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminById (adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
 
     }

@@ -33,9 +33,8 @@ public class GetOrdersTests {
     @Mock
     private Environment environment;
     @Mock
-    private IUserDao iAdminDao;
-    @Mock
-    private IUserDao iStudentDao;
+    private IUserDao userDao;
+
     @InjectMocks
     private OrderService orderService;
     private UserEntity studentEntity;
@@ -72,7 +71,7 @@ public class GetOrdersTests {
 
 
         Mockito.when(authentication.getPrincipal()).thenReturn(adminEntity.getEmail());
-        Mockito.when(this.iAdminDao.findAdminByEmail(adminEntity.getEmail())).thenReturn(Optional.empty());
+        Mockito.when(this.userDao.findAdminByEmail(adminEntity.getEmail())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(InvalidUserInformationException.class, () -> this.orderService.getOrdersByDate(date));
     }
@@ -88,7 +87,7 @@ public class GetOrdersTests {
     @Test
     void getStudentOrdersWithStudentNotFound() {
         String studentUuid = java.util.UUID.randomUUID().toString();
-        Mockito.when(this.iStudentDao.findStudentById(studentUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.userDao.findStudentById(studentUuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> this.orderService.getStudentOrder(studentUuid));
 

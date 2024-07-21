@@ -248,7 +248,7 @@ public class AddOrderTest {
         SecurityContextHolder.setContext(securityContext);
 
         // when
-        Mockito.when(this.studentDao.findById(this.orderDtoIn.getStudentUuid())).thenReturn(Optional.of(this.studentEntity));
+        Mockito.when(this.studentDao.findStudentById(this.orderDtoIn.getStudentUuid())).thenReturn(Optional.of(this.studentEntity));
         Mockito.when(this.menuDao.findMenuById(menuIdFound)).thenReturn(Optional.of(menuEntity));
         Mockito.when(this.taxDao.findAll()).thenReturn(List.of(taxEntity));
         Mockito.when(authentication.getPrincipal()).thenReturn(studentEntity.getEmail());

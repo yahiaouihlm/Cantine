@@ -245,6 +245,7 @@ public class OrderService implements IOrderService {
             throw new InvalidOrderException("INVALID ORDER ID");
         }
         var adminEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         var admin = this.userDao.findAdminByEmail(adminEmail.toString()).orElseThrow(() -> {
             OrderService.LOG.error("INVALID ADMIN INFORMATION");
             return new InvalidUserInformationException("INVALID ADMIN INFORMATION");
