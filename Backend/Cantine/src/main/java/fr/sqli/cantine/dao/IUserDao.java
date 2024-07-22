@@ -34,6 +34,7 @@ public interface IUserDao   extends JpaRepository<UserEntity, String> {
             " WHERE (role.label='ADMIN' AND admin.id = ?1) ")
     public Optional <UserEntity> findAdminById(String id);
 
+
     @Query(value = "SELECT student FROM UserEntity student JOIN student.roles role WHERE (" +
             "role.label = 'STUDENT' AND " +
             "LOWER(REPLACE(student.firstname, ' ', '')) = LOWER(REPLACE(?1, ' ', ''))" +

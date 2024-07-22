@@ -13,9 +13,6 @@ import java.util.Optional;
 @Repository
 public interface IOrderDao  extends JpaRepository<OrderEntity , String> {
 
-
-
-
     public List<OrderEntity> findByStudentOrderByCreationDateDesc(UserEntity student);
     @Query(value = "SELECT order FROM OrderEntity order  WHERE  order.id = ?1" )
     public Optional<OrderEntity> findOrderById(String id);
