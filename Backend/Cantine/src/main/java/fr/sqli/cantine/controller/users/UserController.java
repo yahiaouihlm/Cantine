@@ -39,7 +39,6 @@ public class UserController{
         return ResponseEntity.ok(new ResponseDtout(PASSWORD_RESET_SUCCESSFULLY));
     }
 
-
     @PostMapping(SEND_RESET_PASSWORD_LINK_URL)
     public ResponseEntity<ResponseDtout> resetPasswordLink(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         this.userService.resetPasswordLink(email);
@@ -56,7 +55,6 @@ public class UserController{
     public ResponseEntity<ResponseDtout> checkConfirmationToken(@RequestParam("token") String token) throws UserNotFoundException, InvalidTokenException, ExpiredToken, TokenNotFoundException, AccountActivatedException {
         return ResponseEntity.ok(this.userService.checkLinkValidity(token));
     }
-
 
     @PostMapping(USER_SEND_CONFIRMATION_LINK_URL)
     public ResponseEntity<ResponseDtout> sendEmailConfirmationToken(@RequestParam("email") String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
