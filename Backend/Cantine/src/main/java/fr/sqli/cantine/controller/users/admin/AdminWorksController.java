@@ -1,7 +1,7 @@
 package fr.sqli.cantine.controller.users.admin;
 
 
-import fr.sqli.cantine.controller.users.admin.IAdminWorksController;
+
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @CrossOrigin("http://localhost:4200")
 @RequestMapping(AdminWorksController.ADMIN_DASH_BOARD_BASIC_WORK_URL)
-public class AdminWorksController  implements  IAdminWorksController {
+public class AdminWorksController {
     final static  String ADMIN_DASH_BOARD_BASIC_WORK_URL = "/cantine/admin/adminDashboard/works";
     final String GET_STUDENT_TRANSACTIONS_ENDPOINT = "/getStudentTransactions";
     final String SEND_STUDENT_AMOUNT_NOTIFICATION_ENDPOINT = "/addStudentAmount";

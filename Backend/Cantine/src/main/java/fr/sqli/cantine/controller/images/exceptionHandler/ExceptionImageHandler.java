@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.images;
+package fr.sqli.cantine.controller.images.exceptionHandler;
 
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;

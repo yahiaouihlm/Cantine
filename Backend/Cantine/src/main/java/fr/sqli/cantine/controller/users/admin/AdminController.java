@@ -21,6 +21,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
 import static fr.sqli.cantine.controller.users.admin.AdminController.ADMIN_DASH_BOARD_BASIC_URL;
 
 @RestController
@@ -48,21 +49,21 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
     @PostMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
     public ResponseEntity<ResponseDtout> removeAdminAccount(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         this.adminService.removeAdminAccount(adminUuid);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_DISABLED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
     @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateAdminInfo(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException {
         this.adminService.updateAdminInfo(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_INFO_UPDATED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
     public ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
@@ -75,7 +76,7 @@ public class AdminController {
         return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
     @GetMapping(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
     public ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() {
         return ResponseEntity.ok(this.adminService.getAllAdminFunctions());

@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.order;
+package fr.sqli.cantine.controller.order.exceptionHandler;
 
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
@@ -22,10 +22,6 @@ public class OrderHandlerException {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
     }
 
-
-
-
-
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleOrderNotFound(OrderNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
@@ -36,8 +32,6 @@ public class OrderHandlerException {
     public ResponseEntity<ExceptionDtout> UnavailableMealOrMenu(OrderLimitExceededException e) {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout(e.getMessage()));
     }
-
-
 
     //  one meal or  menu is not available
 

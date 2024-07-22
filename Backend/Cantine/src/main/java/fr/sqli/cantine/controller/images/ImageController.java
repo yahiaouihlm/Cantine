@@ -16,7 +16,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 @RestController
-public class ImageController implements IImageController {
+public class ImageController{
+    final String ENDPOINT_GET_IMAGE= "cantine/download/images/{spot}/{image}";
+    final String ENDPOINT_GET_IMAGE_USERS= "cantine/download/images/persons/{spot}/{image}";
+
+
     private final ImageService imageService;
 
     @Autowired
@@ -36,8 +40,6 @@ public class ImageController implements IImageController {
     public ResponseEntity<InputStreamResource> getUsersImages(@PathVariable("spot") String spot, @PathVariable("image") String image) throws FileNotFoundException, InvalidImageException, ImagePathException {
 
         var path = "images/persons/" + spot;
-
-
         return this.getImage(spot, image, path);
 
 
@@ -47,19 +49,14 @@ public class ImageController implements IImageController {
 
     private   ResponseEntity<InputStreamResource> getImage( String spot ,  String  image ,  String  path ) throws InvalidImageException, ImagePathException, FileNotFoundException {
         var imageExtension = this.imageService.getImageExtension(image);
-        MediaType mediaType = null;
-        switch (imageExtension) {
-            case ".png":
-                mediaType = MediaType.IMAGE_PNG;
-                break;
-            case ".jpg":
-                mediaType = MediaType.IMAGE_JPEG;
-                break;
-            case ".jpeg":
-                mediaType = MediaType.IMAGE_JPEG;
-                break;
-        }
+        MediaType mediaType = switch (imageExtension) {
+            case ".png" -> MediaType.IMAGE_PNG;
+            case ".jpg" -> MediaType.IMAGE_JPEG;
+            case ".jpeg" -> MediaType.IMAGE_JPEG;
+            default -> null;
+        };
         InputStream inputStream = this.imageService.downloadImage(image, path);
+        assert mediaType != null;
         return ResponseEntity.ok()
                 .contentType(mediaType)
                 .body(new InputStreamResource(inputStream));
