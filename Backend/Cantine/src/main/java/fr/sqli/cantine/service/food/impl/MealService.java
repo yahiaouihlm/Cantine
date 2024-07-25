@@ -225,7 +225,6 @@ public class MealService implements IMealService {
     @Override
     public MealEntity getMealEntityByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
         IMealService.checkMealUuidValidity(uuid);
-
         return this.mealDao.findMealById(uuid).orElseThrow(() -> {
             MealService.LOG.debug("NO MEAL WAS FOUND WITH AN UUID = {} IN THE getMealEntityByUUID METHOD", uuid);
             return new FoodNotFoundException("NO MEAL WAS FOUND");

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.imageio.ImageIO;
@@ -95,7 +96,7 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     }
 
     @AfterAll
-    static   void  removeImageOfTestIFExist (){
+    static void removeImageOfTestIFExist() {
         String destination = IMAGE_MEAL_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
         File destFile = new File(destination);
         if (destFile.exists()) {
@@ -105,15 +106,12 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
 
 
     @Test
-    @Disabled
     void removeMealTest() throws Exception {
         copyImageTestFromTestDirectoryToImageMenuDirectory();
         var mealToRemove = this.mealDao.findAll().get(0);
 
-
         var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + mealToRemove.getId())
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
-
 
         result.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("MealDeletedSuccessfully"))));
@@ -125,7 +123,6 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     }
 
     @Test
-    @Disabled
     void removeMealInAssociationWithMenu() throws Exception {
         var idMealToRemove = this.mealDao.findAll().get(0);
         MenuEntity menuEntity = new MenuEntity();
@@ -152,16 +149,13 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
     @Test
     void removeMealInAssociationWithOrder() throws Exception {
 
-        this.iStudentDao.deleteAll();
-        this.iStudentClassDao.deleteAll();
-
-        var users  = this.iStudentDao.findAll().stream()
-                                               .filter(user -> user.getRoles().stream()
-                                                                                 .anyMatch(role -> role.getLabel().equals(STUDENT_ROLE_LABEL))).toList();
-        UserEntity student  = null;
+        var users = this.iStudentDao.findAll().stream()
+                .filter(user -> user.getRoles().stream()
+                        .anyMatch(role -> role.getLabel().equals(STUDENT_ROLE_LABEL))).toList();
+        UserEntity student = null;
         if (users.isEmpty()) {
-               student = AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
-        }else{
+            student = AbstractLoginRequest.saveAStudent(this.iStudentDao, this.iStudentClassDao);
+        } else {
             student = users.get(0);
         }
 
@@ -176,8 +170,8 @@ public class RemoveMealTest extends AbstractContainerConfig implements IMealTest
         orderEntity.setCreationTime(new Time(System.currentTimeMillis()));
         this.orderDao.save(orderEntity);
 
-        var result = this.mockMvc.perform(post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId())
-             /*   .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)*/);
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(DELETE_MEAL_URL + this.paramReq + idMealToRemove.getId())
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(exceptionsMap.get("mealCanNotBeDeletedOrder"))));
