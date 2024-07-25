@@ -141,7 +141,7 @@ class GetMealTest extends AbstractContainerConfig implements IMealTest {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL + this.paramReq + mealUuid).header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.uuid", CoreMatchers.is(mealUuid)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(mealUuid)));
 
     }
 

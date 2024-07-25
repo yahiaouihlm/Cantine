@@ -99,7 +99,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
-        this.formData.add("uuid", this.adminEntity.getId());
+        this.formData.add("id", this.adminEntity.getId());
         this.formData.add("firstname", "Halim");
         this.formData.add("lastname", "Yahiaoui");
         this.formData.add("birthdateAsString", "2000-07-18");
@@ -948,7 +948,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
     @Test
     void updateAdminInfoWithAdminNotFound() throws Exception {
         var adminUuid = java.util.UUID.randomUUID().toString();
-        this.formData.set("uuid", String.valueOf(adminUuid));
+        this.formData.set("id", String.valueOf(adminUuid));
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -962,7 +962,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithInvalidIdAdmin() throws Exception {
-        this.formData.set("uuid", "jjedh5");
+        this.formData.set("id", "jjedh5");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -975,7 +975,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithNullIdAdmin() throws Exception {
-        this.formData.set("uuid", null);
+        this.formData.set("id", null);
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -988,7 +988,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithEmptyIdAdmin() throws Exception {
-        this.formData.set("uuid", "");
+        this.formData.set("id", "");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -1001,7 +1001,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithOutIdAdmin() throws Exception {
-        this.formData.remove("uuid");
+        this.formData.remove("id");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)

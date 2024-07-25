@@ -32,7 +32,7 @@ public interface IStudentService {
 
     static void checkUuIdValidity(String studentUuid) throws InvalidUserInformationException {
         if (studentUuid == null || studentUuid.isBlank() || studentUuid.length() < 20) {
-            throw new InvalidUserInformationException("INVALID UUID");
+            throw new InvalidUserInformationException("INVALID ID");
         }
     }
 

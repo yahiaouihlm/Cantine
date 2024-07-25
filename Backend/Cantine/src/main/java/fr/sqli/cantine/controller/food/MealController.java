@@ -1,7 +1,6 @@
 package fr.sqli.cantine.controller.food;
 
 
-
 import fr.sqli.cantine.dto.in.food.MealDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.MealDtOut;
@@ -24,26 +23,25 @@ import java.util.List;
 import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
-
 @RestController
 @RequestMapping(value = MealController.MEALS_BASIC_URL_ADMIN)
 @CrossOrigin(origins = "http://localhost:4200")
-public class MealController{
+public class MealController {
 
     final static String MEALS_BASIC_URL_ADMIN = "/cantine/admin/api/meals";
     final String ENDPOINT_ADD_MEAL_URL = "/add";
     final String ENDPOINT_DELETE_MEAL_URL = "/delete";
     final String ENDPOINT_GET_ONE_MEAL_URL = "/get";
     final String ENDPOINT_UPDATE_MEAL_URL = "/update";
-    final String ENDPOINT_GET_ONLY_AVAILABLE_MEALS =  "/getAvailableMeals";
+    final String ENDPOINT_GET_ONLY_AVAILABLE_MEALS = "/getAvailableMeals";
 
     final String ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS = "/getUnavailableMeals";
 
     final String GET_ONLY_MEALS_IN_DELETION_PROCESS_URL = "/getMealsInDeletionProcess";
-    final String  ENDPOINT_GET_ALL_MEAL =  "/getAll";
+    final String ENDPOINT_GET_ALL_MEAL = "/getAll";
 
     /*------------------ MESSAGES ------------------*/
-    final String MEAL_ADDED_SUCCESSFULLY   = "MEAL ADDED SUCCESSFULLY";
+    final String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
     final String MEAL_DELETED_SUCCESSFULLY = "MEAL DELETED SUCCESSFULLY";
     final String MEAL_UPDATED_SUCCESSFULLY = "MEAL UPDATED SUCCESSFULLY";
     private final MealService mealService;
@@ -82,18 +80,18 @@ public class MealController{
 
     @GetMapping(value = ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS)
     public ResponseEntity<List<MealDtOut>> getUnavailableMeals() {
-        return  ResponseEntity.ok(this.mealService.getUnavailableMeals());
+        return ResponseEntity.ok(this.mealService.getUnavailableMeals());
     }
 
     @GetMapping(value = GET_ONLY_MEALS_IN_DELETION_PROCESS_URL)
     public ResponseEntity<List<MealDtOut>> getMealsInDeletionProcess() {
-        return  ResponseEntity.ok(this.mealService.getMealsInDeletionProcess());
+        return ResponseEntity.ok(this.mealService.getMealsInDeletionProcess());
     }
 
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = ENDPOINT_GET_ALL_MEAL)
     public ResponseEntity<List<MealDtOut>> getAllMeal() {
-          return ResponseEntity.ok(this.mealService.getAllMeals());
+        return ResponseEntity.ok(this.mealService.getAllMeals());
     }
 
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")

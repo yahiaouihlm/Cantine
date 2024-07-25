@@ -6,7 +6,6 @@ import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.UserEntity;
-import org.apache.catalina.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +66,7 @@ public class GetStudentTest extends AbstractContainerConfig implements IStudentT
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(MockMvcResultMatchers.status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("uuid").value(CoreMatchers.is(this.studentEntity.getId())));
+        result.andExpect(MockMvcResultMatchers.jsonPath("id").value(CoreMatchers.is(this.studentEntity.getId())));
         result.andExpect(MockMvcResultMatchers.jsonPath("firstname").value(CoreMatchers.is(this.studentEntity.getFirstname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("lastname").value(CoreMatchers.is(this.studentEntity.getLastname())));
         result.andExpect(MockMvcResultMatchers.jsonPath("email").value(CoreMatchers.is(this.studentEntity.getEmail())));

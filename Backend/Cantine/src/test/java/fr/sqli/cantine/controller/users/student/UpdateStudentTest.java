@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -72,7 +74,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
-        this.formData.add("uuid", java.util.UUID.randomUUID().toString());
+        this.formData.add("id", java.util.UUID.randomUUID().toString());
         this.formData.add("firstname", "Birus");
         this.formData.add("lastname", "Samaa");
         /*        this.formData.add("email", "halim.yahiaoui@social.aston-ecole.com");*/
@@ -142,7 +144,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
     @Test
     void updateStudentWithOutImage() throws Exception {
 
-        this.formData.set("uuid", this.studentEntity.getId());
+        this.formData.set("id", this.studentEntity.getId());
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .params(this.formData)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
@@ -165,8 +167,9 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithAdminAuthToken() throws Exception {
-         if  (this.adminDao.findAll().isEmpty())
+         if  (this.adminDao.findAll().stream().noneMatch(userEntity -> userEntity.getRoles().stream().anyMatch(roleEntity -> roleEntity.getLabel().equals(ADMIN_ROLE_LABEL))))
                  AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+
         String adminAuthToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
 
@@ -754,7 +757,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithInvalidId() throws Exception {
-        this.formData.set("uuid", "knaezfk");
+        this.formData.set("id", "knaezfk");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
@@ -770,7 +773,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithWrongId2() throws Exception {
-        this.formData.set("uuid", "-1.2");
+        this.formData.set("id", "-1.2");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
@@ -785,7 +788,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithEmptyId() throws Exception {
-        this.formData.set("uuid", "");
+        this.formData.set("id", "");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .file(this.imageData)
@@ -800,7 +803,7 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithNullId() throws Exception {
-        this.formData.set("uuid", null);
+        this.formData.set("id", null);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_STUDENT_INFO)
                 .file(this.imageData)

@@ -56,14 +56,12 @@ public class MenuController {
         return ResponseEntity.ok(new ResponseDtout(MENU_UPDATED_SUCCESSFULLY));
     }
 
-
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_DELETE_MENU_URL)
     public ResponseEntity<ResponseDtout> deleteMenu(@RequestParam("uuidMenu") String uuidMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException {
         this.menuService.removeMenu(uuidMenu);
         return ResponseEntity.ok(new ResponseDtout(MENU_DELETED_SUCCESSFULLY));
     }
-
 
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_ADD_MENU_URL, consumes = MULTIPART_FORM_DATA_VALUE)
@@ -77,7 +75,6 @@ public class MenuController {
     public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws InvalidFoodInformationException, FoodNotFoundException {
         return ResponseEntity.ok(this.menuService.getMenuByUuId(uuidMenu));
     }
-
 
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = ENDPOINT_GET_ALL_MENU)

@@ -34,7 +34,7 @@ public interface IAdminService {
 
     static void checkUuIdValidity(String adminUuid) throws InvalidUserInformationException {
         if (adminUuid == null || adminUuid.isBlank() || adminUuid.length() < 20) {
-            throw new InvalidUserInformationException("INVALID UUID");
+            throw new InvalidUserInformationException("INVALID ID");
         }
     }
 

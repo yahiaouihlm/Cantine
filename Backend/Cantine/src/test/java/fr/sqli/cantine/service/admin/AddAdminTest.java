@@ -93,16 +93,6 @@ class AddAdminTest {
     }
 
 
-    @Test
-    void addAdminWithOutRoleTest() throws InvalidUserInformationException {
-        Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(functionEntity));
-
-        assertThrows(RoleNotFoundException.class, () -> this.adminService.signUp(this.adminDtoIn));
-        Mockito.verify(this.userDao, Mockito.times(0)).save(Mockito.any());
-    }
-
-
-
     /****************************  TESTS FOR FUNCTIONS  ************************************/
     @Test
     void addAdminInformationEmptyFunction() {

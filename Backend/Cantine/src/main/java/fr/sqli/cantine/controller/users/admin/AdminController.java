@@ -62,20 +62,17 @@ public class AdminController {
         return ResponseEntity.ok(new ResponseDtout(ADMIN_INFO_UPDATED_SUCCESSFULLY));
     }
 
-
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
     public ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
     }
 
-
     @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
     public ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, AdminFunctionNotFoundException {
         this.adminService.signUp(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }
-
 
     @GetMapping(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
     public ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() {

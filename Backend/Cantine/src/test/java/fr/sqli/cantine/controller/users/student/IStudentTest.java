@@ -1,12 +1,15 @@
 package fr.sqli.cantine.controller.users.student;
 
+import fr.sqli.cantine.constants.ConstCantine;
 import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.RoleEntity;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public interface IStudentTest {
@@ -57,7 +60,7 @@ public interface IStudentTest {
             Map.entry("InvalidStudentId", "INVALID STUDENT ID"),
             Map.entry("InvalidArgument", "ARGUMENT NOT VALID"),
             Map.entry("StudentNotFound", "STUDENT NOT FOUND"),
-            Map.entry("InvalidUuid", "INVALID UUID")
+            Map.entry("InvalidUuid", "INVALID ID")
     );
 
 
@@ -81,6 +84,7 @@ public interface IStudentTest {
         student.setRegistrationDate(LocalDate.now());
         student.setStatus(1);
         student.setWallet(new BigDecimal(0));
+        student.setRoles(List.of(new RoleEntity(ConstCantine.STUDENT_ROLE_LABEL, ConstCantine.STUDENT_ROLE_DESCRIPTION, student)));
         student.setStudentClass(studentClassEntity);
         return student;
     }

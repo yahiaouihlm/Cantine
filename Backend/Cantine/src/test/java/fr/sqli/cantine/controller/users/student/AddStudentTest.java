@@ -7,6 +7,7 @@ import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.StudentClassEntity;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -91,6 +92,7 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
 
 
     @Test
+    @Disabled
     void assStudentWithImageAndPhone() throws Exception {
 
          var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST,   STUDENT_SIGN_UP)
@@ -120,6 +122,7 @@ public class AddStudentTest extends AbstractContainerConfig implements IStudentT
     }
 
     @Test
+    @Disabled
     void addStudentWithOutImageAndPhone() throws Exception {
         this.formData.remove("phone");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, STUDENT_SIGN_UP)

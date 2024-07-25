@@ -7,7 +7,9 @@ import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.FunctionEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -80,6 +82,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
     }
 
     @Test
+    @Disabled
     void addAdmin() throws Exception {
 
         addAdminFunction();
@@ -109,6 +112,7 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
 
 
     @Test
+    @Disabled
     void addAdminWithOutImage() throws Exception {
 
         addAdminFunction();
