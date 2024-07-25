@@ -23,9 +23,11 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RestController
 @RequestMapping(value = MenuController.MENUS_BASIC_URL_ADMIN)
 public class MenuController {
+
+    final String ENDPOINT_UPDATE_MENU_URL = "/update";
+
     /*------------------ ENDPOINTS ------------------*/
     final static String MENUS_BASIC_URL_ADMIN = "/cantine/admin/api/menus";
-    final String ENDPOINT_UPDATE_MENU_URL = "/update";
     final String ENDPOINT_ADD_MENU_URL = "/add";
     final String ENDPOINT_DELETE_MENU_URL = "/delete";
     final String ENDPOINT_GET_ALL_MENU = "/getAll";

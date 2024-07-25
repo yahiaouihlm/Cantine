@@ -28,16 +28,17 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 public class MealController {
 
     final static String MEALS_BASIC_URL_ADMIN = "/cantine/admin/api/meals";
+
+    /*------------------ ENDPOINTS ------------------*/
     final String ENDPOINT_ADD_MEAL_URL = "/add";
     final String ENDPOINT_DELETE_MEAL_URL = "/delete";
     final String ENDPOINT_GET_ONE_MEAL_URL = "/get";
     final String ENDPOINT_UPDATE_MEAL_URL = "/update";
     final String ENDPOINT_GET_ONLY_AVAILABLE_MEALS = "/getAvailableMeals";
-
     final String ENDPOINT_GET_ONLY_UNAVAILABLE_MEALS = "/getUnavailableMeals";
-
     final String GET_ONLY_MEALS_IN_DELETION_PROCESS_URL = "/getMealsInDeletionProcess";
     final String ENDPOINT_GET_ALL_MEAL = "/getAll";
+
 
     /*------------------ MESSAGES ------------------*/
     final String MEAL_ADDED_SUCCESSFULLY = "MEAL ADDED SUCCESSFULLY";
