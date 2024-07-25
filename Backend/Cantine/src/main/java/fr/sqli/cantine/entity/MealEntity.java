@@ -63,7 +63,7 @@ public class MealEntity  extends AbstractEntity implements Serializable {
     private ImageEntity image;
 
     @Enumerated(EnumType.STRING)
-    private MealTypeEnum mealType;
+    private MealTypeEnum meal_type;
 
     //bi-directional many-to-many association to CommandeEntity
    @ManyToMany( fetch =  FetchType.LAZY)
@@ -89,7 +89,7 @@ public class MealEntity  extends AbstractEntity implements Serializable {
         this.price = price;
         this.quantity = quantity;
         this.status = status;
-        this.mealType = mealTypeEnum;
+        this.meal_type = mealTypeEnum;
         this.image = image;
     }
 

@@ -62,7 +62,7 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
         imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal("10.0"), 1, 10, imageEntity);
-        mealEntity.setMealType(MealTypeEnum.ENTREE);
+        mealEntity.setMeal_type(MealTypeEnum.ENTREE);
 
         this.mealDao.save(mealEntity);
 

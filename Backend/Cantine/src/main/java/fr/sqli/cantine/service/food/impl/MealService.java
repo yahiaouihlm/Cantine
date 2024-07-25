@@ -66,7 +66,7 @@ public class MealService implements IMealService {
         meal.setDescription(mealDtoIn.getDescription().trim());
         meal.setPrice(mealDtoIn.getPrice());
         meal.setQuantity(mealDtoIn.getQuantity());
-        meal.setMealType(mealDtoIn.getMealTypeEnum());
+        meal.setMeal_type(mealDtoIn.getMealTypeEnum());
 
         //check  if the  meal  is  already  present  in  the  database despite  the  update
         Optional<MealEntity> mealEntity = this.getMealWithLabelAndCategoryAndDescription(meal.getLabel(), meal.getCategory(), meal.getDescription());

@@ -59,7 +59,7 @@ class GetMenuTest {
         this.mealEntity.setCategory("Frites");
         this.mealEntity.setDescription("first Meal To  Test");
         this.mealEntity.setLabel("Meal 1");
-        this.mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
+        this.mealEntity.setMeal_type(MealTypeEnum.ACCOMPAGNEMENT);
         this.mealEntity.setImage(new ImageEntity());
 
 

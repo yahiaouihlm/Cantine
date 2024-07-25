@@ -4,7 +4,6 @@ package fr.sqli.cantine.controller.users.admin.menus;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.controller.users.admin.meals.IMealTest;
 import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.*;
 import org.apache.logging.log4j.LogManager;
@@ -90,7 +89,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
         imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal(10.0), 1, 10, imageEntity);
-        mealEntity.setMealType(MealTypeEnum.ENTREE);
+        mealEntity.setMeal_type(MealTypeEnum.ENTREE);
 
         this.mealDao.save(mealEntity);
 

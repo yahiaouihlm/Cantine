@@ -31,7 +31,7 @@ public interface IMealDao extends JpaRepository<MealEntity, String> {
 
 
     @Query(
-            value = "SELECT meal FROM MealEntity meal WHERE  meal.mealType = ?1"
+            value = "SELECT meal FROM MealEntity meal WHERE  meal.meal_type = ?1"
     )
      List<MealEntity> findAllMealsWhereTypeEqualsTo(MealTypeEnum mealType);
 

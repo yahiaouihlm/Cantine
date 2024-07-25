@@ -1,7 +1,6 @@
 
 package fr.sqli.cantine.controller.users.admin.menus;
 
-import com.auth0.jwt.interfaces.Header;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
@@ -10,7 +9,6 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.entity.MenuEntity;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -69,7 +67,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
         imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal(10.0), 1, 10, imageEntity);
-        mealEntity.setMealType(MealTypeEnum.ENTREE);
+        mealEntity.setMeal_type(MealTypeEnum.ENTREE);
 
         this.mealDao.save(mealEntity);
 

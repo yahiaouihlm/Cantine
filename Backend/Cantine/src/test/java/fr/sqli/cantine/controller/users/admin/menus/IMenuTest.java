@@ -113,7 +113,7 @@ public interface IMenuTest {
         imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = createMealWith("MealTest"  , "MealTest  description","MealTest  category", new BigDecimal(10.0) , 1 , 10 , imageEntity);
-         mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
+         mealEntity.setMeal_type(MealTypeEnum.ACCOMPAGNEMENT);
         return  mealEntity ;
     }
 
