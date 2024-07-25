@@ -68,15 +68,4 @@ public class CantineApplication {
 		return  new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-		configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization" , "Content-Type"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
-
 }

@@ -25,7 +25,6 @@ import static fr.sqli.cantine.constants.ConstCantine.STUDENT_ROLE_LABEL;
 
 @RestController
 @RequestMapping(StudentController.STUDENT_BASIC_URL)
-@CrossOrigin(origins = "http://localhost:4200")
 public class StudentController {
 
     final static String STUDENT_BASIC_URL = "/cantine/user/student";

@@ -22,7 +22,6 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping(value = MenuController.MENUS_BASIC_URL_ADMIN)
-@CrossOrigin(origins = "http://localhost:4200")
 public class MenuController {
     /*------------------ ENDPOINTS ------------------*/
     final static String MENUS_BASIC_URL_ADMIN = "/cantine/admin/api/menus";

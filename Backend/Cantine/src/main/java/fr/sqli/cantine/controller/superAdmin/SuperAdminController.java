@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/cantine/superAdmin")
-public class SuperAdminController {
+import static fr.sqli.cantine.controller.superAdmin.SuperAdminController.BASIC_SUPER_ADMIN_URL;
 
+@RestController
+@RequestMapping(BASIC_SUPER_ADMIN_URL)
+public class SuperAdminController {
+    public static final String BASIC_SUPER_ADMIN_URL = "/cantine/superAdmin";
     private  final SuperAdminService superAdminService;
     @Autowired
     public SuperAdminController (SuperAdminService superAdminService){

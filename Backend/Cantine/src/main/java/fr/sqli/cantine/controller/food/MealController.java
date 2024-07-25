@@ -25,7 +25,6 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping(value = MealController.MEALS_BASIC_URL_ADMIN)
-@CrossOrigin(origins = "http://localhost:4200")
 public class MealController {
 
     final static String MEALS_BASIC_URL_ADMIN = "/cantine/admin/api/meals";

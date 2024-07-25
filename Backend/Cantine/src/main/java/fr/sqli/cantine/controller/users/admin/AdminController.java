@@ -26,7 +26,6 @@ import static fr.sqli.cantine.controller.users.admin.AdminController.ADMIN_DASH_
 
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)
-@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
     public static final String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin";
