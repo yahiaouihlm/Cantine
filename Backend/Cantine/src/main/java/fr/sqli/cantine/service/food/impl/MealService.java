@@ -32,6 +32,7 @@ import java.util.Optional;
 
 @Service
 public class MealService implements IMealService {
+
     private static final Logger LOG = LogManager.getLogger();
     private final IMealDao mealDao;
     private final IMenuDao menuDao;
@@ -47,6 +48,9 @@ public class MealService implements IMealService {
         this.MEALS_IMAGES_URL = env.getProperty("sqli.cantine.images.url.meals");
         this.MEALS_IMAGES_PATH = env.getProperty("sqli.cantine.images.meals.path");
     }
+
+
+
     @Override
     public MealEntity updateMeal(MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
 
@@ -184,7 +188,6 @@ public class MealService implements IMealService {
         ).toList();
     }
 
-
     @Override
     public List<MealDtOut> getAllMeals() {
         return this.mealDao.findAll().stream().map(meal -> new MealDtOut(meal, this.MEALS_IMAGES_URL)).toList();
@@ -196,7 +199,6 @@ public class MealService implements IMealService {
                 mealEntity -> new MealDtOut(mealEntity,  this.MEALS_IMAGES_URL)
         ).toList();
     }
-
 
     @Override
     public MealDtOut getMealByUUID(String uuid) throws InvalidFoodInformationException, FoodNotFoundException {
@@ -230,7 +232,6 @@ public class MealService implements IMealService {
             return new FoodNotFoundException("NO MEAL WAS FOUND");
         });
     }
-
 
     @Override
     public Optional<MealEntity> getMealWithLabelAndCategoryAndDescription(String label, String category, String description) {
