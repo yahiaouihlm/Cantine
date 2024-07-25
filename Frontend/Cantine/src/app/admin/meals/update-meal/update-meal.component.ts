@@ -161,7 +161,7 @@ export class UpdateMealComponent implements OnInit {
 
     editMeal(): void {
         const formData = new FormData();
-        formData.append('uuid', this.meal.id.toString());
+        formData.append('id', this.meal.id.toString());
         formData.append('label', this.updatedMeal.controls['label'].value);
         formData.append('description', this.updatedMeal.controls['description'].value);
         formData.append('category', this.updatedMeal.controls['category'].value);

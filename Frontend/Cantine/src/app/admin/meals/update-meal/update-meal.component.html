@@ -21,11 +21,11 @@
                                    id="label"
                             />
                             <div *ngIf="submitted && f['label'].errors" class="invalid-feedback">
-                                <div *ngIf="f['label'].errors['required']" class="center"> Nom du plat est requis</div>
-                                <div *ngIf="f['label'].errors['maxlength']" class="center">
+                                <div *ngIf="f['label'].errors?.['required']" class="center"> Nom du plat est requis</div>
+                                <div *ngIf="f['label'].errors?.['maxlength']" class="center">
                                     le nom du plat ne doit pas dépasser 60 charctéres
                                 </div>
-                                <div *ngIf="f['label'].errors['minlength']" class="center">
+                                <div *ngIf="f['label'].errors?.['minlength']" class="center">
                                     le nom du plat ne doit avoir au minimum de 3 charctéres
                                 </div>
                             </div>
@@ -41,13 +41,13 @@
                                       id="description"
                             > </textarea>
                             <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
-                                <div *ngIf="f['description'].errors['required']" class="center"> Description du plat est
+                                <div *ngIf="f['description'].errors?.['required']" class="center"> Description du plat est
                                     requis
                                 </div>
-                                <div *ngIf="f['description'].errors['maxlength']" class="center">
+                                <div *ngIf="f['description'].errors?.['maxlength']" class="center">
                                     Description du plat ne doit pas dépasser 400 charctéres
                                 </div>
-                                <div *ngIf="f['description'].errors['minlength']" class="center">
+                                <div *ngIf="f['description'].errors?.['minlength']" class="center">
                                     Description du plat ne doit avoir au minimum de 5 charctéres
                                 </div>
                             </div>
@@ -67,13 +67,13 @@
                                 />
                                 <mat-icon>euro</mat-icon>
                                 <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
-                                    <div *ngIf="f['price'].errors['required']" class="center"> le prix du plat est
+                                    <div *ngIf="f['price'].errors?.['required']" class="center"> le prix du plat est
                                         requis
                                     </div>
-                                    <div *ngIf="f['price'].errors['min']" class="center"> le prix du plat doit être
+                                    <div *ngIf="f['price'].errors?.['min']" class="center"> le prix du plat doit être
                                         supérieur à 0.01 euro
                                     </div>
-                                    <div *ngIf="f['price'].errors['max']" class="center"> le prix du plat doit être
+                                    <div *ngIf="f['price'].errors?.['max']" class="center"> le prix du plat doit être
                                         inférieur strictement à 1000 euro
                                     </div>
                                 </div>
@@ -94,14 +94,14 @@
                                    id="quantity"
                             />
                             <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
-                                <div *ngIf="f['quantity'].errors['required']" class="center"> La quantité est requis
+                                <div *ngIf="f['quantity'].errors?.['required']" class="center"> La quantité est requis
                                 </div>
-                                <div *ngIf="f['quantity'].errors['pattern']" class="center">la quantité est un entier positive
+                                <div *ngIf="f['quantity'].errors?.['pattern']" class="center">la quantité est un entier positive
                                 </div>
-                                <div *ngIf="f['quantity'].errors['min']" class="center">la quantité doit être supérieur
+                                <div *ngIf="f['quantity'].errors?.['min']" class="center">la quantité doit être supérieur
                                     à 0
                                 </div>
-                                <div *ngIf="f['quantity'].errors['max']" class="center"> la quantité doit être inférieur
+                                <div *ngIf="f['quantity'].errors?.['max']" class="center"> la quantité doit être inférieur
                                     strictement à 2147483500
                                 </div>
                             </div>
@@ -122,7 +122,7 @@
                                 <option value="Poulets">AUTRE</option>
                             </select>
                             <div *ngIf="submitted && f['mealType'].errors" class="invalid-feedback">
-                                <div *ngIf="f['mealType'].errors['required']" class="center"> le type du plat est
+                                <div *ngIf="f['mealType'].errors?.['required']" class="center"> le type du plat est
                                     requise
                                 </div>
                             </div>
@@ -149,7 +149,7 @@
                                 <option value="Poulets">Poulets</option>
                             </select>
                             <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
-                                <div *ngIf="f['category'].errors['required']" class="center"> une catégorie est
+                                <div *ngIf="f['category'].errors?.['required']" class="center"> une catégorie est
                                     requise
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                                 <mat-radio-button value="toRemove" disabled><span> A supprimé </span></mat-radio-button>
                             </mat-radio-group>
                             <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
-                                <div *ngIf="f['status'].errors['required']" class="center"> le status du plat est
+                                <div *ngIf="f['status'].errors?.['required']" class="center"> le status du plat est
                                     requise
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
                             />
 
                             <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
-                                <div *ngIf="f['image'].errors['required']" class="center"> le image du plat est requis
+                                <div *ngIf="f['image'].errors?.['required']" class="center"> le image du plat est requis
                                 </div>
                             </div>
 

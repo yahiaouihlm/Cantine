@@ -4,13 +4,11 @@ import {MainAdminComponent} from './main-admin/main-admin.component';
 import {RouterModule, Routes} from "@angular/router";
 import {HomeAdminComponent} from './home-admin/home-admin.component';
 import {SharedmoduleModule} from "../sharedmodule/sharedmodule.module";
-import {SignUpComponent} from "../student/dashbord/sign-up/sign-up.component";
 import {MainCoreCantineComponent} from "../core-cantine/main-core-cantine/main-core-cantine.component";
 import {AdminSignUpComponent} from "./dashbord/admin-dashboard/sign-up/admin-sign-up.component";
 
 const routes: Routes = [
     {
-
 
         path: '', component: MainAdminComponent, children: [
             {path: 'home', component: HomeAdminComponent},
@@ -30,13 +28,14 @@ const routes: Routes = [
     },
 
     {
-        path: 'registerOnlyAdmin', component:MainCoreCantineComponent, children: [
+        path: 'registerOnlyAdmin', component: MainCoreCantineComponent, children: [
             {path: 'SignUp', component: AdminSignUpComponent},
             {path: '', redirectTo: 'SignUp', pathMatch: 'full'},
         ]
     }
 
 ];
+
 @NgModule({
     declarations: [
         MainAdminComponent,
@@ -49,4 +48,5 @@ const routes: Routes = [
         RouterModule.forChild(routes),
     ],
 })
-export class AdminModule {}
+export class AdminModule {
+}

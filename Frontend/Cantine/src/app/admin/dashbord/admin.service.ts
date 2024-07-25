@@ -118,7 +118,6 @@ export class AdminService {
 
     }
 
-
     private handleUpdateAdminErrors(error: HttpErrorResponse) {
         const errorObject = error.error as ErrorResponse;
         let errorMessage = errorObject.exceptionMessage;
