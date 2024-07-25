@@ -49,7 +49,7 @@ public class MenuController {
     }
 
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL + ")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_UPDATE_MENU_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> update(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException {
         this.menuService.updateMenu(menuDtoIn);
@@ -57,7 +57,7 @@ public class MenuController {
     }
 
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL + ")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_DELETE_MENU_URL)
     public ResponseEntity<ResponseDtout> deleteMenu(@RequestParam("uuidMenu") String uuidMenu) throws ImagePathException, InvalidFoodInformationException, FoodNotFoundException, RemoveFoodException {
         this.menuService.removeMenu(uuidMenu);
@@ -65,21 +65,21 @@ public class MenuController {
     }
 
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL + ")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_ADD_MENU_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> addMenu(MenuDtoIn menuDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UnavailableFoodException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
         this.menuService.addMenu(menuDtoIn);
         return ResponseEntity.ok(new ResponseDtout(MENU_ADDED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL + ")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = ENDPOINT_GET_ONE_MENU_URL)
     public ResponseEntity<MenuDtOut> getMenuById(@RequestParam("uuidMenu") String uuidMenu) throws InvalidFoodInformationException, FoodNotFoundException {
         return ResponseEntity.ok(this.menuService.getMenuByUuId(uuidMenu));
     }
 
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL + ")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = ENDPOINT_GET_ALL_MENU)
     public ResponseEntity<List<MenuDtOut>> getAllMenu() {
         return ResponseEntity.ok().body(this.menuService.getAllMenus());

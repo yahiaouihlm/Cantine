@@ -78,6 +78,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                         throw new Exception("ACCOUNT NOT ACTIVATED");
                     }
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+
                     authentication.setDetails(authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     filterChain.doFilter(request, response);

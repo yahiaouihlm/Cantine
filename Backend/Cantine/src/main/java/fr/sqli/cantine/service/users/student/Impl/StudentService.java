@@ -131,7 +131,7 @@ public class StudentService implements IStudentService {
 
     @Override
     public void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidStudentClassException, InvalidUserInformationException, ExistingUserException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException,
-            UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, RoleNotFoundException {
+            UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
         UserEntity studentEntity = studentDtoIn.toStudentEntity();
 
         var studentClass = studentDtoIn.getStudentClass();

@@ -1,6 +1,6 @@
 package fr.sqli.cantine.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.sqli.cantine.security.exceptionHandler.CustomAccessDeniedHandler;
 import fr.sqli.cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
 import fr.sqli.cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
@@ -59,21 +59,27 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
                         authorize -> {
-                            authorize.requestMatchers("/cantine/api/getAll/**" , "/cantine/api/getAll/getMealsByType/**").permitAll();
-                            authorize.requestMatchers("/cantine/download/images/**",
+                            authorize
+                                    .requestMatchers("/cantine/api/getAll/**" , "/cantine/api/getAll/getMealsByType/**").permitAll();
+                            authorize
+                                    .requestMatchers("/cantine/download/images/**",
                                     "/cantine/download/images/**").permitAll();
-                            authorize.requestMatchers("/cantine/admin/getAllAdminFunctions"
+                            authorize
+                                    .requestMatchers("/cantine/admin/getAllAdminFunctions"
                                     ,"/cantine/user/check-confirmation-token/**"
                                     ,"/cantine/user/existing-email"
                                     ,"/cantine/user/send-reset-password-link/**"
                                     , "/cantine/admin/register").permitAll();
-                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
-                                authorize.requestMatchers("/cantine/user/student/getAllStudentClass"
+                            authorize
+                                    .requestMatchers("/cantine/user/student/getAllStudentClass"
                                     , "/cantine/user/student/signUp"
                                     , "/cantine/user/send-confirmation-link"
                                     , "/cantine/user/reset-password/**"
-                            ).permitAll();
-                            authorize.anyRequest().authenticated();
+                            )
+                                    .permitAll();
+                            authorize
+                                    .anyRequest()
+                                    .authenticated();
                         })
 
                 .authenticationProvider(authenticationProvider())

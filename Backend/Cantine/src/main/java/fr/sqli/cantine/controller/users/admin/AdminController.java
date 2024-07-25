@@ -27,7 +27,6 @@ import static fr.sqli.cantine.controller.users.admin.AdminController.ADMIN_DASH_
 @RestController
 @RequestMapping(ADMIN_DASH_BOARD_BASIC_URL)
 @CrossOrigin(origins = "http://localhost:4200")
-
 public class AdminController {
 
     public static final String ADMIN_DASH_BOARD_BASIC_URL = "/cantine/admin";
@@ -49,21 +48,22 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(ADMIN_DASH_BOARD_DISABLE_ADMIN_ENDPOINT)
     public ResponseEntity<ResponseDtout> removeAdminAccount(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         this.adminService.removeAdminAccount(adminUuid);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_DISABLED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(ADMIN_DASH_BOARD_UPDATE_ADMIN_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateAdminInfo(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, AdminFunctionNotFoundException {
         this.adminService.updateAdminInfo(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_INFO_UPDATED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(ADMIN_DASH_BOARD_GET_ADMIN_BY_ID_ENDPOINT)
     public ResponseEntity<AdminDtout> getAdminByUuID(@RequestParam("adminUuid") String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.adminService.getAdminByUuID(adminUuid));
@@ -71,12 +71,12 @@ public class AdminController {
 
 
     @PostMapping(ADMIN_DASH_BOARD_SIGN_UP_ENDPOINT)
-    public ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, AdminFunctionNotFoundException, RoleNotFoundException {
+    public ResponseEntity<ResponseDtout> signUp(@ModelAttribute AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, ExistingUserException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, AdminFunctionNotFoundException {
         this.adminService.signUp(adminDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ADMIN_ADDED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+
     @GetMapping(ADMIN_DASH_BOARD_GET_ALL_ADMIN_FUNCTIONS_ENDPOINT)
     public ResponseEntity<List<FunctionDtout>> getAllAdminFunctions() {
         return ResponseEntity.ok(this.adminService.getAllAdminFunctions());

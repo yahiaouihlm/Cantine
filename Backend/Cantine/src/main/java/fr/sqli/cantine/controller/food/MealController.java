@@ -54,21 +54,21 @@ public class MealController{
     }
 
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_UPDATE_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> updateMeal(@ModelAttribute MealDtoIn mealDtoIn) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException {
         this.mealService.updateMeal(mealDtoIn);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_UPDATED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_DELETE_MEAL_URL)
     public ResponseEntity<ResponseDtout> deleteMeal(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, RemoveFoodException, ImagePathException, InvalidFoodInformationException {
         this.mealService.deleteMeal(uuidMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDtout> addMeal(@ModelAttribute MealDtoIn newMeal) throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException {
         this.mealService.addMeal(newMeal);
@@ -90,13 +90,13 @@ public class MealController{
         return  ResponseEntity.ok(this.mealService.getMealsInDeletionProcess());
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = ENDPOINT_GET_ALL_MEAL)
     public ResponseEntity<List<MealDtOut>> getAllMeal() {
           return ResponseEntity.ok(this.mealService.getAllMeals());
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = ENDPOINT_GET_ONE_MEAL_URL)
     public ResponseEntity<MealDtOut> getMealByUUID(@RequestParam("uuidMeal") String uuidMeal) throws FoodNotFoundException, InvalidFoodInformationException {
         var mealdtout = this.mealService.getMealByUUID(uuidMeal);

@@ -21,7 +21,7 @@ public interface IStudentService {
 
     StudentDtout getStudentByUuid(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
 
-    void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException, RoleNotFoundException;
+    void signUpStudent(StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, StudentClassNotFoundException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException, ExistingUserException;
 
     void existingEmail(String adminEmail) throws ExistingUserException;
 

@@ -1,6 +1,7 @@
 package fr.sqli.cantine.service.users.admin.impl;
 
 
+import fr.sqli.cantine.constants.ConstCantine;
 import fr.sqli.cantine.dao.IFunctionDao;
 import fr.sqli.cantine.dao.IRoleDao;
 import fr.sqli.cantine.dao.IUserDao;
@@ -9,6 +10,7 @@ import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.cantine.entity.ImageEntity;
 
+import fr.sqli.cantine.entity.RoleEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.user.impl.UserService;
@@ -80,7 +82,7 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, RemovedAccountException, AccountActivatedException, RoleNotFoundException {
+    public void signUp(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, ExistingUserException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException, MessagingException, RemovedAccountException, AccountActivatedException {
 
         if (adminDtoIn == null)
             throw new InvalidUserInformationException("INVALID INFORMATION REQUEST");
@@ -131,11 +133,7 @@ public class AdminService implements IAdminService {
         adminEntity.setImage(imageEntity);
         adminEntity.setRegistrationDate(LocalDate.now());
         adminEntity.setValidation(0);
-        adminEntity.setRoles(List.of(this.roleDao.findByLabel(ADMIN_ROLE_LABEL).orElseThrow(() -> {
-                    AdminService.LOG.error("ROLE {} NOT  FOUND WHILE SIGNUP", ADMIN_ROLE_LABEL);
-                    return new RoleNotFoundException("ROLE NOT FOUND");
-                }
-        )));
+        adminEntity.setRoles(List.of(new RoleEntity(ADMIN_ROLE_LABEL, ConstCantine.STUDENT_ROLE_DESCRIPTION, adminEntity)));
 
         // save admin
         this.userDao.save(adminEntity);

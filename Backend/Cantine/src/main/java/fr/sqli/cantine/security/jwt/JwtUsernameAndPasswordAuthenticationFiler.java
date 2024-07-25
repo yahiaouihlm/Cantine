@@ -138,7 +138,6 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordA
     }
 
 
-    /*TODO change  the  place of  key to application.properties */
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String key = this.environment.getProperty("sqli.cantine.jwt.secret");

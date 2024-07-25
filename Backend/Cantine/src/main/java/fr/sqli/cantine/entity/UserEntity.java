@@ -56,7 +56,7 @@ public class UserEntity extends AbstractEntity {
     @Column(name = "address", length = 3000)
     private String address;
 
-    @Column(name = "phone", nullable = false, length = 50)
+    @Column(name = "phone", length = 50)
     private String phone;
 
     @Column(name = "validation")

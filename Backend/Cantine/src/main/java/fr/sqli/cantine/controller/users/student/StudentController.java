@@ -20,6 +20,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
 import static fr.sqli.cantine.constants.ConstCantine.STUDENT_ROLE_LABEL;
 
 @RestController
@@ -51,8 +52,7 @@ public class StudentController {
                 .ok()
                 .body(student);
     }
-
-    @PreAuthorize("hasRole("+ STUDENT_ROLE_LABEL +")")
+    @PreAuthorize("hasAuthority('" + STUDENT_ROLE_LABEL + "')")
     @PostMapping(UPDATE_STUDENT_INFO_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateStudentInformation(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException {
         this.studentService.updateStudentInformation(studentDtoIn);
