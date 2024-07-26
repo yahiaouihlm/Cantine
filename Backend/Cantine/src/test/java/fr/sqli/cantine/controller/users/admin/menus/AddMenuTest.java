@@ -48,7 +48,7 @@ public class AddMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     private IFunctionDao functionDao;
 
-    private MultiValueMap<String, String> formData;
+    private LinkedMultiValueMap formData;
 
     private MockMultipartFile imageData;
     private IOrderDao orderDao;

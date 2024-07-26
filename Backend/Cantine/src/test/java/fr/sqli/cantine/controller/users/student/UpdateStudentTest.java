@@ -167,8 +167,11 @@ public class UpdateStudentTest extends AbstractContainerConfig implements IStude
 
     @Test
     void updateStudentWithAdminAuthToken() throws Exception {
-         if  (this.adminDao.findAll().stream().noneMatch(userEntity -> userEntity.getRoles().stream().anyMatch(roleEntity -> roleEntity.getLabel().equals(ADMIN_ROLE_LABEL))))
-                 AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+
+         if  (this.adminDao.findAll().stream().noneMatch(userEntity -> userEntity.getRoles().stream().anyMatch(roleEntity -> roleEntity.getLabel().equals(ADMIN_ROLE_LABEL)))) {
+             this.functionDao.deleteAll();
+             AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+         }
 
         String adminAuthToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 

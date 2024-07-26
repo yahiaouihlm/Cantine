@@ -84,7 +84,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
     @Test
-    @Rollback(value = true)
+   // @Rollback(value = true)
     void getAllMenusInProcessOfDeletion() throws Exception {
         this.menuSaved.setStatus(2);
         this.menuDao.save(this.menuSaved);
@@ -139,7 +139,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.uuid", CoreMatchers.is(mealUuid)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(mealUuid)));
         result.andExpect(MockMvcResultMatchers.jsonPath("$.label", CoreMatchers.is(this.menuSaved.getLabel())));
         result.andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(this.menuSaved.getDescription())));
     }

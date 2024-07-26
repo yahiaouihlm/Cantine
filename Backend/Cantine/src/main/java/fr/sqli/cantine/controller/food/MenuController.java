@@ -93,7 +93,7 @@ public class MenuController {
         return ResponseEntity.ok(this.menuService.getUnavailableMenus());
     }
 
-    @PreAuthorize("hasRole(" + ADMIN_ROLE_LABEL + ")")
+    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @GetMapping(value = GET_ONLY_MENUS_IN_DELETION_PROCESS_URL)
     public ResponseEntity<List<MenuDtOut>> getMenusInDeletionProcess() {
         return ResponseEntity.ok(this.menuService.getMenusInDeletionProcess());
