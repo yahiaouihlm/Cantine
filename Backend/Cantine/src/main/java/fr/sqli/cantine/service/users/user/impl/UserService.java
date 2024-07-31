@@ -176,6 +176,7 @@ public class UserService implements IUserService {
 
 
         userEntity.setStatus(1);
+        userEntity.setDisableDate(null);
 
         this.iUserDao.save(userEntity);
 

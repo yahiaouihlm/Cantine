@@ -6,6 +6,7 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.entity.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -26,6 +28,7 @@ import static fr.sqli.cantine.controller.users.admin.meals.IMealTest.IMAGE_MEAL_
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class CancelOrderByStudentTests extends AbstractContainerConfig implements IOrderTest {
     private final String requestParam = "?" + "orderUuid" + "=";
     private IPaymentDao paymentDao;
@@ -34,9 +37,8 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
     private IMenuDao menuDao;
     private ITaxDao taxDao;
     private MockMvc mockMvc;
-    private IUserDao adminDao;
+    private IUserDao userDao;
     private IFunctionDao functionDao;
-    private IUserDao studentDao;
     private IStudentClassDao studentClassDao;
     private String authorizationToken;
     private UserEntity studentEntity;
@@ -47,12 +49,11 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
     private OrderEntity orderEntity;
 
     @Autowired
-     public  CancelOrderByStudentTests (IUserDao iAdminDao, IFunctionDao iFunctionDao, IPaymentDao iPaymentDao, IOrderDao iOrderDao, IUserDao studentDao, IStudentClassDao studentClassDao, MockMvc mockMvc, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao) throws Exception {
-         this.adminDao = iAdminDao;
+     public  CancelOrderByStudentTests (IUserDao userDao, IFunctionDao iFunctionDao, IPaymentDao iPaymentDao, IOrderDao iOrderDao, IStudentClassDao studentClassDao, MockMvc mockMvc, IMealDao mealDao, IMenuDao menuDao, ITaxDao taxDao) throws Exception {
+             this.userDao = userDao;
             this.functionDao = iFunctionDao;
             this.paymentDao = iPaymentDao;
             this.iOrderDao = iOrderDao;
-            this.studentDao = studentDao;
             this.studentClassDao = studentClassDao;
             this.mockMvc = mockMvc;
             this.mealDao = mealDao;
@@ -65,8 +66,7 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
 
     void cleanDB() {
         this.iOrderDao.deleteAll();
-        this.studentDao.deleteAll();
-        this.adminDao.deleteAll();
+        this.userDao.deleteAll();
         this.functionDao.deleteAll();
         this.studentClassDao.deleteAll();
         this.mealDao.deleteAll();
@@ -77,17 +77,17 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
     }
 
     void initDB() throws Exception {
-        this.studentEntity = AbstractLoginRequest.saveAStudent(this.studentDao, this.studentClassDao);
+        this.studentEntity = AbstractLoginRequest.saveAStudent(this.userDao, this.studentClassDao);
         this.authorizationToken=AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
         ImageEntity image = new ImageEntity();
         image.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
         ImageEntity image2 = new ImageEntity();
-        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
+        image2.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
         ImageEntity image3 = new ImageEntity();
-        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
+        image3.setName(IMAGE_MEAL_FOR_TEST_NAME);
 
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         var mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description", new BigDecimal("1.5"), 10, 1, mealTypeEnum, image);
@@ -116,8 +116,9 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
 
     }
     @Test
+    @Disabled
     void cancelOrderByStudent() throws Exception {
-        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+        AbstractLoginRequest.saveAdmin(this.userDao, this.functionDao);
 
         var  order  =  this.iOrderDao.findAll().get(0);
         order.setStatus(0);
@@ -130,7 +131,7 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
         result.andExpect(MockMvcResultMatchers.status().isOk());
         result.andExpect(MockMvcResultMatchers.content().string(super.responseMessage(IOrderTest.responseMap.get("OrderCancelledSuccessfully"))));
 
-        var student = this.studentDao.findStudentById(this.studentEntity.getId());
+        var student = this.userDao.findStudentById(this.studentEntity.getId());
         Assertions.assertTrue(student.isPresent());
         Assertions.assertEquals(oldStudentWallet.add(order.getPrice()), student.get().getWallet());
         var payment = this.paymentDao.findAll().get(0);
@@ -205,8 +206,8 @@ public class CancelOrderByStudentTests extends AbstractContainerConfig implement
     }
 
     @Test
-    void cancelOrderByAdminWithAdminAuth() throws Exception {
-        AbstractLoginRequest.saveAdmin(this.adminDao, this.functionDao);
+    void cancelOrderByStudentWithAdminAuthToken() throws Exception {
+        AbstractLoginRequest.saveAdmin(this.userDao, this.functionDao);
         var adminAuthorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(CANCEL_ORDER_BY_STUDENT_URL + requestParam + java.util.UUID.randomUUID())

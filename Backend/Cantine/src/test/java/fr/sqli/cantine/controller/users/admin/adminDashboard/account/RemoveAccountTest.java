@@ -14,10 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class RemoveAccountTest extends AbstractContainerConfig implements IAdminTest {
 
     private final String paramReq = "?" + "adminUuid" + "=";

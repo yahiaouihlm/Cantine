@@ -3,6 +3,7 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IOrderDao;
 import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.FunctionEntity;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class AddAdminTest extends AbstractContainerConfig implements IAdminTest {
 
     @Autowired
@@ -43,15 +46,20 @@ public class AddAdminTest extends AbstractContainerConfig implements IAdminTest 
     private MockMvc mockMvc;
     @Autowired
     private Environment environment;
+    @Autowired
+    private IOrderDao orderDao;
+
 
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
 
 
     void cleanDtaBase() {
+        this.orderDao.deleteAll();
         this.iConfirmationTokenDao.deleteAll();// remove  all confirmationtokenEntity  to  keep  the  database  Integrity
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
+
     }
 
     void initFormData() throws IOException {

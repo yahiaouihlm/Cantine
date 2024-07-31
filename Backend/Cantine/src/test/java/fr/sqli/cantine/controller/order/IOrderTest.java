@@ -17,7 +17,7 @@ public interface IOrderTest {
     String ADD_ORDER_URL = ORDER_BASIC_URL + "student/add";
 
 
-    String ORDER_CANCELLED_SUCCESSFULLY = "ORDER CANCELLED SUCCESSFULLY";
+
 
 
     Map<String, String> exceptionsMap = Map.ofEntries(

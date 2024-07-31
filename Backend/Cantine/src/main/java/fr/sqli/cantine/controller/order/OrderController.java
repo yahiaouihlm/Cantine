@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
+import static fr.sqli.cantine.constants.ConstCantine.STUDENT_ROLE_LABEL;
 
 @RestController
 @RequestMapping(OrderController.BASIC_ORDER_URL)
@@ -70,9 +71,9 @@ public class OrderController {
         return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentUuid, date));
     }
 
-    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
+    @PreAuthorize("hasAuthority('" + STUDENT_ROLE_LABEL + "')")
     @PostMapping(ADD_ORDER_URL)
-    public ResponseEntity<ResponseDtout> addOrderByStudent(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, IOException, WriterException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
+    public ResponseEntity<ResponseDtout> addOrderByStudent(@RequestBody OrderDtoIn orderDtoIn) throws InvalidUserInformationException, TaxNotFoundException, InsufficientBalanceException, InvalidOrderException, UnavailableFoodForOrderException, OrderLimitExceededException, MessagingException, InvalidFoodInformationException, FoodNotFoundException, UserNotFoundException {
         this.orderService.addOrderByStudent(orderDtoIn);
         return ResponseEntity.ok(new ResponseDtout(ORDER_ADDED_SUCCESSFULLY));
     }
@@ -87,7 +88,7 @@ public class OrderController {
         return ResponseEntity.ok(this.orderService.getOrdersByDate(date));
     }
 
-    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
+    @PreAuthorize("hasAuthority('" + STUDENT_ROLE_LABEL + "')")
     @PostMapping(CANCEL_ORDER_URL)
     public ResponseEntity<ResponseDtout> cancelOrderByStudent(@RequestParam("orderUuid") String orderUuid) throws OrderNotFoundException, InvalidOrderException, UnableToCancelOrderException, UserNotFoundException, MessagingException {
         this.orderService.cancelOrderByStudent(orderUuid);

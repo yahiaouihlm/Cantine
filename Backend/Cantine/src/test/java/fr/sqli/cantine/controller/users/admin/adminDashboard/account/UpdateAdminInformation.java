@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -30,6 +31,7 @@ import java.nio.file.Files;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class UpdateAdminInformation extends AbstractContainerConfig implements IAdminTest {
 
     @Autowired
