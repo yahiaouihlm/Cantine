@@ -13,12 +13,9 @@ CREATE TABLE IF NOT EXISTS image(
     name VARCHAR(400) NOT NULL
 );
 
-
-
 -- -----------------------------------------------------
 -- Table `cantiniere`.`class_id`
 -- -----------------------------------------------------
-
 
 CREATE TABLE IF NOT EXISTS  studentClass (
     id UUID PRIMARY KEY,
@@ -57,7 +54,7 @@ CREATE  TABLE IF NOT EXISTS luser (
     class_id UUID,
     image_id UUID NOT NULL,
     status INT  NOT NULL  DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
-    disable_date DATE DEFAULT NULL,   /*  if disable_date  is  not  null that  mean  it's   removed admin   */
+    disable_date DATE DEFAULT NOW,   /*  if disable_date  is  not  null that  mean  it's   removed admin   */
     validation INT   DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
     unique(email),
     check (status IN (0,1)),
@@ -102,18 +99,18 @@ CREATE TYPE TransactionType AS ENUM ('REFUNDS', 'DEDUCTION', 'ADDITION', 'OTHERS
 -- -----------------------------------------------------
 
 CREATE table  if NOT EXISTS  lorder(
-     id UUID PRIMARY KEY,
-     student_id UUID NOT NULL,
-     creation_date DATE NOT NULL,
-     creation_time TIME NOT NULL,
-     price DECIMAL(5,2) NOT NULL,
-     status INT  NOT NULL DEFAULT 0   ,   /*0 basic statE  1=validate By Admin, 2=taken */
-     isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
-     qr_code VARCHAR(1000), /* pour faire le qr code  we just make  the  path  to real  image  */
-     unique(qr_code),
-     check (status IN (0,1,2)),
-     FOREIGN KEY (student_id) REFERENCES luser (id) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
+    id UUID PRIMARY KEY,
+    student_id UUID NOT NULL,
+    creation_date DATE NOT NULL,
+    creation_time TIME NOT NULL,
+    price DECIMAL(5,2) NOT NULL,
+    status INT  NOT NULL DEFAULT 0   ,   /*0 basic statE  1=validate By Admin, 2=taken */
+    isCancelled BOOLEAN NOT NULL DEFAULT FALSE,
+    qr_code VARCHAR(1000), /* pour faire le qr code  we just make  the  path  to real  image  */
+    unique(qr_code),
+    check (status IN (0,1,2)),
+    FOREIGN KEY (student_id) REFERENCES luser (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  );
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`plat`
@@ -139,13 +136,11 @@ CREATE TABLE IF NOT EXISTS meal(
     );
 
 
-
-
 CREATE TABLE IF NOT EXISTS menu (
     id UUID PRIMARY KEY,
     label  VARCHAR(100) NOT NULL,
     description  TEXT NOT NULL,
-    status INT  NOT  NULL,  /* 0 = disabled, 1 = enabled , 3 =  to  delete */
+    status INT  NOT  NULL,  /* 0 = disabled, 1 = enabled , 2 =  to  delete */
     price  DECIMAL(5,2) NOT NULL,
     image_id  UUID NOT NULL,
     creation_date  DATE NOT NULL,
