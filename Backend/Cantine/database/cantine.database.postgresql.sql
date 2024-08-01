@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS menu (
     FOREIGN KEY (image_id) REFERENCES image (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 
-CREATE TABLE IF NOT EXISTS menu_has_meal (
+    CREATE TABLE IF NOT EXISTS menu_has_meal (
      menu_id UUID NOT NULL,
      meal_id UUID NOT NULL,
      PRIMARY KEY (menu_id,  meal_id),

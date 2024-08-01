@@ -24,20 +24,16 @@ BEGIN
 
             FETCH cur INTO user_id;
             EXIT WHEN NOT FOUND;
-            RAISE NOTICE ''
+            RAISE NOTICE '';
             RAISE NOTICE '--------------------------- USER  % ------------------------------ \n ', user_id;
-            RAISE NOTICE ''
+            RAISE NOTICE '';
 
             -- Call the stored procedure to remove orders for the current user
             CALL  removeOrdersByStudent(user_id);
             RAISE NOTICE 'ALL ORDERS OF USER % REMOVED', user_id;
-            call  removeImageByStudent(user_id);
-            RAISE NOTICE 'IMAGE OF USER % REMOVED', user_id;
             call  removeRoleByStudent(user_id);
             RAISE NOTICE 'ROLE OF USER % REMOVED', user_id;
-            call  removeStudent(user_id);
-            RAISE NOTICE 'USER % REMOVED', user_id;
-
+            call  removeStudentAndhisImage(user_id);
         END LOOP;
 
     CLOSE cur;
@@ -46,10 +42,16 @@ BEGIN
 END; $$;
 
 
-CREATE OR REPLACE PROCEDURE removeStudent(student_id UUID)
+CREATE OR REPLACE PROCEDURE removeStudentAndhisImage(student_id UUID)
 LANGUAGE plpgsql AS $$
+DECLARE
+       user_image_id UUID;
 BEGIN
-    DELETE FROM luser WHERE  luser.id = student_id;
+    SELECT image_id INTO user_image_id FROM luser WHERE luser.id = student_id;
+    DELETE FROM luser WHERE luser.id = student_id;
+    RAISE NOTICE 'IMAGE %  OF USER % REMOVED',user_image_id ,student_id;
+    DELETE FROM image WHERE image.id = user_image_id;
+    RAISE NOTICE 'USER % REMOVED', student_id;
 END; $$;
 
 
@@ -60,12 +62,6 @@ BEGIN
     DELETE FROM role WHERE role.user_id = student_id;
 END; $$;
 
-
-CREATE OR REPLACE PROCEDURE removeImageByStudent(user_id UUID)
-LANGUAGE plpgsql AS $$
-BEGIN
-    DELETE FROM image WHERE image.id = user_id;  /*   user_id from  luser table  referenece  to  image by foreign ke (image,ID)  */
-END; $$;
 
 
 CREATE OR REPLACE PROCEDURE removeOrdersByStudent(student UUID)
@@ -82,8 +78,9 @@ CREATE OR REPLACE PROCEDURE removeMenus()
 LANGUAGE plpgsql AS $$
 DECLARE
     v_menu_id UUID;
+    v_image_menu_id UUID;
     cur CURSOR FOR
-        SELECT menu_id FROM menu
+        SELECT id FROM menu
         WHERE  status = 2;
 BEGIN
         -- Open the cursor and loop through each user ID
@@ -94,16 +91,20 @@ BEGIN
 
         FETCH cur INTO v_menu_id;
             EXIT WHEN NOT FOUND;
-            RAISE NOTICE ''
+            RAISE NOTICE '';
             RAISE NOTICE '--------------------------- MENU  % ------------------------------ \n ', v_menu_id;
-            RAISE NOTICE ''
+            RAISE NOTICE '';
 
             -- Call the stored procedure to remove orders for the current user
             IF isMenuContainedInOrder(v_menu_id) THEN
                 RAISE NOTICE 'MENU % CONTAINED IN ORDER(S) CAN  NOT BE DELETED', v_menu_id;
             ELSE
+                SELECT image_id  INTO v_image_menu_id  FROM menu WHERE menu.id = v_menu_id;
                 DELETE FROM menu WHERE menu.id = v_menu_id;
                 RAISE NOTICE 'MENU % REMOVED', v_menu_id;
+                DELETE FROM image WHERE image.id = v_image_menu_id;
+                RAISE NOTICE 'IMAGE % OF  MENU  %  IS  REMOVED',v_image_menu_id,v_menu_id;
+
             END IF;
 
 
@@ -121,7 +122,7 @@ RETURNS BOOLEAN AS $$
 DECLARE
         v_menu_id UUID;
 BEGIN
-      SELECT menu_id INTO v_menu_id FROM lorder_has_menu WHERE lorder_has_menu.menu_id = menu_id;
+      SELECT lorder_has_menu.menu_id INTO v_menu_id FROM lorder_has_menu WHERE lorder_has_menu.menu_id = isMenuContainedInOrder.menu_id;
         IF v_menu_id IS NOT NULL THEN
             RETURN TRUE;
         ELSE
@@ -146,13 +147,74 @@ END;
 
 /******************************************* REMOVE  MEAL *******************************************/
 
+CREATE OR REPLACE PROCEDURE removeMeals()
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_meal_id UUID;
+    v_image_meal_id UUID;
+    cur CURSOR FOR
+        SELECT id FROM meal
+        WHERE  status = 2;
+BEGIN
+        -- Open the cursor and loop through each user ID
+    RAISE NOTICE 'Opening cursor to select Meals to be removed';
+    RAISE NOTICE ' ';
+OPEN cur;
+LOOP
+
+    FETCH cur INTO v_meal_id;
+            EXIT WHEN NOT FOUND;
+            RAISE NOTICE '';
+            RAISE NOTICE '--------------------------- MEAL  % ------------------------------ \n ', v_meal_id;
+            RAISE NOTICE '';
+
+            -- Call the stored procedure to remove orders for the current user
+            IF isMealContainedInOrder(v_meal_id) THEN
+                RAISE NOTICE 'MEAL % CONTAINED IN ORDER(S) CAN  NOT BE DELETED', v_meal_id;
+            ELSIF  isMealContainedInMenu(v_meal_id) THEN
+                RAISE NOTICE 'MEAL % CONTAINED IN MENU(S) CAN  NOT BE DELETED', v_meal_id;
+            ELSE
+                SELECT image_id  INTO v_image_meal_id  FROM meal WHERE meal.id = v_meal_id;
+                DELETE FROM meal WHERE meal.id = v_meal_id;
+                RAISE NOTICE 'MEAL % REMOVED', v_meal_id;
+                DELETE FROM image WHERE image.id = v_image_meal_id;
+                RAISE NOTICE 'IMAGE % OF  MEAL  %  IS  REMOVED',v_image_meal_id,v_meal_id;
+
+            END IF;
+
+    END LOOP;
+CLOSE cur;
+RAISE NOTICE 'Cursor closed';
+
+END; $$;
+
+
+
+
 CREATE OR REPLACE FUNCTION isMealContainedInOrder(meal_id UUID)
 RETURNS BOOLEAN AS $$
 DECLARE
         v_meal_id UUID;
 BEGIN
-        SELECT meal_id INTO v_meal_id FROM lorder_has_meal WHERE lorder_has_meal.meal_id = menu_id;
-        IF v_menu_id IS NOT NULL THEN
+        SELECT lorder_has_meal.meal_id INTO v_meal_id FROM lorder_has_meal WHERE lorder_has_meal.meal_id = isMealContainedInOrder.meal_id;
+        IF v_meal_id IS NOT NULL THEN
+            RETURN TRUE;
+        ELSE
+            RETURN FALSE;
+        END IF;
+
+END;
+    $$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION isMealContainedInMenu(meal_id UUID)
+RETURNS BOOLEAN AS $$
+DECLARE
+        v_meal_id UUID;
+BEGIN
+        SELECT menu_has_meal.meal_id INTO v_meal_id FROM menu_has_meal WHERE menu_has_meal.meal_id = isMealContainedInMenu.meal_id;
+        IF v_meal_id IS NOT NULL THEN
             RETURN TRUE;
         ELSE
             RETURN FALSE;
