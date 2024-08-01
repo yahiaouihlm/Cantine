@@ -35,7 +35,7 @@ DECLARE
 
 BEGIN
     -- Open the cursor and loop through each user ID
-    RAISE NOTICE 'Opening cursor to select users to be removed';
+    RAISE NOTICE 'Opening cursor to select users (Students) to be removed';
     RAISE NOTICE ' ';
     OPEN cur;
 
@@ -44,7 +44,7 @@ BEGIN
             FETCH cur INTO user_id;
             EXIT WHEN NOT FOUND;
             RAISE NOTICE '';
-            RAISE NOTICE '--------------------------- USER  % ------------------------------ \n ', user_id;
+            RAISE NOTICE '--------------------------- USER (STUDENT) % ------------------------------ \n ', user_id;
             RAISE NOTICE '';
 
             -- Call the stored procedure to remove orders for the current user
