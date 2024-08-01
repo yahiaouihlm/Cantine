@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -169,6 +170,7 @@ public class StudentService implements IStudentService {
         }
         studentEntity.setImage(imageEntity);
         studentEntity.setRoles(List.of(new RoleEntity(ConstCantine.STUDENT_ROLE_LABEL, ConstCantine.STUDENT_ROLE_DESCRIPTION, studentEntity)));
+        studentEntity.setDisableDate(LocalDate.now());
         this.userDao.save(studentEntity);
         this.userService.sendConfirmationLink(studentEntity.getEmail());
     }

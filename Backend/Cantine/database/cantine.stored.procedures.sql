@@ -1,3 +1,22 @@
+CREATE OR REPLACE PROCEDURE  removeData()
+LANGUAGE plpgsql AS $$
+DECLARE
+BEGIN
+    RAISE NOTICE 'BEGINNING OF THE REMOVAL OF EXPIRED DATA';
+    RAISE NOTICE ' ';
+    RAISE NOTICE ' ';
+
+    CALL removeExpiredOrders();
+    CALL removeMeals();
+    CALL removeMenus();
+    call removeExpiredPayment();
+    CALL removeStudent();
+
+    RAISE NOTICE ' ';
+    RAISE NOTICE ' ';
+    RAISE NOTICE 'END OF THE REMOVAL OF EXPIRED DATA';
+
+END; $$;
 
 
 
@@ -72,6 +91,74 @@ BEGIN
     DELETE FROM lorder WHERE student_id = student;
 END; $$;
 
+/******************************** REMOVE  ORDERS ********************************/
+
+
+CREATE OR REPLACE PROCEDURE removeExpiredOrders()
+LANGUAGE plpgsql AS $$
+
+DECLARE
+    v_order_id UUID;
+    cur CURSOR FOR
+     SELECT lorder.id FROM lorder
+     WHERE lorder.creation_date <= NOW() - INTERVAL '1 YEAR';
+BEGIN
+    RAISE NOTICE 'Opening cursor to select OrderS to be removed';
+    RAISE NOTICE ' ';
+    OPEN cur;
+    LOOP
+        FETCH cur INTO v_order_id;
+            EXIT WHEN NOT FOUND;
+            RAISE NOTICE '';
+            RAISE NOTICE '--------------------------- ORDER  % ------------------------------ \n ', v_order_id;
+            RAISE NOTICE '';
+            DELETE FROM lorder_has_meal WHERE lorder_has_meal.order_id = v_order_id;
+            DELETE FROM lorder_has_menu WHERE lorder_has_menu.order_id = v_order_id;
+            DELETE FROM lorder WHERE lorder.id = v_order_id;
+            RAISE NOTICE 'ORDER % REMOVED WITH  ALL  ITS OCCURRENCE IN lorder_has_meal AND lorder_has_menu TABLES', v_order_id;
+    END LOOP;
+    CLOSE cur;
+   RAISE NOTICE 'Cursor closed';
+
+END; $$;
+
+/******************************** REMOVE  PAYMENT ********************************/
+
+CREATE OR REPLACE PROCEDURE removeExpiredPayment()
+LANGUAGE plpgsql AS $$
+
+DECLARE
+    v_payment_id UUID;
+    v_student_id UUID;
+    v_admin_id UUID;
+    v_origin TransactionType;
+    cur CURSOR FOR
+        SELECT payment.id FROM payment
+        WHERE payment.payment_date <= NOW() - INTERVAL '1 YEAR';
+BEGIN
+    RAISE NOTICE 'Opening cursor to select payment to be removed';
+    RAISE NOTICE ' ';
+    OPEN cur;
+        LOOP
+            FETCH cur INTO v_payment_id;
+                EXIT WHEN NOT FOUND;
+                RAISE NOTICE '';
+                RAISE NOTICE '--------------------------- PAYMENT  % ------------------------------ \n ', v_payment_id;
+                RAISE NOTICE '';
+                SELECT student_id, admin_id, origin INTO v_student_id, v_admin_id, v_origin FROM payment WHERE payment.id = v_payment_id;
+                DELETE FROM payment WHERE payment.id = v_payment_id;
+                RAISE NOTICE 'PAYMENT %  OCCURRED BETWEEN STUDENT % AND  ADMIN  %  HAS ORIGIN = %  REMOVED', v_payment_id, v_student_id, v_admin_id, v_origin;
+        END LOOP;
+    CLOSE cur;
+    RAISE NOTICE 'Cursor closed';
+
+END; $$;
+
+
+
+
+
+
 /******************************** REMOVE  MEALS :  MENU   ********************************/
 
 CREATE OR REPLACE PROCEDURE removeMenus()
@@ -131,16 +218,6 @@ BEGIN
 
 END;
     $$ LANGUAGE plpgsql;
-
-
-
-
-
-
-
-
-
-
 
 
 
