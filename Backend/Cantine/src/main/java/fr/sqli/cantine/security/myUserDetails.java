@@ -10,13 +10,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 
 
-public class myUserDetails implements  org.springframework.security.core.userdetails.UserDetails{
+public class myUserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
-    private final UserEntity user ;
+    private final UserEntity user;
     private final Environment environment;
 
-    public myUserDetails(UserEntity user, Environment environment){
-        this.user =  user ;
+    public myUserDetails(UserEntity user, Environment environment) {
+        this.user = user;
         this.environment = environment;
     }
 
@@ -28,7 +28,7 @@ public class myUserDetails implements  org.springframework.security.core.userdet
 
     @Override
     public String getPassword() {
-       return this.user.getPassword();
+        return this.user.getPassword();
     }
 
     @Override
@@ -38,8 +38,8 @@ public class myUserDetails implements  org.springframework.security.core.userdet
 
     @Override
     public boolean isAccountNonExpired() {
-          return true;
-     }
+        return true;
+    }
 
     @Override
     public boolean isAccountNonLocked() {
@@ -68,16 +68,16 @@ public class myUserDetails implements  org.springframework.security.core.userdet
         return this.user.getLastname();
     }
 
-    public String  getImage() {
-        if  (this.user.getRoles().stream().anyMatch(role -> role.getLabel().equals(ConstCantine.ADMIN_ROLE_LABEL))){
-            return  this.environment.getProperty("sqli.cantine.images.url.admin")+ this.user.getImage().getName();
+    public String getImage() {
+        if (this.user.getRoles().stream().anyMatch(role -> role.getLabel().equals(ConstCantine.ADMIN_ROLE_LABEL))) {
+            return this.environment.getProperty("sqli.cantine.images.url.admin") + this.user.getImage().getName();
         }
 
-        return  this.environment.getProperty("sqli.cantine.images.url.student")+ this.user.getImage().getName();
+        return this.environment.getProperty("sqli.cantine.images.url.student") + this.user.getImage().getName();
 
     }
 
     public String getId() {
-       return this.user.getId();
+        return this.user.getId();
     }
 }

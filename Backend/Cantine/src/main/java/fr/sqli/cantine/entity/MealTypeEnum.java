@@ -9,8 +9,6 @@ public enum MealTypeEnum {
     AUTRE;
 
 
-
-
     public static boolean contains(String mealType) {
         for (MealTypeEnum mealTypeEnum : MealTypeEnum.values()) {
             if (mealTypeEnum.name().equals(mealType)) {
@@ -20,7 +18,7 @@ public enum MealTypeEnum {
         return false;
     }
 
-    public  static  MealTypeEnum getMealTypeEnum(String mealType){
+    public static MealTypeEnum getMealTypeEnum(String mealType) {
         for (MealTypeEnum mealTypeEnum : MealTypeEnum.values()) {
             if (mealTypeEnum.name().equals(mealType)) {
                 return mealTypeEnum;

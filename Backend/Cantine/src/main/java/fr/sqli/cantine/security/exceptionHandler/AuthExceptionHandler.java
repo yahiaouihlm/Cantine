@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AuthExceptionHandler {
 
 
-   @ExceptionHandler(BadCredentialsException.class)
-   public ResponseEntity<ExceptionDtout> handleAdminFunctionNotFound(BadCredentialsException e) {
-       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout(e.getMessage()));
-   }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ExceptionDtout> handleAdminFunctionNotFound(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout(e.getMessage()));
+    }
 
 
     @ExceptionHandler(InsufficientAuthenticationException.class)

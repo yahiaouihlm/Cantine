@@ -1,17 +1,16 @@
 package fr.sqli.cantine.security.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sqli.cantine.dto.in.users.Login;
 import fr.sqli.cantine.security.myUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
@@ -23,8 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +33,7 @@ public class JwtUsernameAndPasswordAuthenticationFiler extends UsernamePasswordA
     private final AuthenticationManager authenticationManager;
     private final Environment environment;
 
-    public JwtUsernameAndPasswordAuthenticationFiler(AuthenticationManager authenticationManager , Environment environment) {
+    public JwtUsernameAndPasswordAuthenticationFiler(AuthenticationManager authenticationManager, Environment environment) {
         this.authenticationManager = authenticationManager;
         this.environment = environment;
         setFilterProcessesUrl("/user/login");

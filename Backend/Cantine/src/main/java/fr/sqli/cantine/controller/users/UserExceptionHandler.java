@@ -2,7 +2,6 @@ package fr.sqli.cantine.controller.users;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,7 +54,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(ExistingUserException.class)
-    public ResponseEntity<ExceptionDtout> handleExistingUserException( ExistingUserException e) {
+    public ResponseEntity<ExceptionDtout> handleExistingUserException(ExistingUserException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
 

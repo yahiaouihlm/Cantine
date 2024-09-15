@@ -1,3 +1,5 @@
+/*REMOVE  IMAGES  FILES */
+
 CREATE OR REPLACE FUNCTION check_payment_integrity()
 RETURNS TRIGGER AS $$
     BEGIN
@@ -62,6 +64,7 @@ END;
 
 
 /******************************** remove  user  has invalid role  ********************************/
+
 CREATE OR REPLACE FUNCTION check_user_integrity_role()
 RETURNS TRIGGER AS $$
     BEGIN
@@ -84,7 +87,6 @@ RETURNS TRIGGER AS $$
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE TRIGGER user_integrity_controls_according_to_role_trigger
         AFTER  INSERT ON role

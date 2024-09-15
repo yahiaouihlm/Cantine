@@ -10,35 +10,34 @@ import lombok.Setter;
 @Setter
 public class StudentClassDtoIn {
 
-     private  String  id ;
+    private String id;
 
-     private  String  name ;
-
-
-
-     @JsonIgnore
-     public StudentClassEntity toStudentClassEntity () throws InvalidStudentClassException {
-          this.checkNameValidity();
-          StudentClassEntity studentClassEntity = new StudentClassEntity();
-          studentClassEntity.setName(this.name.trim());
-
-          return  studentClassEntity;
-     }
+    private String name;
 
 
+    @JsonIgnore
+    public StudentClassEntity toStudentClassEntity() throws InvalidStudentClassException {
+        this.checkNameValidity();
+        StudentClassEntity studentClassEntity = new StudentClassEntity();
+        studentClassEntity.setName(this.name.trim());
 
-     @JsonIgnore
-     public   void   checkNameValidity () throws InvalidStudentClassException {
-         if  (this.name == null  || this.name.trim().isEmpty() ) {
-             throw new InvalidStudentClassException("INVALID STUDENT CLASS NAME");
-         }
-      }
-      @JsonIgnore
-      public  void checkIdValidity () throws InvalidStudentClassException {
-          if (this.id == null || this.id.length() < 10) {
-              throw new InvalidStudentClassException("INVALID STUDENT CLASS ID");
-          }
-      }
+        return studentClassEntity;
+    }
+
+
+    @JsonIgnore
+    public void checkNameValidity() throws InvalidStudentClassException {
+        if (this.name == null || this.name.trim().isEmpty()) {
+            throw new InvalidStudentClassException("INVALID STUDENT CLASS NAME");
+        }
+    }
+
+    @JsonIgnore
+    public void checkIdValidity() throws InvalidStudentClassException {
+        if (this.id == null || this.id.length() < 10) {
+            throw new InvalidStudentClassException("INVALID STUDENT CLASS ID");
+        }
+    }
 
 
 }

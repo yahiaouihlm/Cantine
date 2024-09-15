@@ -1,15 +1,15 @@
 package fr.sqli.cantine.entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Check;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
-
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.Check;
 
 @Getter
 @Setter

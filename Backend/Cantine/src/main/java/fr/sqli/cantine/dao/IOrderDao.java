@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IOrderDao  extends JpaRepository<OrderEntity , String> {
+public interface IOrderDao extends JpaRepository<OrderEntity, String> {
 
     public List<OrderEntity> findByStudentOrderByCreationDateDesc(UserEntity student);
-    @Query(value = "SELECT order FROM OrderEntity order  WHERE  order.id = ?1" )
+
+    @Query(value = "SELECT order FROM OrderEntity order  WHERE  order.id = ?1")
     public Optional<OrderEntity> findOrderById(String id);
+
     public List<OrderEntity> findByCreationDate(LocalDate creationDate);
+
     public List<OrderEntity> findByStudentIdAndCreationDate(String studentUuid, LocalDate creationDate);
 }

@@ -1,17 +1,17 @@
 package fr.sqli.cantine.dto.in.users;
 
 public class Login {
-    private  String email ;
-    private  String password  ;
+    private String email;
+    private String password;
 
 
-
-   public Login(String email, String password) {
+    public Login(String email, String password) {
         this.email = email;
         this.password = password;
     }
-  public  Login(){}
 
+    public Login() {
+    }
 
 
     //  Les getteers et les setters   ...

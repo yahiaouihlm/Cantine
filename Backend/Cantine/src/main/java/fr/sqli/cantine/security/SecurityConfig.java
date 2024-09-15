@@ -65,31 +65,31 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
                         authorize -> {
-                                        authorize
-                                                .requestMatchers("/cantine/api/getAll/**" , "/cantine/api/getAll/getMealsByType/**").permitAll();
+                            authorize
+                                    .requestMatchers("/cantine/api/getAll/**", "/cantine/api/getAll/getMealsByType/**").permitAll();
 
-                                        authorize
-                                                .requestMatchers("/cantine/download/images/**",
-                                                "/cantine/download/images/**").permitAll();
+                            authorize
+                                    .requestMatchers("/cantine/download/images/**",
+                                            "/cantine/download/images/**").permitAll();
 
-                                        authorize
-                                                .requestMatchers("/cantine/admin/getAllAdminFunctions"
-                                                ,"/cantine/user/check-confirmation-token/**"
-                                                ,"/cantine/user/existing-email"
-                                                ,"/cantine/user/send-reset-password-link/**"
-                                                , "/cantine/admin/register").permitAll();
+                            authorize
+                                    .requestMatchers("/cantine/admin/getAllAdminFunctions"
+                                            , "/cantine/user/check-confirmation-token/**"
+                                            , "/cantine/user/existing-email"
+                                            , "/cantine/user/send-reset-password-link/**"
+                                            , "/cantine/admin/register").permitAll();
 
-                                        authorize
-                                                .requestMatchers("/cantine/user/student/getAllStudentClass"
-                                                , "/cantine/user/student/signUp"
-                                                , "/cantine/user/send-confirmation-link"
-                                                , "/cantine/user/reset-password/**").permitAll();
+                            authorize
+                                    .requestMatchers("/cantine/user/student/getAllStudentClass"
+                                            , "/cantine/user/student/signUp"
+                                            , "/cantine/user/send-confirmation-link"
+                                            , "/cantine/user/reset-password/**").permitAll();
 
-                                        authorize.anyRequest().authenticated();
+                            authorize.anyRequest().authenticated();
                         })
 
                 .authenticationProvider(authenticationProvider())
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager() , this.environment))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager(), this.environment))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(this.customAuthenticationEntryPoint)
@@ -103,12 +103,13 @@ public class SecurityConfig {
     public UserDetailsChecker customUserDetailsChecker() {
         return new CustomUserDetailsChecker();
     }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization" , "Content-Type"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -124,7 +125,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(appUserService);
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setPreAuthenticationChecks( customUserDetailsChecker());
+        provider.setPreAuthenticationChecks(customUserDetailsChecker());
         return provider;
     }
 

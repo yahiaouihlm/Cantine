@@ -1,7 +1,9 @@
 package fr.sqli.cantine.service.users.admin.impl;
 
-import fr.sqli.cantine.dao.*;
-
+import fr.sqli.cantine.dao.IConfirmationTokenDao;
+import fr.sqli.cantine.dao.IPaymentDao;
+import fr.sqli.cantine.dao.IStudentClassDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;

@@ -7,8 +7,8 @@ import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.food.impl.MenuService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
-import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +24,9 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequestMapping(value = MenuController.MENUS_BASIC_URL_ADMIN)
 public class MenuController {
 
-    final String ENDPOINT_UPDATE_MENU_URL = "/update";
-
     /*------------------ ENDPOINTS ------------------*/
     final static String MENUS_BASIC_URL_ADMIN = "/cantine/admin/api/menus";
+    final String ENDPOINT_UPDATE_MENU_URL = "/update";
     final String ENDPOINT_ADD_MENU_URL = "/add";
     final String ENDPOINT_DELETE_MENU_URL = "/delete";
     final String ENDPOINT_GET_ALL_MENU = "/getAll";

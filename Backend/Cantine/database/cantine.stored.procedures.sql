@@ -7,9 +7,13 @@ BEGIN
     RAISE NOTICE ' ';
 
     CALL removeExpiredOrders();
+
     CALL removeMeals();
+
     CALL removeMenus();
+
     call removeExpiredPayment();
+
     CALL removeStudent();
 
     RAISE NOTICE ' ';
@@ -60,7 +64,6 @@ BEGIN
 
 END; $$;
 
-
 CREATE OR REPLACE PROCEDURE removeStudentAndhisImage(student_id UUID)
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -74,13 +77,11 @@ BEGIN
 END; $$;
 
 
-
 CREATE OR REPLACE PROCEDURE removeRoleByStudent(student_id UUID)
 LANGUAGE plpgsql AS $$
 BEGIN
     DELETE FROM role WHERE role.user_id = student_id;
 END; $$;
-
 
 
 CREATE OR REPLACE PROCEDURE removeOrdersByStudent(student UUID)

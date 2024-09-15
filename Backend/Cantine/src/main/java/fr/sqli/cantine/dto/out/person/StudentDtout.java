@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class StudentDtout    extends AbstractPersonDtout{
+public class StudentDtout extends AbstractPersonDtout {
 
-    private BigDecimal wallet ;
+    private BigDecimal wallet;
     private String studentClass;
 
 
-    public StudentDtout(UserEntity student , String studentUrlImage) {
+    public StudentDtout(UserEntity student, String studentUrlImage) {
         super.setId(student.getId());
         super.setFirstname(student.getFirstname());
         super.setLastname(student.getLastname());
@@ -22,7 +22,7 @@ public class StudentDtout    extends AbstractPersonDtout{
         super.setBirthdate(student.getBirthdate());
         super.setTown(student.getTown());
         super.setPhone(student.getPhone());
-        var  path  = student.getImage().getName();
+        var path = student.getImage().getName();
         super.setImage(
                 studentUrlImage + path
         );

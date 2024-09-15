@@ -7,11 +7,11 @@ import fr.sqli.cantine.dto.out.food.MealDtOut;
 import fr.sqli.cantine.service.food.exceptions.ExistingFoodException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.food.exceptions.RemoveFoodException;
+import fr.sqli.cantine.service.food.impl.MealService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
-import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,6 +65,7 @@ public class MealController {
         this.mealService.deleteMeal(uuidMeal);
         return ResponseEntity.ok().body(new ResponseDtout(MEAL_DELETED_SUCCESSFULLY));
     }
+
 
     @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
     @PostMapping(value = ENDPOINT_ADD_MEAL_URL, consumes = MULTIPART_FORM_DATA_VALUE)

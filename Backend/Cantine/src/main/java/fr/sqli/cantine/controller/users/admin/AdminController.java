@@ -5,19 +5,17 @@ import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
-import fr.sqli.cantine.service.users.admin.impl.AdminService;
-import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
+import fr.sqli.cantine.service.users.admin.impl.AdminService;
+import fr.sqli.cantine.service.users.exceptions.*;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 

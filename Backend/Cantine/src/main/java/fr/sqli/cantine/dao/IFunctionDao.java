@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface IFunctionDao extends JpaRepository<FunctionEntity, String> {
-    public Optional <FunctionEntity> findByName(String name);
+    public Optional<FunctionEntity> findByName(String name);
 }

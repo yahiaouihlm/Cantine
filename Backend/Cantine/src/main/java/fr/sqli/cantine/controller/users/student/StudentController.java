@@ -4,12 +4,11 @@ import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.person.StudentClassDtout;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
-import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
+import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.users.student.Impl.StudentService;
-import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import static fr.sqli.cantine.constants.ConstCantine.ADMIN_ROLE_LABEL;
 import static fr.sqli.cantine.constants.ConstCantine.STUDENT_ROLE_LABEL;
 
 @RestController
@@ -51,6 +49,7 @@ public class StudentController {
                 .ok()
                 .body(student);
     }
+
     @PreAuthorize("hasAuthority('" + STUDENT_ROLE_LABEL + "')")
     @PostMapping(UPDATE_STUDENT_INFO_ENDPOINT)
     public ResponseEntity<ResponseDtout> updateStudentInformation(@ModelAttribute StudentDtoIn studentDtoIn) throws InvalidUserInformationException, InvalidStudentClassException, InvalidFormatImageException, InvalidImageException, StudentClassNotFoundException, ImagePathException, IOException, UserNotFoundException {

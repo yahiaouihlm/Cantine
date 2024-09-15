@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IStudentClassDao  extends JpaRepository <fr.sqli.cantine.entity.StudentClassEntity, String>{
+public interface IStudentClassDao extends JpaRepository<fr.sqli.cantine.entity.StudentClassEntity, String> {
     public Optional<StudentClassEntity> findByName(String name);
 }

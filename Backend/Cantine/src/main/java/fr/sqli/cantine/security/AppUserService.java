@@ -11,14 +11,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppUserService  implements UserDetailsService {
+public class AppUserService implements UserDetailsService {
 
     private static final Logger LOG = LogManager.getLogger();
-    private final  IUserDao iUserDao ;
+    private final IUserDao iUserDao;
     private final Environment environment;
 
     @Autowired
-    public  AppUserService  (IUserDao iUserDao ,  Environment environment){
+    public AppUserService(IUserDao iUserDao, Environment environment) {
         this.iUserDao = iUserDao;
         this.environment = environment;
     }
@@ -32,6 +32,6 @@ public class AppUserService  implements UserDetailsService {
             AppUserService.LOG.error("USER NOT  FOUND {} WHILE TRYING TO CONNECT IN AppUserService.loadUserByUsername", username);
             return new UsernameNotFoundException("USER NOT  FOUND");
         });
-        return new myUserDetails(user,this.environment);
+        return new myUserDetails(user, this.environment);
     }
 }

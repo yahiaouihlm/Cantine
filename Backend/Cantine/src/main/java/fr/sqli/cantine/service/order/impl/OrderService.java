@@ -5,16 +5,15 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
 import fr.sqli.cantine.entity.*;
-
+import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
+import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.mailer.OrderEmailSender;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.order.IOrderService;
-import fr.sqli.cantine.service.order.qrcode.QrCodeGenerator;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
-import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
-import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.exception.*;
+import fr.sqli.cantine.service.order.qrcode.QrCodeGenerator;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +28,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -116,7 +117,7 @@ public class OrderService implements IOrderService {
 
         orderEntity.setStatus(1);
         this.orderDao.save(orderEntity);
-        this.orderEmailSender.validatedOrderByAdmin(orderEntity.getStudent(), orderEntity ,  filePath);
+        this.orderEmailSender.validatedOrderByAdmin(orderEntity.getStudent(), orderEntity, filePath);
     }
 
     @Override
@@ -312,7 +313,7 @@ public class OrderService implements IOrderService {
             throw new UnableToCancelOrderException("ORDER IS ALREADY CANCELED");
         }
 
-        var  student = this.userDao.findStudentById(order.getStudent().getId()).orElseThrow(() -> {
+        var student = this.userDao.findStudentById(order.getStudent().getId()).orElseThrow(() -> {
             OrderService.LOG.error("STUDENT WITH  ID  =  {} NOT FOUND", order.getStudent().getId());
             return new UserNotFoundException("STUDENT WITH : " + order.getStudent().getFirstname() + " NOT FOUND");
         });

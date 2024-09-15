@@ -4,13 +4,12 @@ import com.google.zxing.WriterException;
 import fr.sqli.cantine.dto.in.food.OrderDtoIn;
 import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.dto.out.food.OrderDtOut;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.FoodNotFoundException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-import fr.sqli.cantine.service.order.impl.OrderService;
 import fr.sqli.cantine.service.order.exception.*;
-
+import fr.sqli.cantine.service.order.impl.OrderService;
 import fr.sqli.cantine.service.superAdmin.exception.TaxNotFoundException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,15 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 @RestController
-public class ImageController{
-    final String ENDPOINT_GET_IMAGE= "cantine/download/images/{spot}/{image}";
-    final String ENDPOINT_GET_IMAGE_USERS= "cantine/download/images/persons/{spot}/{image}";
+public class ImageController {
+    final String ENDPOINT_GET_IMAGE = "cantine/download/images/{spot}/{image}";
+    final String ENDPOINT_GET_IMAGE_USERS = "cantine/download/images/persons/{spot}/{image}";
 
 
     private final ImageService imageService;
@@ -36,7 +35,7 @@ public class ImageController{
     }
 
 
-  @GetMapping(ENDPOINT_GET_IMAGE_USERS)
+    @GetMapping(ENDPOINT_GET_IMAGE_USERS)
     public ResponseEntity<InputStreamResource> getUsersImages(@PathVariable("spot") String spot, @PathVariable("image") String image) throws FileNotFoundException, InvalidImageException, ImagePathException {
 
         var path = "images/persons/" + spot;
@@ -46,8 +45,7 @@ public class ImageController{
     }
 
 
-
-    private   ResponseEntity<InputStreamResource> getImage( String spot ,  String  image ,  String  path ) throws InvalidImageException, ImagePathException, FileNotFoundException {
+    private ResponseEntity<InputStreamResource> getImage(String spot, String image, String path) throws InvalidImageException, ImagePathException, FileNotFoundException {
         var imageExtension = this.imageService.getImageExtension(image);
         MediaType mediaType = switch (imageExtension) {
             case ".png" -> MediaType.IMAGE_PNG;
@@ -66,7 +64,7 @@ public class ImageController{
 
 
     /*TODO
-    * 1-  ajouter  une autorisation pour les images utilisateurs
+     * 1-  ajouter  une autorisation pour les images utilisateurs
      */
 
 }

@@ -2,18 +2,17 @@ package fr.sqli.cantine.controller.users;
 
 
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.service.users.user.impl.UserService;
 import fr.sqli.cantine.service.users.exceptions.*;
+import fr.sqli.cantine.service.users.user.impl.UserService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping(UserController.USER_BASIC_URL)
-public class UserController{
+public class UserController {
 
     public static final String USER_BASIC_URL = "/cantine/user";
     final String EXISTING_EMAIL_URL = "/existing-email";

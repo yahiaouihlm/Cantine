@@ -2,7 +2,6 @@ package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;

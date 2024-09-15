@@ -5,10 +5,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class StudentClassDtout  {
+public class StudentClassDtout {
 
-    private  String  id ;
-    private  String  name  ;
+    private String id;
+    private String name;
 
 
     public StudentClassDtout(String id, String name) {

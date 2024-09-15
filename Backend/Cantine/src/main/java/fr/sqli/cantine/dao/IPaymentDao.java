@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 
-public interface IPaymentDao  extends JpaRepository<PaymentEntity , String> {
+public interface IPaymentDao extends JpaRepository<PaymentEntity, String> {
 
     @Query(value = "SELECT payment FROM PaymentEntity payment WHERE payment.student = ?1")
     List<PaymentEntity> findByStudent(UserEntity student);

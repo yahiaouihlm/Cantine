@@ -44,6 +44,7 @@ public class CantineApplication {
 	 * @exit If any of the directories ('images/users', 'images/meals', or 'images/menus') do not exist
 	 */
 
+/*
 	@Bean
 	public ApplicationRunner checkExistingImagesDirectories() {
 		return args -> {
@@ -61,6 +62,7 @@ public class CantineApplication {
 			});
 		};
 	}
+*/
 
 
 	@Bean

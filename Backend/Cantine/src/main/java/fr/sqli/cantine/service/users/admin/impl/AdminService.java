@@ -9,18 +9,16 @@ import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.dto.out.person.AdminDtout;
 import fr.sqli.cantine.dto.out.superAdmin.FunctionDtout;
 import fr.sqli.cantine.entity.ImageEntity;
-
 import fr.sqli.cantine.entity.RoleEntity;
 import fr.sqli.cantine.entity.UserEntity;
-import fr.sqli.cantine.service.mailer.UserEmailSender;
-import fr.sqli.cantine.service.users.user.impl.UserService;
-import fr.sqli.cantine.service.users.admin.IAdminService;
-import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.images.ImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
 import fr.sqli.cantine.service.images.exception.InvalidImageException;
-import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
+import fr.sqli.cantine.service.mailer.UserEmailSender;
+import fr.sqli.cantine.service.users.admin.IAdminService;
+import fr.sqli.cantine.service.users.exceptions.*;
+import fr.sqli.cantine.service.users.user.impl.UserService;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +28,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -52,11 +49,11 @@ public class AdminService implements IAdminService {
     private final IFunctionDao functionDao;
     private final UserService userService;
     private final IUserDao userDao;
-    private  final IRoleDao roleDao;
+    private final IRoleDao roleDao;
     private UserEmailSender userEmailSender;
 
     @Autowired
-    public AdminService(IUserDao iUserDao,IRoleDao roleDao ,IFunctionDao functionDao, ImageService imageService
+    public AdminService(IUserDao iUserDao, IRoleDao roleDao, IFunctionDao functionDao, ImageService imageService
             , Environment environment
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , UserService userService
@@ -142,6 +139,7 @@ public class AdminService implements IAdminService {
         this.userService.sendConfirmationLink(adminDtoIn.getEmail());//  send  confirmation Link for  email
         this.userEmailSender.sendNotificationToSuperAdminAboutAdminRegistration(adminEntity, URL);
     }
+
     @Override
     public void removeAdminAccount(String adminUuid) throws UserNotFoundException, InvalidUserInformationException {
 
@@ -158,6 +156,7 @@ public class AdminService implements IAdminService {
         admin.setDisableDate(LocalDate.now());
         this.userDao.save(admin);
     }
+
     @Override
     public AdminDtout getAdminByUuID(String adminUuid) throws InvalidUserInformationException, UserNotFoundException {
         IAdminService.checkUuIdValidity(adminUuid);
@@ -174,6 +173,7 @@ public class AdminService implements IAdminService {
         }
         return new AdminDtout(admin, this.ADMIN_IMAGE_URL);
     }
+
     @Override
     public void updateAdminInfo(AdminDtoIn adminDtoIn) throws InvalidUserInformationException, InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, AdminFunctionNotFoundException, UserNotFoundException {
         if (adminDtoIn == null) {
@@ -233,22 +233,24 @@ public class AdminService implements IAdminService {
         this.userDao.save(adminEntity);
 
     }
+
     @Override
     public List<FunctionDtout> getAllAdminFunctions() {
         return this.functionDao.findAll().stream().map(FunctionDtout::new).collect(Collectors.toList());
     }
+
     @Override
     public void existingEmail(String adminEmail) throws ExistingUserException {
         if (this.userDao.findUserByEmail(adminEmail).isPresent()) {
             throw new ExistingUserException("EMAIL IS ALREADY EXISTS");
         }
     }
+
     @Override
     public UserEntity findByUsername(String username) throws UserNotFoundException {
-         return this.userDao.findAdminById(username)
-                 .orElseThrow(() -> new UserNotFoundException("ADMIN NOT FOUND"));
+        return this.userDao.findAdminById(username)
+                .orElseThrow(() -> new UserNotFoundException("ADMIN NOT FOUND"));
     }
-
 
 
 }

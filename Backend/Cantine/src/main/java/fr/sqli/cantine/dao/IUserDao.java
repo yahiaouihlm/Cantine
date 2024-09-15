@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IUserDao   extends JpaRepository<UserEntity, String> {
+public interface IUserDao extends JpaRepository<UserEntity, String> {
 
     Optional<UserEntity> findUserByEmail(String email);
 
     @Query(value = "SELECT admin FROM UserEntity  admin   JOIN admin.roles role" +
             " WHERE (role.label='ADMIN') " +
             "ORDER BY admin.id  ASC LIMIT 1")
-    public Optional <UserEntity> findRandomAdmin();
+    public Optional<UserEntity> findRandomAdmin();
 
     @Query(value = "SELECT admin FROM UserEntity  admin   JOIN admin.roles role" +
-            " WHERE (role.label='ADMIN' AND admin.email = ?1)" )
-    public Optional <UserEntity> findAdminByEmail(String username);
+            " WHERE (role.label='ADMIN' AND admin.email = ?1)")
+    public Optional<UserEntity> findAdminByEmail(String username);
 
   /*  @Query(value = "SELECT admin FROM UserEntity  admin   JOIN admin.roles role" +
             " WHERE (role.label='ADMIN' AND admin.email = ?1)" )
@@ -32,7 +32,7 @@ public interface IUserDao   extends JpaRepository<UserEntity, String> {
 
     @Query(value = "SELECT admin FROM UserEntity  admin   JOIN admin.roles role" +
             " WHERE (role.label='ADMIN' AND admin.id = ?1) ")
-    public Optional <UserEntity> findAdminById(String id);
+    public Optional<UserEntity> findAdminById(String id);
 
 
     @Query(value = "SELECT student FROM UserEntity student JOIN student.roles role WHERE (" +
@@ -44,7 +44,7 @@ public interface IUserDao   extends JpaRepository<UserEntity, String> {
             ")"
 
     )
-    List<UserEntity> findStudentByFirstnameAndLastnameAndBirthdate(String firstName , String lastName , LocalDate birthdate);
+    List<UserEntity> findStudentByFirstnameAndLastnameAndBirthdate(String firstName, String lastName, LocalDate birthdate);
 
 
     @Query(value = "SELECT student FROM UserEntity student JOIN student.roles role WHERE (" +

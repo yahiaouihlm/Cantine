@@ -2,8 +2,8 @@ package fr.sqli.cantine.dto.in.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.entity.UserEntity;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.InvalidStudentClassException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import lombok.Getter;
 import lombok.Setter;
 

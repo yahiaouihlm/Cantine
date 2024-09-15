@@ -7,7 +7,6 @@ import fr.sqli.cantine.dto.out.ResponseDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
-import fr.sqli.cantine.service.users.exceptions.ExistingEmailException;
 import fr.sqli.cantine.service.users.exceptions.*;
 import fr.sqli.cantine.service.users.user.IUserService;
 import jakarta.mail.MessagingException;
@@ -48,6 +47,7 @@ public class UserService implements IUserService {
         this.CONFIRMATION_EMAIL_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
 
     }
+
     @Override
     public void resetPassword(String userToken, String newPassword) throws InvalidTokenException, InvalidUserInformationException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
         if (userToken == null || userToken.trim().isEmpty()) {
@@ -93,6 +93,7 @@ public class UserService implements IUserService {
 
 
     }
+
     @Override
     public void resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
 
@@ -106,6 +107,7 @@ public class UserService implements IUserService {
         });
         this.checkUserStatusAndSendTokenForResetPassword(user);
     }
+
     @Override
     public void existingEmail(String email) throws ExistingEmailException {
 
@@ -121,6 +123,7 @@ public class UserService implements IUserService {
         ;
 
     }
+
     @Override
     public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountActivatedException, MessagingException {
 
@@ -135,6 +138,7 @@ public class UserService implements IUserService {
         });
         this.checkUserStatusAndSendTokenForConfirmationEmail(user);
     }
+
     @Override
     public ResponseDtout checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException {
 

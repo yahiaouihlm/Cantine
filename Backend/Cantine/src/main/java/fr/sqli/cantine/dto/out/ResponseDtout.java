@@ -2,8 +2,7 @@ package fr.sqli.cantine.dto.out;
 
 public class ResponseDtout {
 
-    private   String   message    ;
-
+    private String message;
 
 
     public ResponseDtout(String message) {

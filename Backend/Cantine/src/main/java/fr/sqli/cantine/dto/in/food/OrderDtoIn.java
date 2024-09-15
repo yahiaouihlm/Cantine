@@ -1,9 +1,9 @@
 package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 import fr.sqli.cantine.service.order.exception.InvalidOrderException;
+import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +24,7 @@ public class OrderDtoIn {
 
     @JsonIgnore
     public void checkOrderIDsValidity() throws InvalidUserInformationException, InvalidOrderException, InvalidFoodInformationException {
-        if (this.studentUuid == null || this.studentUuid.trim().length() < 10 ) {
+        if (this.studentUuid == null || this.studentUuid.trim().length() < 10) {
             OrderDtoIn.LOG.error("STUDENT ID IS  REQUIRED OR HAS LESS THAN 10 CHARACTERS");
             throw new InvalidUserInformationException("STUDENT ID IS  REQUIRED");
         }
@@ -36,7 +36,7 @@ public class OrderDtoIn {
 
         if (this.mealsId != null) {
             for (String mealId : mealsId) {
-                if (mealId == null || mealId.trim().length() < 10 ) {
+                if (mealId == null || mealId.trim().length() < 10) {
                     OrderDtoIn.LOG.error("INVALID MEAL ID OR HAS LESS THAN 10 CHARACTERS");
                     throw new InvalidFoodInformationException("INVALID MEAL ID");
                 }

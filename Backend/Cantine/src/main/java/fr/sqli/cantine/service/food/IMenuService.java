@@ -5,8 +5,8 @@ import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.MenuEntity;
 import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
-import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

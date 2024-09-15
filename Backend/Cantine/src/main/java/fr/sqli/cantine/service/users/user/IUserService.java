@@ -9,16 +9,16 @@ import jakarta.mail.MessagingException;
 
 public interface IUserService {
 
-    public void resetPassword(String userToken, String newPassword) throws InvalidTokenException, InvalidUserInformationException, TokenNotFoundException, ExpiredToken, UserNotFoundException ;
+    public void resetPassword(String userToken, String newPassword) throws InvalidTokenException, InvalidUserInformationException, TokenNotFoundException, ExpiredToken, UserNotFoundException;
 
-    public void resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException ;
+    public void resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException;
 
-    public void existingEmail(String email) throws ExistingEmailException ;
+    public void existingEmail(String email) throws ExistingEmailException;
 
-    public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountActivatedException, MessagingException ;
+    public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountActivatedException, MessagingException;
 
-    public ResponseDtout checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException ;
+    public ResponseDtout checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException;
 
-    public UserEntity    findUser(String email) throws UserNotFoundException ;
+    public UserEntity findUser(String email) throws UserNotFoundException;
 
 }
