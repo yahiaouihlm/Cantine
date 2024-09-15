@@ -29,7 +29,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Optional;
 
 
@@ -61,13 +60,13 @@ public class UpdateMenuTest {
         this.menuEntity.setLabel("Test label");
         this.menuEntity.setDescription("Test description");
         this.menuEntity.setPrice(BigDecimal.valueOf(1.5));
-        this.menuEntity.setId(1);
+        this.menuEntity.setId(java.util.UUID.randomUUID().toString());
         this.menuEntity.setImage(new ImageEntity());
 
         this.menuDtoIn =  new MenuDtoIn();
         /*TODO:  this  is  not  correct*/
         this.menuDtoIn.setLabel("label test");
-        this.menuDtoIn.setUuid(java.util.UUID.randomUUID().toString());
+        this.menuDtoIn.setId(java.util.UUID.randomUUID().toString());
         this.menuDtoIn.setDescription("description  test");
         this.menuDtoIn.setQuantity(10);
         this.menuDtoIn.setStatus(1);
@@ -84,16 +83,16 @@ public class UpdateMenuTest {
 
     @Test
     void updateMenuWithFewMealsTest() throws InvalidFormatImageException, InvalidImageException, ImagePathException, IOException, InvalidFoodInformationException, ExistingFoodException, FoodNotFoundException, UnavailableFoodException {
-        this.menuDtoIn.setUuid(java.util.UUID.randomUUID().toString());
+        this.menuDtoIn.setId(java.util.UUID.randomUUID().toString());
         this.menuDtoIn.setImage(null);
         String mealUuid = java.util.UUID.randomUUID().toString();
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setUuid(mealUuid);
+        mealEntity.setId(mealUuid);
         mealEntity.setStatus(1);
         this.menuDtoIn.setListOfMealsAsString(" [\"" + mealUuid + "\" ] ");
 
 
-        Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.of(this.menuEntity));
+        Mockito.when(iMenuDao.findMenuById(this.menuDtoIn.getId())).thenReturn(Optional.of(this.menuEntity));
 
         Mockito.when(this.iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menuDtoIn.getLabel().trim(), this.menuDtoIn.getDescription(), this.menuDtoIn.getPrice()))
                 .thenReturn(Optional.of(this.menuEntity));
@@ -112,16 +111,16 @@ public class UpdateMenuTest {
         this.menuEntity.setLabel("Test label");
         this.menuEntity.setDescription("Test description");
         this.menuEntity.setPrice(BigDecimal.valueOf(1.5));
-        this.menuEntity.setId(1);
+        this.menuEntity.setId(java.util.UUID.randomUUID().toString());
         this.menuEntity.setImage(new ImageEntity());
         this.menuDtoIn.setListOfMealsAsString(" [\"" + uuid+ "\" ] ");
 
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setUuid(uuid);
+        mealEntity.setId(uuid);
         mealEntity.setStatus(0);
 
 
-        Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.of(this.menuEntity));
+        Mockito.when(iMenuDao.findMenuById(this.menuDtoIn.getId())).thenReturn(Optional.of(this.menuEntity));
         Mockito.when(this.iMealService.getMealEntityByUUID(uuid)).thenReturn(mealEntity);
 
         Assertions.assertThrows(UnavailableFoodException.class , () -> this.menuService.updateMenu(this.menuDtoIn));
@@ -130,10 +129,10 @@ public class UpdateMenuTest {
     @Test
     void  updateMenuWithExistingMenuTest () {
         MenuEntity existingMenu = new MenuEntity();
-        existingMenu.setUuid(java.util.UUID.randomUUID().toString());
-        existingMenu.setId(10);
+        existingMenu.setId(java.util.UUID.randomUUID().toString());
+        existingMenu.setId(java.util.UUID.randomUUID().toString());
         this.menuDtoIn.setListOfMealsAsString(" [\"" + java.util.UUID.randomUUID() + "\" ] ");
-        Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.of(this.menuEntity));
+        Mockito.when(iMenuDao.findMenuById(this.menuDtoIn.getId())).thenReturn(Optional.of(this.menuEntity));
 
 
         Mockito.when(this.iMenuDao.findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menuDtoIn.getLabel().trim(), this.menuDtoIn.getDescription(),  this.menuDtoIn.getPrice()))
@@ -141,15 +140,15 @@ public class UpdateMenuTest {
 
         Assertions.assertThrows(ExistingFoodException.class , () -> this.menuService.updateMenu(this.menuDtoIn));
         Mockito.verify(iMenuDao, Mockito.times(1)).findByLabelAndAndPriceAndDescriptionIgnoreCase(this.menuDtoIn.getLabel(), this.menuDtoIn.getDescription(),  this.menuDtoIn.getPrice());
-        Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(this.menuDtoIn.getUuid());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findMenuById(this.menuDtoIn.getId());
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void  updateMenuWithMenuNotFoundTest () {
         this.menuDtoIn.setListOfMealsAsString(" [\"" + java.util.UUID.randomUUID() + "\" ] ");
-        Mockito.when(iMenuDao.findByUuid(this.menuDtoIn.getUuid())).thenReturn(Optional.empty());
+        Mockito.when(iMenuDao.findMenuById(this.menuDtoIn.getId())).thenReturn(Optional.empty());
         Assertions.assertThrows(FoodNotFoundException.class , () -> this.menuService.updateMenu(this.menuDtoIn));
-        Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(this.menuDtoIn.getUuid());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findMenuById(this.menuDtoIn.getId());
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
 
@@ -325,19 +324,19 @@ public class UpdateMenuTest {
 
     @Test
     void  UpdateMenuByUuIdWithShortUuidTest() {
-        this.menuDtoIn.setUuid("erferferfe");
+        this.menuDtoIn.setId("erferferfe");
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> this.menuService.updateMenu(this.menuDtoIn));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void  UpdateMenuByUuIdWithEmptyUuidTest() {
-        this.menuDtoIn.setUuid("");
+        this.menuDtoIn.setId("");
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> this.menuService.updateMenu(this.menuDtoIn));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test
     void UpdateMenuByUuIdWithNullUuidTest()  {
-        this.menuDtoIn.setUuid(null);
+        this.menuDtoIn.setId(null);
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.updateMenu(this.menuDtoIn));
         Mockito.verify(iMenuDao, Mockito.times(0)).save(Mockito.any());
     }

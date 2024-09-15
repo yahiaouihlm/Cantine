@@ -10,13 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 @RestController
-public class ImageController implements IImageController {
+public class ImageController {
+    final String ENDPOINT_GET_IMAGE = "cantine/download/images/{spot}/{image}";
+    final String ENDPOINT_GET_IMAGE_USERS = "cantine/download/images/persons/{spot}/{image}";
+
+
     private final ImageService imageService;
 
     @Autowired
@@ -32,34 +35,26 @@ public class ImageController implements IImageController {
     }
 
 
-  @GetMapping(ENDPOINT_GET_IMAGE_USERS)
+    @GetMapping(ENDPOINT_GET_IMAGE_USERS)
     public ResponseEntity<InputStreamResource> getUsersImages(@PathVariable("spot") String spot, @PathVariable("image") String image) throws FileNotFoundException, InvalidImageException, ImagePathException {
 
         var path = "images/persons/" + spot;
-
-
         return this.getImage(spot, image, path);
 
 
     }
 
 
-
-    private   ResponseEntity<InputStreamResource> getImage( String spot ,  String  image ,  String  path ) throws InvalidImageException, ImagePathException, FileNotFoundException {
+    private ResponseEntity<InputStreamResource> getImage(String spot, String image, String path) throws InvalidImageException, ImagePathException, FileNotFoundException {
         var imageExtension = this.imageService.getImageExtension(image);
-        MediaType mediaType = null;
-        switch (imageExtension) {
-            case ".png":
-                mediaType = MediaType.IMAGE_PNG;
-                break;
-            case ".jpg":
-                mediaType = MediaType.IMAGE_JPEG;
-                break;
-            case ".jpeg":
-                mediaType = MediaType.IMAGE_JPEG;
-                break;
-        }
+        MediaType mediaType = switch (imageExtension) {
+            case ".png" -> MediaType.IMAGE_PNG;
+            case ".jpg" -> MediaType.IMAGE_JPEG;
+            case ".jpeg" -> MediaType.IMAGE_JPEG;
+            default -> null;
+        };
         InputStream inputStream = this.imageService.downloadImage(image, path);
+        assert mediaType != null;
         return ResponseEntity.ok()
                 .contentType(mediaType)
                 .body(new InputStreamResource(inputStream));
@@ -69,7 +64,7 @@ public class ImageController implements IImageController {
 
 
     /*TODO
-    * 1-  ajouter  une autorisation pour les images utilisateurs
+     * 1-  ajouter  une autorisation pour les images utilisateurs
      */
 
 }

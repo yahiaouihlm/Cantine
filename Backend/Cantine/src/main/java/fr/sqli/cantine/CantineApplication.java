@@ -44,6 +44,7 @@ public class CantineApplication {
 	 * @exit If any of the directories ('images/users', 'images/meals', or 'images/menus') do not exist
 	 */
 
+/*
 	@Bean
 	public ApplicationRunner checkExistingImagesDirectories() {
 		return args -> {
@@ -61,22 +62,12 @@ public class CantineApplication {
 			});
 		};
 	}
+*/
 
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder (){
 		return  new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-		configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization" , "Content-Type"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
 	}
 
 }

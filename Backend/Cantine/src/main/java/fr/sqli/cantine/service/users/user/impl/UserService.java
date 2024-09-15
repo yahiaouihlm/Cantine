@@ -1,17 +1,14 @@
-package fr.sqli.cantine.service.users;
+package fr.sqli.cantine.service.users.user.impl;
 
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
-import fr.sqli.cantine.dao.IStudentDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.out.ResponseDtout;
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
-import fr.sqli.cantine.entity.StudentEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
-import fr.sqli.cantine.service.users.exceptions.ExistingEmailException;
 import fr.sqli.cantine.service.users.exceptions.*;
+import fr.sqli.cantine.service.users.user.IUserService;
 import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,24 +19,22 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     private static final Logger LOG = LogManager.getLogger();
     final String SERVER_ADDRESS;
     final String RESET_PASSWORD_URL;
-    final  String CONFIRMATION_EMAIL_URL;
-    private final Environment environment;
-    private final IStudentDao iStudentDao;
-    private final IAdminDao iAdminDao;
+    final String CONFIRMATION_EMAIL_URL;
+    final Environment environment;
     private final IConfirmationTokenDao iConfirmationTokenDao;
+    private final IUserDao iUserDao;
 
     private final UserEmailSender sendUserConfirmationEmail;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public UserService(Environment environment, IStudentDao iStudentDao, IAdminDao iAdminDao, IConfirmationTokenDao iConfirmationTokenDao, UserEmailSender sendUserConfirmationEmail, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.iAdminDao = iAdminDao;
-        this.iStudentDao = iStudentDao;
+    public UserService(Environment environment, IUserDao iUserDao, IConfirmationTokenDao iConfirmationTokenDao, UserEmailSender sendUserConfirmationEmail, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.iUserDao = iUserDao;
         this.environment = environment;
         this.iConfirmationTokenDao = iConfirmationTokenDao;
         this.sendUserConfirmationEmail = sendUserConfirmationEmail;
@@ -49,14 +44,11 @@ public class UserService {
         var port = environment.getProperty("sali.cantine.server.port");
         this.SERVER_ADDRESS = protocol + host + ":" + port;
         this.RESET_PASSWORD_URL = environment.getProperty("sqli.canine.server.reset.password.url");
-        this.CONFIRMATION_EMAIL_URL =  environment.getProperty("sqli.cantine.server.confirmation.token.url");
+        this.CONFIRMATION_EMAIL_URL = environment.getProperty("sqli.cantine.server.confirmation.token.url");
 
     }
 
-    public  void  showStudent () {
-         this.iStudentDao.findAll().forEach(System.out::println);
-    }
-
+    @Override
     public void resetPassword(String userToken, String newPassword) throws InvalidTokenException, InvalidUserInformationException, TokenNotFoundException, ExpiredToken, UserNotFoundException {
         if (userToken == null || userToken.trim().isEmpty()) {
             UserService.LOG.error("INVALID TOKEN  IN CHECK  LINK  VALIDITY");
@@ -89,57 +81,50 @@ public class UserService {
             throw new ExpiredToken("EXPIRED TOKEN");
         }
 
-        UserEntity userEntity = null;
-        var student = this.iStudentDao.findById(user.getId());
-        if (student.isPresent()) {
-            userEntity = student.get();
-        } else {
-            userEntity = this.iAdminDao.findById(user.getId()).orElseThrow(() -> {
-                UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", userToken);
-                return new UserNotFoundException("USER NOT FOUND");
-            });
-        }
+        var userEntity = this.iUserDao.findUserByEmail(user.getEmail()).orElseThrow(() -> {
+            UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", userToken);
+            return new UserNotFoundException("USER NOT FOUND");
+        });
+
 
         userEntity.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
-        if (userEntity instanceof StudentEntity) {
-            this.iStudentDao.save((StudentEntity) userEntity);
-        } else {
-            this.iAdminDao.save((AdminEntity) userEntity);
-        }
+
+        this.iUserDao.save(userEntity);
+
 
     }
 
+    @Override
     public void resetPasswordLink(String email) throws UserNotFoundException, MessagingException, AccountActivatedException, RemovedAccountException {
 
         if (email == null || email.isEmpty() || email.isBlank()) {
             UserService.LOG.error("INVALID EMAIL TO SEND  CONFIRMATION LINK");
             throw new UserNotFoundException("INVALID EMAIL");
         }
-        var student = this.iStudentDao.findByEmail(email);
-        if (student.isPresent()) {
-            this.checkUserStatusAndSendTokenForResetPassword(student.get());
-        } else {
-            var admin = this.iAdminDao.findByEmail(email).orElseThrow(() -> {
-                UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
-                return new UserNotFoundException("USER NOT FOUND");
-            });
-            this.checkUserStatusAndSendTokenForResetPassword(admin);
-        }
-
+        var user = this.iUserDao.findUserByEmail(email).orElseThrow(() -> {
+            UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
+            return new UserNotFoundException("USER NOT FOUND");
+        });
+        this.checkUserStatusAndSendTokenForResetPassword(user);
     }
 
+    @Override
     public void existingEmail(String email) throws ExistingEmailException {
 
         if (email == null || email.isEmpty()) {
             UserService.LOG.error("INVALID EMAIL  IN EXISTING EMAIL");
             throw new ExistingEmailException("EMAIL ALREADY EXISTS");
         }
-        if (this.iAdminDao.findByEmail(email).isPresent() || this.iStudentDao.findByEmail(email).isPresent()) {
+
+        if (this.iUserDao.findUserByEmail(email).isPresent()) {
             UserService.LOG.error("EMAIL  {} ALREADY  EXISTS ", email);
             throw new ExistingEmailException("EMAIL ALREADY EXISTS");
         }
+        ;
+
     }
 
+    @Override
     public void sendConfirmationLink(String email) throws UserNotFoundException, RemovedAccountException, AccountActivatedException, MessagingException {
 
         if (email == null || email.isEmpty() || email.isBlank()) {
@@ -147,20 +132,14 @@ public class UserService {
             throw new UserNotFoundException("INVALID EMAIL");
         }
 
-        var student = this.iStudentDao.findByEmail(email);
-        if (student.isPresent()) {
-            this.checkUserStatusAndSendTokenForConfirmationEmail(student.get());
-        } else {
-            var admin = this.iAdminDao.findByEmail(email).orElseThrow(() -> {
-                UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
-                return new UserNotFoundException("USER NOT FOUND");
-            });
-            this.checkUserStatusAndSendTokenForConfirmationEmail(admin);
-        }
-
+        var user = this.iUserDao.findUserByEmail(email).orElseThrow(() -> {
+            UserService.LOG.error("user  WITH  EMAIL  {} IS  NOT  FOUND TO SEND  CONFIRMATION LINK", email);
+            return new UserNotFoundException("USER NOT FOUND");
+        });
+        this.checkUserStatusAndSendTokenForConfirmationEmail(user);
     }
 
-
+    @Override
     public ResponseDtout checkLinkValidity(String token) throws InvalidTokenException, TokenNotFoundException, ExpiredToken, UserNotFoundException, AccountActivatedException {
 
         if (token == null || token.trim().isEmpty()) {
@@ -194,27 +173,28 @@ public class UserService {
             throw new ExpiredToken("EXPIRED TOKEN");
         }
 
-        UserEntity userEntity = null;
-        var student = this.iStudentDao.findById(user.getId());
-        if (student.isPresent()) {
-            userEntity = student.get();
-        } else {
-            userEntity = this.iAdminDao.findById(user.getId()).orElseThrow(() -> {
-                UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
-                return new UserNotFoundException("USER NOT FOUND");
-            });
-        }
+        var userEntity = this.iUserDao.findUserByEmail(user.getEmail()).orElseThrow(() -> {
+            UserService.LOG.error("USER  NOT  FOUND  IN CHECK  LINK  VALIDITY WITH  token = {}", token);
+            return new UserNotFoundException("USER NOT FOUND");
+        });
+
 
         userEntity.setStatus(1);
-        if (userEntity instanceof StudentEntity) {
-            this.iStudentDao.save((StudentEntity) userEntity);
-            return  new ResponseDtout("STUDENT_TOKEN_CHECKED_SUCCESSFULLY");
-        } else {
-            this.iAdminDao.save((AdminEntity) userEntity);
-            return  new ResponseDtout("ADMIN_TOKEN_CHECKED_SUCCESSFULLY");
-        }
+        userEntity.setDisableDate(null);
+
+        this.iUserDao.save(userEntity);
+
+        return new ResponseDtout("TOKEN_CHECKED_SUCCESSFULLY");
+
     }
 
+    @Override
+    public UserEntity findUser(String email) throws UserNotFoundException {
+        return this.iUserDao.findUserByEmail(email).orElseThrow(() -> {
+            UserService.LOG.error("USER  NOT  FOUND  WITH  EMAIL  {} ", email);
+            return new UserNotFoundException("USER NOT FOUND");
+        });
+    }
 
     private void checkUserStatusAndSendTokenForConfirmationEmail(UserEntity user) throws RemovedAccountException, AccountActivatedException, MessagingException {
         // account already  removed
@@ -230,26 +210,16 @@ public class UserService {
         ConfirmationTokenEntity confirmationToken = null;
         Optional<ConfirmationTokenEntity> confirmationTokenEntity;
 
-        if (user instanceof AdminEntity) {
-            confirmationTokenEntity = this.iConfirmationTokenDao.findByAdmin((AdminEntity) user);
-            confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
+        this.iConfirmationTokenDao.findByAdmin(user).ifPresent(this.iConfirmationTokenDao::delete);
 
-            confirmationToken = new ConfirmationTokenEntity((AdminEntity) user);
+        confirmationToken = new ConfirmationTokenEntity(user);
 
-        } else {
-            confirmationTokenEntity = this.iConfirmationTokenDao.findByStudent((StudentEntity) user);
-            confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
-
-            confirmationToken = new ConfirmationTokenEntity((StudentEntity) user);
-
-        }
         this.iConfirmationTokenDao.save(confirmationToken);
 
         var url = this.SERVER_ADDRESS + this.CONFIRMATION_EMAIL_URL + confirmationToken.getToken();
 
         this.sendUserConfirmationEmail.sendConfirmationLink(user, url);
     }
-
 
     private void checkUserStatusAndSendTokenForResetPassword(UserEntity user) throws RemovedAccountException, AccountActivatedException, MessagingException {
         // account already  removed
@@ -265,19 +235,12 @@ public class UserService {
         ConfirmationTokenEntity confirmationToken = null;
         Optional<ConfirmationTokenEntity> confirmationTokenEntity;
 
-        if (user instanceof AdminEntity) {
-            confirmationTokenEntity = this.iConfirmationTokenDao.findByAdmin((AdminEntity) user);
-            confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
+        confirmationTokenEntity = this.iConfirmationTokenDao.findByAdmin(user);
+        confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
 
-            confirmationToken = new ConfirmationTokenEntity((AdminEntity) user);
+        confirmationToken = new ConfirmationTokenEntity(user);
 
-        } else {
-            confirmationTokenEntity = this.iConfirmationTokenDao.findByStudent((StudentEntity) user);
-            confirmationTokenEntity.ifPresent(this.iConfirmationTokenDao::delete);
 
-            confirmationToken = new ConfirmationTokenEntity((StudentEntity) user);
-
-        }
         this.iConfirmationTokenDao.save(confirmationToken);
 
         var url = this.SERVER_ADDRESS + this.RESET_PASSWORD_URL + confirmationToken.getToken();

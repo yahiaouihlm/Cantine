@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import java.io.IOException;
 
-public class StoneAuthenticationFailureHandler implements AuthenticationFailureHandler, AuthenticationEntryPoint,AccessDeniedHandler {
+public class StoneAuthenticationFailureHandler implements AuthenticationFailureHandler, AuthenticationEntryPoint, AccessDeniedHandler {
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -36,7 +36,7 @@ public class StoneAuthenticationFailureHandler implements AuthenticationFailureH
     private void handle(HttpServletRequest request, HttpServletResponse response, Exception pException, int httpStatus)
             throws IOException, JsonProcessingException {
         var out = new ExceptionDtout(pException.getMessage());
-       // out.setStatus(Integer.valueOf(httpStatus));
+        // out.setStatus(Integer.valueOf(httpStatus));
         var expToJson = this.objectMapper.writeValueAsString(out);
         var pw = response.getWriter();
         pw.write(expToJson);
@@ -61,8 +61,6 @@ public class StoneAuthenticationFailureHandler implements AuthenticationFailureH
                 request.getRequestURL(), authException);
 
 
-
-
         this.handle(request, response, authException, HttpServletResponse.SC_UNAUTHORIZED);
     }
 
@@ -74,8 +72,6 @@ public class StoneAuthenticationFailureHandler implements AuthenticationFailureH
 
         this.handle(request, response, exception, HttpServletResponse.SC_FORBIDDEN);
     }
-
-
 
 
 }

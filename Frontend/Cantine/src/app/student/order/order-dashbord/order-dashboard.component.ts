@@ -59,8 +59,8 @@ export class OrderDashboardComponent implements OnInit {
             }
             this.isLoading = true;
             this.order.studentUuid = studentUuid;
-            this.order.mealsId = this.order.meals.map(meal => meal.uuid);
-            this.order.menusId = this.order.menus.map(menu => menu.uuid);
+            this.order.mealsId = this.order.meals.map(meal => meal.id);
+            this.order.menusId = this.order.menus.map(menu => menu.id);
             this.orderService.addOrder(this.order).subscribe({
                 next: (response) => {
                     this.isLoading = false;

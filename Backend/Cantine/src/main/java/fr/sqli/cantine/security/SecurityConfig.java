@@ -1,6 +1,6 @@
 package fr.sqli.cantine.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.sqli.cantine.security.exceptionHandler.CustomAccessDeniedHandler;
 import fr.sqli.cantine.security.exceptionHandler.CustomAuthenticationEntryPoint;
 import fr.sqli.cantine.security.exceptionHandler.StoneAuthenticationFailureHandler;
@@ -21,6 +21,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -59,25 +65,31 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeRequests(
                         authorize -> {
-                            authorize.requestMatchers("/cantine/api/getAll/**" , "/cantine/api/getAll/getMealsByType/**").permitAll();
-                            authorize.requestMatchers("/cantine/download/images/**",
-                                    "/cantine/download/images/**").permitAll();
-                            authorize.requestMatchers("/cantine/admin/getAllAdminFunctions"
-                                    ,"/cantine/user/check-confirmation-token/**"
-                                    ,"/cantine/user/existing-email"
-                                    ,"/cantine/user/send-reset-password-link/**"
-                                    , "/cantine/admin/register").permitAll();
-                            authorize.requestMatchers("/cantine/admin/adminDashboard/getAllAdminFunctions").permitAll();
-                                authorize.requestMatchers("/cantine/user/student/getAllStudentClass"
-                                    , "/cantine/user/student/signUp"
-                                    , "/cantine/user/send-confirmation-link"
-                                    , "/cantine/user/reset-password/**"
-                            ).permitAll();
+                            authorize
+                                    .requestMatchers("/cantine/api/getAll/**", "/cantine/api/getAll/getMealsByType/**").permitAll();
+
+                            authorize
+                                    .requestMatchers("/cantine/download/images/**",
+                                            "/cantine/download/images/**").permitAll();
+
+                            authorize
+                                    .requestMatchers("/cantine/admin/getAllAdminFunctions"
+                                            , "/cantine/user/check-confirmation-token/**"
+                                            , "/cantine/user/existing-email"
+                                            , "/cantine/user/send-reset-password-link/**"
+                                            , "/cantine/admin/register").permitAll();
+
+                            authorize
+                                    .requestMatchers("/cantine/user/student/getAllStudentClass"
+                                            , "/cantine/user/student/signUp"
+                                            , "/cantine/user/send-confirmation-link"
+                                            , "/cantine/user/reset-password/**").permitAll();
+
                             authorize.anyRequest().authenticated();
                         })
 
                 .authenticationProvider(authenticationProvider())
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager() , this.environment))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFiler(authenticationManager(), this.environment))
                 .addFilterBefore(jwtTokenVerifier, JwtUsernameAndPasswordAuthenticationFiler.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(this.customAuthenticationEntryPoint)
@@ -91,20 +103,17 @@ public class SecurityConfig {
     public UserDetailsChecker customUserDetailsChecker() {
         return new CustomUserDetailsChecker();
     }
-/*
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization" , "Content-Type"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-*/
-
 
     @Bean
     public AuthenticationManager authenticationManager() {
@@ -116,13 +125,8 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(appUserService);
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setPreAuthenticationChecks( customUserDetailsChecker());
+        provider.setPreAuthenticationChecks(customUserDetailsChecker());
         return provider;
     }
 
-/*
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }*/
 }

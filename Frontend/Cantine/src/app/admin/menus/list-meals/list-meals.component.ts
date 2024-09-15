@@ -23,7 +23,7 @@ export class ListMealsComponent implements  OnInit{
     }
 
     isInMealsList(pmeal : Meal) : boolean {
-        return !!this.chosenMeals.find(meal => meal.uuid === pmeal.uuid);
+        return !!this.chosenMeals.find(meal => meal.id === pmeal.id);
     }
 
     addToListToLinkMealToMenu(meal : Meal) {

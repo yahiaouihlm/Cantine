@@ -19,11 +19,11 @@
                        id="firstName"
                 />
                 <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
-                    <div *ngIf="f['firstName'].errors['required']" class="center"> Votre Prénom est requis</div>
-                    <div *ngIf="f['firstName'].errors['maxlength']" class="center">
+                    <div *ngIf="f['firstName'].errors?.['required']" class="center"> Votre Prénom est requis</div>
+                    <div *ngIf="f['firstName'].errors?.['maxlength']" class="center">
                         votre Prénom ne doit pas dépasser 60 charctéres
                     </div>
-                    <div *ngIf="f['firstName'].errors['minlength']" class="center">
+                    <div *ngIf="f['firstName'].errors?.['minlength']" class="center">
                         votre Prénom doit avoir au minimum de 3 charctéres
                     </div>
                 </div>
@@ -40,11 +40,11 @@
                        id="lastName"
                 />
                 <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
-                    <div *ngIf="f['lastName'].errors['required']" class="center"> Votre Nom est requis</div>
-                    <div *ngIf="f['lastName'].errors['maxlength']" class="center">
+                    <div *ngIf="f['lastName'].errors?.['required']" class="center"> Votre Nom est requis</div>
+                    <div *ngIf="f['lastName'].errors?.['maxlength']" class="center">
                         votre Nom ne doit pas dépasser 60 charctéres
                     </div>
-                    <div *ngIf="f['lastName'].errors['minlength']" class="center">
+                    <div *ngIf="f['lastName'].errors?.['minlength']" class="center">
                         votre Nom doit avoir au minimum de 3 charctéres
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                        id="birthDate"
                 />
                 <div *ngIf="submitted && f['birthDate'].errors" class="invalid-feedback">
-                    <div *ngIf="f['birthDate'].errors['required']" class="center"> La date de naissance est requise
+                    <div *ngIf="f['birthDate'].errors?.['required']" class="center"> La date de naissance est requise
                     </div>
 
                 </div>
@@ -98,12 +98,12 @@
                        id="address"
                 />
                 <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
-                    <div *ngIf="f['address'].errors['required']" class="center"> le champs est obligatoire</div>
-                    <div *ngIf="f['address'].errors['maxlength']" class="center">
+                    <div *ngIf="f['address'].errors?.['required']" class="center"> le champs est obligatoire</div>
+                    <div *ngIf="f['address'].errors?.['maxlength']" class="center">
                         L'adresse ne doit pas dépasser 3000 charctéres
                     </div>
 
-                    <div *ngIf="f['address'].errors['minlength']" class="center">
+                    <div *ngIf="f['address'].errors?.['minlength']" class="center">
                         L'adresse doit avoir au minimum de 10 charctéres
                     </div>
 
@@ -122,12 +122,12 @@
                        id="town"
                 />
                 <div *ngIf="submitted && f['town'].errors" class="invalid-feedback">
-                    <div *ngIf="f['town'].errors['required']" class="center"> le champs est obligatoire</div>
-                    <div *ngIf="f['town'].errors['maxlength']" class="center">
+                    <div *ngIf="f['town'].errors?.['required']" class="center"> le champs est obligatoire</div>
+                    <div *ngIf="f['town'].errors?.['maxlength']" class="center">
                         Le nom de la ville ne doit pas dépasser 1000 charctéres
                     </div>
 
-                    <div *ngIf="f['town'].errors['minlength']" class="center">
+                    <div *ngIf="f['town'].errors?.['minlength']" class="center">
                         Le nom de la ville doit avoir au minimum de 3 charctéres
                     </div>
 
@@ -146,7 +146,7 @@
                        id="phoneNumber"
                 />
                 <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
-                    <div *ngIf="f['phoneNumber'].errors['pattern']" class="center">
+                    <div *ngIf="f['phoneNumber'].errors?.['pattern']" class="center">
                         Format Numéro Téléphone est incorrect
                     </div>
 
@@ -166,7 +166,7 @@
                     </ng-container>
                 </select>
                 <div *ngIf="submitted && f['adminFunction'].errors" class="invalid-feedback">
-                    <div *ngIf="f['adminFunction'].errors['required']" class="center"> saisie de votre travail est
+                    <div *ngIf="f['adminFunction'].errors?.['required']" class="center"> saisie de votre travail est
                         requise
                     </div>
                 </div>

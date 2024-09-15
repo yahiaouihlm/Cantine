@@ -1,9 +1,9 @@
 package fr.sqli.cantine.service.order.exception;
 
-public class InvalidOrderException  extends   Exception{
+public class InvalidOrderException extends Exception {
 
-       public  InvalidOrderException( String  message ){
-           super(message);
-       }
+    public InvalidOrderException(String message) {
+        super(message);
+    }
 
 }

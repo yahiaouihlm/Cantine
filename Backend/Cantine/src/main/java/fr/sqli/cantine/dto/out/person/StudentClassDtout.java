@@ -1,21 +1,19 @@
 package fr.sqli.cantine.dto.out.person;
 
-public class StudentClassDtout  {
+import lombok.Getter;
+import lombok.Setter;
 
-    private  Integer  id ;
-    private  String  name  ;
+@Setter
+@Getter
+public class StudentClassDtout {
+
+    private String id;
+    private String name;
 
 
-    public StudentClassDtout(Integer id, String name) {
+    public StudentClassDtout(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

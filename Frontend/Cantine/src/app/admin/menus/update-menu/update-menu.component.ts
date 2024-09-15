@@ -19,9 +19,9 @@ import {IConstantsURL} from "../../../sharedmodule/constants/IConstantsURL";
 })
 export class UpdateMenuComponent implements OnInit {
 
-    private WOULD_YOU_LIKE_TO_UPDATE_THIS_MENU = "Voulez-vous  enregistrer  ce  menu ?"
+    private WOULD_YOU_LIKE_TO_UPDATE_THIS_MENU = "Voulez-vous  sauvgarder  ces modifications ?";
 
-    private MENU_ADDED_SUCCESSFULLY = "Le Menu a été ajouté avec succès !"
+    private MENU_ADDED_SUCCESSFULLY = "Le Menu a été modifié avec succès !"
     private ATTENTION_MENU_PRICE = "Attention, Vous  avez  Saisie un  prix  supérieur à 80€  pour ce  menu  !"
     private  MENU_REMOVED_SUCCESSFULLY = "Le menu a été supprimé avec succès !"
     private  WOULD_YOU_LIKE_TO_DELETE_THIS_MENU = "Voulez-vous vraiment supprimer ce menu ?"
@@ -96,10 +96,10 @@ export class UpdateMenuComponent implements OnInit {
     editMenu() {
         let mealsIds: string[] = []
         this.mealsContainMenu.forEach((meal) => {
-            mealsIds.push(meal.uuid);
+            mealsIds.push(meal.id);
         });
         const menu = new FormData();
-        menu.append("uuid", this.menu.uuid);
+        menu.append("id", this.menu.id);
         menu.append('label', this.updatedMenu.controls["label"].value);
         menu.append('description', this.updatedMenu.controls["description"].value);
         menu.append('price', this.updatedMenu.controls["price"].value);
@@ -189,7 +189,7 @@ export class UpdateMenuComponent implements OnInit {
     }
 
     deleteMenu () {
-        this.menuService.removeMenu(this.menu.uuid).subscribe({
+        this.menuService.removeMenu(this.menu.id).subscribe({
             next: (data) => {
                 const result = this.matDialog.open(SuccessfulDialogComponent, {
                     data: {message: this.MENU_REMOVED_SUCCESSFULLY},

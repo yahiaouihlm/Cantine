@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -26,23 +27,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     final String paramReq = "?" + "uuidMenu" + "=";
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
     private IFunctionDao functionDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private String authorizationToken;
     private MenuEntity menuSaved;
 
     @Autowired
-    public RemoveMenuTest(MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IAdminDao adminDao) throws Exception {
+    public RemoveMenuTest(MockMvc mockMvc, IMenuDao menuDao, IMealDao mealDao, IFunctionDao functionDao, IUserDao adminDao) throws Exception {
         this.mockMvc = mockMvc;
         this.menuDao = menuDao;
         this.mealDao = mealDao;
@@ -59,10 +61,10 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
         var meal = this.mealDao.save(IMenuTest.createMeal());
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal("10.0"), 1, 10, imageEntity);
-        mealEntity.setMealType(MealTypeEnum.ENTREE);
+        mealEntity.setMeal_type(MealTypeEnum.ENTREE);
 
         this.mealDao.save(mealEntity);
 
@@ -81,14 +83,14 @@ public class RemoveMenuTest extends AbstractContainerConfig implements IMenuTest
     @Test
     void removeMenuWithExistingMenu() throws Exception {
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(DELETE_MENU_URL + this.paramReq + menuSaved.getUuid())
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(DELETE_MENU_URL + this.paramReq + menuSaved.getId())
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(IMenuTest.responseMap.get("MenuDeletedSuccessfully"))));
 
         //check  if  the image  is  really   deleted
-        var imageName = menuSaved.getImage().getImagename();
+        var imageName = menuSaved.getImage().getName();
         Assertions.assertFalse(new File(DIRECTORY_IMAGE_MENU + imageName).exists());
     }
 

@@ -2,27 +2,27 @@ package fr.sqli.cantine.dto.out.person;
 
 import java.time.LocalDate;
 
-public abstract  class AbstractPersonDtout {
+public abstract class AbstractPersonDtout {
 
-    private  String uuid ;
-    private  String firstname;
-    private  String lastname;
-    private  String email;
+    private String id;
+    private String firstname;
+    private String lastname;
+    private String email;
 
 
     private LocalDate birthdate;
-    private  String town;
-    private  String address;
-    private  String phone;
+    private String town;
+    private String address;
+    private String phone;
     private String image;
 
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFirstname() {
@@ -48,9 +48,6 @@ public abstract  class AbstractPersonDtout {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
-
 
 
     public LocalDate getBirthdate() {

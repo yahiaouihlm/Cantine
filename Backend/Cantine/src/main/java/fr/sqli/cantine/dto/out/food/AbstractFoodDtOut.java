@@ -5,7 +5,7 @@ import fr.sqli.cantine.entity.ImageEntity;
 import java.math.BigDecimal;
 
 public abstract class AbstractFoodDtOut {
-    protected final String uuid;
+    protected final String id;
     protected final String label;
     protected final String description;
 
@@ -16,18 +16,18 @@ public abstract class AbstractFoodDtOut {
     protected final String image;
 
     public AbstractFoodDtOut(String uuid, String label, String description, BigDecimal price, Integer quantity, Integer status, ImageEntity foodImageEntity, String foodUrlImage) {
-        this.uuid = uuid;
+        this.id = uuid;
         this.label = label;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.status = status;
-        this.image = foodUrlImage + foodImageEntity.getImagename();
+        this.image = foodUrlImage + foodImageEntity.getName();
 
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     public String getLabel() {

@@ -49,7 +49,6 @@ export class SignUpComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        Malfunctions.checkUserConnection(this.router);
         this.studentClass$ = this.studentService.getAllStudentClass();
     }
 

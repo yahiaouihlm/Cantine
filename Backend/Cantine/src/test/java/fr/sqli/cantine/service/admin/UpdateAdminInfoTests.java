@@ -1,8 +1,9 @@
 package fr.sqli.cantine.service.admin;
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IFunctionDao;
+import fr.sqli.cantine.dao.IRoleDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.AdminDtoIn;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
@@ -38,7 +39,7 @@ public class UpdateAdminInfoTests {
     private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     @Mock
     private ImageService imageService;
 
@@ -52,6 +53,8 @@ public class UpdateAdminInfoTests {
     private AdminService adminService;
     private FunctionEntity functionEntity;
     private AdminDtoIn adminDtoIn;
+    @Mock
+    private IRoleDao iRoleDao;
 
     @BeforeEach
     void setUp() throws IOException, FileNotFoundException {
@@ -62,7 +65,7 @@ public class UpdateAdminInfoTests {
         this.environment.setProperty("sqli.cantine.admin.email.domain","social.aston-ecole.com");
         this.environment.setProperty("sqli.cantine.image.admin.path","adminImagePath");
         this.adminDtoIn = new AdminDtoIn();
-        this.adminDtoIn.setUuid(java.util.UUID.randomUUID().toString());
+        this.adminDtoIn.setId(java.util.UUID.randomUUID().toString());
         this.adminDtoIn.setFirstname("firstName");
         this.adminDtoIn.setLastname("lastName");
         this.adminDtoIn.setFunction("function");
@@ -76,7 +79,7 @@ public class UpdateAdminInfoTests {
                 "images/png",                    // type MIME
                 new FileInputStream(IMAGE_TESTS_PATH)));
         ;  // contenu du fichier
-        this.adminService = new AdminService(adminDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),  null, null);
+        this.adminService = new AdminService(adminDao,this.iRoleDao, functionDao,imageService,  this.environment, new BCryptPasswordEncoder(),  null, null);
 
     }
 
@@ -374,12 +377,12 @@ public class UpdateAdminInfoTests {
  @Test
  void  updateAdminInformationWithNotFoundAdmin () throws InvalidUserInformationException {
      String adminUuid = java.util.UUID.randomUUID().toString();
-     this.adminDtoIn.setUuid(adminUuid);
+     this.adminDtoIn.setId(adminUuid);
      FunctionEntity function = new FunctionEntity();
-        function.setId(1);
+        function.setId(java.util.UUID.randomUUID().toString());
         function.setName(this.adminDtoIn.getFunction());
 
-     Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
+     Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.empty());
      Mockito.when(this.functionDao.findByName(this.adminDtoIn.getFunction())).thenReturn(Optional.of(function));
 
      Assertions.assertThrows(UserNotFoundException.class, () -> {
@@ -391,14 +394,14 @@ public class UpdateAdminInfoTests {
  }
      @Test
    void updateAdminWithInvalidUuid (){
-         this.adminDtoIn.setUuid("ehbrerfrfr");
+         this.adminDtoIn.setId("ehbrerfrfr");
          assertThrows(InvalidUserInformationException.class, () -> {
               this.adminService.updateAdminInfo( this.adminDtoIn);
          });
   }
     @Test
      void updateAdminInfoWithNullUuid (){
-        this.adminDtoIn.setUuid(null);
+        this.adminDtoIn.setId(null);
         assertThrows(InvalidUserInformationException.class, () -> {
             this.adminService.updateAdminInfo( this.adminDtoIn);
         });

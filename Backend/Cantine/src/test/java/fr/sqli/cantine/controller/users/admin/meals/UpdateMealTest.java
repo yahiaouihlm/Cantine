@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.io.File;
@@ -34,22 +35,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class UpdateMealTest extends AbstractContainerConfig implements IMealTest {
 
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private LinkedMultiValueMap<String, String> formData;
     private MockMultipartFile imageData;
     private String authorizationToken;
 
     @Autowired
-    public UpdateMealTest(IAdminDao adminDao, IMealDao mealDao, MockMvc mockMvc, IFunctionDao functionDao) throws Exception {
+    public UpdateMealTest(IUserDao adminDao, IMealDao mealDao, MockMvc mockMvc, IFunctionDao functionDao) throws Exception {
         this.adminDao = adminDao;
         this.mealDao = mealDao;
         this.mockMvc = mockMvc;
@@ -61,7 +63,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     public void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
-        this.formData.add("uuid", java.util.UUID.randomUUID().toString());
+        this.formData.add("id", java.util.UUID.randomUUID().toString());
         this.formData.add("label", "MealTest");
         this.formData.add("price", "3.75");
         this.formData.add("category", "MealTest category");
@@ -83,9 +85,9 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         ImageEntity image1 = new ImageEntity();
-        image1.setImagename(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
+        image1.setName(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         List<MealEntity> meals = List.of(new MealEntity("Entrée", "Salade de tomates", "Salade", new BigDecimal("2.3"), 1, 1, mealTypeEnum, image), new MealEntity("Plat", "Poulet", "Poulet", new BigDecimal("2.3"), 1, 1, mealTypeEnum, image1));
         this.mealDao.saveAll(meals);
@@ -129,8 +131,8 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void updateMealWithImage() throws Exception {
-        var mealUuid = this.mealDao.findAll().get(0).getUuid();
-        this.formData.set("uuid", mealUuid);
+        var mealUuid = this.mealDao.findAll().get(0).getId();
+        this.formData.set("id", mealUuid);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_MEAL_URL).file(this.imageData).params(this.formData).header(HttpHeaders.AUTHORIZATION, this.authorizationToken).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -139,7 +141,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         // add other tests  to  check if the meal is updated in database
 
 
-        var updatedMeal = this.mealDao.findByUuid(mealUuid);
+        var updatedMeal = this.mealDao.findMealById(mealUuid);
         Assertions.assertTrue(updatedMeal.isPresent());
 
         Assertions.assertEquals(this.formData.getFirst("label"), updatedMeal.get().getLabel());
@@ -148,7 +150,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("status"))), updatedMeal.get().getStatus());
         Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("quantity"))), updatedMeal.get().getQuantity());
         Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.get().getPrice());
-        var newImageName = updatedMeal.get().getImage().getImagename();
+        var newImageName = updatedMeal.get().getImage().getName();
 
         Assertions.assertTrue(new File(IMAGE_MEAL_DIRECTORY_PATH + newImageName).delete());
 
@@ -157,8 +159,8 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void updateMealWithOutImage() throws Exception {
-        var mealUuid = this.mealDao.findAll().get(0).getUuid();
-        this.formData.set("uuid", mealUuid);
+        var mealUuid = this.mealDao.findAll().get(0).getId();
+        this.formData.set("id", mealUuid);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_MEAL_URL).params(this.formData).header(HttpHeaders.AUTHORIZATION, this.authorizationToken).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -166,7 +168,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
         // add other tests  to  check if the meal is updated in database
 
-        var updatedMeal = this.mealDao.findByUuid(mealUuid);
+        var updatedMeal = this.mealDao.findMealById(mealUuid);
         Assertions.assertTrue(updatedMeal.isPresent());
         Assertions.assertEquals(this.formData.getFirst("label"), updatedMeal.get().getLabel());
         Assertions.assertEquals(this.formData.getFirst("category"), updatedMeal.get().getCategory());
@@ -174,13 +176,13 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
         Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("status"))), updatedMeal.get().getStatus());
         Assertions.assertEquals(Integer.parseInt(Objects.requireNonNull(this.formData.getFirst("quantity"))), updatedMeal.get().getQuantity());
         Assertions.assertEquals(new BigDecimal(Objects.requireNonNull(this.formData.getFirst("price"))), updatedMeal.get().getPrice());
-        Assertions.assertEquals(this.imageData.getOriginalFilename(), updatedMeal.get().getImage().getImagename());
+        Assertions.assertEquals(this.imageData.getOriginalFilename(), updatedMeal.get().getImage().getName());
     }
 
     @Test
     void updateMealWithWrongImageFormat() throws Exception {
-        var mealUuid = this.mealDao.findAll().get(0).getUuid();
-        this.formData.set("uuid", mealUuid);
+        var mealUuid = this.mealDao.findAll().get(0).getId();
+        this.formData.set("id", mealUuid);
         this.imageData = new MockMultipartFile("image",                         // nom du champ de fichier
                 IMAGE_MEAL_FOR_TEST_NAME,          // nom du fichier
                 "image/gif",                    // type MIME
@@ -210,7 +212,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
     void updateMealToExistingMeal() throws Exception {
         var existingMeal = this.mealDao.findAll().get(0);
         var MealToUpdate = this.mealDao.findAll().get(1);
-        this.formData.set("uuid", MealToUpdate.getUuid());
+        this.formData.set("id", MealToUpdate.getId());
         this.formData.set("label", existingMeal.getLabel());
         this.formData.set("category", existingMeal.getCategory());
         this.formData.set("description", existingMeal.getDescription());
@@ -726,7 +728,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void updateMealWithInvalidID() throws Exception {
-        this.formData.set("uuid", "");
+        this.formData.set("id", "");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_MEAL_URL).file(this.imageData).header(HttpHeaders.AUTHORIZATION, this.authorizationToken).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -736,7 +738,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
     @Test
     void updateMealWithIDNull() throws Exception {
 
-        this.formData.set("uuid", null);
+        this.formData.set("id", null);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_MEAL_URL).file(this.imageData).header(HttpHeaders.AUTHORIZATION, this.authorizationToken).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -747,7 +749,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
     @Test
     void updateMealWithOutID() throws Exception {
 
-        this.formData.remove("uuid");
+        this.formData.remove("id");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_MEAL_URL).file(this.imageData).header(HttpHeaders.AUTHORIZATION, this.authorizationToken).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -758,7 +760,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
 
     @Test
     void updateMealWithInvalidIDArgument() throws Exception {
-        this.formData.set("uuid", "erfzr");
+        this.formData.set("id", "erfzr");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, UPDATE_MEAL_URL).file(this.imageData).header(HttpHeaders.AUTHORIZATION, this.authorizationToken).params(this.formData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 

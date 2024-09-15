@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     updateStudent() {
         const formDataStudent = new FormData();
-        formDataStudent.append('uuid', this.user.uuid.toString());
+        formDataStudent.append('id', this.user.id.toString());
         formDataStudent.append('firstname', this.studentUpdated.value.firstName);
         formDataStudent.append('lastname', this.studentUpdated.value.lastName);
         formDataStudent.append('birthdateAsString  ', this.studentUpdated.value.birthDate);

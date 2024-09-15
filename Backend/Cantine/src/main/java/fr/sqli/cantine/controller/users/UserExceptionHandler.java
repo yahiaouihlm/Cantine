@@ -2,21 +2,26 @@ package fr.sqli.cantine.controller.users;
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
-import fr.sqli.cantine.service.users.exceptions.AccountActivatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.management.relation.RoleNotFoundException;
+
 @ControllerAdvice
 public class UserExceptionHandler {
 
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ExceptionDtout> handleUnknownUser(RoleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDtout(e.getMessage()));
+    }
 
     @ExceptionHandler(UnknownUser.class)
     public ResponseEntity<ExceptionDtout> handleUnknownUser(UnknownUser e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
     }
-
 
     @ExceptionHandler(ExpiredToken.class)
     public ResponseEntity<ExceptionDtout> handleExpiredToken(ExpiredToken e) {
@@ -27,6 +32,7 @@ public class UserExceptionHandler {
     public ResponseEntity<ExceptionDtout> handleInvalidToken(InvalidTokenException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
     }
+
     @ExceptionHandler(TokenNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleTokenNotFoundException(TokenNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
@@ -41,28 +47,21 @@ public class UserExceptionHandler {
     public ResponseEntity<ExceptionDtout> handleAccountAlreadyActivated(AccountActivatedException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
+
     @ExceptionHandler(InvalidUserInformationException.class)
     public ResponseEntity<ExceptionDtout> handleExistingMeal(InvalidUserInformationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
     }
+
     @ExceptionHandler(ExistingUserException.class)
-    public ResponseEntity<ExceptionDtout> handleExistingUserException( ExistingUserException e) {
+    public ResponseEntity<ExceptionDtout> handleExistingUserException(ExistingUserException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
-
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleUserNotFound(UserNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -74,10 +73,12 @@ public class UserExceptionHandler {
     public ResponseEntity<ExceptionDtout> handleExistingStudentClass(ExistingStudentClassException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage()));
     }
+
     @ExceptionHandler(InvalidStudentClassException.class)
     public ResponseEntity<ExceptionDtout> handleInvalidStudentClass(InvalidStudentClassException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
     }
+
     @ExceptionHandler(StudentClassNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleAdminNotFound(StudentClassNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage()));

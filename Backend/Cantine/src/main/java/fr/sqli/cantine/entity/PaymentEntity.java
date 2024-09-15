@@ -13,38 +13,40 @@ import java.time.LocalTime;
 @Table(name = "payment")
 @Getter
 @Setter
-public class PaymentEntity  extends AbstractEntity{
+public class PaymentEntity extends AbstractEntity {
 
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    private AdminEntity admin;
+    private UserEntity admin;
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
-    private StudentEntity student;
+    private UserEntity student;
 
-    @Column(name = "amount" , nullable=false )
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "payment_date" , nullable=false )
+    @Column(name = "payment_date", nullable = false)
     private LocalDate paymentDate;
 
-    @Column(name = "payment_time", nullable=false)
+    @Column(name = "payment_time", nullable = false)
     private Time paymentTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "origin" ,  nullable = false)
+    @Column(name = "origin", nullable = false)
     private TransactionType origin;
 
-    public PaymentEntity(AdminEntity admin, StudentEntity student, BigDecimal amount , TransactionType origin) {
+    public PaymentEntity(UserEntity admin, UserEntity student, BigDecimal amount, TransactionType origin) {
         this.admin = admin;
         this.student = student;
         this.amount = amount;
         this.paymentDate = LocalDate.now();
         this.paymentTime = Time.valueOf(LocalTime.now());
-        this.origin= origin;
+        this.origin = origin;
     }
-    public  PaymentEntity(){}
+
+    public PaymentEntity() {
+    }
 
 
 }

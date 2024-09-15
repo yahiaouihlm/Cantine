@@ -54,10 +54,10 @@ public class AddMealTest {
         env.setProperty("sqli.cantine.images.meals.path", "images/meals");
        mealService = new MealService(env, mealDao, imageService, iMenuDao);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename("image-test");
+        imageEntity.setName("image-test");
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         this.mealEntity = new MealEntity(mealLabel, categoryMeal, descriptionMeal, BigDecimal.valueOf(1.3), 1, 1, mealTypeEnum, imageEntity);
-        this.mealEntity.setId(1);
+        this.mealEntity.setId(java.util.UUID.randomUUID().toString());
 
 
         this.mealDtoIn = new MealDtoIn();

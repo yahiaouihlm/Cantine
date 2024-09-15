@@ -11,7 +11,8 @@ import java.util.List;
 public interface IAdminFunctionService {
 
 
-    List<TransactionDtout>getStudentTransactions(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
+    List<TransactionDtout> getStudentTransactions(String studentUuid) throws InvalidUserInformationException, UserNotFoundException;
+
     void addAmountToStudentAccountCodeValidation(String adminUuid, String studentUuid, Integer validationCode, Double amount) throws InvalidUserInformationException, ExpiredToken, InvalidTokenException, UserNotFoundException, UnknownUser, MessagingException;
 
     void attemptAddAmountToStudentAccount(String adminUuid, String studentUuid, Double amount) throws InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser;

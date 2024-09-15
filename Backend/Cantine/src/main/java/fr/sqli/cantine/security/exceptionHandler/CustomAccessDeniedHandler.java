@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class CustomAccessDeniedHandler   implements  org.springframework.security.web.access.AccessDeniedHandler{
-
-
+public class CustomAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
 
 
     @Override
@@ -20,6 +18,6 @@ public class CustomAccessDeniedHandler   implements  org.springframework.securit
 
         System.out.println(accessDeniedException.getMessage());
 
-        response.sendError(500,"ACCESS DENIED");
+        response.sendError(500, "ACCESS DENIED");
     }
 }

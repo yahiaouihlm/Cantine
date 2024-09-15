@@ -5,13 +5,13 @@ import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 public class UserEmailSender {
 
-    private final  EmailSenderService emailSenderService;
+    private final EmailSenderService emailSenderService;
 
     private final SpringTemplateEngine templateEngine;
 
@@ -25,8 +25,7 @@ public class UserEmailSender {
     }
 
 
-
-    public void sendNotificationAboutNewStudentAmount(UserEntity user, Double newSold , Double amount) throws MessagingException {
+    public void sendNotificationAboutNewStudentAmount(UserEntity user, Double newSold, Double amount) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", user.getFirstname());
         context.setVariable("lastname", user.getLastname());
@@ -42,7 +41,8 @@ public class UserEmailSender {
         String body = templateEngine.process("student-AddAmount-Notification", context);
         this.emailSenderService.send(user.getEmail(), "Nouveau  Solde sur  votre  compte  cantière", body);
     }
-    public void sendConfirmationCodeToCheckAddRemoveAmount (UserEntity user, Integer code , Double amount) throws MessagingException {
+
+    public void sendConfirmationCodeToCheckAddRemoveAmount(UserEntity user, Integer code, Double amount) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", user.getFirstname());
         context.setVariable("lastname", user.getLastname());
@@ -106,7 +106,7 @@ public class UserEmailSender {
 
     }
 
-    public  void sendNotificationTOStudentWhenEmailHasBeenChanged(UserEntity student) throws MessagingException {
+    public void sendNotificationTOStudentWhenEmailHasBeenChanged(UserEntity student) throws MessagingException {
         Context context = new Context();
         context.setVariable("firstname", student.getFirstname());
         context.setVariable("lastname", student.getLastname());
@@ -120,7 +120,7 @@ public class UserEmailSender {
         this.emailSenderService.send(student.getEmail(), "Votre Email à été changer", body);
     }
 
-    private  String getCodeAndMakeSpaceBetweenDigits(Integer code){
+    private String getCodeAndMakeSpaceBetweenDigits(Integer code) {
         String codeAsString = code.toString();
         StringBuilder codeWithSpace = new StringBuilder();
         for (int i = 0; i < codeAsString.length(); i++) {

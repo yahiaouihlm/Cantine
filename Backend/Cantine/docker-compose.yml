@@ -14,13 +14,13 @@ services:
     depends_on:
       - database
     build:
-      context: ../gamelife
+      context: ../cantine
     environment:
       - "SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/cantine?stringtype=unspecified"
       - "SPRING_DATASOURCE_USERNAME=adminCantine"
       - "SPRING_DATASOURCE_PASSWORD=halim"
       - "SPRING_PROFILES_ACTIVE=dev"
-    restart: always
+    restart: no
     ports:
       - 8080:8080
     volumes:
@@ -29,8 +29,8 @@ services:
     tty: true
 
   front:
-    build: ../../Front/gamelife
-    restart: always
+    build: ../../Frontend/cantine
+    restart: no
     ports:
       - 4200:80
     depends_on:

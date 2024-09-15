@@ -4,9 +4,9 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
-import fr.sqli.cantine.entity.AdminEntity;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -30,29 +31,30 @@ import java.nio.file.Files;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class UpdateAdminInformation extends AbstractContainerConfig implements IAdminTest {
 
     @Autowired
-    private IStudentDao studentDao;
+    private IUserDao studentDao;
     @Autowired
     private IStudentClassDao studentClassDao;
     @Autowired
     private Environment environment;
     private IOrderDao orderDao;
     private IFunctionDao functionDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IConfirmationTokenDao iConfirmationTokenDao;
     private MockMvc mockMvc;
     private String authorizationToken;
-    private AdminEntity adminEntity;
+    private UserEntity adminEntity;
 
     private MockMultipartFile imageData;
     private MultiValueMap<String, String> formData;
     private FunctionEntity savedFunction;
-    private AdminEntity savedAdmin;
+    private UserEntity savedAdmin;
 
     @Autowired
-    public UpdateAdminInformation(IOrderDao iOrderDao ,MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+    public UpdateAdminInformation(IOrderDao iOrderDao ,MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
@@ -99,7 +101,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     void initFormData() throws IOException {
         this.formData = new LinkedMultiValueMap<>();
-        this.formData.add("uuid", this.adminEntity.getUuid());
+        this.formData.add("id", this.adminEntity.getId());
         this.formData.add("firstname", "Halim");
         this.formData.add("lastname", "Yahiaoui");
         this.formData.add("birthdateAsString", "2000-07-18");
@@ -132,7 +134,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminUpdatedSuccessfully"))));
 
-        var adminUpdated = this.adminDao.findByUuid(this.adminEntity.getUuid());
+        var adminUpdated = this.adminDao.findById(this.adminEntity.getId());
 
         Assertions.assertTrue(adminUpdated.isPresent());
 
@@ -143,7 +145,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
         Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.get().getAddress());
         Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.get().getPhone());
 
-        var imageUpdated = new File(ADMIN_IMAGE_PATH + adminUpdated.get().getImage().getImagename());
+        var imageUpdated = new File(ADMIN_IMAGE_PATH + adminUpdated.get().getImage().getName());
 
         Assertions.assertTrue(imageUpdated.delete());
 
@@ -159,7 +161,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
        // make  a  new  admin  with  a default  image
        var defaultImageAdmin  =  this.environment.getProperty("sqli.cantine.default.persons.student.imagename");
        var defaultImg = new ImageEntity();
-         defaultImg.setImagename(defaultImageAdmin);
+         defaultImg.setName(defaultImageAdmin);
          this.adminEntity.setImage(defaultImg);
 
             this.adminDao.save(this.adminEntity);
@@ -174,7 +176,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminUpdatedSuccessfully"))));
 
 
-        var adminUpdated = this.adminDao.findByUuid(this.adminEntity.getUuid());
+        var adminUpdated = this.adminDao.findById(this.adminEntity.getId());
 
         Assertions.assertTrue(adminUpdated.isPresent());
         Assertions.assertEquals(this.formData.get("firstname").get(0), adminUpdated.get().getFirstname());
@@ -200,7 +202,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminUpdatedSuccessfully"))));
 
 
-        var adminUpdated = this.adminDao.findByUuid(this.adminEntity.getUuid());
+        var adminUpdated = this.adminDao.findById(this.adminEntity.getId());
         Assertions.assertTrue(adminUpdated.isPresent());
 
         Assertions.assertEquals(this.formData.get("firstname").get(0), adminUpdated.get().getFirstname());
@@ -208,7 +210,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
         Assertions.assertEquals(this.formData.get("town").get(0), adminUpdated.get().getTown());
         Assertions.assertEquals(this.formData.get("address").get(0), adminUpdated.get().getAddress());
         Assertions.assertEquals(this.formData.get("phone").get(0), adminUpdated.get().getPhone());
-        Assertions.assertEquals(this.adminEntity.getImage().getImagename(), adminUpdated.get().getImage().getImagename());
+        Assertions.assertEquals(this.adminEntity.getImage().getName(), adminUpdated.get().getImage().getName());
 
 
     }
@@ -948,7 +950,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
     @Test
     void updateAdminInfoWithAdminNotFound() throws Exception {
         var adminUuid = java.util.UUID.randomUUID().toString();
-        this.formData.set("uuid", String.valueOf(adminUuid));
+        this.formData.set("id", String.valueOf(adminUuid));
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -962,7 +964,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithInvalidIdAdmin() throws Exception {
-        this.formData.set("uuid", "jjedh5");
+        this.formData.set("id", "jjedh5");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -975,7 +977,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithNullIdAdmin() throws Exception {
-        this.formData.set("uuid", null);
+        this.formData.set("id", null);
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -988,7 +990,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithEmptyIdAdmin() throws Exception {
-        this.formData.set("uuid", "");
+        this.formData.set("id", "");
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)
                 .params(this.formData)
@@ -1001,7 +1003,7 @@ public class UpdateAdminInformation extends AbstractContainerConfig implements I
 
     @Test
     void updateAdminInfoWithOutIdAdmin() throws Exception {
-        this.formData.remove("uuid");
+        this.formData.remove("id");
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADMIN_UPDATE_INFO)
                 .file(this.imageData)

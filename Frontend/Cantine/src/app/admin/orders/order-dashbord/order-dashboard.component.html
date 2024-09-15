@@ -11,7 +11,7 @@
                     <span>  N° Commande  :  {{order.uuid}} </span>
                 </div>
                 <div class="col-md-2">
-                    <span><strong> Etudiant : </strong> <span (click)="goToStudentProfile(order.studentOrder.uuid)"
+                    <span><strong> Etudiant : </strong> <span (click)="goToStudentProfile(order.studentOrder.id)"
                                                               style="color: blue; cursor: pointer">{{order.studentOrder.firstname}}  {{order.studentOrder.lastname}}</span> </span>
                 </div>
                 <div class="col-md-2">

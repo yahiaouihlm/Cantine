@@ -41,7 +41,7 @@ export class MenuDetailsComponent implements OnInit {
         const userId = Malfunctions.getUserIdFromLocalStorage();
         if (userId != null && userId !== "") {
 
-            const element = document.getElementById(menu.uuid) as HTMLButtonElement;
+            const element = document.getElementById(menu.id) as HTMLButtonElement;
             if (element != null) {
                 element.textContent = "Menu ajouté";
                 element.disabled = true;

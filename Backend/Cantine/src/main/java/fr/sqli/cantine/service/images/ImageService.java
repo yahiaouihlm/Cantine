@@ -1,8 +1,8 @@
 package fr.sqli.cantine.service.images;
 
 import fr.sqli.cantine.service.images.exception.ImagePathException;
-import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ImageService implements IImageService {
             LOG.fatal("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
             throw new ImagePathException("INVALID PATH CAN'T UPLOAD IMAGE");
         }
-        if  (!Files.exists(Path.of(path))){
+        if (!Files.exists(Path.of(path))) {
             LOG.fatal("CAN'T UPLOAD IMAGE BECAUSE THE PATH IS INVALID ITS EMPTY OR NULL IN THE uploadImage METHOD ");
             throw new ImagePathException("INVALID PATH CAN'T UPLOAD IMAGE");
         }

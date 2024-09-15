@@ -31,7 +31,7 @@ export class MealsComponent implements OnInit {
         const userId = Malfunctions.getUserIdFromLocalStorage();
         if (userId != null && userId !== "") {
 
-            const element = document.getElementById(meal.uuid) as HTMLButtonElement;
+            const element = document.getElementById(meal.id) as HTMLButtonElement;
             if (element != null) {
                 element.textContent = "plat Ajouté";
                 element.disabled = true;

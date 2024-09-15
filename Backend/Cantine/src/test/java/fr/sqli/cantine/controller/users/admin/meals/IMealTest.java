@@ -4,43 +4,31 @@ import java.util.Map;
 
 public interface IMealTest {
 
+    /************************ URLS ************************/
     String BASIC_CANTINE_ROOT_URL = "http://localhost:8080/";
 
+
+    /*********************** END POINTS ************************/
     String BASIC_MEAL_URL = BASIC_CANTINE_ROOT_URL + "cantine/admin/api/meals";
-
-
-    final  String GET_ONE_MEAL_URL = BASIC_MEAL_URL + "/get";
+    String GET_ONE_MEAL_URL = BASIC_MEAL_URL + "/get";
     String GET_ALL_MEALS_URL = BASIC_MEAL_URL + "/getAll";
-
     String GET_UNAVAILABLE_MEALS_URL = BASIC_MEAL_URL + "/getUnavailableMeals";
-
-
-    final String ADD_MEAL_URL = BASIC_MEAL_URL + "/add";
-
-    final String DELETE_MEAL_URL = BASIC_MEAL_URL + "/delete";
-
-    final String UPDATE_MEAL_URL = BASIC_MEAL_URL + "/update";
-
+    String ADD_MEAL_URL = BASIC_MEAL_URL + "/add";
+    String DELETE_MEAL_URL = BASIC_MEAL_URL + "/delete";
+    String UPDATE_MEAL_URL = BASIC_MEAL_URL + "/update";
     String IMAGE_MEAL_TEST_DIRECTORY_PATH = "imagesTests/";
-
-
-    String  IMAGE_MEAL_FOR_TEST_NAME = "ImageForTest.jpg";
-    String SECOND_IMAGE_MEAL_FOR_TEST_NAME="ImageMealForTest1.jpg";
-    String IMAGE_MEAL_FORMAT_FOR_TEST="image/jpg";
-
+    String IMAGE_MEAL_FOR_TEST_NAME = "ImageForTest.jpg";
+    String SECOND_IMAGE_MEAL_FOR_TEST_NAME = "ImageMealForTest1.jpg";
+    String IMAGE_MEAL_FORMAT_FOR_TEST = "image/jpg";
     String IMAGE_MEAL_DIRECTORY_PATH = "images/meals/";
-    String   IMAGE_MEAL_FOR_TEST_PATH = IMAGE_MEAL_TEST_DIRECTORY_PATH +IMAGE_MEAL_FOR_TEST_NAME;
+    String IMAGE_MEAL_FOR_TEST_PATH = IMAGE_MEAL_TEST_DIRECTORY_PATH + IMAGE_MEAL_FOR_TEST_NAME;
 
 
-    Map <String, String> responseMap = Map.ofEntries(
+    Map<String, String> responseMap = Map.ofEntries(
             Map.entry("MealAddedSuccessfully", "MEAL ADDED SUCCESSFULLY"),
             Map.entry("MealDeletedSuccessfully", "MEAL DELETED SUCCESSFULLY"),
             Map.entry("MealUpdatedSuccessfully", "MEAL UPDATED SUCCESSFULLY")
     );
-
-
-
-
 
 
     final Map<String, String> exceptionsMap = Map.ofEntries(
@@ -71,13 +59,11 @@ public interface IMealTest {
             Map.entry("InvalidMealUuid", "INVALID MEAL UUID"),
             Map.entry("mealNotFound", "NO MEAL WAS FOUND"),
             Map.entry("mealCanNotBeDeletedOrder", "THE MENU CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN ORDER(S)"
-                    +"PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT"),
+                    + "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT"),
             Map.entry("mealCanNotBeDeletedMenu", "THE MEAL CAN NOT BE DELETED BECAUSE IT IS PRESENT IN AN OTHER MENU(S) " +
                     "PS -> THE  MEAL WILL  BE  AUTOMATICALLY  REMOVED IN  BATCH  TRAITEMENT")
 
     );
-
-
 
 
 }

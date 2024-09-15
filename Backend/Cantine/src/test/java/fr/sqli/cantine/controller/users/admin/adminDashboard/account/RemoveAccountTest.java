@@ -2,47 +2,42 @@ package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
-import fr.sqli.cantine.controller.users.admin.Impl.AdminController;
 import fr.sqli.cantine.dao.*;
-import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class RemoveAccountTest extends AbstractContainerConfig implements IAdminTest {
 
     private final String paramReq = "?" + "adminUuid" + "=";
 
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao iFunctionDao;
     private IConfirmationTokenDao iConfirmationTokenDao;
     private MockMvc mockMvc;
-    private AdminEntity adminEntity;
+    private UserEntity adminEntity;
     private String authorizationToken;
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
 
 
     @Autowired
-    public RemoveAccountTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
+    public RemoveAccountTest(MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IConfirmationTokenDao iConfirmationTokenDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.iFunctionDao = functionDao;
@@ -67,7 +62,7 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
 
     @Test
     void removeAdminAccountWithValidateAdminUuid() throws Exception {
-        var adminUuid = this.adminEntity.getUuid();
+        var adminUuid = this.adminEntity.getId();
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_DISABLE_ACCOUNT
                         + paramReq + adminUuid)
@@ -78,7 +73,7 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
         result.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(responseMap.get("AdminDisabledSuccessfully"))));
 
-        var admin = this.adminDao.findByUuid(adminUuid);
+        var admin = this.adminDao.findById(adminUuid);
         Assertions.assertTrue(admin.isPresent());
 
         Assertions.assertEquals(0, admin.get().getStatus());
@@ -95,7 +90,7 @@ public class RemoveAccountTest extends AbstractContainerConfig implements IAdmin
         var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_DISABLE_ACCOUNT
-                        + paramReq + this.adminEntity.getUuid())
+                        + paramReq + this.adminEntity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken)
                 .accept(MediaType.APPLICATION_JSON));
