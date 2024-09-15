@@ -1,7 +1,6 @@
 package fr.sqli.cantine.service.food.menus;
 
 import fr.sqli.cantine.dao.IMenuDao;
-import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MealTypeEnum;
@@ -53,20 +52,19 @@ class GetMenuTest {
 
 
         this.mealEntity = new MealEntity();  //  a meal
-        this.mealEntity.setId(1);
+        this.mealEntity.setId(java.util.UUID.randomUUID().toString());
         this.mealEntity.setStatus(1);
         this.mealEntity.setPrice(BigDecimal.valueOf(1.3));
         this.mealEntity.setQuantity(1);
         this.mealEntity.setCategory("Frites");
         this.mealEntity.setDescription("first Meal To  Test");
         this.mealEntity.setLabel("Meal 1");
-        this.mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
+        this.mealEntity.setMeal_type(MealTypeEnum.ACCOMPAGNEMENT);
         this.mealEntity.setImage(new ImageEntity());
 
 
         this.menuEntity = new MenuEntity(); // a menu
-        this.menuEntity.setUuid(java.util.UUID.randomUUID().toString());
-        this.menuEntity.setId(1);
+        this.menuEntity.setId(java.util.UUID.randomUUID().toString());
         this.menuEntity.setStatus(1);
         this.menuEntity.setPrice(BigDecimal.valueOf(1.3));
         this.menuEntity.setQuantity(1);
@@ -81,37 +79,36 @@ class GetMenuTest {
 
     @Test
     void getMenuByIdWithValidateUuid() throws InvalidFoodInformationException, FoodNotFoundException {
-        Mockito.when(iMenuDao.findByUuid(this.menuEntity.getUuid())).thenReturn(Optional.of(this.menuEntity));
+        Mockito.when(iMenuDao.findMenuById(this.menuEntity.getId())).thenReturn(Optional.of(this.menuEntity));
 
-        var  result  =  this.menuService.getMenuByUuId(this.menuEntity.getUuid());
+        var  result  =  this.menuService.getMenuByUuId(this.menuEntity.getId());
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getDescription(), this.menuEntity.getDescription());
-        Assertions.assertEquals(this.menuEntity.getUuid() , this.menuEntity.getUuid());
-        Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(this.menuEntity.getUuid());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findMenuById(this.menuEntity.getId());
 
     }
 
     @Test
     void getMenuByIdWithMenuNotFoundTest()  {
-        Mockito.when(iMenuDao.findByUuid(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(iMenuDao.findMenuById(Mockito.anyString())).thenReturn(Optional.empty());
         Assertions.assertThrows(FoodNotFoundException.class, () -> menuService.getMenuByUuId(java.util.UUID.randomUUID().toString()));
-        Mockito.verify(iMenuDao, Mockito.times(1)).findByUuid(Mockito.anyString());
+        Mockito.verify(iMenuDao, Mockito.times(1)).findMenuById(Mockito.anyString());
 
     }
     @Test
     void  getMenuByIdWithShortUuIdTest(){
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.getMenuByUuId("rfzrfzrfzrfzrf"));
-        Mockito.verify(iMenuDao, Mockito.times(0)).findByUuid(Mockito.anyString());;
+        Mockito.verify(iMenuDao, Mockito.times(0)).findMenuById(Mockito.anyString());;
     }
     @Test
     void  getMenuByIdWithEmptyUuIdTest(){
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.getMenuByUuId(""));/*TODO:  this  is  not  correct*/
-        Mockito.verify(iMenuDao, Mockito.times(0)).findByUuid(Mockito.anyString());;
+        Mockito.verify(iMenuDao, Mockito.times(0)).findMenuById(Mockito.anyString());;
     }
     @Test
     void getMenuByIdWithNullUuIdTest(){
         Assertions.assertThrows(InvalidFoodInformationException.class, () -> menuService.getMenuByUuId(null));
-        Mockito.verify(iMenuDao, Mockito.times(0)).findByUuid(Mockito.anyString());;
+        Mockito.verify(iMenuDao, Mockito.times(0)).findMenuById(Mockito.anyString());;
     }
 
 
@@ -120,7 +117,7 @@ class GetMenuTest {
     void getAllMenusWithTwoMenuTest() {
 
         var menuEntity2 = new MenuEntity(); // a menu
-        menuEntity2.setId(1);
+        menuEntity2.setId(java.util.UUID.randomUUID().toString());
         menuEntity2.setStatus(1);
         menuEntity2.setPrice(BigDecimal.valueOf(1.3));
         menuEntity2.setQuantity(1);

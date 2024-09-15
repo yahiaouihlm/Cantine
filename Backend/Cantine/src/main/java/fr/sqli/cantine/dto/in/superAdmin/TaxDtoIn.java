@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class TaxDtoIn {
 
-    private  BigDecimal taxValue ;
+    private BigDecimal taxValue;
 
     public BigDecimal getTaxValue() {
         return taxValue;

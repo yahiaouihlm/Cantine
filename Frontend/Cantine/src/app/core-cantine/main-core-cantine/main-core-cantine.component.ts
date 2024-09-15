@@ -52,7 +52,7 @@ export class MainCoreCantineComponent implements OnInit {
 
     gotoProfile() {
         this.router.navigate([IConstantsURL.STUDENT_PROFILE_URL],
-            {queryParams: {id: this.user.uuid}}).then(window.location.reload);
+            {queryParams: {id: this.user.id}}).then(window.location.reload);
     }
 
     logout() {

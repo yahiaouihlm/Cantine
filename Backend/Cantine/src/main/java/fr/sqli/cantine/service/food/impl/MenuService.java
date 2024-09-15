@@ -7,13 +7,13 @@ import fr.sqli.cantine.dto.out.food.MenuDtOut;
 import fr.sqli.cantine.entity.ImageEntity;
 import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MenuEntity;
-import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.food.IMealService;
 import fr.sqli.cantine.service.food.IMenuService;
+import fr.sqli.cantine.service.food.exceptions.*;
 import fr.sqli.cantine.service.images.IImageService;
 import fr.sqli.cantine.service.images.exception.ImagePathException;
-import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +55,13 @@ public class MenuService implements IMenuService {
             throw new InvalidFoodInformationException("THE MENU CAN NOT BE NULL");
         }
 
-        IMenuService.checkMenuUuidValidity(menuDtoIn.getUuid());
+        IMenuService.checkMenuUuidValidity(menuDtoIn.getId());
 
         menuDtoIn.checkMenuInformationsWithOutImage();
 
 
-        var menuEntity = this.menuDao.findByUuid(menuDtoIn.getUuid()).orElseThrow(() -> {
-            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE updateMenu METHOD ", menuDtoIn.getUuid());
+        var menuEntity = this.menuDao.findMenuById(menuDtoIn.getId()).orElseThrow(() -> {
+            MenuService.LOG.error("NO MENU WAS FOUND WITH AN UUID = {} IN THE updateMenu METHOD ", menuDtoIn.getId());
             return new FoodNotFoundException("NO MENU WAS FOUND");
         });
 
@@ -69,7 +69,7 @@ public class MenuService implements IMenuService {
         var menuUpdatedDoesExist = this.getMenuWithLabelAndDescriptionAndPrice(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
 
         if (menuUpdatedDoesExist.isPresent()) {
-            if (menuUpdatedDoesExist.get().getId().intValue() != menuEntity.getId().intValue()) {
+            if (!menuUpdatedDoesExist.get().getId().equals(menuEntity.getId())) {
                 MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
                 throw new ExistingFoodException("THE MENU ALREADY EXISTS");
             }
@@ -104,9 +104,9 @@ public class MenuService implements IMenuService {
         menuEntity.setMeals(new ArrayList<>(mealsInMenu));
 
         if (menuDtoIn.getImage() != null && !menuDtoIn.getImage().isEmpty() && menuDtoIn.getImage().getSize() > 0) {
-            var oldImageName = menuEntity.getImage().getImagename();
+            var oldImageName = menuEntity.getImage().getName();
             var newImageName = this.imageService.updateImage(oldImageName, menuDtoIn.getImage(), this.MENUS_IMAGES_PATH);
-            menuEntity.getImage().setImagename(newImageName);
+            menuEntity.getImage().setName(newImageName);
         }
 
         return this.menuDao.save(menuEntity);
@@ -118,7 +118,7 @@ public class MenuService implements IMenuService {
 
         IMenuService.checkMenuUuidValidity(menuUuid);
 
-        var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
+        var menu = this.menuDao.findMenuById(menuUuid).orElseThrow(() -> {
             MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE removeMenu METHOD ", menuUuid);
             return new FoodNotFoundException("MENU NOT FOUND");
         });
@@ -134,7 +134,7 @@ public class MenuService implements IMenuService {
         }
 
 
-        var imageName = menu.getImage().getImagename();
+        var imageName = menu.getImage().getName();
         this.imageService.deleteImage(imageName, this.MENUS_IMAGES_PATH);
         this.menuDao.delete(menu);
         return menu;
@@ -151,7 +151,7 @@ public class MenuService implements IMenuService {
 
         if (this.getMenuWithLabelAndDescriptionAndPrice(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice()).isPresent()) {
             MenuService.LOG.error("THE MENU ALREADY EXISTS IN THE DATABASE with label = {} , description = {} and price = {} ", menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice());
-            throw new ExistingFoodException("THE MENU ALREADY EXISTS IN THE DATABASE");
+            throw new ExistingFoodException("THE MENU ALREADY EXISTS");
         }
         //945b5e94-e694-4380-b8eb-24c3b0b59031
         // use  the Set to  avoid  duplicate  meals in the  menu
@@ -175,7 +175,7 @@ public class MenuService implements IMenuService {
         MultipartFile image = menuDtoIn.getImage();
         var imageName = this.imageService.uploadImage(image, this.MENUS_IMAGES_PATH);
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(imageName);
+        imageEntity.setName(imageName);
 
         var menuEntity = new MenuEntity(menuDtoIn.getLabel(), menuDtoIn.getDescription(), menuDtoIn.getPrice(), menuDtoIn.getStatus(), menuDtoIn.getQuantity(), imageEntity, mealsInMenu);
 
@@ -188,7 +188,7 @@ public class MenuService implements IMenuService {
 
         IMenuService.checkMenuUuidValidity(menuUuid);
 
-        var menu = this.menuDao.findByUuid(menuUuid).orElseThrow(() -> {
+        var menu = this.menuDao.findMenuById(menuUuid).orElseThrow(() -> {
             MenuService.LOG.debug("NO MENU WAS FOUND WITH AN UUID = {} IN THE getMenuByUuId METHOD ", menuUuid);
             return new FoodNotFoundException("MENU NOT FOUND");
         });

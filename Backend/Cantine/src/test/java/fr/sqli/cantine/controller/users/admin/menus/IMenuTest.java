@@ -58,7 +58,7 @@ public interface IMenuTest {
             Map.entry("HighPrice", "PRICE MUST BE LESS THAN 1000"),
             Map.entry("NegativePrice", "PRICE MUST BE GREATER THAN 0"),
             Map.entry("InvalidImageFormat", "INVALID IMAGE TYPE ONLY PNG , JPG , JPEG   ARE ACCEPTED"),
-            Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS IN THE DATABASE"),
+            Map.entry("ExistingMenu",  "THE MENU ALREADY EXISTS"),
             Map.entry("missingParam", "MISSING PARAMETER"),
             Map.entry("InvalidParameter", "THE ID CAN NOT BE NULL OR LESS THAN 0"),
             Map.entry("MenuNotFound", "MENU NOT FOUND"),
@@ -75,6 +75,7 @@ public interface IMenuTest {
 
     Map <String, String> responseMap = Map.ofEntries(
             Map.entry("MenuAddedSuccessfully", "MENU ADDED SUCCESSFULLY"),
+            Map.entry("MenuUpdatedSuccessfully", "MENU UPDATED SUCCESSFULLY"),
             Map.entry("MenuDeletedSuccessfully",  "MENU DELETED SUCCESSFULLY")
 
     );
@@ -98,8 +99,8 @@ public interface IMenuTest {
       }
 
 
-    static LinkedMultiValueMap initFormData(){
-        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+    static LinkedMultiValueMap<String, String>  initFormData(){
+        LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("label", "MenuTest");
         map.add("description", "Menu  description  test");
         map.add("price", "3.87");
@@ -110,10 +111,10 @@ public interface IMenuTest {
     static  MealEntity createMeal  () {
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = createMealWith("MealTest"  , "MealTest  description","MealTest  category", new BigDecimal(10.0) , 1 , 10 , imageEntity);
-         mealEntity.setMealType(MealTypeEnum.ACCOMPAGNEMENT);
+         mealEntity.setMeal_type(MealTypeEnum.ACCOMPAGNEMENT);
         return  mealEntity ;
     }
 
@@ -138,7 +139,7 @@ public interface IMenuTest {
         menuEntity.setMeals(mealAssociated);
         menuEntity.setCreatedDate(LocalDate.now());
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         menuEntity.setImage(imageEntity);
 

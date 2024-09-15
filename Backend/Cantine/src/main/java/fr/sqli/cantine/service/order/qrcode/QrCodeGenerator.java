@@ -8,22 +8,18 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-
 import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class QrCodeGenerator  {
+public class QrCodeGenerator {
 
 
-
-
-    public  static   void   generateQrCode  (String  data ,  String  path) throws IOException, WriterException {
+    public static void generateQrCode(String data, String path) throws IOException, WriterException {
 
         String charset = "UTF-8"; // or "ISO-8859-1"
         Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
-        hintMap.put(EncodeHintType.ERROR_CORRECTION,  ErrorCorrectionLevel.L);
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         BitMatrix matrix = new MultiFormatWriter().encode(
                 new String(data.getBytes(charset), charset),
                 BarcodeFormat.QR_CODE, 200, 200, hintMap);

@@ -1,6 +1,6 @@
 package fr.sqli.cantine.service.food.exceptions;
 
-public class InvalidFoodInformationException  extends  Exception{
+public class InvalidFoodInformationException extends Exception {
     public InvalidFoodInformationException(String message) {
         super(message);
     }

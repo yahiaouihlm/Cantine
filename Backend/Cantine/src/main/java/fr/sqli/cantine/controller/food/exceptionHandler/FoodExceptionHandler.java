@@ -21,7 +21,6 @@ public class FoodExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
 
-
     @ExceptionHandler(UnavailableFoodException.class)
     public ResponseEntity<ExceptionDtout> handleExistingMenu(UnavailableFoodException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage().toUpperCase()));
@@ -31,8 +30,6 @@ public class FoodExceptionHandler {
     public ResponseEntity<ExceptionDtout> handleFoodNotFoundException(FoodNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionDtout(e.getMessage().toUpperCase()));
     }
-
-
 
     @ExceptionHandler(RemoveFoodException.class)
     public ResponseEntity<ExceptionDtout> handleRemoveMealAdminException(RemoveFoodException e) {

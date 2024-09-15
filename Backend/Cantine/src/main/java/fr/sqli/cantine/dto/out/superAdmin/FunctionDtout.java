@@ -11,11 +11,13 @@ public class FunctionDtout {
         this.name = name;
 
     }
+
     public FunctionDtout(FunctionEntity functionEntity) {
         this.name = functionEntity.getName();
 
 
     }
+
     public String getName() {
         return name;
     }
@@ -23,9 +25,6 @@ public class FunctionDtout {
     public void setName(String name) {
         this.name = name;
     }
-
-
-
 
 
 }

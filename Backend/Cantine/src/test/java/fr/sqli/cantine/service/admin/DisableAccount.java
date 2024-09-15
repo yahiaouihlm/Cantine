@@ -1,9 +1,9 @@
 package fr.sqli.cantine.service.admin;
 
-import fr.sqli.cantine.dao.IAdminDao;
 import fr.sqli.cantine.dao.IFunctionDao;
-import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.entity.FunctionEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import fr.sqli.cantine.service.users.admin.impl.AdminService;
 import fr.sqli.cantine.service.users.exceptions.InvalidUserInformationException;
 import fr.sqli.cantine.service.users.exceptions.UserNotFoundException;
@@ -29,7 +29,7 @@ public class DisableAccount {
     private static final Logger LOG = LogManager.getLogger();
     final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
 
     @Mock
     private IFunctionDao functionDao;
@@ -40,17 +40,17 @@ public class DisableAccount {
     @Mock
      private  MockEnvironment env;
     private FunctionEntity functionEntity;
-    private  AdminEntity adminEntity;
+    private UserEntity adminEntity;
 
 
     @BeforeEach
     void  init  () {
          this.functionEntity = new FunctionEntity();
-        functionEntity.setId(1);
+        functionEntity.setId(java.util.UUID.randomUUID().toString());
         functionEntity.setName("name");
 
-         this.adminEntity = new AdminEntity();
-        adminEntity.setId(1);
+         this.adminEntity = new UserEntity();
+        adminEntity.setId(java.util.UUID.randomUUID().toString());
 
         adminEntity.setFirstname("firstname");
         adminEntity.setLastname("lastname");
@@ -65,9 +65,9 @@ public class DisableAccount {
     @Test  /** No Exception thrown  **/
     void  disabledAccountWithValidAdmin () throws UserNotFoundException, InvalidUserInformationException {
         String  adminUuid =  java.util.UUID.randomUUID().toString() ;
-        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.of(this.adminEntity));
+        Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.of(this.adminEntity));
         this.adminService.removeAdminAccount(adminUuid);
-        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminById(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(1)).save(this.adminEntity);
 
     }
@@ -86,13 +86,13 @@ public class DisableAccount {
          String  adminUuid =  java.util.UUID.randomUUID().toString() ;
 
 
-        Mockito.when(this.adminDao.findByUuid(adminUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.adminDao.findAdminById(adminUuid)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserNotFoundException.class, () -> {
             this.adminService.removeAdminAccount(adminUuid);
         });
 
-        Mockito.verify(this.adminDao, Mockito.times(1)).findByUuid(adminUuid);
+        Mockito.verify(this.adminDao, Mockito.times(1)).findAdminById(adminUuid);
         Mockito.verify(this.adminDao, Mockito.times(0)).save(Mockito.any());
     }
     @Test

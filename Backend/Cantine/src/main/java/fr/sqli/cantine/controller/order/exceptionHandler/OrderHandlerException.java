@@ -1,4 +1,4 @@
-package fr.sqli.cantine.controller.order;
+package fr.sqli.cantine.controller.order.exceptionHandler;
 
 
 import fr.sqli.cantine.dto.out.ExceptionDtout;
@@ -12,19 +12,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class OrderHandlerException {
 
 
-
     @ExceptionHandler(CancelledOrderException.class)
     public ResponseEntity<ExceptionDtout> handleCancelledOrderException(CancelledOrderException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
     }
+
     @ExceptionHandler(UnableToCancelOrderException.class)
     public ResponseEntity<ExceptionDtout> handleUnableToCancelOrder(UnableToCancelOrderException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDtout(e.getMessage()));
     }
-
-
-
-
 
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ExceptionDtout> handleOrderNotFound(OrderNotFoundException e) {
@@ -37,8 +33,6 @@ public class OrderHandlerException {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionDtout(e.getMessage()));
     }
 
-
-
     //  one meal or  menu is not available
 
     @ExceptionHandler(UnavailableFoodForOrderException.class)
@@ -47,7 +41,7 @@ public class OrderHandlerException {
     }
 
     @ExceptionHandler(InvalidOrderException.class)
-    public ResponseEntity<ExceptionDtout> handleInvalidOrder(InvalidOrderException  e) {
+    public ResponseEntity<ExceptionDtout> handleInvalidOrder(InvalidOrderException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDtout(e.getMessage()));
     }
 
@@ -56,8 +50,6 @@ public class OrderHandlerException {
     public ResponseEntity<ExceptionDtout> handleInsufficientBalance(InsufficientBalanceException e) {
         return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(new ExceptionDtout(e.getMessage()));
     }
-
-
 
 
 }

@@ -68,7 +68,7 @@ export class ManageStudentComponent implements OnInit {
     addAmount() {
         let amountToAdd = 0;
         let dialogRef = this.matDialog.open(EditStudentWalletDialogComponent, {
-            data: {message: "Le Montant à Ajouter", userid: this.user.uuid},
+            data: {message: "Le Montant à Ajouter", userid: this.user.id},
             width: '47%',
             height: '30%'
         });
@@ -87,7 +87,7 @@ export class ManageStudentComponent implements OnInit {
     sendStudentAmount(amountToAdd: number) {
 
         let myAdminUuid = Malfunctions.getUserIdFromLocalStorage()
-        this.studentsManagementService.attemptAddAmountToStudentAccount(myAdminUuid, this.user.uuid, amountToAdd).subscribe({
+        this.studentsManagementService.attemptAddAmountToStudentAccount(myAdminUuid, this.user.id, amountToAdd).subscribe({
             next: (response) => {
                 this.isLoadingPage = false
                 console.log(response);
@@ -105,7 +105,7 @@ export class ManageStudentComponent implements OnInit {
     sendStudentConfirmationCode(amountToAdd: number) {
         let dialogRef = this.matDialog.open(NgOtpInputDialogComponent, {
             width: "50vw", height: "30vh",
-            data: {studentUuid: this.user.uuid , amount : amountToAdd},
+            data: {studentUuid: this.user.id , amount : amountToAdd},
         });
             let result = dialogRef.afterClosed().subscribe((result: string) => {
                 if (result != undefined && result != "") {
@@ -156,7 +156,7 @@ export class ManageStudentComponent implements OnInit {
               return;
 
         this.isLoadingPage = true;
-        this.studentsManagementService.updateStudentEmail(this.user.uuid, this.student.controls['email'].value).subscribe({
+        this.studentsManagementService.updateStudentEmail(this.user.id, this.student.controls['email'].value).subscribe({
             next: (response) => {
                 this.showConfirmationDialog(this.STUDENT_EMAIL_UPDATED_SUCCESSFULLY);
                 this.isLoadingPage = false;
@@ -176,6 +176,6 @@ export class ManageStudentComponent implements OnInit {
     }
 
     goToTransactionsHistory() {
-        this.router.navigate([IConstantsURL.ADMIN_STUDENT_TRANSACTIONS_HISTORY_URL], {queryParams: {studentUuid: this.user.uuid}}).then(r => window.location.reload());
+        this.router.navigate([IConstantsURL.ADMIN_STUDENT_TRANSACTIONS_HISTORY_URL], {queryParams: {studentUuid: this.user.id}}).then(r => window.location.reload());
      }
 }

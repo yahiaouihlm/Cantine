@@ -1,25 +1,24 @@
 package fr.sqli.cantine.dto.out.person;
 
-import fr.sqli.cantine.entity.AdminEntity;
 
-public class AdminDtout extends AbstractPersonDtout{
+import fr.sqli.cantine.entity.UserEntity;
 
-   private  String function;
+public class AdminDtout extends AbstractPersonDtout {
 
-    public AdminDtout(AdminEntity adminEntity , String  imageUrl){
-            super.setUuid(adminEntity.getUuid());
-            super.setFirstname(adminEntity.getFirstname());
-            super.setLastname(adminEntity.getLastname());
-            super.setEmail(adminEntity.getEmail());
-            super.setBirthdate(adminEntity.getBirthdate());
-            super.setAddress(adminEntity.getAddress());
-            super.setTown(adminEntity.getTown());
-            super.setPhone(adminEntity.getPhone());
-            super.setImage(imageUrl + adminEntity.getImage().getImagename());
-            this.setFunction(adminEntity.getFunction().getName());
+    private String function;
+
+    public AdminDtout(UserEntity adminEntity, String imageUrl) {
+        super.setId(adminEntity.getId());
+        super.setFirstname(adminEntity.getFirstname());
+        super.setLastname(adminEntity.getLastname());
+        super.setEmail(adminEntity.getEmail());
+        super.setBirthdate(adminEntity.getBirthdate());
+        super.setAddress(adminEntity.getAddress());
+        super.setTown(adminEntity.getTown());
+        super.setPhone(adminEntity.getPhone());
+        super.setImage(imageUrl + adminEntity.getImage().getName());
+        this.setFunction(adminEntity.getFunction().getName());
     }
-
-
 
 
     public String getFunction() {

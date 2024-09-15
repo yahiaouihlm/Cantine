@@ -20,6 +20,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,16 +34,16 @@ class GetMealTest extends AbstractContainerConfig implements IMealTest {
 
     final String paramReq = "?" + "uuidMeal" + "=";
 
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     private IStudentClassDao iStudentClassDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
     private IFunctionDao functionDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private String authorizationToken;
 
     @Autowired
-    public GetMealTest(MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao, IMealDao mealDao, IStudentDao iStudentDao, IStudentClassDao iStudentClassDao) throws Exception {
+    public GetMealTest(MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IMealDao mealDao, IUserDao iStudentDao, IStudentClassDao iStudentClassDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
@@ -60,9 +61,9 @@ class GetMealTest extends AbstractContainerConfig implements IMealTest {
         this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         ImageEntity image1 = new ImageEntity();
-        image1.setImagename(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
+        image1.setName(SECOND_IMAGE_MEAL_FOR_TEST_NAME);
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
                 , new BigDecimal("1.5"), 10, 1, mealTypeEnum, image);
@@ -85,7 +86,7 @@ class GetMealTest extends AbstractContainerConfig implements IMealTest {
     @DisplayName("Get all meals tests  : 2 meals in database")
     public void testGetAllMealsTest() throws Exception {
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         MealEntity mealEntity = new MealEntity("platNotAvailable", "MealTest category", "MealTest description"
                 , new BigDecimal("1.5"), 10, 1, MealTypeEnum.getMealTypeEnum("ENTREE"), image);
         this.mealDao.save(mealEntity);
@@ -117,7 +118,7 @@ class GetMealTest extends AbstractContainerConfig implements IMealTest {
     @Test
     void getUnavailableMealsTest() throws Exception {
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         MealEntity mealEntity = new MealEntity("platNotAvailable", "MealTest category", "MealTest description"
                 , new BigDecimal("1.5"), 10, 0, MealTypeEnum.getMealTypeEnum("ENTREE"), image);
         this.mealDao.save(mealEntity);
@@ -136,12 +137,12 @@ class GetMealTest extends AbstractContainerConfig implements IMealTest {
     @Test
     void getMenuByIdTest() throws Exception {
 
-        var mealUuid = this.mealDao.findAll().get(0).getUuid();
+        var mealUuid = this.mealDao.findAll().get(0).getId();
 
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MEAL_URL + this.paramReq + mealUuid).header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.uuid", CoreMatchers.is(mealUuid)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(mealUuid)));
 
     }
 

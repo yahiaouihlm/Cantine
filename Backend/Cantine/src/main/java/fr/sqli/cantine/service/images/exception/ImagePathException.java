@@ -1,11 +1,12 @@
 package fr.sqli.cantine.service.images.exception;
 
-public class ImagePathException  extends  Exception{
+public class ImagePathException extends Exception {
 
 
     /**
-     *  Exception will be  thrown  when  the  path  of image  is  not valid
-     *  @param message the detail message.
+     * Exception will be  thrown  when  the  path  of image  is  not valid
+     *
+     * @param message the detail message.
      */
     public ImagePathException(String message) {
         super(message);

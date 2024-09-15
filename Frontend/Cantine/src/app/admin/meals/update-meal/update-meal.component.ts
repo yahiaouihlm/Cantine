@@ -114,7 +114,7 @@ export class UpdateMealComponent implements OnInit {
 
 
     removeMealSendReq(): void {
-        this.mealServiceService.deleteMeal(this.meal.uuid).subscribe({
+        this.mealServiceService.deleteMeal(this.meal.id).subscribe({
                 next: (data) => {
                     this.isLoading = false;
                     const result = this.matDialog.open(SuccessfulDialogComponent, {
@@ -161,7 +161,7 @@ export class UpdateMealComponent implements OnInit {
 
     editMeal(): void {
         const formData = new FormData();
-        formData.append('uuid', this.meal.uuid.toString());
+        formData.append('id', this.meal.id.toString());
         formData.append('label', this.updatedMeal.controls['label'].value);
         formData.append('description', this.updatedMeal.controls['description'].value);
         formData.append('category', this.updatedMeal.controls['category'].value);

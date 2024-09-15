@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -29,25 +30,26 @@ import java.math.BigDecimal;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMealDao mealDao;
     private MockMvc mockMvc;
     private IOrderDao orderDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private MultiValueMap<String, String> formData;
     private MockMultipartFile imageData;
     private String authorizationToken;
 
     @Autowired
-    public AddMealTest(IOrderDao iOrderDao, MockMvc mockMvc, IAdminDao adminDao, IFunctionDao functionDao , IMealDao mealDao) throws Exception {
+    public AddMealTest(IOrderDao iOrderDao, MockMvc mockMvc, IUserDao adminDao, IFunctionDao functionDao, IMealDao mealDao) throws Exception {
         this.mockMvc = mockMvc;
         this.adminDao = adminDao;
         this.functionDao = functionDao;
@@ -78,7 +80,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
 
     public void clearDataBase() {
-       this.orderDao.deleteAll();
+        this.orderDao.deleteAll();
         this.adminDao.deleteAll();
         this.functionDao.deleteAll();
         this.mealDao.findAll();
@@ -95,7 +97,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
         this.authorizationToken = AbstractLoginRequest.getAdminBearerToken(this.mockMvc);
 
         ImageEntity image = new ImageEntity();
-        image.setImagename(IMAGE_MEAL_FOR_TEST_NAME);
+        image.setName(IMAGE_MEAL_FOR_TEST_NAME);
         MealTypeEnum mealTypeEnum = MealTypeEnum.getMealTypeEnum("ENTREE");
         MealEntity mealEntity = new MealEntity("MealTest", "MealTest category", "MealTest description"
                 , new BigDecimal("1.5"), 10, 1, mealTypeEnum, image);
@@ -103,7 +105,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
         this.mealDao.save(mealEntity);
     }
 
-   @Test
+    @Test
     void addMealTestWithAllValidateInformation() throws Exception {
 
         this.formData.set("label", "MealTest2");
@@ -116,8 +118,8 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
-       result.andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(IMealTest.responseMap.get("MealAddedSuccessfully"))));
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(super.responseMessage(IMealTest.responseMap.get("MealAddedSuccessfully"))));
 
         //  clear  the  database  after
         //  we find  the  Unique Meal Added to  DataBase ,  get ImageName  and  delete  the  image  from  the  folder  images/meals
@@ -125,15 +127,16 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
         var meal = this.mealDao.findByLabelAndAndCategoryAndDescriptionIgnoreCase("MealTest2", "MealTest2 category", "MealTest2 description");
         Assertions.assertTrue(meal.isPresent());
-        var imageName = meal.get().getImage().getImagename();
-        var  imageFile = new File(IMAGE_MEAL_DIRECTORY_PATH + imageName);
+        var imageName = meal.get().getImage().getName();
+        var imageFile = new File(IMAGE_MEAL_DIRECTORY_PATH + imageName);
         Assertions.assertTrue(imageFile.delete());
 
     }
+
     /**************************************** Tests  For  Student Token    ********************************************/
     @Test
-    void  addMealTestWithStudentToken() throws Exception {
-       this.orderDao.deleteAll();
+    void addMealTestWithStudentToken() throws Exception {
+        this.orderDao.deleteAll();
         this.iStudentDao.deleteAll();
         this.iStudentClassDao.deleteAll();
 
@@ -144,46 +147,46 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
-                .header(HttpHeaders.AUTHORIZATION,studentAuthorizationToken)
+                .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
         result.andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
-   /**************************************** Tests  For  Meal Type    ********************************************/
+    /**************************************** Tests  For  Meal Type    ********************************************/
 
-   @Test
-   void  addMealTestWithWrongMealType() throws Exception {
-       this.formData.set("mealType" , "wrongMealType");
-
-
-       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
-               .file(this.imageData)
-               .params(this.formData)
-               .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
-               .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+    @Test
+    void addMealTestWithWrongMealType() throws Exception {
+        this.formData.set("mealType", "wrongMealType");
 
 
-       result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-               .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidMealType"))));
-   }
-
-   @Test
-   void  addMealTestWithOutMealType() throws Exception {
-       this.formData.remove("mealType");
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
 
-       var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
-               .file(this.imageData)
-               .params(this.formData)
-               .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
-               .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("InvalidMealType"))));
+    }
+
+    @Test
+    void addMealTestWithOutMealType() throws Exception {
+        this.formData.remove("mealType");
 
 
-         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-                 .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("mealType"))));
-   }
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
+                .file(this.imageData)
+                .params(this.formData)
+                .header(HttpHeaders.AUTHORIZATION, this.authorizationToken)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().json(super.exceptionMessage(IMealTest.exceptionsMap.get("mealType"))));
+    }
 
     @Test
     void addMealTestWithExistingMealWithAddSpacesAndChangingCase4() throws Exception {
@@ -212,7 +215,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
         this.formData.set("description", "mEAlT E s t DESC          RI P T i oN");
 
 
-                // 3  Test  With  Trying  to  add The Same Meal again
+        // 3  Test  With  Trying  to  add The Same Meal again
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
                 .file(this.imageData)
                 .params(this.formData)
@@ -331,16 +334,15 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
 
         result.andExpect(MockMvcResultMatchers.status().isConflict());
-      //  clearDataBase(); //  clear  the  database  after  all
+        //  clearDataBase(); //  clear  the  database  after  all
     }
-
 
 
     @Test
     @DisplayName("add Meal with  the  same  label+same spaces    and  the  same  category  and  the  same  description  of  an  existing  meal  in  the  database")
     void addMealTestWithExistingMealWithAddSpacesToLabel() throws Exception {
 
-        this.formData.set("label" , " M e a  l T e s t ");
+        this.formData.set("label", " M e a  l T e s t ");
 
         // 3  Test  With  Trying  to  add The Same Meal again
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -694,7 +696,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     }
 
 
-   /********************************* Tests for Status *********************************/
+    /********************************* Tests for Status *********************************/
     @Test
     void AddMealTestWithOutSideStatusValue3() throws Exception {
         this.formData.set("status", "3 ");
@@ -850,12 +852,11 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     }
 
 
-
     /*****************************************  Tests For   MealType  *****************************************/
     @Test
     void AddMealTestWithInvalidMealType() throws Exception {
         // given :  remove label from formData
-        this.formData.set("mealType" , "invalidMealType");
+        this.formData.set("mealType", "invalidMealType");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -873,7 +874,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     @Test
     void AddMealTestWithOutMealType() throws Exception {
         // given :  remove label from formData
-         this.formData.remove("mealType");
+        this.formData.remove("mealType");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -990,7 +991,7 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
     void AddMealWithEmptyCategory() throws Exception {
 
         // given :  remove label from formData
-        this.formData.set("category",  "               ");
+        this.formData.set("category", "               ");
 
         // when : call addMeal
         var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(ADD_MEAL_URL)
@@ -1197,11 +1198,12 @@ public class AddMealTest extends AbstractLoginRequest implements IMealTest {
 
 
     }
+
     @Test
     void addMealTestWithOutAuthToken() throws Exception {
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST ,ADD_MEAL_URL)
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, ADD_MEAL_URL)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         // then :

@@ -37,8 +37,8 @@ public class OrderDtOut {
     private boolean isCancelled;
 
     public OrderDtOut(OrderEntity orderEntity, String mealUrlImage, String menuUrlImage, String studentUrlImage) {
-        this.uuid = orderEntity.getUuid();
-        this.studentUuid = orderEntity.getStudent().getUuid();
+        this.uuid = orderEntity.getId();
+        this.studentUuid = orderEntity.getStudent().getId();
         this.creationDate = orderEntity.getCreationDate();
         this.creationTime = orderEntity.getCreationTime();
         this.status = orderEntity.getStatus();

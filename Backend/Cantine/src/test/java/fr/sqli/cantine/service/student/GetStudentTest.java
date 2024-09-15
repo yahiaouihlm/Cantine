@@ -24,38 +24,39 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class GetStudentTest {
-    final   String  IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
+    final String IMAGE_TESTS_PATH = "imagesTests/ImageForTest.jpg";
     @Mock
-     private IStudentDao  studentDao;
+    private IUserDao studentDao;
     @Mock
     private ImageService imageService;
 
-    private String  IMAGE_URL = "http://localhost:8080/cantine/download/images/persons/students/";
+    private String IMAGE_URL = "http://localhost:8080/cantine/download/images/persons/students/";
     @Mock
     private IStudentClassDao studentClassDao;
+    @Mock
+    private IRoleDao roleDao;
     @Mock
     private MockEnvironment environment;
     @InjectMocks
     private StudentService studentService;
 
     @BeforeEach
-    void  setUp (){
-        this.studentService = new StudentService(studentDao, studentClassDao,  this.environment,  null ,  imageService ,  null);
+    void setUp() {
+        this.studentService = new StudentService(studentDao,this.roleDao ,studentClassDao, this.environment, null, imageService, null);
 
     }
 
     @Test
-    void  getAdminByIDTest () throws InvalidUserInformationException, UserNotFoundException {
+    void getAdminByIDTest() throws InvalidUserInformationException, UserNotFoundException {
         var uuid = java.util.UUID.randomUUID().toString();
-       // this.environment.setProperty("sqli.cantine.images.url.student", "src/test/resources/imagesTests");
+        // this.environment.setProperty("sqli.cantine.images.url.student", "src/test/resources/imagesTests");
         Mockito.when(this.environment.getProperty("sqli.cantine.images.url.student")).thenReturn(this.IMAGE_URL);
         StudentClassEntity studentClass = new StudentClassEntity();
-        studentClass.setId(1);
+        studentClass.setId(java.util.UUID.randomUUID().toString()  );
         studentClass.setName("test-studentClass");
 
-        StudentEntity student = new StudentEntity();
-        student.setId(1);
-        student.setUuid(uuid);
+        UserEntity student = new UserEntity();
+        student.setId(uuid);
         student.setFirstname("firstname");
         student.setLastname("lastname");
         student.setEmail("email@test.fr");
@@ -63,29 +64,30 @@ public class GetStudentTest {
         student.setTown("town");
         student.setPhone("0631990180");
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_TESTS_PATH);
+        imageEntity.setName(IMAGE_TESTS_PATH);
         student.setImage(imageEntity);
         student.setStudentClass(studentClass);
-        Mockito.when(this.studentDao.findByUuid(student.getUuid())).thenReturn(Optional.of(student));
+        Mockito.when(this.studentDao.findStudentById(student.getId())).thenReturn(Optional.of(student));
 
-        var  rsult =  this.studentService.getStudentByUuid(uuid);
+        var rsult = this.studentService.getStudentByUuid(uuid);
 
         System.out.println(rsult.getImage());
-        Assertions.assertEquals(rsult.getUuid(), student.getUuid());
+        Assertions.assertEquals(rsult.getId(), student.getId());
         Assertions.assertEquals(rsult.getFirstname(), student.getFirstname());
         Assertions.assertEquals(rsult.getLastname(), student.getLastname());
         Assertions.assertEquals(rsult.getEmail(), student.getEmail());
         Assertions.assertEquals(rsult.getBirthdate(), student.getBirthdate());
         Assertions.assertEquals(rsult.getTown(), student.getTown());
         Assertions.assertEquals(rsult.getPhone(), student.getPhone());
-        Assertions.assertEquals(rsult.getImage(), this.IMAGE_URL + student.getImage().getImagename());
+        Assertions.assertEquals(rsult.getImage(), this.IMAGE_URL + student.getImage().getName());
 
 
     }
+
     @Test
-    void  getAdminByIdWithNotFoundAdmin () throws InvalidUserInformationException {
+    void getAdminByIdWithNotFoundAdmin() throws InvalidUserInformationException {
         String studentUuid = java.util.UUID.randomUUID().toString();
-        Mockito.when(this.studentDao.findByUuid(studentUuid)).thenReturn(Optional.empty());
+        Mockito.when(this.studentDao.findStudentById(studentUuid)).thenReturn(Optional.empty());
         Assertions.assertThrows(UserNotFoundException.class, () -> {
             this.studentService.getStudentByUuid(studentUuid);
         });
@@ -95,23 +97,20 @@ public class GetStudentTest {
 
 
     @Test
-    void getAdminByIdWithInvalidUuID (){
+    void getAdminByIdWithInvalidUuID() {
         String studentUuid = "null";
         assertThrows(InvalidUserInformationException.class, () -> {
             this.studentService.getStudentByUuid(studentUuid);
         });
     }
+
     @Test
-    void getAdminByIdWithNullUuID (){
+    void getAdminByIdWithNullUuID() {
 
         assertThrows(InvalidUserInformationException.class, () -> {
             this.studentService.getStudentByUuid(null);
         });
     }
-
-
-
-
 
 
 }

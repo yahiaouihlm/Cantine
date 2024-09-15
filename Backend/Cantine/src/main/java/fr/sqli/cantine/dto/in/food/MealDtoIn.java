@@ -1,7 +1,6 @@
 package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
 
@@ -70,6 +69,7 @@ public class MealDtoIn extends AbstractFoodDtoIn implements Serializable {
     public String getMealType() {
         return mealType;
     }
+
     public void setMealType(String mealType) {
         this.mealType = mealType;
     }

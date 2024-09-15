@@ -1,7 +1,6 @@
 
 package fr.sqli.cantine.controller.users.admin.menus;
 
-import com.auth0.jwt.interfaces.Header;
 import fr.sqli.cantine.controller.AbstractContainerConfig;
 import fr.sqli.cantine.controller.AbstractLoginRequest;
 import fr.sqli.cantine.dao.*;
@@ -10,7 +9,6 @@ import fr.sqli.cantine.entity.MealEntity;
 import fr.sqli.cantine.entity.MealTypeEnum;
 import fr.sqli.cantine.entity.MenuEntity;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +18,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,20 +35,20 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
     private final String paramReq = "?" + "uuidMenu" + "=";
 
     @Autowired
-    private IStudentDao iStudentDao;
+    private IUserDao iStudentDao;
     @Autowired
     private IStudentClassDao iStudentClassDao;
     private IMenuDao menuDao;
     private MockMvc mockMvc;
     private IMealDao mealDao;
-    private IAdminDao adminDao;
+    private IUserDao adminDao;
     private IFunctionDao functionDao;
     private String authorizationToken;
     private MenuEntity menuSaved;
 
 
     @Autowired
-    public GetMenuTest(IAdminDao adminDao, IMenuDao menuDao, IMealDao mealDao, MockMvc mockMvc, IFunctionDao functionDao) throws Exception {
+    public GetMenuTest(IUserDao adminDao, IMenuDao menuDao, IMealDao mealDao, MockMvc mockMvc, IFunctionDao functionDao) throws Exception {
         this.adminDao = adminDao;
         this.menuDao = menuDao;
         this.mealDao = mealDao;
@@ -66,10 +65,10 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
         var meal = this.mealDao.save(IMenuTest.createMeal());
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_MENU_FOR_TEST_NAME);
+        imageEntity.setName(IMAGE_MENU_FOR_TEST_NAME);
 
         MealEntity mealEntity = IMenuTest.createMealWith("MealTest2", "MealTest  description2", "MealTest  category test", new BigDecimal(10.0), 1, 10, imageEntity);
-        mealEntity.setMealType(MealTypeEnum.ENTREE);
+        mealEntity.setMeal_type(MealTypeEnum.ENTREE);
 
         this.mealDao.save(mealEntity);
 
@@ -86,7 +85,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
 
 
     @Test
-    @Rollback(value = true)
+   // @Rollback(value = true)
     void getAllMenusInProcessOfDeletion() throws Exception {
         this.menuSaved.setStatus(2);
         this.menuDao.save(this.menuSaved);
@@ -127,7 +126,7 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
         var studentAuthorizationToken = AbstractLoginRequest.getStudentBearerToken(this.mockMvc);
 
 
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + this.menuSaved.getUuid())
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + this.menuSaved.getId())
                 .header(HttpHeaders.AUTHORIZATION, studentAuthorizationToken));
 
 
@@ -136,12 +135,12 @@ public class GetMenuTest extends AbstractContainerConfig implements IMenuTest {
 
     @Test
     void getMenuByIdTest() throws Exception {
-        var mealUuid = this.menuSaved.getUuid(); // id must be not exist in database
+        var mealUuid = this.menuSaved.getId(); // id must be not exist in database
         var result = this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ONE_MENU_URL + this.paramReq + mealUuid)
                 .header(HttpHeaders.AUTHORIZATION, this.authorizationToken));
 
         result.andExpect(status().isOk());
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.uuid", CoreMatchers.is(mealUuid)));
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(mealUuid)));
         result.andExpect(MockMvcResultMatchers.jsonPath("$.label", CoreMatchers.is(this.menuSaved.getLabel())));
         result.andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(this.menuSaved.getDescription())));
     }

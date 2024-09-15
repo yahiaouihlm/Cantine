@@ -1,8 +1,8 @@
 package fr.sqli.cantine.service.images;
 
 import fr.sqli.cantine.service.images.exception.ImagePathException;
-import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import fr.sqli.cantine.service.images.exception.InvalidFormatImageException;
+import fr.sqli.cantine.service.images.exception.InvalidImageException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -17,9 +17,9 @@ public interface IImageService {
      * @param image MultipartFile image
      * @param path  String path the spot where the image will be saved (the directory)
      * @return String the name of the image
-     * @throws ImagePathException        if the ( Directory ) path is invalid (null or empty)
-     * @throws IOException               if  JVM can't write the image in the directory
-     * @throws InvalidImageException     if the image is invalid (null or empty)
+     * @throws ImagePathException          if the ( Directory ) path is invalid (null or empty)
+     * @throws IOException                 if  JVM can't write the image in the directory
+     * @throws InvalidImageException       if the image is invalid (null or empty)
      * @throws InvalidFormatImageException if the image type is not jpg or png or jpeg
      * @Note <Strong> Please   Don't Add     / at The End Of Path   </Strong>
      */
@@ -63,10 +63,10 @@ public interface IImageService {
      * @param image        the new image as MultipartFile  to upload and save in the directory specified in the path
      * @param path         the path of the directory where the image will be saved
      * @return String the new image name
-     * @throws ImagePathException        if the ( Directory ) path is invalid (null or empty) or the image name is invalid (null or empty)
+     * @throws ImagePathException          if the ( Directory ) path is invalid (null or empty) or the image name is invalid (null or empty)
      * @throws InvalidFormatImageException if the image type is not jpg or png or jpeg
-     * @throws InvalidImageException     if the image file  is invalid (null or empty)
-     * @throws IOException               if JVM can't write the image in the directory
+     * @throws InvalidImageException       if the image file  is invalid (null or empty)
+     * @throws IOException                 if JVM can't write the image in the directory
      */
 
     String updateImage(String oldImageName, MultipartFile image, String path) throws ImagePathException, InvalidFormatImageException, InvalidImageException, IOException;
@@ -84,8 +84,8 @@ public interface IImageService {
     /**
      * this method is used to check if the image exist in the directory specified in the path
      *
-     * @param ImageName the image name
-     * @param pathDirectory      the path of the directory where the image was saved
+     * @param ImageName     the image name
+     * @param pathDirectory the path of the directory where the image was saved
      * @return boolean true if the image exist in the directory specified in the path
      * @throws ImagePathException    if the ( Directory ) path is invalid (null or empty) or the image name is invalid (null or empty)
      * @throws InvalidImageException if the image file  is invalid (null or empty)

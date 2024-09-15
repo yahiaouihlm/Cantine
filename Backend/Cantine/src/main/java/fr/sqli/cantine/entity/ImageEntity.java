@@ -1,53 +1,37 @@
 package fr.sqli.cantine.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
 
+@Setter
+@Getter
 @Entity
 
-@Table(name="image")
-public class ImageEntity  implements Serializable {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private Integer idimage;
+@Table(name = "image")
+public class ImageEntity extends AbstractEntity implements Serializable {
 
-    @Column(name = "imagename")
-    private String  imagename ;
+
+    @Column(name = "name", nullable = false, length = 399)
+    private String name;
     //@Column(nullable=false)
 
 
     //bi-directional many-to-one association to MenuEntity
     //@OneToMany(mappedBy="image")
-   // private List<MenuEntity> menus;
+    // private List<MenuEntity> menus;
 
     //bi-directional many-to-one association to PlatEntity
     /*@OneToMany(mappedBy="image")
     private List<MealEntity> plats;*/
 
     //bi-directional many-to-one association to UserEntity
-  //  @OneToMany(mappedBy="image")
-   // private List<UserEntity> users;
-
-
-
-    public Integer getIdimage() {
-        return idimage;
-    }
-
-    public void setIdimage(Integer idimage) {
-        this.idimage = idimage;
-    }
-
-    public String getImagename() {
-        return imagename;
-    }
-
-    public void setImagename(String imagename) {
-        this.imagename = imagename;
-    }
+    //  @OneToMany(mappedBy="image")
+    // private List<UserEntity> users;
 
 
   /*  public List<MealEntity> getPlats() {

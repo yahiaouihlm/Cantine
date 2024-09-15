@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +38,6 @@ import java.util.Optional;
 public class AddMenuTest {
     @Mock
     private IMenuDao iMenuDao;
-
-
     @Mock
     IImageService imageService;
 
@@ -83,10 +80,10 @@ public class AddMenuTest {
 
     @Test
     void addMenuWithFewMealsTest() throws InvalidFoodInformationException, FoodNotFoundException {
-        this.menuDtoIn.setUuid(java.util.UUID.randomUUID().toString());
+        this.menuDtoIn.setId(java.util.UUID.randomUUID().toString());
         String mealUuid = java.util.UUID.randomUUID().toString();
         MealEntity mealEntity = new MealEntity();
-        mealEntity.setUuid(mealUuid);
+        mealEntity.setId(mealUuid);
         mealEntity.setStatus(1);
 
         this.menuDtoIn.setListOfMealsAsString(" [\"" + mealUuid + "\" ] ");
@@ -115,9 +112,9 @@ public class AddMenuTest {
     void AddMenuWithUnalienableMeal() throws Exception {
         String uuid = java.util.UUID.randomUUID().toString();
         MealEntity meal = new MealEntity();
-        meal.setUuid(uuid);
+        meal.setId(uuid);
         meal.setLabel("label test");
-        meal.setId(1);
+        meal.setId(java.util.UUID.randomUUID().toString());
         meal.setStatus(0);
         // allow the  meal parsing  by the service
         this.menuDtoIn.setListOfMealsAsString(" [\"" + uuid + "\" ] ");

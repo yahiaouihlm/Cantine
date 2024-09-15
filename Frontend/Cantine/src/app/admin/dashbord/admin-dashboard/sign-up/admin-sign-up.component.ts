@@ -19,18 +19,19 @@ import {IConstantsURL} from "../../../../sharedmodule/constants/IConstantsURL";
 
 @Component({
     selector: 'app-sign-up',
-    templateUrl: './sign-up.component.html',
-    styles: [],
+    templateUrl: './admin-sign-up.component.html',
+   /* styleUrls: ["../../../../../assets/styles/main.component.scss"],*/
     providers: [AdminService, SharedService]
 })
-export class SignUpComponent implements OnInit {
+export class AdminSignUpComponent implements OnInit {
+
 
     private WOULD_YOU_LIKE_TO_SIGN_UP = "Voulez-vous vraiment vous inscrire ?";
     private EMAIL_SEND_SUCCESSFULLY = "Votre Inscription est prise en compte , un Email vous a éte envoyer pour vérifier votre Adresse ";
     submitted = false;
     image!: File;
     isLoading = false;
-    adminfunction$: Observable<Adminfunction[]> = of([]);
+    adminfunctions$: Observable<Adminfunction[]> = of([]);
 
     constructor(private adminService: AdminService, private matDialog: MatDialog, private sharedService: SharedService, private router: Router) {
     }
@@ -55,8 +56,8 @@ export class SignUpComponent implements OnInit {
     );
 
     ngOnInit(): void {
-        Malfunctions.checkUserConnection(this.router);
-        this.adminfunction$ = this.adminService.getAdminFunctionS();
+        this.adminfunctions$ = this.adminService.getAdminFunctionS();
+
     }
 
     onSubmit() {

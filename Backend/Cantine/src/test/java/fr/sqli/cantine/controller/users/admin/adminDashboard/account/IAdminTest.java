@@ -1,11 +1,14 @@
 package fr.sqli.cantine.controller.users.admin.adminDashboard.account;
 
-import fr.sqli.cantine.entity.AdminEntity;
+import fr.sqli.cantine.constants.ConstCantine;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.ImageEntity;
+import fr.sqli.cantine.entity.RoleEntity;
+import fr.sqli.cantine.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public interface IAdminTest {
@@ -71,16 +74,16 @@ public interface IAdminTest {
             Map.entry("ExistingAdmin", "EMAIL IS ALREADY EXISTS"),
             Map.entry("InvalidParam", "ARGUMENT NOT VALID"),
             Map.entry("InvalidInfo", "INVALID INFORMATION REQUEST THE  EMAIL AND  PASSWORD  MUST BE  EXCLUDED"),
-            Map.entry("InvalidUuId", "INVALID UUID"),
+            Map.entry("InvalidUuId", "INVALID ID"),
             Map.entry("AdminNotFound", "ADMIN NOT FOUND"),
             Map.entry("MissingPram", "MISSING PARAMETER"),
             Map.entry("InvalidEmail", "YOUR EMAIL IS NOT VALID"),
             Map.entry("EnableAccount", "YOUR ACCOUNT IS ALREADY ENABLED")
     );
 
-    static AdminEntity createAdminWith(String email, FunctionEntity functionEntity, ImageEntity imageEntity) {
+    static UserEntity createAdminWith(String email, FunctionEntity functionEntity, ImageEntity imageEntity) {
 
-        AdminEntity adminEntity = new AdminEntity();
+        UserEntity adminEntity = new UserEntity();
         adminEntity.setEmail(email);
         adminEntity.setFunction(functionEntity);
         adminEntity.setFirstname("firstName");
@@ -90,6 +93,7 @@ public interface IAdminTest {
         adminEntity.setPhone("0631990180");
         adminEntity.setBirthdate(LocalDate.now());
         adminEntity.setPassword(new BCryptPasswordEncoder().encode(ADMIN_PASSWORD_EXAMPLE));
+        adminEntity.setRoles(List.of(new RoleEntity(ConstCantine.ADMIN_ROLE_LABEL, ConstCantine.ADMIN_ROLE_LABEL, adminEntity)));
         adminEntity.setValidation(1);
         adminEntity.setRegistrationDate(LocalDate.now());
         adminEntity.setImage(imageEntity);
@@ -102,7 +106,7 @@ public interface IAdminTest {
 
     static ImageEntity createImageEntity() {
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImagename(IMAGE_NAME);
+        imageEntity.setName(IMAGE_NAME);
         return imageEntity;
     }
 

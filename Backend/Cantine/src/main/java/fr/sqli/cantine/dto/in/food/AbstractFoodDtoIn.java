@@ -2,14 +2,13 @@ package fr.sqli.cantine.dto.in.food;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.sqli.cantine.service.food.exceptions.InvalidFoodInformationException;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
 public abstract class AbstractFoodDtoIn {
 
-    private String uuid;
+    private String id;
     private String label;
     private String description;
     private BigDecimal price;
@@ -92,12 +91,12 @@ public abstract class AbstractFoodDtoIn {
     }
 
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLabel() {

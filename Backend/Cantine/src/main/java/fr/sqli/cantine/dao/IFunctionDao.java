@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IFunctionDao extends JpaRepository<FunctionEntity, Integer> {
-    public Optional <FunctionEntity> findByName(String name);
+public interface IFunctionDao extends JpaRepository<FunctionEntity, String> {
+    public Optional<FunctionEntity> findByName(String name);
 }

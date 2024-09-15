@@ -1,7 +1,9 @@
 package fr.sqli.cantine.service.users.admin.impl;
 
-import fr.sqli.cantine.dao.*;
-
+import fr.sqli.cantine.dao.IConfirmationTokenDao;
+import fr.sqli.cantine.dao.IPaymentDao;
+import fr.sqli.cantine.dao.IStudentClassDao;
+import fr.sqli.cantine.dao.IUserDao;
 import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
@@ -32,23 +34,20 @@ public class AdminWorksService implements IAdminFunctionService {
     private final Integer MAX_STUDENT_WALLET = 3000;
     private final Integer MAX_STUDENT_WALLET_ADD_AMOUNT = 500;
     private final String STUDENT_IMAGE_URL;
-    private IStudentDao studentDao;
-    private IPaymentDao paymentDao;
+    private final IPaymentDao paymentDao;
     private final UserEmailSender userEmailSender;
-    private IStudentClassDao studentClassDao;
-
-    private IAdminDao adminDao;
-    private Environment environment;
-    private IConfirmationTokenDao confirmationTokenDao;
+    private final IStudentClassDao studentClassDao;
+    private final IUserDao iUserDao;
+    private final Environment environment;
+    private final IConfirmationTokenDao confirmationTokenDao;
 
 
     @Autowired
-    public AdminWorksService(IStudentClassDao iStudentClassDao, IStudentDao studentDao, Environment environment, UserEmailSender userEmailSender, IAdminDao adminDao,
+    public AdminWorksService(IUserDao iUserDao, IStudentClassDao iStudentClassDao, Environment environment, UserEmailSender userEmailSender,
                              IConfirmationTokenDao confirmationTokenDao, IPaymentDao paymentDao) {
         this.studentClassDao = iStudentClassDao;
-        this.studentDao = studentDao;
         this.environment = environment;
-        this.adminDao = adminDao;
+        this.iUserDao = iUserDao;
         this.userEmailSender = userEmailSender;
         this.confirmationTokenDao = confirmationTokenDao;
         this.paymentDao = paymentDao;
@@ -58,17 +57,18 @@ public class AdminWorksService implements IAdminFunctionService {
 
     @Override
     public List<TransactionDtout> getStudentTransactions(String studentUuid) throws InvalidUserInformationException, UserNotFoundException {
-        if  (studentUuid == null || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 10) {
+        if (studentUuid == null || studentUuid.isBlank() || studentUuid.length() < 10) {
             AdminWorksService.LOG.error("INVALID  STUDENT UUID  IN  getStudentTransactions ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT UUID");
         }
-        var  student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
+        var student = this.iUserDao.findStudentById(studentUuid).orElseThrow(() -> {
             AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
             return new UserNotFoundException("STUDENT NOT  FOUND");
         });
 
+
         return this.paymentDao.findByStudent(student).stream().map(transaction ->
-                new TransactionDtout(transaction.getAdmin() , transaction.getStudent(), transaction.getAmount(), transaction.getPaymentDate() , transaction.getPaymentTime())).toList();
+                new TransactionDtout(transaction.getAdmin(), transaction.getStudent(), transaction.getAmount(), transaction.getPaymentDate(), transaction.getPaymentTime())).toList();
     }
 
     @Override
@@ -80,25 +80,27 @@ public class AdminWorksService implements IAdminFunctionService {
             throw new InvalidUserInformationException("INVALID FIELDS ");
         }
 
-
         //  check if student is valid
-        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(
-                () -> {
-                    AdminWorksService.LOG.error("STUDENT NOT  FOUND  WITH UUID = {}", studentUuid);
-                    return new UserNotFoundException("STUDENT NOT  FOUND");
-                }
-        );
+        var student = this.iUserDao.findStudentById(studentUuid).orElseThrow(() -> {
+            AdminWorksService.LOG.error("STUDENT NOT  FOUND  WITH UUID = {}", studentUuid);
+            return new UserNotFoundException("STUDENT NOT  FOUND");
+        });
+
 
         String adminEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 
-        var adminReq = this.adminDao.findByUuid(adminUuid).orElseThrow(() -> {
+
+        var adminReq = this.iUserDao.findAdminById(adminUuid).orElseThrow(() -> {
             AdminWorksService.LOG.error("ADMIN  WITH  UUID =  " + adminUuid + "  DOEST NOT EXISTS");
             return new UserNotFoundException("ADMIN NOT  FOUND");
         });
-        var adminAuth = this.adminDao.findByEmail(adminEmail).orElseThrow(() -> {
+
+
+        var adminAuth = this.iUserDao.findAdminByEmail(adminEmail).orElseThrow(() -> {
             AdminWorksService.LOG.error("ADMIN  WITH  EMAIL =  " + adminEmail + "  DOEST NOT EXISTS");
             return new UserNotFoundException("ADMIN NOT  FOUND");
         });
+
         if (!adminReq.equals(adminAuth)) {
             AdminWorksService.LOG.error("ADMIN OF  TOKEN {} IS DIFFERENT FROM ADMIN OF  REQUEST {}", adminUuid, adminAuth.getEmail());
             throw new UnknownUser("UNKNOWN ADMIN FOUND");
@@ -138,18 +140,17 @@ public class AdminWorksService implements IAdminFunctionService {
 
         //  if we want we can add the condifition     than  student  wallet  must  be  less than  3000
 
-            var newWallet = student.getWallet().add(new BigDecimal(amount));
+        var newWallet = student.getWallet().add(new BigDecimal(amount));
 
-            if  (newWallet.compareTo(BigDecimal.ZERO) < 0) {
-                AdminWorksService.LOG.error("WALLET  CAN  NOT  BE  NEGATIVE  AMOUNT");
-                throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
-            }
+        if (newWallet.compareTo(BigDecimal.ZERO) < 0) {
+            AdminWorksService.LOG.error("WALLET  CAN  NOT  BE  NEGATIVE  AMOUNT");
+            throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
+        }
 
-            if (newWallet.compareTo(new BigDecimal(MAX_STUDENT_WALLET)) > 0) {
-                AdminWorksService.LOG.error("WALLET  TO  BIG");
-                throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
-            }
-
+        if (newWallet.compareTo(new BigDecimal(MAX_STUDENT_WALLET)) > 0) {
+            AdminWorksService.LOG.error("WALLET  TO  BIG");
+            throw new InvalidUserInformationException("EXCESSIVE AMOUNT");
+        }
 
 
         // add  new amount  to student  account
@@ -157,7 +158,7 @@ public class AdminWorksService implements IAdminFunctionService {
         var paymentInformation = new PaymentEntity(adminAuth, student, new BigDecimal(amount), TransactionType.ADDITION);
         // save  the  payment  information
         this.paymentDao.save(paymentInformation);
-        this.studentDao.save(student);
+        this.iUserDao.save(student);
 
         this.userEmailSender.sendNotificationAboutNewStudentAmount(student, student.getWallet().doubleValue(), amount);
 
@@ -168,30 +169,29 @@ public class AdminWorksService implements IAdminFunctionService {
     public void attemptAddAmountToStudentAccount(String adminUuid, String studentUuid, Double amount) throws
             InvalidUserInformationException, MessagingException, UserNotFoundException, UnknownUser {
 
-        if (studentUuid == null || amount == null || amount < 10 || amount > MAX_STUDENT_WALLET_ADD_AMOUNT || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 10) {
+        if (studentUuid == null || amount == null || amount < 10 || amount > MAX_STUDENT_WALLET_ADD_AMOUNT || studentUuid.isBlank() || studentUuid.length() < 10) {
             AdminWorksService.LOG.error("INVALID  STUDENT UUID OR AMOUNT IN  attemptAddAmountToStudentAccount ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID OR AMOUNT");
         }
-        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(() -> {
-                    AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
-                    return new UserNotFoundException("STUDENT NOT  FOUND");
-                }
-        );
-
+        var student = this.iUserDao.findStudentById(studentUuid).orElseThrow(() -> {
+            AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("STUDENT NOT  FOUND");
+        });
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(student);
-        this.confirmationTokenDao.findByStudent(student).ifPresent(confirmationTokenEntity -> {
-            this.confirmationTokenDao.delete(confirmationTokenEntity);
-        });
+        this.confirmationTokenDao.findByStudent(student).ifPresent(this.confirmationTokenDao::delete);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        var adminReq = this.adminDao.findByUuid(adminUuid).orElseThrow(() -> {
+
+        var adminReq = this.iUserDao.findAdminById(adminUuid).orElseThrow(() -> {
             AdminWorksService.LOG.error("ADMIN  WITH  UUID =  " + adminUuid + "  DOEST NOT EXISTS");
             return new UserNotFoundException("ADMIN NOT  FOUND");
         });
-        var adminAuth = this.adminDao.findByEmail(authentication.getPrincipal().toString()).orElseThrow(() -> {
+
+        var adminAuth = this.iUserDao.findAdminByEmail(authentication.getPrincipal().toString()).orElseThrow(() -> {
             AdminWorksService.LOG.error("ADMIN  WITH  EMAIL =  " + authentication.getPrincipal().toString() + "  DOEST NOT EXISTS");
             return new UserNotFoundException("ADMIN NOT  FOUND");
         });
+
         if (!adminReq.equals(adminAuth)) {
             AdminWorksService.LOG.error("ADMIN OF  TOKEN {} IS DIFFERENT FROM ADMIN OF  REQUEST {}", adminUuid, adminAuth.getEmail());
             throw new UnknownUser("UNKNOWN ADMIN FOUND");
@@ -218,59 +218,56 @@ public class AdminWorksService implements IAdminFunctionService {
 
     @Override
     public StudentDtout getStudentByEmail(String email) throws InvalidUserInformationException, UserNotFoundException {
-        if (email == null || email.isEmpty() || email.isBlank() || email.length() < 5) {
+        if (email == null || email.isBlank() || email.length() < 5) {
             AdminWorksService.LOG.error("INVALID  EMAIL  IN  getStudentByEmail ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  EMAIL");
         }
-        var student = this.studentDao.findByEmail(email).orElseThrow(
-                () -> {
-                    AdminWorksService.LOG.error("STUDENT  WITH  EMAIL =  " + email + "  DOEST NOT EXISTS");
-                    return new UserNotFoundException("STUDENT NOT  FOUND");
-                }
-        );
+        var student = this.iUserDao.findStudentByEmail(email).orElseThrow(() -> {
+            AdminWorksService.LOG.error("STUDENT  WITH  EMAIL =  " + email + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("STUDENT NOT  FOUND");
+        });
+
         return new StudentDtout(student, this.STUDENT_IMAGE_URL);
     }
 
     @Override
     public void updateStudentEmail(String studentUuid, String newEmail) throws InvalidUserInformationException, UserNotFoundException, ExistingUserException, MessagingException {
-        if (studentUuid == null || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 20) {
+        if (studentUuid == null || studentUuid.isBlank() || studentUuid.length() < 20) {
             AdminWorksService.LOG.error("INVALID  STUDENT UUID  IN  updateStudentEmail ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT UUID");
         }
-        if (newEmail == null || newEmail.isEmpty() || newEmail.isBlank() || newEmail.length() < 5) {
+        if (newEmail == null || newEmail.isBlank() || newEmail.length() < 5) {
             AdminWorksService.LOG.error("INVALID  EMAIL  IN  updateStudentEmail ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  EMAIL");
         }
-        var student = this.studentDao.findByUuid(studentUuid).orElseThrow(
-                () -> {
-                    AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
-                    return new UserNotFoundException("STUDENT NOT  FOUND");
-                }
-        );
+        var student = this.iUserDao.findStudentById(studentUuid).orElseThrow(() -> {
+            AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("STUDENT NOT  FOUND");
+        });
 
-        if (this.studentDao.findByEmail(newEmail).isPresent() || this.adminDao.findByEmail(newEmail).isPresent()) {
+        if (this.iUserDao.findUserByEmail(newEmail).isPresent()) {
             AdminWorksService.LOG.error("EMAIL =  " + newEmail + "  ALREADY EXISTS IN ADMIN OR STUDENT  TABLE");
             throw new ExistingUserException("EMAIL ALREADY EXISTS");
         }
         student.setEmail(newEmail);
         student.setStatus(0);
-        this.studentDao.save(student);
+        this.iUserDao.save(student);
         this.userEmailSender.sendNotificationTOStudentWhenEmailHasBeenChanged(student);
     }
 
 
     public StudentDtout getStudentByUuid(String studentUuid) throws InvalidUserInformationException, UserNotFoundException {
-        if (studentUuid == null || studentUuid.isEmpty() || studentUuid.isBlank() || studentUuid.length() < 20) {
+        if (studentUuid == null || studentUuid.isBlank() || studentUuid.length() < 20) {
             AdminWorksService.LOG.error("studentUuid IS  NULL  IN  getStudentById ADMIN WORK SERVICE ");
             throw new InvalidUserInformationException("INVALID  STUDENT ID ");
         }
-        var student = this.studentDao.findByUuid(studentUuid);
-        if (student.isEmpty()) {
-            AdminWorksService.LOG.error("STUDENT  WITH  ID =  " + studentUuid + "  DOEST NOT EXISTS");
-            throw new UserNotFoundException("STUDENT NOT  FOUND");
-        }
+        var student = this.iUserDao.findStudentById(studentUuid).orElseThrow(() -> {
+            AdminWorksService.LOG.error("STUDENT  WITH  UUID =  " + studentUuid + "  DOEST NOT EXISTS");
+            return new UserNotFoundException("STUDENT NOT  FOUND");
+        });
 
-        return new StudentDtout(student.get(), this.STUDENT_IMAGE_URL);
+
+        return new StudentDtout(student, this.STUDENT_IMAGE_URL);
     }
 
     @Override
@@ -285,7 +282,7 @@ public class AdminWorksService implements IAdminFunctionService {
             throw new InvalidUserInformationException("INVALID  FIELD");
         }
 
-        return this.studentDao.findByFirstnameAndLastnameAndBirthdate(studentDtoIn.getFirstname(), studentDtoIn.getLastname(), studentDtoIn.getBirthdate())
+        return this.iUserDao.findStudentByFirstnameAndLastnameAndBirthdate(studentDtoIn.getFirstname(), studentDtoIn.getLastname(), studentDtoIn.getBirthdate())
                 .stream().map(student -> new StudentDtout(student, this.STUDENT_IMAGE_URL)).toList();
 
 
