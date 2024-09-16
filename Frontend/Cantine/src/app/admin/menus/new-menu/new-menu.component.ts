@@ -109,7 +109,16 @@ export class NewMenuComponent {
     // dialog to open  the  list  of  meals  and  select  the  meals  to  add  to  the  menu
     onOpenListMealDialog() {
         this.closedDialog = false;
-        const result = this.matDialog.open(ListMealsComponent);
+        const dialogConfig = {
+            width: '80%',   // Définit la largeur de la boîte de dialogue (80% de la largeur de la fenêtre)
+            height: '70%',  // Définit la hauteur de la boîte de dialogue (70% de la hauteur de la fenêtre)
+            maxWidth: '90vw',  // Définit la largeur maximale (90% de la largeur du viewport)
+            maxHeight: '90vh', // Définit la hauteur maximale (90% de la hauteur du viewport)
+            panelClass: 'custom-dialog-container', // (optionnel) classe CSS personnalisée si tu veux customiser plus
+        };
+
+
+        const result = this.matDialog.open(ListMealsComponent, dialogConfig);
         result.afterClosed().subscribe((result) => {
             this.closedDialog = true;
             if (result === undefined)

@@ -1,6 +1,6 @@
 <h2 class="center"> List Des Plats Disponible </h2>
-<div class="container" *ngIf="(meals$ | async) as meal; else loadingTemplate">
-    <div class="row">
+<div class="container" *ngIf="(meals$ | async) as meal; else loadingTemplate" >
+    <div class="row scrollable">
         <div *ngFor="let meal of meals$ | async " class="col m4 s12">
                 <div class="card horizontal ">
                     <div class="center">
