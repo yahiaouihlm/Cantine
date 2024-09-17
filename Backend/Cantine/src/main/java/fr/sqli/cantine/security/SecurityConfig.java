@@ -116,7 +116,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(this.FRONT_END_URL ,  this.MOBILE_FRONT_URL ));
+        configuration.setAllowedOrigins(List.of(this.FRONT_END_URL ,  this.MOBILE_FRONT_URL));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
