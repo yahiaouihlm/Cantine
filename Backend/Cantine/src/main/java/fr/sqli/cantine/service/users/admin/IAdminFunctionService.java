@@ -1,6 +1,6 @@
 package fr.sqli.cantine.service.users.admin;
 
-import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
+
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.service.users.exceptions.*;
@@ -21,9 +21,6 @@ public interface IAdminFunctionService {
 
     List<StudentDtout> getStudentsByNameAndBirthdate(String firstname, String lastname, String birthdateAsString) throws InvalidUserInformationException;
 
-    void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException;
-
-    void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException;
 
     StudentDtout getStudentByEmail(String email) throws InvalidUserInformationException, UserNotFoundException;
 

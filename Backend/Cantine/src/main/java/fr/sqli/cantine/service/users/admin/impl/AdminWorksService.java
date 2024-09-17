@@ -2,15 +2,12 @@ package fr.sqli.cantine.service.users.admin.impl;
 
 import fr.sqli.cantine.dao.IConfirmationTokenDao;
 import fr.sqli.cantine.dao.IPaymentDao;
-import fr.sqli.cantine.dao.IStudentClassDao;
 import fr.sqli.cantine.dao.IUserDao;
-import fr.sqli.cantine.dto.in.users.StudentClassDtoIn;
 import fr.sqli.cantine.dto.in.users.StudentDtoIn;
 import fr.sqli.cantine.dto.out.person.StudentDtout;
 import fr.sqli.cantine.dto.out.person.TransactionDtout;
 import fr.sqli.cantine.entity.ConfirmationTokenEntity;
 import fr.sqli.cantine.entity.PaymentEntity;
-import fr.sqli.cantine.entity.StudentClassEntity;
 import fr.sqli.cantine.entity.TransactionType;
 import fr.sqli.cantine.service.mailer.UserEmailSender;
 import fr.sqli.cantine.service.users.admin.IAdminFunctionService;
@@ -36,16 +33,15 @@ public class AdminWorksService implements IAdminFunctionService {
     private final String STUDENT_IMAGE_URL;
     private final IPaymentDao paymentDao;
     private final UserEmailSender userEmailSender;
-    private final IStudentClassDao studentClassDao;
     private final IUserDao iUserDao;
     private final Environment environment;
     private final IConfirmationTokenDao confirmationTokenDao;
 
 
     @Autowired
-    public AdminWorksService(IUserDao iUserDao, IStudentClassDao iStudentClassDao, Environment environment, UserEmailSender userEmailSender,
+    public AdminWorksService(IUserDao iUserDao,  Environment environment, UserEmailSender userEmailSender,
                              IConfirmationTokenDao confirmationTokenDao, IPaymentDao paymentDao) {
-        this.studentClassDao = iStudentClassDao;
+
         this.environment = environment;
         this.iUserDao = iUserDao;
         this.userEmailSender = userEmailSender;
@@ -202,19 +198,7 @@ public class AdminWorksService implements IAdminFunctionService {
     }
 
 
-    @Override
-    public void addStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, ExistingStudentClassException {
-        if (studentClassDtoIn == null) {
-            throw new InvalidStudentClassException("STUDENT CLASS IS NULL");
-        }
 
-        StudentClassEntity studentClassEntity = studentClassDtoIn.toStudentClassEntity();
-        if (this.studentClassDao.findByName(studentClassEntity.getName()).isPresent()) {
-            throw new ExistingStudentClassException("STUDENT CLASS ALREADY EXIST");
-
-        }
-        this.studentClassDao.save(studentClassEntity);
-    }
 
     @Override
     public StudentDtout getStudentByEmail(String email) throws InvalidUserInformationException, UserNotFoundException {
@@ -286,19 +270,6 @@ public class AdminWorksService implements IAdminFunctionService {
                 .stream().map(student -> new StudentDtout(student, this.STUDENT_IMAGE_URL)).toList();
 
 
-    }
-
-    @Override
-    public void updateStudentClass(StudentClassDtoIn studentClassDtoIn) throws InvalidStudentClassException, StudentClassNotFoundException {
-        studentClassDtoIn.checkIdValidity();
-        StudentClassEntity studentClassEntity = studentClassDtoIn.toStudentClassEntity();
-
-        var studentClass = this.studentClassDao.findById(studentClassDtoIn.getId());
-        if (studentClass.isEmpty()) {
-            throw new StudentClassNotFoundException("STUDENT CLASS NOT FOUND");
-        }
-        studentClass.get().setName((studentClassEntity.getName()));
-        this.studentClassDao.save(studentClass.get());
     }
 
 

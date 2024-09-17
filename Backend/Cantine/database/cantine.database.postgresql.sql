@@ -13,27 +13,8 @@ CREATE TABLE IF NOT EXISTS image(
     name VARCHAR(400) NOT NULL
 );
 
--- -----------------------------------------------------
--- Table `cantiniere`.`class_id`
--- -----------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS  studentClass (
-    id UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    unique(name)
- );
 
 
--- -----------------------------------------------------
--- Table `cantiniere`.`function`
--- -----------------------------------------------------
-
-
-CREATE TABLE IF NOT EXISTS  adminFunction (
-    id UUID PRIMARY KEY,
-    name VARCHAR(300) NOT NULL,
-    unique(name)
-);
 
 -- -----------------------------------------------------
 -- Table `cantiniere`.`adminService`
@@ -58,8 +39,6 @@ CREATE  TABLE IF NOT EXISTS luser (
     validation INT   DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
     unique(email),
     check (status IN (0,1)),
-    FOREIGN KEY (function_id) REFERENCES adminFunction (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY (class_id)    REFERENCES studentClass  (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY (image_id)    REFERENCES image         (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 

@@ -68,14 +68,14 @@ public class UserEntity extends AbstractEntity {
     @Column(name = "wallet")
     private BigDecimal wallet;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "class_id")
-    private StudentClassEntity studentClass;
+
+    @Column(name = "class_id")
+    private Integer studentClass;
 
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "function_id")
-    private FunctionEntity function;
+
+    @Column(name = "function_id")
+    private Integer function;
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,11 +1,10 @@
 package fr.sqli.cantine.service.superAdmin;
 
 
-import fr.sqli.cantine.dao.IFunctionDao;
+
 import fr.sqli.cantine.dao.ITaxDao;
 import fr.sqli.cantine.dto.in.superAdmin.FunctionDtoIn;
 import fr.sqli.cantine.dto.in.superAdmin.TaxDtoIn;
-import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.TaxEntity;
 import fr.sqli.cantine.service.superAdmin.exception.ExistingTax;
 import fr.sqli.cantine.service.superAdmin.exception.InvalidTaxException;
@@ -19,26 +18,13 @@ import java.math.BigDecimal;
 public class SuperAdminService {
 
 
-    private IFunctionDao iFunctionDao;
+
     private ITaxDao iTaxDao;
 
     @Autowired
-    public SuperAdminService(IFunctionDao iFunctionDao, ITaxDao iTaxDao) {
-        this.iFunctionDao = iFunctionDao;
+    public SuperAdminService( ITaxDao iTaxDao) {
         this.iTaxDao = iTaxDao;
 
-    }
-
-
-    public FunctionEntity addFunction(FunctionDtoIn functionDtoIn) throws InvalidUserInformationException {
-        var functionName = functionDtoIn.getName();
-        var functionEntity = this.iFunctionDao.findByName(functionName);
-        if (functionEntity.isEmpty()) {
-            throw new InvalidUserInformationException("FUNCTION NAME ALREADY EXISTS");
-        }
-        FunctionEntity newfunctionEntity = new FunctionEntity();
-        newfunctionEntity.setName(functionDtoIn.getName());
-        return this.iFunctionDao.save(newfunctionEntity);
     }
 
 
