@@ -1,13 +1,13 @@
 <!--<h1 class="center"> Nos Plats </h1>-->
 <div class="center" style="margin: 10px">
-    <img src="../../../../../../Mobile/cantine/src/assets/images/nos-menus.jpg" alt="food" style="width: 50%; height: 20%">
+  <img src="assets/images/nos-menus.png"  alt="NOS MENUS">
 </div>
 
 <div class="container">
     <div class="row">
         <app-menu-search></app-menu-search>
 
-        <div *ngFor="let menu of menus$ |async " class=" center col m4 s12">
+        <div *ngFor="let menu of menus$ |async " class="center col-md-4">
             <div class="card horizontal">
                 <div class="center">
                     <img [src]="menu.image" height="40%" width="40%"/>

@@ -5,8 +5,8 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve --port 8100",
+    "build": "ng build --port 8100",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

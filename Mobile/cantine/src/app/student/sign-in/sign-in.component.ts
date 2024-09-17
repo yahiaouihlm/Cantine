@@ -66,6 +66,7 @@ export class SignInComponent implements OnInit {
         }
       },
       error: (error) => {
+
         if (error.status === HttpStatusCode.Forbidden && error.error.message === IConstantsMessages.STUDENT_DISABLED_ACCOUNT) {
           this.disabled_account = true;
           this.wrongCredentials = false;

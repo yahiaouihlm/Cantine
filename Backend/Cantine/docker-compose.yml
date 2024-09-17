@@ -9,6 +9,10 @@ services:
       - "POSTGRES_DB=cantine"
     ports:
       - "5432:5432"
+    volumes:
+      - type: bind
+        source: database/cantine.database.postgresql.sql
+        target: /docker-entrypoint-initdb.d/cantine.database.postgresql.sql
 
   back:
     depends_on:

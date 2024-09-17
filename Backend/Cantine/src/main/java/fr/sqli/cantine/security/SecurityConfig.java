@@ -42,6 +42,8 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final StoneAuthenticationFailureHandler stoneAuthenticationFailureHandler = new StoneAuthenticationFailureHandler();
     private final Environment environment;
+    private final String FRONT_END_URL;
+    private final String MOBILE_FRONT_URL;
 
     public SecurityConfig(AppUserService appUserService, CustomAccessDeniedHandler customAccessDeniedHandler, Environment environment,
                           CustomAuthenticationEntryPoint customAuthenticationEntryPoint, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenVerifier jwtTokenVerifier) {
@@ -53,6 +55,13 @@ public class SecurityConfig {
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.environment = environment;
 
+        this.FRONT_END_URL = environment.getProperty("sqli.cantine.server.protocol") +
+                  environment.getProperty("sqli.cantine.server.ip.address") +
+                ":" + environment.getProperty("sali.cantine.server.port");
+
+        this.MOBILE_FRONT_URL = environment.getProperty("sqli.cantine.server.protocol") +
+                environment.getProperty("sqli.cantine.server.ip.address") +
+                ":" + environment.getProperty("sqli.canine.server.port.mobile");
     }
 
 
@@ -107,7 +116,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of(this.FRONT_END_URL ,  this.MOBILE_FRONT_URL ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

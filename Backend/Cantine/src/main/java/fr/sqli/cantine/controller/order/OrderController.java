@@ -64,7 +64,7 @@ public class OrderController {
         return ResponseEntity.ok(new ResponseDtout(ORDER_SUBMITTED_SUCCESSFULLY));
     }
 
-    @PreAuthorize("hasAuthority('" + ADMIN_ROLE_LABEL + "')")
+    @PreAuthorize("hasAuthority('" + STUDENT_ROLE_LABEL + "')")
     @GetMapping(GET_ORDER_BY_DATE_AND_STUDENT_ID_URL)
     public ResponseEntity<List<OrderDtOut>> getOrdersByDateAndStudentId(@RequestParam("studentUuid") String studentUuid, @RequestParam("date") LocalDate date) throws InvalidOrderException, InvalidUserInformationException, UserNotFoundException {
         return ResponseEntity.ok(this.orderService.getOrdersByDateAndStudentId(studentUuid, date));

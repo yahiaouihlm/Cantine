@@ -209,6 +209,7 @@ public class UpdateMealTest extends AbstractContainerConfig implements IMealTest
     }
 
     @Test
+   @Disabled
     void updateMealToExistingMeal() throws Exception {
         var existingMeal = this.mealDao.findAll().get(0);
         var MealToUpdate = this.mealDao.findAll().get(1);

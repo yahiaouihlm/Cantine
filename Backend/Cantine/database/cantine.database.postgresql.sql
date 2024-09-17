@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS tax (
-    id  SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     tax DECIMAL(5,2) NOT NULL
 );
 
@@ -54,7 +54,7 @@ CREATE  TABLE IF NOT EXISTS luser (
     class_id UUID,
     image_id UUID NOT NULL,
     status INT  NOT NULL  DEFAULT 0 ,   /* 0 = disabled, 1 = enabled */
-    disable_date DATE DEFAULT NOW,   /*  if disable_date  is  not  null that  mean  it's   removed admin   */
+    disable_date DATE DEFAULT NOW(),   /*  if disable_date  is  not  null that  mean  it's   removed admin   */
     validation INT   DEFAULT  0 ,   /* 0 = Invalidated  1 = validated */
     unique(email),
     check (status IN (0,1)),

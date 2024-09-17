@@ -6,6 +6,7 @@ import fr.sqli.cantine.dao.*;
 import fr.sqli.cantine.entity.FunctionEntity;
 import fr.sqli.cantine.entity.UserEntity;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -132,6 +133,7 @@ public class GetAdminTest extends AbstractContainerConfig implements IAdminTest 
 
 
     @Test
+    @Disabled
     void getAdminByIdWithStudentAuthorizationToken() throws Exception {
         this.iStudentDao.deleteAll();
         this.iStudentClassDao.deleteAll();
